@@ -229,7 +229,7 @@ h2 {
 }
 
 .splash-text {
-    margin-bottom: 40px;
+    margin-left: 0px;
 }
 
 .m-splash-image {    
@@ -539,6 +539,86 @@ h2 {
 .aacc-content {
     position: relative;
     top:-30px;
+}
+
+/* ANIMATED TEXT SECTION */
+.rw-wrapper{
+	position: relative;
+	padding: 15px;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+}
+.rw-sentence{
+	margin: 0px 460px 10px 0px;
+}
+.rw-sentence span{
+	font-weight: normal;
+}
+.rw-words{
+	display: inline;
+	text-indent: 10px;
+}
+.rw-words-1 span{
+	position: absolute;
+	opacity: 0;
+	overflow: hidden;
+	-webkit-animation: rotateWord 18s linear infinite 0s;
+	-ms-animation: rotateWord 18s linear infinite 0s;
+	animation: rotateWord 18s linear infinite 0s;
+}
+.rw-words-1 span:nth-child(2) { 
+    -webkit-animation-delay: 3s; 
+	-ms-animation-delay: 3s; 
+	animation-delay: 3s; 
+
+}
+.rw-words-1 span:nth-child(3) { 
+    -webkit-animation-delay: 6s; 
+	-ms-animation-delay: 6s; 
+	animation-delay: 6s; 
+
+}
+.rw-words-1 span:nth-child(4) { 
+    -webkit-animation-delay: 9s; 
+	-ms-animation-delay: 9s; 
+	animation-delay: 9s; 
+
+}
+
+}
+@-webkit-keyframes rotateWord {
+    0% { opacity: 0; }
+    2% { opacity: 0; -webkit-transform: translateY(-30px); }
+	5% { opacity: 1; -webkit-transform: translateY(0px);}
+    17% { opacity: 1; -webkit-transform: translateY(0px); }
+	20% { opacity: 0; -webkit-transform: translateY(30px); }
+	80% { opacity: 0; }
+    100% { opacity: 0; }
+}
+@-ms-keyframes rotateWord {
+    0% { opacity: 0; }
+    2% { opacity: 0; -ms-transform: translateY(-30px); }
+	5% { opacity: 1; -ms-transform: translateY(0px);}
+    17% { opacity: 1; -ms-transform: translateY(0px); }
+	20% { opacity: 0; -ms-transform: translateY(30px); }
+	80% { opacity: 0; }
+    100% { opacity: 0; }
+}
+@keyframes rotateWord {
+    0% { opacity: 0; }
+    2% { opacity: 0; -webkit-transform: translateY(-30px); transform: translateY(-30px); }
+	5% { opacity: 1; -webkit-transform: translateY(0px); transform: translateY(0px);}
+    17% { opacity: 1; -webkit-transform: translateY(0px); transform: translateY(0px); }
+	20% { opacity: 0; -webkit-transform: translateY(30px); transform: translateY(30px); }
+	80% { opacity: 0; }
+    100% { opacity: 0; }
+}
+@media screen and (max-width: 768px){
+	.rw-sentence { font-size: 11px; }
+}
+@media screen and (max-width: 320px){
+	.rw-sentence { font-size: 8px; }
 }
 
 /* ABOUT ME SECTION */
