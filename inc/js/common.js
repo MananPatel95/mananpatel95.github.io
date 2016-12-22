@@ -162,7 +162,6 @@ function contact_form_submit(){
     };
     var marker = new google.maps.Marker({
         position: myLatlng,
-        map: map,
     });
 	marker.setMap(map);
 
