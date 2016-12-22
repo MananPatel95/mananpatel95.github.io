@@ -147,7 +147,9 @@ function contact_form_submit(){
      =============================================== */
     var myLatlng = new google.maps.LatLng(44.483058,-79.387963);
 
-    var mapContainer = document.getElementById('map');
+    
+    var map = new google.maps.Map(mapContainer, mapOptions)
+	var mapContainer = document.getElementById('map');
     var mapOptions = {
         panControl: false,
         draggable: false,
@@ -158,12 +160,9 @@ function contact_form_submit(){
         mapTypeId: google.maps.MapTypeId.MAP,
         zoom: 5
     };
-    var map = new google.maps.Map(mapContainer, mapOptions)
-
     var marker = new google.maps.Marker({
         position: myLatlng,
         map: map,
-        icon: iconBase
     });
 	marker.setMap(map);
 
