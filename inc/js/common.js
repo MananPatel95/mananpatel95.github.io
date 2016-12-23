@@ -147,7 +147,7 @@ function contact_form_submit(){
      =============================================== */
 
 
-    var myLatlng = new google.maps.LatLng(44.483058,-79.387963);
+    var myLatlng = new google.maps.LatLng(43.6532,-79.3832);
 
     var mapContainer = document.getElementById('map');
     var mapOptions = {
