@@ -160,8 +160,7 @@ function contact_form_submit(){
         mapTypeId: google.maps.MapTypeId.MAP,
         zoom: 5
     };
-    var map = new google.maps.Map(mapContainer, mapOptions)
-
+    var map = new google.maps.Map(mapContainer, mapOptions);
     var marker = new google.maps.Marker({
         position: myLatlng,
         map: map,
