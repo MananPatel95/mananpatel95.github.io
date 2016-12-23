@@ -146,7 +146,7 @@ function contact_form_submit(){
      Google maps
      =============================================== */
 
-    var iconBase = 'img/google-marker.png';
+
     var myLatlng = new google.maps.LatLng(44.483058,-79.387963);
 
     var mapContainer = document.getElementById('map');
@@ -165,7 +165,6 @@ function contact_form_submit(){
     var marker = new google.maps.Marker({
         position: myLatlng,
         map: map,
-        icon: iconBase
     });
 	marker.setMap(map);
 
