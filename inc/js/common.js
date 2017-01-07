@@ -16,7 +16,7 @@ jQuery("#commentForm").validate({
  Contact form ajax script
  =============================================== */
 function contact_form_submit(){
-    jQuery('.contact-button').click(function() {
+    jQuery('#cf_button').click(function() {
         var name = jQuery('#cf_name').val();
         var email = jQuery('#cf_email').val();
         var message = jQuery('#cf_message').val();
