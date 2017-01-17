@@ -2,7 +2,7 @@ jQuery(document).ready(function() {
     'use strict';
     
 /* ==============================================
- Contact form checker
+ Contact form WS
  =============================================== */
 
 jQuery("#commentForm").validate({
