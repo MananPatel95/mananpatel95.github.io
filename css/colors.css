@@ -35,6 +35,15 @@ p {
 .m-splash-image a {
     color: #fff;
 }
+
+.style-1 {
+    color:;
+}
+.style-1:hover, 
+.style:focus {
+    color: darkred;
+}
+
 .mp {
 	width = 10px;
 	height: auto;
