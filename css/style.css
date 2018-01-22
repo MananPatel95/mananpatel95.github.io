@@ -9,7 +9,7 @@ a {
 }
 
 p {
-    line-height: 1.9em;
+    line-height: 1.8em;
     font-size: 1.2em;
 }
 
@@ -22,17 +22,17 @@ p > a:hover {
 }
 
 h1 {
-    font-size: 3.4em;
+    font-size: 3em;
      line-height: 1.3em;
 }
 
 h2 {
-    font-size: 3em;
+    font-size: 2.6em;
     line-height: 1.3em;
 }
 
 h3 {
-    font-size: 2.6em;
+    font-size: 2.3em;
     line-height: 1.35em;
 }
 
@@ -41,19 +41,19 @@ h3 > a:link, h3 > a:visited, h3> a:hover, h3 > a:active{
 }
 
 h4 {
-    font-size: 2.2em;
+    font-size: 2.0em;
     line-height: 1.4em;
 }
 
 
 h5 {
     font-size: 1.8em;
-    line-height: 1.45em;
+    line-height: 1.4em;
 }
 
 h6 {
     font-size: 1.3em;
-    line-height: 1.5em;
+    line-height: 1.4em;
 }
 
 h2 {
@@ -315,7 +315,7 @@ h2 {
 .l-navigation-wrap {
     width: 100%;
     float: left;
-    z-index: 110;
+    z-index: 100;
     transition: padding 0.2s linear;
     -webkit-transition: padding 0.2s linear;
     -moz-transition: padding 0.2s linear;
@@ -448,12 +448,12 @@ h2 {
 
 /* PAGE SECTION */
 .l-content-wrap .l-page-section {
-    padding: 150px 0 100px;
+    padding: 60px 0 60px;
     margin: 10px 0 0 0;
 }
 
 .menu-padd {
-    padding: 15px 0 15px 0;
+    padding: 5px 0 15px 0;
 }
 
 .round-icon {
@@ -1170,6 +1170,22 @@ h2 {
     margin-bottom:2px;
 }
 
+.column {
+    float: left;
+}
+
+.left {
+  width: 75%;
+  padding: 0px 0px 0px 40px;
+}
+
+.right {
+  width: 25%;
+  padding: 27px 40px;
+}
+
+
+
 /* contact us */
 
 
@@ -1405,7 +1421,7 @@ h2 {
     }
     
     .l-section {
-        padding: 70px 0;
+        padding: 50px 0;
     }
     
     .what-we-do-section .col-xs-12 {
