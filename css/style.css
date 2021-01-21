@@ -166,6 +166,8 @@ h2 {
     vertical-align: middle;
     z-index: 10;
     position: relative;
+	height: 100%;
+	width: 100%;
 }
 
 .splash-centering {
@@ -192,6 +194,7 @@ h2 {
     font-size: 1.2em;
     margin-right: 5px;
     margin-bottom: 5px;
+
 }
 
 .m-splash-image a:hover {
@@ -238,6 +241,7 @@ h2 {
 
 .slide-background {
     background: url('../img/slider-background2.jpg') no-repeat center;
+	background-size:100%
 }
 
 /*
@@ -458,6 +462,7 @@ h2 {
 
 .round-icon {
     margin-bottom: 30px;
+	border-radius: 50%;
     -ms-transform: scale(0); /* IE 9 */
     -webkit-transform: scale(0); /* Chrome, Safari, Opera */
     transform: scale(0);
@@ -1305,7 +1310,7 @@ h2 {
 /* RESPONSIVE */
 
 
-@media (max-width: 1200px) {
+@media () {
     .navbar-header {
         float: none;
     }
@@ -1347,7 +1352,7 @@ h2 {
 }
 
 
-@media (max-width: 1200px)  {
+@media ()  {
     .m-posts .news-content {
         padding: 25px;
     }
