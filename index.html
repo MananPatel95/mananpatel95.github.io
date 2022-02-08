@@ -43,8 +43,8 @@
                     <nav class="">
                         <ul>
                             <li><a href="#hello">About_me</a></li>
-                            <li><a href="#portfolio">Projects</a></li>
                             <li><a href="#resume">Resume</a></li>
+                            <li><a href="#portfolio">Projects</a></li>
                         </ul>
                     </nav>
                 </div>
@@ -77,31 +77,28 @@
 
     <!--Header-->
     <header class="main-header" style="">
-        <div class="container">
+        <div id="hello" class="container">
             <div class="row personal-profile">
                 <div class="col-md-4 personal-profile__avatar">
                     <img class="" src="images/Headshot1.jpg" alt="avatar">
                 </div>
                 <div class="col-md-8">
                     <p class="personal-profile__name">Manan Patel</p>
-                    <p class="personal-profile__work">Software and Mobile Engineer</p>
+                    <p class="personal-profile__work">iOS and Software Engineer</p>
                     <div class="personal-profile__contacts">
                         <dl class="contact-list contact-list__opacity-titles">
-                            <dt>GitHub:</dt>
-                            <dd><a href="https://github.com/MananPatel95" target="_blank">MananPatel95</a></dd>
-                            <dt>LinkedIn:</dt>
-                            <dd><a href="https://www.linkedin.com/in/mananpatel95/" target="_blank">Manan Patel</a>
-                            </dd>
                             <dt>Email:</dt>
                             <dd><a href="mailto:manan.patel@outlook.com">manan.patel@outlook.com</a></dd>
+                            <dt>GitHub:</dt>
+                            <dd><a href="https://github.com/MananPatel95" target="_blank">MananPatel95</a></dd> 
+                            <dt>Leetcode:</dt>
+                            <dd><a href="https://leetcode.com/mananpatel1/">MananPatel1</a></dd>
                             <dt>Location:</dt>
                             <dd>Toronto, ON</dd>
                         </dl>
                     </div>
                     <p class="personal-profile__social">
                         <a href="https://github.com/MananPatel95" target="_blank"><i class="fa fa-github"></i></a>
-                        <a href="https://www.linkedin.com/in/mananpatel95/" target="_blank"><i
-                                class="fa fa-linkedin-square"></i></a>
                     </p>
                 </div>
             </div>
@@ -110,12 +107,12 @@
     <!--Header-->
 
     <!--Hello-->
-    <section id="hello" class="container section">
+    <section id="" class="container section">
         <div class="row">
             <div class="col-md-10">
                 <h2 id="hello_header" class="section__title" style="text-indent: 0px;">AboutMe_</h2>
                 <p class="section__description">
-					I am a developer who is experienced in mobile and software development. I have prior experience building out iOS applications with Swift, 
+					I am a developer who is experienced in mobile and software development. I have prior experience building out iOS applications with Swift & Obj-C, 
 					consumer facing real-time applications and databases, and research experience with machine learning and big data. Skilled at writing well-designed, testable and efficient code and applying current best practices. My primary interests are app development, machine learning, and entrepreneurship. 
 					
 					
@@ -130,6 +127,86 @@
 
     <hr>
 
+    <!--Resume-->
+    <section id="resume" class="container section">
+        <div class="row">
+            <div class="col-md-10">
+                <h2 id="resume_header" class="section__title" style="text-indent: -9999px;">Resume_</h2>
+                <p class="section__description">
+                    Throughout my career I had a chance to work in different areas. I worked not
+                    only as an engineer but also as marketing personnel and as a research assistant.
+                    This section contains my employment history as well as education timeline.
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8 section__resume resume-list">
+                <h3 class="resume-list_title">Employment</h3>
+                
+                <!-- Wattpad -->
+                <div class="resume-list__block">
+                    <p class="resume-list__block-title">Wattpad Inc.</p>
+                    <p class="resume-list__block-date">August 2021 - Current</p>
+                    <p><strong>iOS Engineer</strong></p>
+                    <p> - Native Swift and Obj-C engineering for the <a href="https://apps.apple.com/us/app/wattpad-read-write-stories/id306310789">iOS Wattpad App</a>, specifically the User Profile and Reader</p>
+                    <p> - Sole engineer responsible for the Mute/Block User client side functionality</p>
+                    <p> - Currently establishing a design system of reusable components to enable faster development across the app by standardizing buttons, label, etc. through an atomic design methodology </p>
+                    <p> - Create architectural diagrams and on-boarding material as part of modernization of hiring effort</p>
+                </div>
+
+                <!-- ECCC -->
+                <div class="resume-list__block">
+                    <p class="resume-list__block-title">Environment and Climate Change Canada</p>
+                    <p class="resume-list__block-date">May 2017 - July 2021</p>
+                    <p><strong>iOS and Software Developer</strong></p>
+                    <p> - Concept to completion app release of the national weather <a href="https://apps.apple.com/ca/app/weathercan/id1334221563">iOS app, WeatherCAN</a></p>
+                    <p> - Real-time consumer facing databases</p>
+                    <p> - XML Parsers, Product Generators, and support of all weather components related to observations, forecasts, and alerts</p>
+                </div>
+
+                <!-- UOFT Research Assistant -->
+                <div class="resume-list__block">
+                    <p class="resume-list__block-title">Department of Economics, University of Toronto</p>
+                    <p class="resume-list__block-date">Sept 2016 - Dec 2016</p>
+                    <p><strong>Statistical Research Assistant</strong></p>
+					  <p> - Python and R based ML Model traning (Neural Nets and Random Walks)</p>
+					  <p> - Generating real world inferences based on ML Model output</p>
+                </div>
+
+                <!-- AACC -->
+                <div class="resume-list__block">
+                    <p class="resume-list__block-title">Academic Advising & Career Centre, University of Toronto</p>
+                    <p class="resume-list__block-date">May 2015 -  Aug 2016</p>
+                    <p><strong>iOS and Web Developer</strong></p>
+						<p> - Native Swift development using UIKit, Google Maps, and injesting API</p>
+						<p> - Helped create the <a href="https://apps.apple.com/us/app/utsc-student-experience/id1178722133"> UTSC Student Expereince App </a>
+                    <p> - Created interal social media ticket system which boosted traffic 30% and reduced time taken for posts</p>
+					  <p> - Creating marketing materials and webpages for student workshops, events, and services</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8 section__resume resume-list">
+                <h3 class="resume-list_title">
+                    Education
+                </h3>
+                <div class="resume-list__block">
+                    <p class="resume-list__block-title">University of Toronto</p>
+                    <p class="resume-list__block-date">2013 - 2019</p>
+                    <p>BSc (Hons) Computer and Statistical Science - Co-op</p>
+                    <p>GPA: 3.2</p>
+                </div>
+            </div>
+        </div>
+
+
+    </section>
+    <!--Resume-->
+    
+    <hr>
+    
     <!--Portfolio-->
     <section id="portfolio" class="container section">
         <div class="row">
@@ -269,75 +346,6 @@
     </section>
     <!--Portfolio-->
 
-    <hr>
-
-    <!--Resume-->
-    <section id="resume" class="container section">
-        <div class="row">
-            <div class="col-md-10">
-                <h2 id="resume_header" class="section__title" style="text-indent: -9999px;">Resume_</h2>
-                <p class="section__description">
-                    Throughout my career I had a chance to work in different areas. I worked not
-                    only as an engineer and programmer but also as marketing personnel and a research assistant.
-                    This section contains my employment history as well as education timeline.
-                </p>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-8 section__resume resume-list">
-                <h3 class="resume-list_title">Employment</h3>
-
-                <!-- ECCC -->
-                <div class="resume-list__block">
-                    <p class="resume-list__block-title">Environment and Climate Change Canada</p>
-                    <p class="resume-list__block-date">May 2017 - Current</p>
-                    <p><strong>iOS and Software Developer</strong></p>
-                    <p> - Concept to completion app release of a native iOS product</p>
-                    <p> - Real-time consumer facing databases</p>
-                    <p> - XML Parsers, Product Generators, and support of all weather components related to observations, forecasts, and alerts</p>
-                </div>
-
-                <!-- UOFT Research Assistant -->
-                <div class="resume-list__block">
-                    <p class="resume-list__block-title">Department of Economics, University of Toronto</p>
-                    <p class="resume-list__block-date">Sept 2016 - Dec 2016</p>
-                    <p><strong>Statistical Research Assistant</strong></p>
-					  <p> - Python and R based ML Model traning (Neural Nets and Random Walks)</p>
-					  <p> - Generating real world inferences based on ML Model output</p>
-                </div>
-
-                <!-- AACC -->
-                <div class="resume-list__block">
-                    <p class="resume-list__block-title">Academic Advising & Career Centre, University of Toronto</p>
-                    <p class="resume-list__block-date">May 2015 -  Aug 2016</p>
-                    <p><strong>iOS and Web Developer</strong></p>
-						<p> - Native Swift development using UIKit, Google Maps, and injesting API</p>
-						<p> - Helped create the <a href="https://apps.apple.com/us/app/utsc-student-experience/id1178722133"> UTSC Student Expereince App </a>
-                    <p> - Created interal social media ticket system which boosted traffic 30% and reduced time taken for posts</p>
-					  <p> - Creating marketing materials and webpages for student workshops, events, and services</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-8 section__resume resume-list">
-                <h3 class="resume-list_title">
-                    Education
-                </h3>
-                <div class="resume-list__block">
-                    <p class="resume-list__block-title">University of Toronto</p>
-                    <p class="resume-list__block-date">2013 - 2019</p>
-                    <p>BSc (Hons) Computer and Statistical Science - Co-op</p>
-                    <p>GPA: 3.2</p>
-                </div>
-            </div>
-        </div>
-
-
-    </section>
-    <!--Resume-->
-
 
     <!-- Footer -->
     <div class="background">
@@ -346,8 +354,6 @@
                 <p>Manan Patel</p>
                 <p class="personal-profile__social">
                     <a href="https://github.com/MananPatel95" target="_blank"><i class="fa fa-github"></i></a>
-                    <a href="https://www.linkedin.com/in/mananpatel95/" target="_blank"><i
-                            class="fa fa-linkedin-square"></i></a>
                 </p>
             </div>
         </div>
