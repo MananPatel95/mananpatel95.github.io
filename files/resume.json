@@ -1,0 +1,121 @@
+{
+  "selectedTemplate": 1,
+  "headings": {
+    "skills": "",
+    "awards": "About"
+  },
+  "basics": {
+    "name": "Manan Patel",
+    "email": "manan.patel@outlook.com",
+    "website": "mananpatel.info",
+    "location": {
+      "address": "Calgary, Canada"
+    }
+  },
+  "education": [
+    {
+      "institution": "University of Toronto",
+      "location": "Toronto, Canada",
+      "area": "Computer Science & Statistical Machine Learning",
+      "startDate": "Sep 2013",
+      "endDate": "May 2019",
+      "studyType": "Bachelors of Science (16 Mo Co-op) -"
+    }
+  ],
+  "work": [
+    {
+      "website": "",
+      "highlights": [
+        "Lead the Weather Dissemination team to create, maintain, and produce weather related components and data for the Weather.gc.ca website and Mobile applications",
+        "Identify, generate, and delegate tasks to 3 other full-time developers and 2 co-op students to achieve organization wide KPIs and timelines in an agile workflow",
+        "Currently leading the team to expand our Radar product to also support real-time Lightning, Hurricane, and Tornado events on the map",
+        null
+      ],
+      "company": " Environment & Climate Change Canada",
+      "position": "Interim Team Lead",
+      "location": "Calgary, Canada (Remote)",
+      "startDate": "March 2023",
+      "endDate": "Present"
+    },
+    {
+      "highlights": [
+        "Swift, SwiftUI, and Obj-C engineering for the iOS Wattpad App",
+        "Lead iOS Engineer for the new Wattpad Comments experience, complete overhaul of comments from Obj-C to SwiftUI, to introduce comment liking, in-line replies, and design system components",
+        "Part of User Safety projects like User Blocking, Password Strengthening, and Age restrictions",
+        "Implemented WP Design System, via an atomic design methodology, of components, molecules, and organisms for a unified product and developer experience. Written in SwiftUI with bridges for UIKit",
+        "Took on bi-monthly release master duties to test, monitor, resolve, and release new app versions to TestFlight and App Store. Using Fastlane and Github Actions"
+      ],
+      "endDate": "March 2023",
+      "startDate": "Aug 2021",
+      "location": "Toronto, Canada (Remote)",
+      "position": "iOS Engineer",
+      "company": "Wattpad Inc."
+    },
+    {
+      "highlights": [
+        "Concept to completion app release of the Canadian governmental national weather iOS app, WeatherCAN, with only a 2 person team and 1 year timeline",
+        "Work with VueJS to create GUI layers, for the Weather GC website redesign project, such as real-time lightning strikes, weather radar, and weather alerting",
+        "Creation and maintenance of XML Parsers, Product Generators, and support of all weather components related to observations, forecasts, and alerts for National Weather outlets",
+        "Established real-time consumer facing databases and weather alerting systems for mobile applications and APIs"
+      ],
+      "position": " Software & iOS Developer",
+      "location": "Toronto, Canada (Remote)",
+      "startDate": "May 2017",
+      "endDate": "July 2021",
+      "company": " Environment & Climate Change Canada "
+    },
+    {
+      "highlights": [
+        "Developed machine learning models of economic information about the countries of Peru and Canada to analyze the effect of trade policies on regional trade output",
+        "Created databases using Python and R based pre-processing techniques which were used to formulate and train machine learning models to generate inferences about efficient trade policies"
+      ],
+      "endDate": "Dec 2016",
+      "startDate": "Sept 2016",
+      "location": "Toronto, Canada",
+      "position": "Statistical Research Assistant",
+      "company": "Department of Economics, University of Toronto"
+    }
+  ],
+  "skills": [
+    {
+      "level": "",
+      "keywords": [
+        "Swift, Objective-C, SwiftUI, Java, JavaScript, Kotlin, Python, R"
+      ],
+      "name": "Programming Languages"
+    },
+    {
+      "keywords": [
+        "XCode, Android Studio, Git, Jenkins, Firebase, Fastlane, Docker, Figma"
+      ],
+      "name": "Tools"
+    },
+    {
+      "keywords": [
+        "CoreData, PostgreSQL, MongoDB"
+      ],
+      "name": "Databases"
+    }
+  ],
+  "projects": [
+    {
+      "keywords": [
+        "Swift, CoreML, SwiftUI, Xcode, Git, Urban Airship, AWS"
+      ],
+      "description": "Working on an iOS application that uses OCR to read receipts and reminds you when your food is expiring to reduce food waste. Reads users grocery receipts and after a period of time reminds them when the types of food they bought are expected to go bad.  Written in Swift and uses the CoreML to parse the data from the images and APNS to send notifications. ",
+      "name": "GroSaver"
+    }
+  ],
+  "awards": [
+    {}
+  ],
+  "sections": [
+    "templates",
+    "profile",
+    "work",
+    "skills",
+    "education",
+    "projects",
+    "awards"
+  ]
+}
