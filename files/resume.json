@@ -1,8 +1,8 @@
 {
   "selectedTemplate": 1,
   "headings": {
-    "skills": "",
-    "awards": "About"
+    "projects": "",
+    "awards": ""
   },
   "basics": {
     "name": "Manan Patel",
@@ -14,100 +14,108 @@
   },
   "education": [
     {
+      "location": "Toronto. ON, Canada",
+      "startDate": "Sept 2013",
+      "gpa": "",
       "institution": "University of Toronto",
-      "location": "Toronto, Canada",
+      "studyType": "Bachelors of Science (16 Mo Co-op)",
       "area": "Computer Science & Statistical Machine Learning",
-      "startDate": "Sep 2013",
-      "endDate": "May 2019",
-      "studyType": "Bachelors of Science (16 Mo Co-op) -"
+      "endDate": "May 2019"
     }
   ],
   "work": [
     {
-      "website": "",
-      "highlights": [
-        "Lead the Weather Dissemination team to create, maintain, and produce weather related components and data for the Weather.gc.ca website and Mobile applications",
-        "Identify, generate, and delegate tasks to 3 other full-time developers and 2 co-op students to achieve organization wide KPIs and timelines in an agile workflow",
-        "Currently leading the team to expand our Radar product to also support real-time Lightning, Hurricane, and Tornado events on the map",
-        null
-      ],
-      "company": " Environment & Climate Change Canada",
-      "position": "Interim Team Lead",
+      "company": "Environment & Climate Change Canada",
       "location": "Calgary, Canada (Remote)",
+      "position": "Team Lead and iOS Developer",
+      "website": "",
       "startDate": "March 2023",
+      "highlights": [
+        "Lead the Weather Dissemination team to create, maintain, and produce weather related components and data for the Weather.gc.ca website, and iOS & Android applications",
+        "Lead iOS Engineer for the iOS WeatherCan Application, 5M+ MAU, #3 Weather app in Canada",
+        "Oversee 3 full-time developers and 2 co-op students, surpassing KPI success and project timelines",
+        "Currently leading the team to expand our Radar product to also support real-time Lightning,                         Hurricane, and Tornado events across Canada!"
+      ],
       "endDate": "Present"
     },
     {
       "highlights": [
-        "Swift, SwiftUI, and Obj-C engineering for the iOS Wattpad App",
-        "Lead iOS Engineer for the new Wattpad Comments experience, complete overhaul of comments from Obj-C to SwiftUI, to introduce comment liking, in-line replies, and design system components",
-        "Part of User Safety projects like User Blocking, Password Strengthening, and Age restrictions",
-        "Implemented WP Design System, via an atomic design methodology, of components, molecules, and organisms for a unified product and developer experience. Written in SwiftUI with bridges for UIKit",
-        "Took on bi-monthly release master duties to test, monitor, resolve, and release new app versions to TestFlight and App Store. Using Fastlane and Github Actions"
+        "Swift, SwiftUI, and Objective-C engineering for the iOS Wattpad App",
+        "Lead iOS Engineer for the new Wattpad Comments experience, completed an overhaul of comments from Obj-C to Swift/SwiftUI, to introduce comment liking, in-line replies, design system components, and more! Managed a team of 3 and associated requirements, tickets, timelines, delegation, and release for the life of the project.",
+        "Feature development for several User Safety projects like User Blocking, Password Strengthening, and Age restrictions.",
+        "Helped implement WP Design System, via an atomic design methodology, of components, molecules, and organisms for a unified product and developer experience. Written in SwiftUI with bridges for UIKit.",
+        "Took on bi-monthly release master duties to test, resolve, and release new app versions to TestFlight and App Store using Fastlane and Github Actions."
       ],
-      "endDate": "March 2023",
-      "startDate": "Aug 2021",
-      "location": "Toronto, Canada (Remote)",
+      "company": "Wattpad Inc.",
       "position": "iOS Engineer",
-      "company": "Wattpad Inc."
-    },
-    {
-      "highlights": [
-        "Concept to completion app release of the Canadian governmental national weather iOS app, WeatherCAN, with only a 2 person team and 1 year timeline",
-        "Work with VueJS to create GUI layers, for the Weather GC website redesign project, such as real-time lightning strikes, weather radar, and weather alerting",
-        "Creation and maintenance of XML Parsers, Product Generators, and support of all weather components related to observations, forecasts, and alerts for National Weather outlets",
-        "Established real-time consumer facing databases and weather alerting systems for mobile applications and APIs"
-      ],
-      "position": " Software & iOS Developer",
       "location": "Toronto, Canada (Remote)",
-      "startDate": "May 2017",
-      "endDate": "July 2021",
-      "company": " Environment & Climate Change Canada "
+      "startDate": "Aug 2021",
+      "endDate": "March 2023"
     },
     {
       "highlights": [
-        "Developed machine learning models of economic information about the countries of Peru and Canada to analyze the effect of trade policies on regional trade output",
-        "Created databases using Python and R based pre-processing techniques which were used to formulate and train machine learning models to generate inferences about efficient trade policies"
+        "Design and build iOS application features for TD App that offer seamless access to banking services, including account management, fund transfers, and transaction history",
+        "Collaborate with backend developers to integrate financial APIs securely with multi-factor authentication",
+        "rovide technical guidance and mentor-ship to team members, conducting code reviews and ensuring adherence to coding standards"
       ],
-      "endDate": "Dec 2016",
-      "startDate": "Sept 2016",
+      "startDate": "Jan 2020",
+      "endDate": "Aug 2021",
+      "company": "TD Bank",
+      "position": "iOS Developer",
+      "location": "Toronto, ON (Hybrid)"
+    },
+    {
+      "highlights": [
+        "Concept to completion release of the Canadian governmental national weather iOS app, WeatherCAN, with only a 2 person team and 1 year timeline",
+        "Established real-time consumer facing databases and backend APIs for mobile applications",
+        "Work with VueJS to create GUI layers for the Weather GC website redesign project, such as real-time lightning strikes, weather radar, and weather alerting",
+        "Creation and maintenance of XML Parsers, Product Generators, and support of all weather components related to observations, forecasts, and alerts for National Weather outlets"
+      ],
+      "company": "Environment & Climate Change Canada",
+      "position": "Software Developer",
       "location": "Toronto, Canada",
-      "position": "Statistical Research Assistant",
-      "company": "Department of Economics, University of Toronto"
+      "startDate": "May 2017",
+      "endDate": "Dec 2020"
     }
   ],
   "skills": [
     {
       "level": "",
       "keywords": [
-        "Swift, Objective-C, SwiftUI, Java, JavaScript, Kotlin, Python, R"
+        "Swift, Objective-C, SwiftUI, Kotlin, React, Java, JavaScript, Python, R"
       ],
       "name": "Programming Languages"
     },
     {
       "keywords": [
-        "XCode, Android Studio, Git, Jenkins, Firebase, Fastlane, Docker, Figma"
+        "XCode, Android Studio, Jenkins, Firebase, Fastlane, Docker, Figma, Git "
       ],
       "name": "Tools"
     },
     {
       "keywords": [
-        "CoreData, PostgreSQL, MongoDB"
+        "SwiftData, CoreData, SQL, MongoDB"
       ],
       "name": "Databases"
     }
   ],
   "projects": [
     {
+      "name": "",
+      "description": "",
+      "url": "",
       "keywords": [
-        "Swift, CoreML, SwiftUI, Xcode, Git, Urban Airship, AWS"
-      ],
-      "description": "Working on an iOS application that uses OCR to read receipts and reminds you when your food is expiring to reduce food waste. Reads users grocery receipts and after a period of time reminds them when the types of food they bought are expected to go bad.  Written in Swift and uses the CoreML to parse the data from the images and APNS to send notifications. ",
-      "name": "GroSaver"
+        ""
+      ]
     }
   ],
   "awards": [
-    {}
+    {
+      "title": "",
+      "date": "",
+      "awarder": "",
+      "summary": ""
+    }
   ],
   "sections": [
     "templates",
