@@ -235,7 +235,7 @@ input[type="button"] {
   line-height: 20px;
   font-family: Roboto Mono, monospace;
   text-transform: uppercase;
-  font-weight: 700;
+  font-weight: 550;
 }
 .menu .menu__wrapper nav a {
   color: #fff;
@@ -316,7 +316,7 @@ input[type="button"] {
   line-height: 20px;
   font-family: Roboto Mono, monospace;
   text-transform: uppercase;
-  font-weight: 700;
+  font-weight: 500;
   margin-top: 60px;
 }
 .mobile-menu .mobile-menu__wrapper ul {
@@ -392,7 +392,7 @@ input[type="button"] {
   line-height: 30px;
   font-family: Roboto Mono, monospace;
   margin-bottom: 15px;
-  font-weight: 700;
+  font-weight: 575;
 }
 .project-card .project-card__description {
   font-size: 16px;
@@ -403,7 +403,7 @@ input[type="button"] {
   font-family: Roboto Mono, monospace;
   font-size: 12px;
   line-height: 18px;
-  font-weight: 700;
+  font-weight: 500;
   text-transform: uppercase;
   margin-bottom: 15px;
 }
@@ -459,7 +459,7 @@ input[type="button"] {
   font-size: 14px;
   line-height: 20px;
   font-family: Roboto Mono, monospace;
-  font-weight: 700;
+  font-weight: 500;
   padding-bottom: 5px;
 }
 .resume-list .resume-list__block-date {
@@ -638,16 +638,16 @@ input[type="button"] {
   
   .expertise-card h3 {
     font-family: 'Roboto Mono', monospace;
-    font-size: 1.2em;
+    font-size: 1.05em;
     margin: 10px 0;
-    font-weight: 700;
+    font-weight: 500;
   }
   
   .expertise-card p {
     margin: 0;
     font-size: 0.9em;
     font-family: 'Roboto Mono', monospace;
-    font-weight: 400;
+    font-weight: 300;
   }
   
   /* Responsive behavior */
