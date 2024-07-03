@@ -15,36 +15,34 @@
   "education": [
     {
       "location": "Toronto. ON, Canada",
-      "startDate": "Sept 2013",
       "gpa": "",
       "institution": "University of Toronto",
-      "studyType": "Bachelors of Science (16 Mo Co-op)",
-      "area": "Computer Science & Statistical Machine Learning",
-      "endDate": "May 2019"
+      "studyType": "Honours Bachelors of Science - ",
+      "area": "Computer Science & Statistical Machine Learning"
     }
   ],
   "work": [
     {
       "company": "Environment & Climate Change Canada",
       "location": "Calgary, Canada (Remote)",
-      "position": "Team Lead and iOS Developer",
+      "position": "Senior Software Engineer",
       "website": "",
       "startDate": "March 2023",
       "highlights": [
-        "Lead the Weather Dissemination team to create, maintain, and produce weather related components and data for the Weather.gc.ca website, and iOS & Android applications",
+        "Lead the Weather Dissemination team to create, maintain, and produce weather-related components and data for the Weather.gc.ca website (Vue), iOS, and Android platforms",
+        "Identify, generate, and delegate tasks to 3 full time developers and 2 co-op students to achieve organization wide KPIs and timelines",
         "Lead iOS Engineer for the iOS WeatherCan Application, 5M+ MAU, #3 Weather app in Canada",
-        "Oversee 3 full-time developers and 2 co-op students, surpassing KPI success and project timelines",
-        "Currently leading the team to expand our Radar product to also support real-time Lightning,                         Hurricane, and Tornado events across Canada!"
+        "Develop features in Swift/SwiftUI, intergrate proprietry and performant APIs for near real-time weather broadcasting,  manage CI/CD pipelines for releases using Fastlane and GitHub Actions, conduct accessibility, unit, and UI testing "
       ],
       "endDate": "Present"
     },
     {
       "highlights": [
         "Swift, SwiftUI, and Objective-C engineering for the iOS Wattpad App",
-        "Lead iOS Engineer for the new Wattpad Comments experience, completed an overhaul of comments from Obj-C to Swift/SwiftUI, to introduce comment liking, in-line replies, design system components, and more! Managed a team of 3 and associated requirements, tickets, timelines, delegation, and release for the life of the project.",
-        "Feature development for several User Safety projects like User Blocking, Password Strengthening, and Age restrictions.",
-        "Helped implement WP Design System, via an atomic design methodology, of components, molecules, and organisms for a unified product and developer experience. Written in SwiftUI with bridges for UIKit.",
-        "Took on bi-monthly release master duties to test, resolve, and release new app versions to TestFlight and App Store using Fastlane and Github Actions."
+        "Lead iOS Engineer for the new Wattpad Comments experience, completed an overhaul of comments from Obj-C to Swift/SwiftUI, to introduce comment liking, in-line replies, design system components, and more! Managed a team of 3 and associated requirements, tickets, timelines, delegation, and release for the life of the project",
+        "Feature development for several User Safety projects like User Blocking, Password Strengthening, and Age restrictions",
+        "Helped implement WP Design System, via an atomic design methodology, of components, molecules, and organisms for a unified product and developer experience. Written in SwiftUI with bridges for UIKit",
+        "Took on bi-monthly release master duties to test, resolve, and release new app versions to TestFlight and App Store using Fastlane and Github Actions"
       ],
       "company": "Wattpad Inc.",
       "position": "iOS Engineer",
@@ -54,41 +52,41 @@
     },
     {
       "highlights": [
-        "Design and build iOS application features for TD App that offer seamless access to banking services, including account management, fund transfers, and transaction history",
+        "Design and build iOS application features for TD App that offer seamless access to banking services, including account management, fund transfers, and transaction history in Swift and Obj-C",
         "Collaborate with backend developers to integrate financial APIs securely with multi-factor authentication",
-        "rovide technical guidance and mentor-ship to team members, conducting code reviews and ensuring adherence to coding standards"
+        "Provide technical guidance and mentorship to team members, conducting code reviews and ensuring adherence to coding standards"
       ],
+      "endDate": "July 2021",
       "startDate": "Jan 2020",
-      "endDate": "Aug 2021",
-      "company": "TD Bank",
+      "location": "Toronto, Canada (Remote)",
       "position": "iOS Developer",
-      "location": "Toronto, ON (Hybrid)"
+      "company": "TD Bank"
     },
     {
       "highlights": [
-        "Concept to completion release of the Canadian governmental national weather iOS app, WeatherCAN, with only a 2 person team and 1 year timeline",
+        "Concept to completion release of the Canadian governmental national weather iOS app, WeatherCAN, with only a 2 person team and 1 year timeline. Written fully in Swift",
         "Established real-time consumer facing databases and backend APIs for mobile applications",
         "Work with VueJS to create GUI layers for the Weather GC website redesign project, such as real-time lightning strikes, weather radar, and weather alerting",
         "Creation and maintenance of XML Parsers, Product Generators, and support of all weather components related to observations, forecasts, and alerts for National Weather outlets"
       ],
-      "company": "Environment & Climate Change Canada",
-      "position": "Software Developer",
-      "location": "Toronto, Canada",
+      "location": "Toronto, Canada (Remote)",
       "startDate": "May 2017",
-      "endDate": "Dec 2020"
+      "endDate": "Jan 2020",
+      "position": "Software Developer",
+      "company": "Environment & Climate Change Canada"
     }
   ],
   "skills": [
     {
       "level": "",
       "keywords": [
-        "Swift, Objective-C, SwiftUI, Kotlin, React, Java, JavaScript, Python, R"
+        "Swift, SwiftUI, Objective-C, Python, Java, JavaScript, Kotlin, React, R"
       ],
       "name": "Programming Languages"
     },
     {
       "keywords": [
-        "XCode, Android Studio, Jenkins, Firebase, Fastlane, Docker, Figma, Git "
+        "XCode, Android Studio, Jenkins, Firebase, Fastlane, Docker, Figma, Git"
       ],
       "name": "Tools"
     },
@@ -122,8 +120,8 @@
     "profile",
     "work",
     "skills",
-    "education",
     "projects",
+    "education",
     "awards"
   ]
 }
