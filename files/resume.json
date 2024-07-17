@@ -32,7 +32,7 @@
         "Lead the Weather Dissemination team to create, maintain, and produce weather-related components and data for the Weather.gc.ca website (Vue), iOS, and Android platforms",
         "Identify, generate, and delegate tasks to 3 full time developers and 2 co-op students to achieve organization wide KPIs and timelines",
         "Lead iOS Engineer for the iOS WeatherCan Application, 5M+ MAU, #3 Weather app in Canada",
-        "Develop features in Swift/SwiftUI, intergrate proprietry and performant APIs for near real-time weather broadcasting,  manage CI/CD pipelines for releases using Fastlane and GitHub Actions, conduct accessibility, unit, and UI testing "
+        " Develop features in Swift/SwiftUI, integrate proprietary and performant APIs for near real-time weather broadcasting, manage CI/CD pipelines for releases using Fastlane and GitHub Actions, conduct accessibility, unit, and UI testing"
       ],
       "endDate": "Present"
     },
