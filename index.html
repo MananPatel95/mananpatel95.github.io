@@ -156,7 +156,7 @@
 
                         <h6>Notable Features</h6>
                         <li>Real-time Weather Alert Notifcations, GPS based and for Saved Locations</li>
-                        <li>Sole engineer responsible for "Now" & "Hourly" pages, and also the TodayExtension Widget</li>
+                        <li>Sole engineer responsible for "Now" & "7 Day" pages, Lightning Layer on Map, and also the Widgets</li>
                         <li>Implemented localization and unit translations</li>
                         <li>Used CoreData to store persistant data</li>
                     </p>
@@ -171,8 +171,8 @@
                     <a href="https://apps.apple.com/ca/app/weathercan/id1334221563" class="project-card__link">App Store: WeatherCan</a>
                 </div>
                 <div class="col-md-6 col-lg-5 project-card__img">
-                    <video autoplay muted loop class="" src="images/Projects/WeatherCan/weatherCan.mp4"
-                            style="margin:auto;position:relative;width:90%;height:90%;padding-left: 40px;" alt="Login">
+                    <video autoplay muted loop class="" src="images/Projects/WeatherCan/weatherCan.mp4" alt="Login">
+                    </video>
                 </div>
             </div>
 
@@ -182,36 +182,39 @@
                     <!-- Full-width images with number text -->
                     <div class="mySlides">
                         <div class="numbertext">1 / 4</div>
-                        <video autoplay muted loop class="" src="images/Projects/Wattpad/after-gif.mp4" alt="After"
-                            style="margin:auto;position:center;width:90%;height:90%;padding-left: 40px;">
+                        <video autoplay muted loop src="images/Projects/Wattpad/after-gif.mp4" alt="After"></video>
+                        <div class="caption-container">
+                            <p>New Comments Experience &#128525;</p>
+                        </div>
                     </div>
 
                     <div class="mySlides">
                         <div class="numbertext">2 / 4</div>
-                        <video autoplay muted loop class="" src="images/Projects/Wattpad/before-gif.mp4"
-                            style="margin:auto;position:relative;width:90%;height:90%;padding-left: 40px;" alt="Before">
+                        <video autoplay muted loop src="images/Projects/Wattpad/before-gif.mp4" alt="Before"></video>
+                        <div class="caption-container">
+                            <p>Old Comments Experience &#129296;</p>
+                        </div>
                     </div>
 
                     <div class="mySlides">
                         <div class="numbertext">3 / 4</div>
-                        <video autoplay muted loop class="" src="images/Projects/Wattpad/mute.mp4"
-                            style="margin:auto;position:relative;width:90%;height:90%;padding-left: 40px;" alt="Mute">
+                        <video autoplay muted loop src="images/Projects/Wattpad/mute.mp4" alt="Mute"></video>
+                        <div class="caption-container">
+                            <p>Mute User Flow &#128245;</p>
+                        </div>
                     </div>
 
                     <div class="mySlides">
                         <div class="numbertext">4 / 4</div>
-                        <video autoplay muted loop class="" src="images/Projects/Wattpad/login.mp4"
-                            style="margin:auto;position:relative;width:90%;height:90%;padding-left: 40px;" alt="Login">
+                        <video autoplay muted loop src="images/Projects/Wattpad/login.mp4" alt="Login"></video>
+                        <div class="caption-container">
+                            <p>Password Strengthening &#10035;</p>
+                        </div>
                     </div>
 
                     <!-- Next and previous buttons -->
                     <a class="prev" onclick="event.stopPropagation(); plusSlides(-1)">&#10094;</a>
                     <a class="next" onclick="event.stopPropagation(); plusSlides(1)">&#10095;</a>
-
-                    <!-- Image text -->
-                    <div class="caption-container">
-                        <p id="caption"></p>
-                    </div>
                 </div>
                 <div class="col-md-6 col-lg-7 project-card__info">
                     <h3 class="project-card__title">Wattpad &#128214</h3>
@@ -275,8 +278,8 @@
                         Store: CountriesQuiz</a>
                 </div>
                 <div class="col-md-6 col-lg-5 project-card__img">
-                    <video autoplay muted loop class="" src="images/Projects/CountriesQuiz/countriesQuiz.mov"
-                        style="margin:auto;position:relative;width:90%;height:90%;padding-left: 40px;" alt="CountriesQuiz">
+                    <video autoplay muted loop class="" src="images/Projects/CountriesQuiz/countriesQuiz.mov" alt="CountriesQuiz">
+                    </video>
                 </div>
             </div>
 
@@ -520,7 +523,6 @@
         function showSlides(n) {
             var i;
             var slides = document.getElementsByClassName("mySlides");
-            var captionText = document.getElementById("caption");
 
             if (n > slides.length) { slideIndex = 1 }
             if (n < 1) { slideIndex = slides.length }
@@ -530,15 +532,6 @@
             }
 
             slides[slideIndex - 1].style.display = "block";
-            if (slides[slideIndex - 1].querySelector('video').getAttribute('alt') === 'After') {
-                captionText.innerHTML = "New Comments Experience &#128525";
-            } else if (slides[slideIndex - 1].querySelector('video').getAttribute('alt') === 'Before') {
-                captionText.innerHTML = "Old Comments Experience &#129296";
-            } else if (slides[slideIndex - 1].querySelector('video').getAttribute('alt') === 'Mute') {
-                captionText.innerHTML = "Mute User Flow &#128245";
-            } else if (slides[slideIndex - 1].querySelector('video').getAttribute('alt') === 'Login') {
-                captionText.innerHTML = "Password Strengthening &#10035";
-            }
         }
     </script>
 
