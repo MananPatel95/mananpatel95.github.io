@@ -144,48 +144,46 @@
             </div>
 
         <div class="portfolio-cards">
-            <!-- iOS Apps -->
-            <div class="row project-card" onclick="window.open('https://apps.apple.com/us/app/wattpad-read-write-stories/id306310789', '_blank')" style="cursor: pointer;">
+            <!-- WeatherCan -->
+            <div class="row project-card" onclick="window.open('https://apps.apple.com/ca/app/weathercan/id1334221563', '_blank')" style="cursor: pointer;">
                 <div class="col-md-6 col-lg-7 project-card__info">
-                    <h3 class="project-card__title">Wattpad &#128214</h3>
+                    <h3 class="project-card__title">WeatherCan 	&#9925</h3>
                     <p class="project-card__description">
-                        As an iOS Engineer, worked on widely used user facing features for Comments, User Safety, Ads,
-                        and Content Moderation, often as a solo developer.
+                        WeatherCan is the official mobile weather application for Environment Canada where I was one of
+                        2 developers responsible for creating the iOS version from concept to completion within 12 months.
 
-                    <h6>Notable Projects</h6>
-                    &#9000 <em>Comments Revamp:<br></em>
-                    <li>iOS Tech Lead, managed a team of 3, from concept to release</li>
-                    <li>Complete overhaul from ObjC to Swift and introduced comment liking, in-line replies, design
-                        system components, and ads in between comments!</li>
-                    <li>Produced a <strong>massive</strong> bump in engagement, revenue, and retention in the comments
-                        experience</li><br>
+                        </br></br><br><strong>#2 Weather Application in Canada with over 5 million monthly active users!</strong>
 
-                    &#128245 <em>User & Story Mute:<br></em>
-                    <li>Added ability to mute/block a specific person across the application from viewing any of your
-                        content or information</li>
-                    <li><strong>Most used user safety feature on Wattpad by far!</strong></li>
-                    <li>Sole engineer on project from concept to release</li><br>
-
-                    &#10035 <em>Signup Strengthening:<br></em>
-                    <li>Implemented new set of verification rules for new signups (email, username, password, & birthday) and account info changes
-                    </li>
-                    <li>Super short timeline saved company from fines from regulatory body</li><br><br>
-
+                        <h6>Notable Features</h6>
+                        <li>Real-time Weather Alert Notifcations, GPS based and for Saved Locations</li>
+                        <li>Sole engineer responsible for "Now" & "Hourly" pages, and also the TodayExtension Widget</li>
+                        <li>Implemented localization and unit translations</li>
+                        <li>Used CoreData to store persistant data</li>
+                    </p>
+                    <p class="project-card__stack">Stack:</p>
                     <ul class="tags">
                         <li>Swift</li>
-                        <li>SwiftUI</li>
-                        <li>Objective-C</li>
+                        <li>Firebase</li>
+                        <li>CoreData</li>
+                        <li>CoreGraphics</li>
+                        <li>UIKit</li>
                     </ul>
-                    <a href="https://apps.apple.com/us/app/wattpad-read-write-stories/id306310789"
-                        class="project-card__link">App Store: Wattpad</a>
+                    <a href="https://apps.apple.com/ca/app/weathercan/id1334221563" class="project-card__link">App Store: WeatherCan</a>
                 </div>
-                <div class="container col-md-6 col-lg-5 project-card__img">
+                <div class="col-md-6 col-lg-5 project-card__img">
+                    <video autoplay muted loop class="" src="images/Projects/WeatherCan/weatherCan.mp4"
+                            style="margin:auto;position:relative;width:90%;height:90%;padding-left: 40px;" alt="Login">
+                </div>
+            </div>
 
+            <!-- Wattpad -->
+            <div class="row project-card" onclick="window.open('https://apps.apple.com/us/app/wattpad-read-write-stories/id306310789', '_blank')" style="cursor: pointer;">
+                <div class="col-md-6 col-lg-5 project-card__img">
                     <!-- Full-width images with number text -->
                     <div class="mySlides">
                         <div class="numbertext">1 / 4</div>
                         <video autoplay muted loop class="" src="images/Projects/Wattpad/after-gif.mp4" alt="After"
-                            style="margin:auto;position:center;width:90%;height:90%;padding-left: 40px;" alt="After">
+                            style="margin:auto;position:center;width:90%;height:90%;padding-left: 40px;">
                     </div>
 
                     <div class="mySlides">
@@ -207,196 +205,161 @@
                     </div>
 
                     <!-- Next and previous buttons -->
-                    <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
-                    <a class="next" onclick="plusSlides(1)">&#10095;</a>
+                    <a class="prev" onclick="event.stopPropagation(); plusSlides(-1)">&#10094;</a>
+                    <a class="next" onclick="event.stopPropagation(); plusSlides(1)">&#10095;</a>
 
                     <!-- Image text -->
                     <div class="caption-container">
                         <p id="caption"></p>
                     </div>
                 </div>
+                <div class="col-md-6 col-lg-7 project-card__info">
+                    <h3 class="project-card__title">Wattpad &#128214</h3>
+                    <p class="project-card__description">
+                        As an iOS Engineer, worked on widely used user facing features for Comments, User Safety, Ads,
+                        and Content Moderation, often as a solo developer.
 
-                <script>
-                    var slideIndex = 1;
-                    showSlides(slideIndex);
+                        <h6>Notable Projects</h6>
+                        &#9000 <em>Comments Revamp:<br></em>
+                        <li>iOS Tech Lead, managed a team of 3, from concept to release</li>
+                        <li>Complete overhaul from ObjC to Swift and introduced comment liking, in-line replies, design
+                            system components, and ads in between comments!</li>
+                        <li>Produced a <strong>massive</strong> bump in engagement, revenue, and retention in the comments
+                            experience</li><br>
 
-                    function plusSlides(n) {
-                        showSlides(slideIndex += n);
-                    }
+                        &#128245 <em>User & Story Mute:<br></em>
+                        <li>Added ability to mute/block a specific person across the application from viewing any of your
+                            content or information</li>
+                        <li><strong>Most used user safety feature on Wattpad by far!</strong></li>
+                        <li>Sole engineer on project from concept to release</li><br>
 
-                    function currentSlide(n) {
-                        showSlides(slideIndex = n);
-                    }
-
-                    function showSlides(n) {
-                        var i;
-                        var slides = document.getElementsByClassName("mySlides");
-                        var captionText = document.getElementById("caption");
-
-                        if (n > slides.length) { slideIndex = 1 }
-                        if (n < 1) { slideIndex = slides.length }
-
-                        for (i = 0; i < slides.length; i++) {
-                            slides[i].style.display = "none";
-                        }
-
-                        slides[slideIndex - 1].style.display = "block";
-                        if (slides[slideIndex - 1].querySelector('video').getAttribute('alt') === 'After') {
-                            captionText.innerHTML = "New Comments Experience &#128525";
-                        } else if (slides[slideIndex - 1].querySelector('video').getAttribute('alt') === 'Before') {
-                            captionText.innerHTML = "Old Comments Experience &#129296";
-                        } else if (slides[slideIndex - 1].querySelector('video').getAttribute('alt') === 'Mute') {
-                            captionText.innerHTML = "Mute User Flow &#128245";
-                        } else if (slides[slideIndex - 1].querySelector('video').getAttribute('alt') === 'Login') {
-                            captionText.innerHTML = "Password Strengthening &#10035";
-                        }
-                    }
-                </script>
-            </div>
-
-
-
-        <div class="row project-card" onclick="window.open('https://apps.apple.com/ca/app/weathercan/id1334221563', '_blank')" style="cursor: pointer;">
-            <div class="col-md-6 col-lg-5 project-card__img">
-                <video autoplay muted loop class="" src="images/Projects/WeatherCan/weatherCan.mp4"
-                            style="margin:auto;position:relative;width:90%;height:90%;padding-left: 40px;" alt="Login">
-            </div>
-            <div class="col-md-6 col-lg-7 project-card__info">
-                <h3 class="project-card__title">WeatherCan 	&#9925</h3>
-                <p class="project-card__description">
-                    WeatherCan is the official mobile weather application for Environment Canada where I was one of
-                    2 developers responsible for creating the iOS version from concept to completion within 12 months.
-
-                    </br></br><br><strong>#2 Weather Application in Canada with over 5 million monthly active users!</strong>
-
-                    <h6>Notable Features</h6>
-                    <li>Real-time Weather Alert Notifcations, GPS based and for Saved Locations</li>
-                    <li>Sole engineer responsible for "Now" & "Hourly" pages, and also the TodayExtension Widget</li>
-                    <li>Implemented localization and unit translations</li>
-                    <li>Used CoreData to store persistant data</li>
-
-                </p>
-                <p class="project-card__stack">Stack:</p>
-                <ul class="tags">
-                    <li>Swift</li>
-                    <li>Firebase</li>
-                    <li>CoreData</li>
-                    <li>CoreGraphics</li>
-                    <li>UIKit</li>
-                </ul>
-                <a href="https://apps.apple.com/ca/app/weathercan/id1334221563" class="project-card__link">App
-                    Store: WeatherCan</a>
-            </div>
-        </div>
-
-        <div class="row project-card" onclick="window.open('https://mananpatel.info/countries-quiz/', '_blank')" style="cursor: pointer;">
-            <div class="col-md-6 col-lg-7 project-card__info">
-                <h3 class="project-card__title">Countries Quiz 🌍</h3>
-                <p class="project-card__description">
-                    Inspired by my favorite JetPunk game, I created this iOS app to satisfy my passion for geography on the go. This interactive quiz helps your learn about countries, flags, and capitals of the world.
-                    </br>
-                    <h6>Key Features</h6>
-                    <li>Multiple game modes, country quiz, capital quiz, and flag quiz</li>
-                    <li>Interactive World Map with custom GeoJSON polygons</li>
-                    <li>Clean animations, user experience, and sounds that I also generated!</li>
-                    <li>FREE, No Ads, No In-App Purchases</li>
+                        &#10035 <em>Signup Strengthening:<br></em>
+                        <li>Implemented new set of verification rules for new signups (email, username, password, & birthday) and account info changes
+                        </li>
+                        <li>Super short timeline saved company from fines from regulatory body</li><br>
+                    </p>
+                    <p class="project-card__stack">Stack:</p>
+                    <ul class="tags">
+                        <li>Swift</li>
+                        <li>SwiftUI</li>
+                        <li>Objective-C</li>
                     </ul>
-                </p>
-                </br>
-                <p class="project-card__stack">Stack:</p>
-                <ul class="tags">
-                    <li>Swift</li>
-                    <li>SwiftUI</li>
-                    <li>MapKit</li>
-                    <li>AVFoundation</li>
-                    <li>Firebase</li>
-                </ul>
-                <a href="https://apps.apple.com/us/app/countriesquiz/id6698896459?platform=iphone" class="project-card__link">App
-                    Page: CountriesQuiz</a>
-            </div>
-            <div class="col-md-6 col-lg-5 project-card__img">
-                <div style="border: 10px solid #ffffff; border-radius: 20px; overflow: hidden; width: 270px; height: 540px; margin: 0 auto; display: flex; justify-content: center; align-items: center;">
-                    <img class="" src="images/Projects/CountriesQuiz/countriesQuiz.png" alt="project-img" style="width: 90%; height: 90%; object-fit: contain;">
+                    <a href="https://apps.apple.com/us/app/wattpad-read-write-stories/id306310789" class="project-card__link">App Store: Wattpad</a>
                 </div>
             </div>
-        </div>
 
-        <div class="row project-card" onclick="window.open('https://github.com/MananPatel95/CloneOfUber', '_blank')" style="cursor: pointer;">
-            <div class="col-md-6 col-lg-5 project-card__img">
-                <img class="" src="images/Projects/Clones/UberClone.jpg" alt="project-img">
+            <!-- Countries Quiz -->
+            <div class="row project-card" onclick="window.open('https://mananpatel.info/countries-quiz/', '_blank')" style="cursor: pointer;">
+                <div class="col-md-6 col-lg-7 project-card__info">
+                    <h3 class="project-card__title">Countries Quiz 🌍</h3>
+                    <p class="project-card__description">
+                        Inspired by my favorite JetPunk game, I created this iOS app to satisfy my passion for geography on the go. This interactive quiz helps your learn about countries, flags, and capitals of the world.
+                        </br>
+                        <h6>Key Features</h6>
+                        <li>Multiple game modes, country quiz, capital quiz, and flag quiz</li>
+                        <li>Interactive World Map with custom GeoJSON polygons</li>
+                        <li>Clean animations, user experience, and sounds that I also generated!</li>
+                        <li>FREE, No Ads, No In-App Purchases</li>
+                        </ul>
+                    </p>
+                    </br>
+                    <p class="project-card__stack">Stack:</p>
+                    <ul class="tags">
+                        <li>Swift</li>
+                        <li>SwiftUI</li>
+                        <li>MapKit</li>
+                        <li>AVFoundation</li>
+                        <li>Firebase</li>
+                    </ul>
+                    <a href="https://apps.apple.com/us/app/countriesquiz/id6698896459?platform=iphone" class="project-card__link">App
+                        Store: CountriesQuiz</a>
+                </div>
+                <div class="col-md-6 col-lg-5 project-card__img">
+                    <video autoplay muted loop class="" src="images/Projects/CountriesQuiz/countriesQuiz.mov"
+                        style="margin:auto;position:relative;width:90%;height:90%;padding-left: 40px;" alt="CountriesQuiz">
+                </div>
             </div>
-            <div class="col-md-6 col-lg-7 project-card__info">
-                <h3 class="project-card__title">UberClone &#128661</h3>
-                <p class="project-card__description">
-                    Created a clone of the Uber app using Swift to learn more about Firebase and MapKit in
-                    particular.
-                    </br></br>
-                    This project started as an experiment using Firebase. The idea was simple: create an uber clone
-                    with authentication and separate functionality for a passenger and a driver.
-                    For the maps and places I decided to go with Apple's MapKit as I had already tried Google maps
-                    and places in my other projects.
-                </p>
-                <p class="project-card__stack">Stack:</p>
-                <ul class="tags">
-                    <li>Swift</li>
-                    <li>MapKit</li>
-                    <li>UIKit</li>
-                    <li>Firebase</li>
-                </ul>
-                <a href="https://github.com/MananPatel95/CloneOfUber" class="project-card__link">Github:
-                    UberClone</a>
-            </div>
-        </div>
 
-        <div class="row project-card" onclick="window.open('https://github.com/MananPatel95/SwiftYoutube', '_blank')" style="cursor: pointer;">
-            <div class="col-md-6 col-lg-7 project-card__info">
-                <h3 class="project-card__title">SwiftYoutube</h3>
-                <p class="project-card__description">
-                    Created a mock version of the Youtube iOS application to play around with UIKit, AVKit, and a
-                    consumer facing real-time REST API.
+            <!-- UberClone -->
+            <div class="row project-card" onclick="window.open('https://github.com/MananPatel95/CloneOfUber', '_blank')" style="cursor: pointer;">
+                <div class="col-md-6 col-lg-5 project-card__img">
+                    <img class="" src="images/Projects/Clones/UberClone.jpg" alt="project-img">
+                </div>
+                <div class="col-md-6 col-lg-7 project-card__info">
+                    <h3 class="project-card__title">UberClone &#128661</h3>
+                    <p class="project-card__description">
+                        Created a clone of the Uber app using Swift to learn more about Firebase and MapKit in
+                        particular.
+                        </br></br>
+                        This project started as an experiment using Firebase. The idea was simple: create an uber clone
+                        with authentication and separate functionality for a passenger and a driver.
+                        For the maps and places I decided to go with Apple's MapKit as I had already tried Google maps
+                        and places in my other projects.
+                    </p>
+                    <p class="project-card__stack">Stack:</p>
+                    <ul class="tags">
+                        <li>Swift</li>
+                        <li>MapKit</li>
+                        <li>UIKit</li>
+                        <li>Firebase</li>
+                    </ul>
+                    <a href="https://github.com/MananPatel95/CloneOfUber" class="project-card__link">Github:
+                        UberClone</a>
+                </div>
+            </div>
 
-                    </br></br> This project helped me learn more about UICollectionViews, TabBarControllers, AVKit
-                    components like UISlider and AVPlayer, and attaching multiple JSON feeds from a real-time public
-                    API into a project.
-                </p>
-                <p class="project-card__stack">Stack:</p>
-                <ul class="tags">
-                    <li>Swift</li>
-                    <li>UIKit</li>
-                    <li>AVKit</li>
-                    <li>REST API</li>
-                </ul>
-                <a href="https://github.com/MananPatel95/SwiftYoutube" class="project-card__link">Github:
-                    SwiftYoutube</a>
-            </div>
-            <div class="col-md-6 col-lg-5 project-card__img">
-                <img class="" src="images/Projects/SwiftYoutube/swiftyoutube.png" alt="project-img">
-            </div>
-        </div>
+            <!-- SwiftYoutube -->
+            <div class="row project-card" onclick="window.open('https://github.com/MananPatel95/SwiftYoutube', '_blank')" style="cursor: pointer;">
+                <div class="col-md-6 col-lg-7 project-card__info">
+                    <h3 class="project-card__title">SwiftYoutube</h3>
+                    <p class="project-card__description">
+                        Created a mock version of the Youtube iOS application to play around with UIKit, AVKit, and a
+                        consumer facing real-time REST API.
 
-        <div class="row project-card" onclick="window.open('https://github.com/MananPatel95/UiTube', '_blank')" style="cursor: pointer;">
-            <div class="col-md-6 col-lg-5 project-card__img">
-                <img class="" src="images/Projects/UiTube/uitube.PNG" alt="project-img">
+                        </br></br> This project helped me learn more about UICollectionViews, TabBarControllers, AVKit
+                        components like UISlider and AVPlayer, and attaching multiple JSON feeds from a real-time public
+                        API into a project.
+                    </p>
+                    <p class="project-card__stack">Stack:</p>
+                    <ul class="tags">
+                        <li>Swift</li>
+                        <li>UIKit</li>
+                        <li>AVKit</li>
+                        <li>REST API</li>
+                    </ul>
+                    <a href="https://github.com/MananPatel95/SwiftYoutube" class="project-card__link">Github:
+                        SwiftYoutube</a>
+                </div>
+                <div class="col-md-6 col-lg-5 project-card__img">
+                    <img class="" src="images/Projects/SwiftYoutube/swiftyoutube.png" alt="project-img">
+                </div>
             </div>
-            <div class="col-md-6 col-lg-7 project-card__info">
-                <h3 class="project-card__title">UITube - Youtube Chrome Extension</h3>
-                <p class="project-card__description">
-                    A chrome extension that changes the Youtube UI so that users can view the video, read comments,
-                    get the video info and related videos all in 1 page. There is also an auto night mode that
-                    appears
-                    while mouse is on the video and additional settings such as annotations, playback speed, and
-                    captions
-                    available from the menu.
-                </p>
-                <p class="project-card__stack">Stack:</p>
-                <ul class="tags">
-                    <li>JavaScript</li>
-                    <li>CSS</li>
-                    <li>HTML</li>
-                </ul>
-                <a href="https://github.com/MananPatel95/UiTube" class="project-card__link">Github: UITube</a>
+
+            <!-- UITube -->
+            <div class="row project-card" onclick="window.open('https://github.com/MananPatel95/UiTube', '_blank')" style="cursor: pointer;">
+                <div class="col-md-6 col-lg-5 project-card__img">
+                    <img class="" src="images/Projects/UiTube/uitube.PNG" alt="project-img">
+                </div>
+                <div class="col-md-6 col-lg-7 project-card__info">
+                    <h3 class="project-card__title">UITube - Youtube Chrome Extension</h3>
+                    <p class="project-card__description">
+                        A chrome extension that changes the Youtube UI so that users can view the video, read comments,
+                        get the video info and related videos all in 1 page. There is also an auto night mode that
+                        appears
+                        while mouse is on the video and additional settings such as annotations, playback speed, and
+                        captions
+                        available from the menu.
+                    </p>
+                    <p class="project-card__stack">Stack:</p>
+                    <ul class="tags">
+                        <li>JavaScript</li>
+                        <li>CSS</li>
+                        <li>HTML</li>
+                    </ul>
+                    <a href="https://github.com/MananPatel95/UiTube" class="project-card__link">Github: UITube</a>
+                </div>
             </div>
-        </div>
+            </div>
         </div>
     </section>
     <!--Portfolio-->
@@ -541,6 +504,43 @@
     <script src="js/portfolio-filter.js"></script>
     <script src="js/mobile-menu.js"></script>
     <script src="js/site-btn.js"></script>
+
+    <script>
+        var slideIndex = 1;
+        showSlides(slideIndex);
+
+        function plusSlides(n) {
+            showSlides(slideIndex += n);
+        }
+
+        function currentSlide(n) {
+            showSlides(slideIndex = n);
+        }
+
+        function showSlides(n) {
+            var i;
+            var slides = document.getElementsByClassName("mySlides");
+            var captionText = document.getElementById("caption");
+
+            if (n > slides.length) { slideIndex = 1 }
+            if (n < 1) { slideIndex = slides.length }
+
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+
+            slides[slideIndex - 1].style.display = "block";
+            if (slides[slideIndex - 1].querySelector('video').getAttribute('alt') === 'After') {
+                captionText.innerHTML = "New Comments Experience &#128525";
+            } else if (slides[slideIndex - 1].querySelector('video').getAttribute('alt') === 'Before') {
+                captionText.innerHTML = "Old Comments Experience &#129296";
+            } else if (slides[slideIndex - 1].querySelector('video').getAttribute('alt') === 'Mute') {
+                captionText.innerHTML = "Mute User Flow &#128245";
+            } else if (slides[slideIndex - 1].querySelector('video').getAttribute('alt') === 'Login') {
+                captionText.innerHTML = "Password Strengthening &#10035";
+            }
+        }
+    </script>
 
 </body>
 
