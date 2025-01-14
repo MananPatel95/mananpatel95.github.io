@@ -330,11 +330,11 @@ input[type="button"] {
 }
 .tags li {
   display: inline-block;
-  font-size: 15px;
+  font-size: 14px;
   line-height: 20px;
   background-color: #fff;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.14);
-  padding: 6px 12px;
+  padding: 5px 10px;
   margin-right: 10px;
   border-radius: 3px;
 }
@@ -361,11 +361,11 @@ input[type="button"] {
 }
 
 .project-card .project-card__info {
-  padding: 30px 40px 20px 30px;
+  padding: 50px 50px 0px 30px;
 }
 
 .project-card .project-card__title {
-  font-size: 22px;
+  font-size: 18px;
   line-height: 30px;
   font-family: Roboto Mono, monospace;
   margin-bottom: 15px;
@@ -373,29 +373,18 @@ input[type="button"] {
 }
 
 .project-card .project-card__description {
-  font-size: 17px;
-  line-height: 1.6;
-  margin-bottom: 20px;
-}
-
-.project-card .project-card__description h6 {
-  font-size: 19px;
-  margin: 15px 0 10px 0;
-  font-weight: 600;
-}
-
-.project-card .project-card__description li {
-  margin-bottom: 8px;
-  line-height: 1.4;
+  font-size: 16px;
+  line-height: 24px;
+  margin-bottom: 25px;
 }
 
 .project-card .project-card__stack {
   font-family: Roboto Mono, monospace;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 18px;
   font-weight: 500;
   text-transform: uppercase;
-  margin: 15px 0 10px 0;
+  margin-bottom: 15px;
 }
 
 .project-card .project-card__link {
@@ -1181,232 +1170,5 @@ input[type="button"] {
     .menu .menu__wrapper nav {
         font-size: 12px;
     }
-  }
-  
-  /* Specific styling for GoalGetter card */
-  .project-card:first-child .project-card__info {
-    padding: 60px 40px 0 30px;  /* More top padding */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    min-height: 650px;  /* Increased height */
-  }
-  
-  /* Adjust the last element's margin in GoalGetter card to remove extra space */
-  .project-card:first-child .project-card__info .project-card__link {
-    margin-bottom: 0;
-  }
-  
-  /* Ensure the stack section doesn't have too much space below */
-  .project-card:first-child .project-card__stack {
-    margin-bottom: 10px;
-  }
-  
-  /* Adjust spacing after the description */
-  .project-card:first-child .project-card__description {
-    margin-bottom: 15px;
-  }
-  
-  /* Specific styling for Countries Quiz card (fourth card) */
-  .project-card:nth-child(4) .project-card__info {
-    padding: 60px 40px 0 30px;  /* More top padding */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    min-height: 650px;  /* Increased height */
-  }
-  
-  /* Adjust the last element's margin in Countries Quiz card */
-  .project-card:nth-child(4) .project-card__info .project-card__link {
-    margin-bottom: 0;
-  }
-  
-  /* Ensure the stack section doesn't have too much space below */
-  .project-card:nth-child(4) .project-card__stack {
-    margin-bottom: 10px;
-  }
-  
-  /* Adjust spacing after the description */
-  .project-card:nth-child(4) .project-card__description {
-    margin-bottom: 15px;
-  }
-  
-  /* Larger text and spacing for GoalGetter and Countries Quiz */
-  .project-card:first-child .project-card__description,
-  .project-card:nth-child(4) .project-card__description {
-    font-size: 18px;  /* Bigger font */
-    line-height: 1.7;  /* More line height */
-    margin-bottom: 25px;  /* More space after description */
-  }
-  
-  /* Larger headers */
-  .project-card:first-child .project-card__description h6,
-  .project-card:nth-child(4) .project-card__description h6 {
-    font-size: 21px;  /* Bigger section headers */
-    margin: 20px 0 15px 0;  /* More spacing around headers */
-  }
-  
-  /* More spacing between list items */
-  .project-card:first-child .project-card__description li,
-  .project-card:nth-child(4) .project-card__description li {
-    margin-bottom: 12px;  /* More space between items */
-    line-height: 1.5;
-  }
-  
-  /* Larger titles */
-  .project-card:first-child .project-card__title,
-  .project-card:nth-child(4) .project-card__title {
-    font-size: 24px;  /* Bigger title */
-    margin-bottom: 20px;  /* More space after title */
-  }
-  
-  /* Larger stack section */
-  .project-card:first-child .project-card__stack,
-  .project-card:nth-child(4) .project-card__stack {
-    font-size: 15px;
-    margin: 25px 0 15px 0;  /* More space above stack section */
-  }
-  
-  /* Larger tags */
-  .project-card:first-child .tags li,
-  .project-card:nth-child(4) .tags li {
-    font-size: 16px;
-    padding: 7px 14px;
-  }
-  
-  /* Base styles for featured project cards (GoalGetter and Countries Quiz) */
-  .portfolio-cards .project-card.featured-card .project-card__info,
-  .portfolio-cards .project-card:first-child .project-card__info,
-  .portfolio-cards .project-card:nth-child(4) .project-card__info {
-    padding: 60px 40px 0 30px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    min-height: 650px;
-    height: 100%;
-    box-sizing: border-box;
-  }
-  
-  /* Text styles for featured cards */
-  .portfolio-cards .project-card.featured-card .project-card__description,
-  .portfolio-cards .project-card:first-child .project-card__description,
-  .portfolio-cards .project-card:nth-child(4) .project-card__description {
-    font-size: 18px;
-    line-height: 1.7;
-    margin-bottom: 25px;
-  }
-  
-  /* Headers in featured cards */
-  .portfolio-cards .project-card.featured-card .project-card__description h6,
-  .portfolio-cards .project-card:first-child .project-card__description h6,
-  .portfolio-cards .project-card:nth-child(4) .project-card__description h6 {
-    font-size: 21px;
-    margin: 20px 0 15px 0;
-    font-weight: 600;
-    color: #333;
-  }
-  
-  /* List items in featured cards */
-  .portfolio-cards .project-card.featured-card .project-card__description li,
-  .portfolio-cards .project-card:first-child .project-card__description li,
-  .portfolio-cards .project-card:nth-child(4) .project-card__description li {
-    margin-bottom: 12px;
-    line-height: 1.5;
-    position: relative;
-    padding-left: 5px;
-  }
-  
-  /* Card titles */
-  .portfolio-cards .project-card.featured-card .project-card__title,
-  .portfolio-cards .project-card:first-child .project-card__title,
-  .portfolio-cards .project-card:nth-child(4) .project-card__title {
-    font-size: 24px;
-    margin-bottom: 20px;
-    font-weight: 600;
-    color: #333;
-  }
-  
-  /* Stack section */
-  .portfolio-cards .project-card.featured-card .project-card__stack,
-  .portfolio-cards .project-card:first-child .project-card__stack,
-  .portfolio-cards .project-card:nth-child(4) .project-card__stack {
-    font-size: 15px;
-    margin: 25px 0 15px 0;
-    font-weight: 500;
-  }
-  
-  /* Tags in featured cards */
-  .portfolio-cards .project-card.featured-card .tags li,
-  .portfolio-cards .project-card:first-child .tags li,
-  .portfolio-cards .project-card:nth-child(4) .tags li {
-    font-size: 16px;
-    padding: 7px 14px;
-    margin-bottom: 8px;
-    display: inline-block;
-  }
-  
-  /* Responsive adjustments */
-  @media screen and (max-width: 991px) {
-    .portfolio-cards .project-card.featured-card .project-card__info,
-    .portfolio-cards .project-card:first-child .project-card__info,
-    .portfolio-cards .project-card:nth-child(4) .project-card__info {
-        min-height: auto;
-        padding: 40px 30px;
-    }
-    
-    .portfolio-cards .project-card.featured-card .project-card__description,
-    .portfolio-cards .project-card:first-child .project-card__description,
-    .portfolio-cards .project-card:nth-child(4) .project-card__description {
-        font-size: 16px;
-    }
-    
-    .portfolio-cards .project-card.featured-card .project-card__title,
-    .portfolio-cards .project-card:first-child .project-card__title,
-    .portfolio-cards .project-card:nth-child(4) .project-card__title {
-        font-size: 20px;
-    }
-  }
-  
-  /* Ensure proper spacing at the bottom of cards */
-  .portfolio-cards .project-card.featured-card .project-card__link,
-  .portfolio-cards .project-card:first-child .project-card__link,
-  .portfolio-cards .project-card:nth-child(4) .project-card__link {
-    margin-top: auto;
-    padding-bottom: 20px;
-  }
-  
-  /* Base styles for featured project cards (GoalGetter and Countries Quiz) */
-  .project-card:first-child .project-card__info,  /* GoalGetter */
-  .project-card:nth-child(4) .project-card__info { /* Countries Quiz */
-    padding: 60px 40px 60px 30px;  /* Added bottom padding to match top */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;  /* Centers content vertically */
-    min-height: 600px;  /* Match the height of the image section */
-  }
-  
-  /* Adjust spacing between elements */
-  .project-card:first-child .project-card__description,
-  .project-card:nth-child(4) .project-card__description {
-    margin-bottom: 20px;
-  }
-  
-  /* Stack section positioning */
-  .project-card:first-child .project-card__stack,
-  .project-card:nth-child(4) .project-card__stack {
-    margin: 20px 0 10px 0;
-  }
-  
-  /* Link positioning */
-  .project-card:first-child .project-card__link,
-  .project-card:nth-child(4) .project-card__link {
-    margin-top: 10px;
-    margin-bottom: 0;
-  }
-  
-  /* Container for the content to enable proper centering */
-  .project-card:first-child .project-card__info > *,
-  .project-card:nth-child(4) .project-card__info > * {
-    flex-shrink: 0;  /* Prevents content from shrinking */
   }
   
