@@ -1378,51 +1378,35 @@ input[type="button"] {
   /* Base styles for featured project cards (GoalGetter and Countries Quiz) */
   .project-card:first-child .project-card__info,  /* GoalGetter */
   .project-card:nth-child(4) .project-card__info { /* Countries Quiz */
-    padding: 60px 40px 0 30px;
+    padding: 60px 40px 60px 30px;  /* Added bottom padding to match top */
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    min-height: 650px;
+    justify-content: center;  /* Centers content vertically */
+    min-height: 600px;  /* Match the height of the image section */
   }
   
-  /* Text content for both cards */
+  /* Adjust spacing between elements */
   .project-card:first-child .project-card__description,
   .project-card:nth-child(4) .project-card__description {
-    font-size: 18px;
-    line-height: 1.7;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
   }
   
-  /* Headers in both cards */
-  .project-card:first-child .project-card__description h6,
-  .project-card:nth-child(4) .project-card__description h6 {
-    font-size: 21px;
-    margin: 20px 0 15px 0;
-    font-weight: 600;
+  /* Stack section positioning */
+  .project-card:first-child .project-card__stack,
+  .project-card:nth-child(4) .project-card__stack {
+    margin: 20px 0 10px 0;
   }
   
-  /* List items in both cards */
-  .project-card:first-child .project-card__description li,
-  .project-card:nth-child(4) .project-card__description li {
-    margin-bottom: 12px;
-    line-height: 1.5;
-  }
-  
-  /* Remove extra space at bottom */
-  .project-card:first-child .project-card__info .project-card__link,
-  .project-card:nth-child(4) .project-card__info .project-card__link {
+  /* Link positioning */
+  .project-card:first-child .project-card__link,
+  .project-card:nth-child(4) .project-card__link {
+    margin-top: 10px;
     margin-bottom: 0;
   }
   
-  /* Stack section spacing */
-  .project-card:first-child .project-card__stack,
-  .project-card:nth-child(4) .project-card__stack {
-    margin: 15px 0 10px 0;
-  }
-  
-  /* Description spacing */
-  .project-card:first-child .project-card__description,
-  .project-card:nth-child(4) .project-card__description {
-    margin-bottom: 15px;
+  /* Container for the content to enable proper centering */
+  .project-card:first-child .project-card__info > *,
+  .project-card:nth-child(4) .project-card__info > * {
+    flex-shrink: 0;  /* Prevents content from shrinking */
   }
   
