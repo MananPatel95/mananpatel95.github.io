@@ -580,6 +580,11 @@
     <script>
         var slideIndex2 = 1;
         showSlides2(slideIndex2);
+        
+        // Auto advance slides
+        setInterval(function() {
+            plusSlides2(1);
+        }, 1000); // 1000ms = 1 second
 
         function plusSlides2(n) {
             showSlides2(slideIndex2 += n);
