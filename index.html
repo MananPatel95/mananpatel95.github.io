@@ -150,8 +150,42 @@
                     <a href="https://apps.apple.com/ca/app/goalgetter-habit-tracker/id6737703423" class="project-card__link">App Store: Goal Getter</a>
                 </div>
                 <div class="col-md-6 col-lg-5 project-card__img">
-                    <video autoplay muted loop class="" src="images/Projects/GoalGetter/goalGetter.mp4" alt="GoalGetter">
-                    </video>
+                    <!-- Full-width images with number text -->
+                    <div class="mySlides2">
+                        <div class="numbertext">1 / 4</div>
+                        <img src="images/Projects/GoalGetter/3d - 1.png" alt="GoalGetter Home">
+                        <div class="caption-container">
+                            <p>Home Screen with Widgets ⭐️</p>
+                        </div>
+                    </div>
+
+                    <div class="mySlides2">
+                        <div class="numbertext">2 / 4</div>
+                        <img src="images/Projects/GoalGetter/3d - 2.png" alt="GoalGetter Stats">
+                        <div class="caption-container">
+                            <p>Progress Insights 📊</p>
+                        </div>
+                    </div>
+
+                    <div class="mySlides2">
+                        <div class="numbertext">3 / 4</div>
+                        <img src="images/Projects/GoalGetter/3d - 3.png" alt="GoalGetter Calendar">
+                        <div class="caption-container">
+                            <p>Calendar View 📅</p>
+                        </div>
+                    </div>
+
+                    <div class="mySlides2">
+                        <div class="numbertext">4 / 4</div>
+                        <img src="images/Projects/GoalGetter/3d - 4.png" alt="GoalGetter Settings">
+                        <div class="caption-container">
+                            <p>Goal Settings ⚙️</p>
+                        </div>
+                    </div>
+
+                    <!-- Next and previous buttons -->
+                    <a class="prev" onclick="event.stopPropagation(); plusSlides2(-1)">&#10094;</a>
+                    <a class="next" onclick="event.stopPropagation(); plusSlides2(1)">&#10095;</a>
                 </div>
             </div>
 
@@ -540,6 +574,33 @@
             }
 
             slides[slideIndex - 1].style.display = "block";
+        }
+    </script>
+
+    <script>
+        var slideIndex2 = 1;
+        showSlides2(slideIndex2);
+
+        function plusSlides2(n) {
+            showSlides2(slideIndex2 += n);
+        }
+
+        function currentSlide2(n) {
+            showSlides2(slideIndex2 = n);
+        }
+
+        function showSlides2(n) {
+            var i;
+            var slides = document.getElementsByClassName("mySlides2");
+
+            if (n > slides.length) { slideIndex2 = 1 }
+            if (n < 1) { slideIndex2 = slides.length }
+
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+
+            slides[slideIndex2 - 1].style.display = "block";
         }
     </script>
 
