@@ -121,6 +121,54 @@
             </div>
 
         <div class="portfolio-cards">
+            <!-- RentPlay (image | text) -->
+            <div class="row project-card" onclick="window.open('https://rentplay.ca/', '_blank')" style="cursor: pointer;">
+                <div class="col-md-6 col-lg-5 project-card__img">
+                    <!-- Full-width images with number text -->
+                    <div class="mySlides3">
+                        <div class="numbertext">1 / 2</div>
+                        <img src="images/RentPlay/rentplay-app.png" alt="RentPlay App">
+                        <div class="caption-container">
+                            <p>RentPlay App 📱</p>
+                        </div>
+                    </div>
+
+                    <div class="mySlides3">
+                        <div class="numbertext">2 / 2</div>
+                        <img src="images/RentPlay/rentplay-ig.png" alt="RentPlay Social">
+                        <div class="caption-container">
+                            <p>RentPlay Social 🎯</p>
+                        </div>
+                    </div>
+
+                    <!-- Next and previous buttons -->
+                    <a class="prev" onclick="event.stopPropagation(); plusSlides3(-1)">&#10094;</a>
+                    <a class="next" onclick="event.stopPropagation(); plusSlides3(1)">&#10095;</a>
+                </div>
+                <div class="col-md-6 col-lg-7 project-card__info">
+                    <h3 class="project-card__title">RentPlay 💰</h3>
+                    <p class="project-card__description">
+                        Co-founded RentPlay to revolutionize the rental rewards space in Canada. Our platform enables renters to earn rewards and cashback just by paying their rent, while helping local businesses acquire new customers.
+                        
+                        <h6>Key Features</h6>
+                        <li>Seamless rent payment processing via Interac e-Transfer and Pre-Authorized Debit</li>
+                        <li>Up to 7% instant savings at partner stores</li>
+                        <li>2% cashback in coins on purchases</li>
+                        <li>Coin redemption system for rent payments or gift cards</li>
+                        <li>Local business partnership platform</li>
+                    </p>
+                    <p class="project-card__stack">Stack:</p>
+                    <ul class="tags">
+                        <li>Swift</li>
+                        <li>SwiftUI</li>
+                        <li>Node.js</li>
+                        <li>React</li>
+                        <li>AWS</li>
+                    </ul>
+                    <a href="https://rentplay.ca/" class="project-card__link">RentPlay Website</a>
+                </div>
+            </div>
+
             <!-- GoalGetter (text | video) -->
             <div class="row project-card" onclick="window.open('https://apps.apple.com/ca/app/goalgetter-habit-tracker/id6737703423', '_blank')" style="cursor: pointer;">
                 <div class="col-md-6 col-lg-7 project-card__info">
@@ -418,6 +466,17 @@
                 <h2 id="resume_header" class="section__title" style="text-indent: -9999px;">Resume_</h2>
                 <h3 class="resume-list_title">Employment</h3>
 
+                <!-- RentPlay -->
+                <div class="resume-list__block">
+                    <p class="resume-list__block-title">RentPlay</p>
+                    <p class="resume-list__block-date">October 2024 - Present</p>
+                    <p><strong>Co-Founder</strong></p>
+                    <p> - Revolutionizing the rental debit rewards space Canada wide!</p>
+                    <p> - Building a platform that allows renters to earn rewards and cashback on their rent payments</p>
+                    <p> - Creating partnerships with local businesses to provide exclusive discounts and offers to renters</p>
+                    <p> - Leading product development and technical architecture of the platform</p>
+                </div>
+
                 <!-- ECCC -->
                 <div class="resume-list__block">
                     <p class="resume-list__block-title">Environment and Climate Change Canada</p>
@@ -624,6 +683,56 @@
             }
 
             slides[slideIndex2 - 1].style.display = "block";
+        }
+    </script>
+
+    <script>
+        var slideIndex3 = 1;
+        var slideInterval3;
+        showSlides3(slideIndex3);
+        
+        // Start auto-advance
+        startSlideshow3();
+        
+        function startSlideshow3() {
+            // Clear any existing interval first
+            clearInterval(slideInterval3);
+            // Start new interval
+            slideInterval3 = setInterval(function() {
+                plusSlides3(1);
+            }, 3000); // 3000ms = 3 seconds
+        }
+
+        function pauseSlideshow3() {
+            clearInterval(slideInterval3);
+            // Restart slideshow after 5 seconds of inactivity
+            setTimeout(startSlideshow3, 5000);
+        }
+
+        function plusSlides3(n) {
+            showSlides3(slideIndex3 += n);
+            // Pause slideshow when user interacts
+            pauseSlideshow3();
+        }
+
+        function currentSlide3(n) {
+            showSlides3(slideIndex3 = n);
+            // Pause slideshow when user interacts
+            pauseSlideshow3();
+        }
+
+        function showSlides3(n) {
+            var i;
+            var slides = document.getElementsByClassName("mySlides3");
+
+            if (n > slides.length) { slideIndex3 = 1 }
+            if (n < 1) { slideIndex3 = slides.length }
+
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+
+            slides[slideIndex3 - 1].style.display = "block";
         }
     </script>
 
