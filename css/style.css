@@ -362,9 +362,6 @@ input[type="button"] {
 
 .project-card .project-card__info {
   padding: 50px 50px 0px 30px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
 }
 
 .project-card .project-card__title {
@@ -1183,6 +1180,24 @@ input[type="button"] {
     color: #555;
     background: rgba(255, 255, 255, 0.8);
     border-radius: 4px;
+  }
+  
+  /* GoalGetter specific - align text with top of phone image */
+  .goalgetter-card .project-card__info {
+    padding-top: 100px; /* Push text down to align with phone top */
+  }
+  
+  /* Fix project card links layout */
+  .project-card__links {
+    display: flex;
+    gap: 20px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .project-card__links .project-card__link {
+    float: none;
+    margin: 0;
   }
   .menu .menu__wrapper nav {
     overflow-x: auto;
