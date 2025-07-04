@@ -50,49 +50,49 @@
     </script>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <!--Main menu-->
+    <div class="menu" role="navigation" aria-label="Main navigation">
         <div class="container">
-            <a class="navbar-brand" href="../index.html">Manan Patel</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="../index.html">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="../index.html#about">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="../index.html#portfolio">Portfolio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="index.html">Blog</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="../index.html#contact">Contact</a>
-                    </li>
-                </ul>
+            <div class="row">
+                <div class="menu__wrapper col-md-12">
+                    <nav class="" role="navigation">
+                        <ul role="menubar" aria-label="Main menu">
+                            <li role="none"><a href="../index.html#about" role="menuitem" aria-label="About Manan Patel">About Me</a></li>
+                            <li role="none"><a href="../index.html#portfolio" role="menuitem" aria-label="Portfolio and Work">Work</a></li>
+                            <li role="none"><a href="index.html" role="menuitem" aria-label="Technical Blog and iOS Development Insights">Blog</a></li>
+                            <li role="none"><a href="../index.html#resume" role="menuitem" aria-label="Resume and Experience">Resume</a></li>
+                        </ul>
+                    </nav>
+                </div>
             </div>
         </div>
-    </nav>
+    </div>
+    <!--Main menu-->
 
-    <main class="container mt-5 pt-5">
-        <div class="row">
-            <div class="col-lg-8 mx-auto">
-                <header class="text-center mb-5">
-                    <h1 class="display-4 fw-bold mb-3">iOS Development Blog</h1>
-                    <p class="lead text-muted">Technical insights, best practices, and deep dives into iOS development</p>
-                    <div class="d-flex justify-content-center gap-3 mb-4">
-                        <a href="https://github.com/MananPatel95/iOS-Notes" class="btn btn-outline-primary" target="_blank" rel="noopener">
+    <!--Header-->
+    <header class="main-header" style="" role="banner" aria-label="iOS Development Blog">
+        <div class="container">
+            <div class="row personal-profile">
+                <div class="col-md-12 text-center">
+                    <h1 class="personal-profile__name" style="color: #fff; font-size: 44px; margin-bottom: 20px;">iOS Development Blog</h1>
+                    <h2 class="personal-profile__work" style="color: #fff; margin-bottom: 30px;">Technical insights, best practices, and deep dives into iOS development</h2>
+                    <div class="personal-profile__contacts mb-4" style="text-align: center;">
+                        <a href="https://github.com/MananPatel95/iOS-Notes" class="site-btn" target="_blank" rel="noopener" style="margin-right: 15px;">
                             <i class="fab fa-github"></i> View Source Code
                         </a>
-                        <a href="../index.html#contact" class="btn btn-primary">
+                        <a href="../index.html#contact" class="site-btn">
                             <i class="fas fa-envelope"></i> Get in Touch
                         </a>
                     </div>
-                </header>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!--Header-->
+
+    <main class="container mt-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
 
                 <div class="row">
                     <!-- Blog Post Cards -->
@@ -273,20 +273,21 @@
         </div>
     </main>
 
-    <footer class="bg-dark text-white mt-5 py-4">
+    <!--Footer-->
+    <footer class="footer section">
         <div class="container">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-12 text-center">
                     <p>&copy; 2024 Manan Patel. All rights reserved.</p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <a href="../index.html#contact" class="text-white me-3">Contact</a>
-                    <a href="https://github.com/MananPatel95" class="text-white me-3" target="_blank" rel="noopener">GitHub</a>
-                    <a href="https://linkedin.com/in/mananpatel95" class="text-white" target="_blank" rel="noopener">LinkedIn</a>
+                    <div class="personal-profile__social">
+                        <a href="https://github.com/MananPatel95" target="_blank" rel="noopener" aria-label="GitHub Profile"><i class="fa fa-github" aria-hidden="true"></i></a>
+                        <a href="https://www.linkedin.com/in/mananpatel95/" target="_blank" rel="noopener" aria-label="LinkedIn Profile"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
+                    </div>
                 </div>
             </div>
         </div>
     </footer>
+    <!--Footer-->
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
