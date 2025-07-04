@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern iOS Networking with Async/Await | Manan Patel</title>
+    <meta name="description" content="Building robust networking layers using Swift's modern async/await pattern and protocol-oriented programming. Production-ready networking examples for iOS apps.">
+    <meta name="keywords" content="iOS networking, async await, URLSession, Swift networking, API integration, HTTP requests">
+    <meta name="author" content="Manan Patel">
+    <link rel="canonical" href="https://mananpatel.info/blog/ios-networking-async-await.html">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">Manan Patel</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html">Blog</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../index.html#contact">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mt-5 pt-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <article>
+                    <header class="mb-5">
+                        <span class="badge bg-dark px-3 py-2">Networking</span>
+                        <h1 class="display-5 fw-bold mb-3">Modern iOS Networking with Async/Await</h1>
+                        <p class="lead">Written on January 16, 2024</p>
+                    </header>
+
+                    <div class="mb-4">
+                        <h2>Modern Networking Architecture</h2>
+                        <p>Building robust networking layers using Swift's modern async/await pattern and protocol-oriented programming. These patterns are used in production iOS applications.</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h2>1. Protocol-Oriented Network Layer</h2>
+                        <pre><code class="language-swift">// Network service protocol
+protocol NetworkServiceProtocol {
+    func request<T: Codable>(_ endpoint: Endpoint) async throws -> T
+    func upload(_ data: Data, to endpoint: Endpoint) async throws -> Data
+    func download(from url: URL) async throws -> Data
+}
+
+// Endpoint definition
+struct Endpoint {
+    let path: String
+    let method: HTTPMethod
+    let headers: [String: String]?
+    let body: Data?
+    
+    enum HTTPMethod: String {
+        case GET, POST, PUT, DELETE, PATCH
+    }
+}
+
+// Network service implementation
+actor NetworkService: NetworkServiceProtocol {
+    private let session: URLSession
+    private let baseURL: URL
+    
+    init(baseURL: URL, session: URLSession = .shared) {
+        self.baseURL = baseURL
+        self.session = session
+    }
+    
+    func request<T: Codable>(_ endpoint: Endpoint) async throws -> T {
+        let url = baseURL.appendingPathComponent(endpoint.path)
+        var request = URLRequest(url: url)
+        request.httpMethod = endpoint.method.rawValue
+        request.httpBody = endpoint.body
+        
+        // Add headers
+        endpoint.headers?.forEach { key, value in
+            request.setValue(value, forHTTPHeaderField: key)
+        }
+        
+        let (data, response) = try await session.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw NetworkError.invalidResponse
+        }
+        
+        guard 200...299 ~= httpResponse.statusCode else {
+            throw NetworkError.httpError(httpResponse.statusCode)
+        }
+        
+        return try JSONDecoder().decode(T.self, from: data)
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="mb-4">
+                        <h2>2. Error Handling</h2>
+                        <pre><code class="language-swift">enum NetworkError: Error, LocalizedError {
+    case invalidURL
+    case invalidResponse
+    case httpError(Int)
+    case decodingError
+    case noData
+    case unauthorized
+    case serverError
+    
+    var errorDescription: String? {
+        switch self {
+        case .invalidURL:
+            return "Invalid URL"
+        case .invalidResponse:
+            return "Invalid response"
+        case .httpError(let code):
+            return "HTTP Error: \(code)"
+        case .decodingError:
+            return "Failed to decode response"
+        case .noData:
+            return "No data received"
+        case .unauthorized:
+            return "Unauthorized access"
+        case .serverError:
+            return "Server error"
+        }
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="mb-4">
+                        <h2>3. Practical Usage Examples</h2>
+                        <pre><code class="language-swift">// API service for user management
+class UserService {
+    private let networkService: NetworkServiceProtocol
+    
+    init(networkService: NetworkServiceProtocol) {
+        self.networkService = networkService
+    }
+    
+    func fetchUser(id: String) async throws -> User {
+        let endpoint = Endpoint(
+            path: "users/\(id)",
+            method: .GET,
+            headers: ["Content-Type": "application/json"],
+            body: nil
+        )
+        
+        return try await networkService.request(endpoint)
+    }
+    
+    func createUser(_ user: CreateUserRequest) async throws -> User {
+        let body = try JSONEncoder().encode(user)
+        let endpoint = Endpoint(
+            path: "users",
+            method: .POST,
+            headers: ["Content-Type": "application/json"],
+            body: body
+        )
+        
+        return try await networkService.request(endpoint)
+    }
+}
+
+// Usage in ViewModel
+@MainActor
+class UserViewModel: ObservableObject {
+    @Published var user: User?
+    @Published var isLoading = false
+    @Published var errorMessage: String?
+    
+    private let userService: UserService
+    
+    init(userService: UserService) {
+        self.userService = userService
+    }
+    
+    func loadUser(id: String) async {
+        isLoading = true
+        errorMessage = nil
+        
+        do {
+            user = try await userService.fetchUser(id: id)
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+        
+        isLoading = false
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="mb-4">
+                        <h2>4. Authentication & Token Management</h2>
+                        <pre><code class="language-swift">actor AuthenticatedNetworkService: NetworkServiceProtocol {
+    private let baseService: NetworkServiceProtocol
+    private var authToken: String?
+    
+    init(baseService: NetworkServiceProtocol) {
+        self.baseService = baseService
+    }
+    
+    func setAuthToken(_ token: String) {
+        self.authToken = token
+    }
+    
+    func request<T: Codable>(_ endpoint: Endpoint) async throws -> T {
+        var authenticatedEndpoint = endpoint
+        
+        // Add auth header if token exists
+        if let token = authToken {
+            var headers = endpoint.headers ?? [:]
+            headers["Authorization"] = "Bearer \(token)"
+            authenticatedEndpoint = Endpoint(
+                path: endpoint.path,
+                method: endpoint.method,
+                headers: headers,
+                body: endpoint.body
+            )
+        }
+        
+        do {
+            return try await baseService.request(authenticatedEndpoint)
+        } catch NetworkError.httpError(401) {
+            // Token expired, refresh and retry
+            try await refreshToken()
+            return try await baseService.request(authenticatedEndpoint)
+        }
+    }
+    
+    private func refreshToken() async throws {
+        // Implement token refresh logic
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="mb-4">
+                        <h2>5. Caching Strategy</h2>
+                        <pre><code class="language-swift">actor CachingNetworkService: NetworkServiceProtocol {
+    private let baseService: NetworkServiceProtocol
+    private var cache: [String: CachedResponse] = [:]
+    
+    struct CachedResponse {
+        let data: Data
+        let timestamp: Date
+        let maxAge: TimeInterval
+        
+        var isExpired: Bool {
+            Date().timeIntervalSince(timestamp) > maxAge
+        }
+    }
+    
+    init(baseService: NetworkServiceProtocol) {
+        self.baseService = baseService
+    }
+    
+    func request<T: Codable>(_ endpoint: Endpoint) async throws -> T {
+        let cacheKey = "\(endpoint.method.rawValue):\(endpoint.path)"
+        
+        // Check cache for GET requests
+        if endpoint.method == .GET,
+           let cachedResponse = cache[cacheKey],
+           !cachedResponse.isExpired {
+            return try JSONDecoder().decode(T.self, from: cachedResponse.data)
+        }
+        
+        // Make network request
+        let result: T = try await baseService.request(endpoint)
+        
+        // Cache GET responses
+        if endpoint.method == .GET {
+            let data = try JSONEncoder().encode(result)
+            cache[cacheKey] = CachedResponse(
+                data: data,
+                timestamp: Date(),
+                maxAge: 300 // 5 minutes
+            )
+        }
+        
+        return result
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="mb-4">
+                        <h2>6. Testing Network Code</h2>
+                        <pre><code class="language-swift">// Mock network service for testing
+class MockNetworkService: NetworkServiceProtocol {
+    var responses: [String: Result<Data, Error>] = [:]
+    
+    func request<T: Codable>(_ endpoint: Endpoint) async throws -> T {
+        let key = "\(endpoint.method.rawValue):\(endpoint.path)"
+        
+        guard let response = responses[key] else {
+            throw NetworkError.noData
+        }
+        
+        let data = try response.get()
+        return try JSONDecoder().decode(T.self, from: data)
+    }
+}
+
+// Unit test example
+class UserServiceTests: XCTestCase {
+    func testFetchUser() async throws {
+        // Given
+        let mockService = MockNetworkService()
+        let userService = UserService(networkService: mockService)
+        
+        let expectedUser = User(id: "1", name: "John Doe", email: "john@example.com")
+        let userData = try JSONEncoder().encode(expectedUser)
+        mockService.responses["GET:users/1"] = .success(userData)
+        
+        // When
+        let user = try await userService.fetchUser(id: "1")
+        
+        // Then
+        XCTAssertEqual(user.name, "John Doe")
+        XCTAssertEqual(user.email, "john@example.com")
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="mb-4">
+                        <h2>Best Practices</h2>
+                        <ul>
+                            <li><strong>Use actors for network services</strong> to ensure thread safety</li>
+                            <li><strong>Implement proper error handling</strong> with custom error types</li>
+                            <li><strong>Add authentication layers</strong> for secure API access</li>
+                            <li><strong>Cache responses when appropriate</strong> to improve performance</li>
+                            <li><strong>Use protocol-oriented design</strong> for testability</li>
+                            <li><strong>Handle network timeouts and retries</strong> gracefully</li>
+                        </ul>
+                    </div>
+
+                    <footer class="mt-5 pt-4 border-top">
+                        <p><a href="https://github.com/MananPatel95/iOS-Notes" target="_blank" rel="noopener">View complete networking examples on GitHub</a></p>
+                    </footer>
+                </article>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

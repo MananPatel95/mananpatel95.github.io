@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UIKit Fundamentals: Views, Lifecycle, and Layout | Manan Patel</title>
+    <meta name="description" content="Deep dive into UIKit essentials: view lifecycle, responder chain, AutoLayout, and Frame vs Bounds. Master iOS UI development fundamentals.">
+    <meta name="keywords" content="UIKit, iOS UI, view lifecycle, AutoLayout, responder chain, UIViewController">
+    <meta name="author" content="Manan Patel">
+    <link rel="canonical" href="https://mananpatel.info/blog/uikit-fundamentals.html">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">Manan Patel</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html">Blog</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../index.html#contact">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mt-5 pt-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <article>
+                    <header class="mb-5">
+                        <span class="badge bg-secondary px-3 py-2">UIKit</span>
+                        <h1 class="display-5 fw-bold mb-3">UIKit Fundamentals: Views, Lifecycle, and Layout</h1>
+                        <p class="lead">Written on December 8, 2023</p>
+                    </header>
+
+                    <div class="mb-4">
+                        <h2>View Controller Lifecycle</h2>
+                        <p>Understanding the view controller lifecycle is crucial for iOS development. Each method serves a specific purpose in the view's lifetime.</p>
+                        
+                        <pre><code class="language-swift">class ExampleViewController: UIViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Called once when view loads into memory
+        // Set up UI elements, create constraints
+        // Views have bounds but may not have correct frame
+        setupUI()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        // Called every time before view appears
+        // Refresh data, start animations
+        refreshData()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        // Called after view appears
+        // Start location services, timers
+        startLocationServices()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        // Called before view disappears
+        // Save user input, pause video
+        saveUserData()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        // Called after view disappears
+        // Stop timers, pause expensive operations
+        stopLocationServices()
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="mb-4">
+                        <h2>AutoLayout Fundamentals</h2>
+                        <pre><code class="language-swift">class AutoLayoutExample: UIViewController {
+    private let titleLabel = UILabel()
+    private let descriptionLabel = UILabel()
+    private let actionButton = UIButton(type: .system)
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupViews()
+        setupConstraints()
+    }
+    
+    private func setupViews() {
+        // Configure views
+        titleLabel.text = "Welcome"
+        titleLabel.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+        titleLabel.textAlignment = .center
+        
+        descriptionLabel.text = "This is a description"
+        descriptionLabel.numberOfLines = 0
+        descriptionLabel.textAlignment = .center
+        
+        actionButton.setTitle("Get Started", for: .normal)
+        actionButton.backgroundColor = .systemBlue
+        actionButton.setTitleColor(.white, for: .normal)
+        actionButton.layer.cornerRadius = 8
+        
+        // Add to view hierarchy
+        view.addSubview(titleLabel)
+        view.addSubview(descriptionLabel)
+        view.addSubview(actionButton)
+        
+        // Disable autoresizing masks
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
+        actionButton.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    private func setupConstraints() {
+        NSLayoutConstraint.activate([
+            // Title label constraints
+            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
+            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            
+            // Description label constraints
+            descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
+            descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            
+            // Action button constraints
+            actionButton.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 30),
+            actionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            actionButton.widthAnchor.constraint(equalToConstant: 200),
+            actionButton.heightAnchor.constraint(equalToConstant: 50)
+        ])
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="mb-4">
+                        <h2>Frame vs Bounds</h2>
+                        <pre><code class="language-swift">// Frame: Position and size relative to superview
+// Bounds: Internal coordinate system of the view
+
+class FrameBoundsExample: UIViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        let containerView = UIView()
+        containerView.backgroundColor = .systemBlue
+        containerView.frame = CGRect(x: 50, y: 100, width: 200, height: 200)
+        view.addSubview(containerView)
+        
+        print("Container Frame: \(containerView.frame)")
+        // Output: (50.0, 100.0, 200.0, 200.0)
+        
+        print("Container Bounds: \(containerView.bounds)")
+        // Output: (0.0, 0.0, 200.0, 200.0)
+        
+        // Add subview using bounds
+        let subview = UIView()
+        subview.backgroundColor = .systemRed
+        subview.frame = CGRect(x: 10, y: 10, width: 50, height: 50)
+        containerView.addSubview(subview)
+        
+        // Transform affects frame but not bounds
+        containerView.transform = CGAffineTransform(rotationAngle: .pi/4)
+        
+        print("After rotation - Frame: \(containerView.frame)")
+        // Frame changes to encompass rotated view
+        
+        print("After rotation - Bounds: \(containerView.bounds)")
+        // Bounds remain the same: (0.0, 0.0, 200.0, 200.0)
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="mb-4">
+                        <h2>Responder Chain</h2>
+                        <pre><code class="language-swift">class CustomView: UIView {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        print("Touch began in CustomView")
+        
+        // Handle touch or pass to next responder
+        if shouldHandleTouch(touches) {
+            handleTouch(touches)
+        } else {
+            super.touchesBegan(touches, with: event)
+        }
+    }
+    
+    private func shouldHandleTouch(_ touches: Set<UITouch>) -> Bool {
+        // Custom logic to determine if this view should handle the touch
+        return true
+    }
+    
+    private func handleTouch(_ touches: Set<UITouch>) {
+        // Handle the touch event
+        print("Touch handled by CustomView")
+    }
+}
+
+class CustomViewController: UIViewController {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        print("Touch began in CustomViewController")
+        super.touchesBegan(touches, with: event)
+    }
+    
+    // First responder management
+    override var canBecomeFirstResponder: Bool {
+        return true
+    }
+    
+    override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+        if motion == .motionShake {
+            print("Device shaken!")
+        }
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="mb-4">
+                        <h2>Custom Views</h2>
+                        <pre><code class="language-swift">class CustomButton: UIView {
+    private let titleLabel = UILabel()
+    private let iconImageView = UIImageView()
+    
+    var title: String? {
+        didSet {
+            titleLabel.text = title
+        }
+    }
+    
+    var icon: UIImage? {
+        didSet {
+            iconImageView.image = icon
+        }
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupView()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupView()
+    }
+    
+    private func setupView() {
+        backgroundColor = .systemBlue
+        layer.cornerRadius = 8
+        
+        // Setup title label
+        titleLabel.textColor = .white
+        titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        titleLabel.textAlignment = .center
+        
+        // Setup icon
+        iconImageView.contentMode = .scaleAspectFit
+        iconImageView.tintColor = .white
+        
+        // Add subviews
+        addSubview(iconImageView)
+        addSubview(titleLabel)
+        
+        // Setup constraints
+        iconImageView.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            iconImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            iconImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            iconImageView.widthAnchor.constraint(equalToConstant: 24),
+            iconImageView.heightAnchor.constraint(equalToConstant: 24),
+            
+            titleLabel.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 8),
+            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor)
+        ])
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        backgroundColor = .systemBlue.withAlphaComponent(0.7)
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        backgroundColor = .systemBlue
+    }
+    
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        backgroundColor = .systemBlue
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="mb-4">
+                        <h2>Best Practices</h2>
+                        <ul>
+                            <li><strong>Use AutoLayout</strong> for responsive design across devices</li>
+                            <li><strong>Understand the view lifecycle</strong> to optimize performance</li>
+                            <li><strong>Leverage the responder chain</strong> for event handling</li>
+                            <li><strong>Create reusable custom views</strong> for consistency</li>
+                            <li><strong>Use safe area guides</strong> for proper layout on all devices</li>
+                            <li><strong>Test on multiple screen sizes</strong> and orientations</li>
+                        </ul>
+                    </div>
+
+                    <footer class="mt-5 pt-4 border-top">
+                        <p><a href="https://github.com/MananPatel95/iOS-Notes" target="_blank" rel="noopener">View UIKit examples on GitHub</a></p>
+                    </footer>
+                </article>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

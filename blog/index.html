@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iOS Development Blog - Manan Patel | Technical Insights & Best Practices</title>
+    <meta name="description" content="In-depth iOS development blog covering Swift, UIKit, SwiftUI, architecture patterns, concurrency, and mobile app best practices by Manan Patel, Senior iOS Developer.">
+    <meta name="keywords" content="iOS development, Swift programming, mobile architecture, MVVM, SwiftUI, concurrency, iOS performance, mobile app development">
+    <meta name="author" content="Manan Patel">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://mananpatel.info/blog/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mananpatel.info/blog/">
+    <meta property="og:title" content="iOS Development Blog - Manan Patel">
+    <meta property="og:description" content="Technical insights on iOS development, Swift programming, and mobile architecture patterns">
+    <meta property="og:image" content="https://mananpatel.info/images/Headshot1.jpg">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://mananpatel.info/blog/">
+    <meta property="twitter:title" content="iOS Development Blog - Manan Patel">
+    <meta property="twitter:description" content="Technical insights on iOS development, Swift programming, and mobile architecture patterns">
+    <meta property="twitter:image" content="https://mananpatel.info/images/Headshot1.jpg">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Blog",
+        "name": "Manan Patel iOS Development Blog",
+        "description": "Technical blog covering iOS development, Swift programming, and mobile architecture",
+        "url": "https://mananpatel.info/blog/",
+        "author": {
+            "@type": "Person",
+            "name": "Manan Patel",
+            "jobTitle": "Senior iOS Developer",
+            "url": "https://mananpatel.info"
+        },
+        "publisher": {
+            "@type": "Person",
+            "name": "Manan Patel"
+        }
+    }
+    </script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">Manan Patel</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html#about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html#portfolio">Portfolio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.html">Blog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html#contact">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mt-5 pt-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <header class="text-center mb-5">
+                    <h1 class="display-4 fw-bold mb-3">iOS Development Blog</h1>
+                    <p class="lead text-muted">Technical insights, best practices, and deep dives into iOS development</p>
+                    <div class="d-flex justify-content-center gap-3 mb-4">
+                        <a href="https://github.com/MananPatel95/iOS-Notes" class="btn btn-outline-primary" target="_blank" rel="noopener">
+                            <i class="fab fa-github"></i> View Source Code
+                        </a>
+                        <a href="../index.html#contact" class="btn btn-primary">
+                            <i class="fas fa-envelope"></i> Get in Touch
+                        </a>
+                    </div>
+                </header>
+
+                <div class="row">
+                    <!-- Blog Post Cards -->
+                    <div class="col-md-6 mb-4">
+                        <article class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <span class="badge bg-primary mb-2">Architecture</span>
+                                <h3 class="card-title">
+                                    <a href="ios-architecture-patterns.html" class="text-decoration-none">
+                                        iOS Architecture Patterns: MVC vs MVVM vs VIPER
+                                    </a>
+                                </h3>
+                                <p class="card-text text-muted">A comprehensive guide to choosing the right architecture pattern for your iOS applications, with real-world examples and best practices.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">
+                                        <i class="fas fa-calendar"></i> March 15, 2024
+                                    </small>
+                                    <small class="text-muted">8 min read</small>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <article class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <span class="badge bg-success mb-2">Concurrency</span>
+                                <h3 class="card-title">
+                                    <a href="swift-concurrency-multithreading.html" class="text-decoration-none">
+                                        Mastering Swift Concurrency and Multithreading
+                                    </a>
+                                </h3>
+                                <p class="card-text text-muted">From GCD to Swift Actors: A complete guide to handling concurrent operations in modern iOS development.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">
+                                        <i class="fas fa-calendar"></i> February 28, 2024
+                                    </small>
+                                    <small class="text-muted">12 min read</small>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <article class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <span class="badge bg-warning mb-2">Memory Management</span>
+                                <h3 class="card-title">
+                                    <a href="ios-memory-management.html" class="text-decoration-none">
+                                        iOS Memory Management: Weak vs Strong vs Unowned
+                                    </a>
+                                </h3>
+                                <p class="card-text text-muted">Understanding ARC, preventing memory leaks, and choosing the right reference types for optimal performance.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">
+                                        <i class="fas fa-calendar"></i> February 14, 2024
+                                    </small>
+                                    <small class="text-muted">10 min read</small>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <article class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <span class="badge bg-info mb-2">Data Persistence</span>
+                                <h3 class="card-title">
+                                    <a href="ios-data-persistence.html" class="text-decoration-none">
+                                        iOS Data Persistence: Complete Guide
+                                    </a>
+                                </h3>
+                                <p class="card-text text-muted">Comprehensive comparison of UserDefaults, CoreData, Keychain, and SwiftData for iOS app data storage.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">
+                                        <i class="fas fa-calendar"></i> January 30, 2024
+                                    </small>
+                                    <small class="text-muted">15 min read</small>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <article class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <span class="badge bg-dark mb-2">Networking</span>
+                                <h3 class="card-title">
+                                    <a href="ios-networking-async-await.html" class="text-decoration-none">
+                                        Modern iOS Networking with Async/Await
+                                    </a>
+                                </h3>
+                                <p class="card-text text-muted">Building robust networking layers using Swift's modern async/await pattern and protocol-oriented programming.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">
+                                        <i class="fas fa-calendar"></i> January 16, 2024
+                                    </small>
+                                    <small class="text-muted">11 min read</small>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <article class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <span class="badge bg-danger mb-2">Testing</span>
+                                <h3 class="card-title">
+                                    <a href="ios-unit-testing-mock-objects.html" class="text-decoration-none">
+                                        iOS Unit Testing with Mock Objects
+                                    </a>
+                                </h3>
+                                <p class="card-text text-muted">Advanced unit testing strategies using mock objects, dependency injection, and test-driven development.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">
+                                        <i class="fas fa-calendar"></i> December 22, 2023
+                                    </small>
+                                    <small class="text-muted">9 min read</small>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <article class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <span class="badge bg-secondary mb-2">UIKit</span>
+                                <h3 class="card-title">
+                                    <a href="uikit-fundamentals.html" class="text-decoration-none">
+                                        UIKit Fundamentals: Views, Lifecycle, and Layout
+                                    </a>
+                                </h3>
+                                <p class="card-text text-muted">Deep dive into UIKit essentials: view lifecycle, responder chain, AutoLayout, and Frame vs Bounds.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">
+                                        <i class="fas fa-calendar"></i> December 8, 2023
+                                    </small>
+                                    <small class="text-muted">13 min read</small>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <article class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <span class="badge bg-primary mb-2">SwiftUI</span>
+                                <h3 class="card-title">
+                                    <a href="swiftui-modern-development.html" class="text-decoration-none">
+                                        SwiftUI Modern Development Patterns
+                                    </a>
+                                </h3>
+                                <p class="card-text text-muted">Exploring SwiftUI's declarative approach, async/await integration, and the power of opaque types.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">
+                                        <i class="fas fa-calendar"></i> November 24, 2023
+                                    </small>
+                                    <small class="text-muted">7 min read</small>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+
+                <div class="text-center mt-5">
+                    <h3 class="mb-3">About This Blog</h3>
+                    <p class="lead">
+                        This blog contains technical insights and code examples developed over my career as an iOS developer. 
+                        All content is based on real-world experience building production iOS applications.
+                    </p>
+                    <p class="text-muted">
+                        <a href="https://github.com/MananPatel95/iOS-Notes" target="_blank" rel="noopener">
+                            View the source code and examples on GitHub
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-dark text-white mt-5 py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p>&copy; 2024 Manan Patel. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="../index.html#contact" class="text-white me-3">Contact</a>
+                    <a href="https://github.com/MananPatel95" class="text-white me-3" target="_blank" rel="noopener">GitHub</a>
+                    <a href="https://linkedin.com/in/mananpatel95" class="text-white" target="_blank" rel="noopener">LinkedIn</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

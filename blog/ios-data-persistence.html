@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iOS Data Persistence: Complete Guide | Manan Patel</title>
+    <meta name="description" content="Comprehensive guide to iOS data persistence: UserDefaults, CoreData, Keychain, and SwiftData. Learn when to use each storage method in your iOS apps.">
+    <meta name="keywords" content="iOS data persistence, CoreData, UserDefaults, Keychain, SwiftData, iOS storage, data management">
+    <meta name="author" content="Manan Patel">
+    <link rel="canonical" href="https://mananpatel.info/blog/ios-data-persistence.html">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">Manan Patel</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html">Blog</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../index.html#contact">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mt-5 pt-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <article>
+                    <header class="mb-5">
+                        <span class="badge bg-info px-3 py-2">Data Persistence</span>
+                        <h1 class="display-5 fw-bold mb-3">iOS Data Persistence: Complete Guide</h1>
+                        <p class="lead">Written on January 30, 2024</p>
+                    </header>
+
+                    <div class="mb-4">
+                        <h2>Overview of iOS Storage Options</h2>
+                        <p>Choosing the right data persistence method is crucial for iOS app performance and user experience. This guide covers all major storage options with real-world examples.</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h2>1. UserDefaults - Simple Key-Value Storage</h2>
+                        <pre><code class="language-swift">// Basic UserDefaults usage
+UserDefaults.standard.set("John Doe", forKey: "username")
+UserDefaults.standard.set(true, forKey: "isFirstLaunch")
+UserDefaults.standard.set(42, forKey: "userAge")
+
+// Reading values
+let username = UserDefaults.standard.string(forKey: "username")
+let isFirstLaunch = UserDefaults.standard.bool(forKey: "isFirstLaunch")
+let userAge = UserDefaults.standard.integer(forKey: "userAge")
+
+// Custom objects with Codable
+struct UserPreferences: Codable {
+    let theme: String
+    let notifications: Bool
+    let language: String
+}
+
+let preferences = UserPreferences(theme: "dark", notifications: true, language: "en")
+if let encoded = try? JSONEncoder().encode(preferences) {
+    UserDefaults.standard.set(encoded, forKey: "userPreferences")
+}</code></pre>
+
+                        <h3>When to Use UserDefaults</h3>
+                        <ul>
+                            <li>App settings and preferences</li>
+                            <li>Simple configuration data</li>
+                            <li>Small amounts of data (&lt;1MB)</li>
+                            <li>Data that needs to persist between app launches</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-4">
+                        <h2>2. CoreData - Object-Relational Mapping</h2>
+                        <pre><code class="language-swift">// CoreData setup
+import CoreData
+
+class CoreDataManager {
+    static let shared = CoreDataManager()
+    
+    lazy var persistentContainer: NSPersistentContainer = {
+        let container = NSPersistentContainer(name: "DataModel")
+        container.loadPersistentStores { _, error in
+            if let error = error {
+                fatalError("CoreData error: \(error)")
+            }
+        }
+        return container
+    }()
+    
+    var context: NSManagedObjectContext {
+        return persistentContainer.viewContext
+    }
+    
+    func saveContext() {
+        if context.hasChanges {
+            try? context.save()
+        }
+    }
+}</code></pre>
+
+                        <h3>When to Use CoreData</h3>
+                        <ul>
+                            <li>Complex relational data</li>
+                            <li>Large datasets</li>
+                            <li>Need for queries and filtering</li>
+                            <li>Data synchronization requirements</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-4">
+                        <h2>3. Keychain - Secure Storage</h2>
+                        <pre><code class="language-swift">// Keychain wrapper
+class KeychainManager {
+    static let shared = KeychainManager()
+    
+    func save(key: String, data: Data) -> Bool {
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrAccount as String: key,
+            kSecValueData as String: data
+        ]
+        
+        SecItemDelete(query as CFDictionary)
+        return SecItemAdd(query as CFDictionary, nil) == errSecSuccess
+    }
+    
+    func load(key: String) -> Data? {
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrAccount as String: key,
+            kSecReturnData as String: true
+        ]
+        
+        var item: CFTypeRef?
+        if SecItemCopyMatching(query as CFDictionary, &item) == errSecSuccess {
+            return item as? Data
+        }
+        return nil
+    }
+}</code></pre>
+
+                        <h3>When to Use Keychain</h3>
+                        <ul>
+                            <li>Passwords and authentication tokens</li>
+                            <li>Sensitive user data</li>
+                            <li>Cryptographic keys</li>
+                            <li>Data that should survive app deletion</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-4">
+                        <h2>4. SwiftData - Modern Data Persistence</h2>
+                        <pre><code class="language-swift">// SwiftData model
+import SwiftData
+
+@Model
+class User {
+    var name: String
+    var email: String
+    var createdAt: Date
+    
+    init(name: String, email: String) {
+        self.name = name
+        self.email = email
+        self.createdAt = Date()
+    }
+}
+
+// SwiftData usage
+struct ContentView: View {
+    @Environment(\.modelContext) private var context
+    @Query private var users: [User]
+    
+    var body: some View {
+        List(users) { user in
+            Text(user.name)
+        }
+        .onAppear {
+            addUser()
+        }
+    }
+    
+    private func addUser() {
+        let newUser = User(name: "John", email: "john@example.com")
+        context.insert(newUser)
+        try? context.save()
+    }
+}</code></pre>
+
+                        <h3>When to Use SwiftData</h3>
+                        <ul>
+                            <li>SwiftUI applications</li>
+                            <li>Modern iOS development (iOS 17+)</li>
+                            <li>Type-safe data modeling</li>
+                            <li>Replacing CoreData in new projects</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-4">
+                        <h2>Decision Matrix</h2>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Storage Method</th>
+                                    <th>Use Case</th>
+                                    <th>Data Size</th>
+                                    <th>Security</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>UserDefaults</td>
+                                    <td>Settings, preferences</td>
+                                    <td>Small (&lt;1MB)</td>
+                                    <td>Low</td>
+                                </tr>
+                                <tr>
+                                    <td>CoreData</td>
+                                    <td>Complex relational data</td>
+                                    <td>Large</td>
+                                    <td>Medium</td>
+                                </tr>
+                                <tr>
+                                    <td>Keychain</td>
+                                    <td>Sensitive data</td>
+                                    <td>Small</td>
+                                    <td>High</td>
+                                </tr>
+                                <tr>
+                                    <td>SwiftData</td>
+                                    <td>Modern SwiftUI apps</td>
+                                    <td>Medium-Large</td>
+                                    <td>Medium</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <footer class="mt-5 pt-4 border-top">
+                        <p><a href="https://github.com/MananPatel95/iOS-Notes" target="_blank" rel="noopener">View source code examples on GitHub</a></p>
+                    </footer>
+                </article>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

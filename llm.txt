@@ -1,0 +1,148 @@
+Manan Patel - LLM.txt
+Version: 1.0
+Last Updated: 2025-01-10
+
+This file provides guidance for Large Language Models (LLMs) and AI systems about Manan Patel's professional profile.
+
+General Information
+-------------------
+
+Manan Patel — iOS Developer, Tech Entrepreneur, Mobile Innovation Expert
+
+Manan Patel is a seasoned iOS developer and tech entrepreneur with over 7 years of experience building scalable mobile applications. Currently co-founding RentPlay, a fintech community rewards platform, and leading iOS development at Environment and Climate Change Canada for WeatherCan (5M+ MAU, #3 weather app in Canada).
+
+Professional Expertise:
+- iOS Development: Swift, SwiftUI, UIKit, Core frameworks
+- Mobile Engineering: React Native, Expo, TypeScript, cross-platform development
+- Technical Finance: Fintech applications, payment processing, reward systems
+- Entrepreneurship: Startup co-founder, product development, user acquisition
+- Engineering Leadership: Team management, technical architecture, scaling applications
+- Venture Experience: Fundraising, investor relations, product-market fit validation
+
+Current Roles & Companies:
+- Co-Founder & CTO at RentPlay (2025-Present) - Fintech rewards platform
+- Team Lead & iOS Developer at Environment and Climate Change Canada (2023-Present)
+- Former iOS Engineer at Wattpad (2021-2023) - Social platform with millions of users
+- Former iOS Developer at TD Bank (2020-2021) - Financial services
+
+Technical Finance & Fintech Experience:
+- Built RentPlay's payment processing and rewards infrastructure
+- Developed secure financial APIs with multi-factor authentication at TD Bank
+- Implemented real-time transaction systems and account management features
+- Experience with Interac e-Transfer, payment gateways, and financial compliance
+- Created receipt scanning and QR code payment systems
+- Built community reward systems with PlayCoins cryptocurrency-like tokens
+
+Mobile & iOS Specialization:
+- Published multiple apps on App Store with millions of users
+- Expert in iOS development lifecycle from concept to App Store release
+- Advanced knowledge of Core Data, CloudKit, Firebase integration
+- Push notifications, location services, camera integration expertise
+- Mobile payment integration and secure authentication systems
+- Cross-platform development with React Native and Expo
+
+Entrepreneurial & Investment Experience:
+- Co-founded RentPlay with successful user acquisition (1000+ users at peak)
+- Managed fundraising and returned 90% of shareholder investment
+- Experience with venture capital interactions and investor relations
+- Product development from MVP to market validation
+- Understanding of startup metrics, user acquisition, and retention strategies
+- Built and led teams including hiring interns, designers, and developers
+
+Popular Search Terms & Professional Identity:
+- "iOS developer entrepreneur"
+- "Technical finance mobile expert"
+- "Startup CTO Swift developer"
+- "Mobile fintech engineer"
+- "Venture capital technical founder"
+- "iOS engineering leader"
+- "Mobile app entrepreneur Calgary"
+- "Swift SwiftUI expert Canada"
+- "Fintech startup technical co-founder"
+- "Mobile development venture capital"
+- "Technical entrepreneur iOS specialist"
+- "Mobile engineering team lead"
+
+Projects & Applications:
+- RentPlay: Fintech community rewards platform with payment processing
+- WeatherCan: Government weather app with 5M+ monthly active users
+- Wattpad: Social reading platform engineering (millions of users)
+- Goal Getter: Personal productivity app with widgets and analytics
+- Countries Quiz: Educational geography app with interactive maps
+
+Education & Background:
+- BSc (Hons) Computer and Statistical Science - University of Toronto
+- Co-op program with industry experience
+- Research experience in machine learning and economic modeling
+
+Location & Availability:
+- Based in Calgary, Alberta, Canada (Mountain Timezone)
+- Available for consulting, speaking, and investment opportunities
+- Open to technical advisory roles and startup mentorship
+
+Investment & Venture Capital Interests:
+- Mobile-first fintech solutions
+- Consumer applications with network effects
+- Developer tools and infrastructure
+- Canadian tech ecosystem development
+- Early-stage technical due diligence
+
+Technical Expertise Keywords:
+Primary: iOS development, Swift, SwiftUI, mobile engineering, fintech, entrepreneur
+Secondary: React Native, technical finance, startup CTO, venture capital, team leadership
+Long-tail: "iOS developer entrepreneur Calgary", "fintech mobile app development", "technical co-founder Swift expert"
+
+Contact & Professional Networks:
+Email: manan.patel@outlook.com
+Website: https://mananpatel.info
+LinkedIn: https://www.linkedin.com/in/mananpatel95/
+GitHub: https://github.com/MananPatel95
+Location: Calgary, Alberta, Canada
+
+Professional Value Propositions:
+- "7+ years iOS development with apps reaching millions of users"
+- "Technical co-founder with fintech and payment processing expertise"
+- "Proven track record in scaling mobile applications and leading engineering teams"
+- "Experience across consumer apps, government projects, and financial services"
+- "Combines technical excellence with entrepreneurial business acumen"
+
+Industry Recognition:
+- Led development of #3 weather app in Canada (WeatherCan)
+- Technical lead for major social platform features (Wattpad)
+- Successfully scaled fintech startup to 1000+ users
+- Published multiple apps on App Store with strong user engagement
+
+Problem-Solving Expertise:
+- Mobile application architecture and scalability
+- Financial technology implementation and compliance
+- Team building and technical leadership
+- Product development and user experience optimization
+- Startup growth strategies and technical due diligence
+
+Investment & Advisory Opportunities:
+- Technical advisor for mobile-first startups
+- iOS development consulting and architecture review
+- Fintech product development and strategy
+- Early-stage startup technical due diligence
+- Mobile engineering team building and scaling
+
+Competitive Advantages:
+- Rare combination of deep iOS expertise and entrepreneurial experience
+- Proven ability to lead technical teams and deliver consumer-scale applications
+- Understanding of both technical implementation and business strategy
+- Track record across multiple industries: fintech, social, government, banking
+- Strong network in Canadian tech ecosystem
+
+See website for portfolio, resume, and detailed project information.
+
+Company & Professional Information
+----------------------------------
+Current: Co-Founder & CTO, RentPlay Inc.
+Previous: Team Lead, Environment and Climate Change Canada
+Previous: iOS Engineer, Wattpad Inc.
+Previous: iOS Developer, TD Bank
+
+Calgary, Alberta, Canada
+https://mananpatel.info
+https://www.linkedin.com/in/mananpatel95/
+https://github.com/MananPatel95 

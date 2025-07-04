@@ -26,11 +26,11 @@
     <link rel="stylesheet" href="css/normalize.css" />
     <link rel="stylesheet" href="js/www.w3schools.com/w3css/4/w3.css" />
     <link rel="stylesheet" href="js/cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="js/maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
 
     <script src="js/ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="js/cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="js/maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
 </head>
 
 
@@ -52,9 +52,9 @@
                     </nav>
                 </div>
                 <div class="menu__wrapper col-md-12 d-lg-none">
-                    <button type="button" class="menu__mobile-button">
-                        <span><i class="fa fa-bars" aria-hidden="true"></i></span>
-                    </button>
+                                    <button type="button" class="menu__mobile-button" aria-label="Toggle mobile menu">
+                    <span><i class="fa fa-bars" aria-hidden="true"></i></span>
+                </button>
                 </div>
             </div>
         </div>
@@ -94,7 +94,7 @@
                             <dt>Email:</dt>
                             <dd><a href="mailto:manan.patel@outlook.com">manan.patel@outlook.com</a></dd>
                             <dt>GitHub:</dt>
-                            <dd><a href="https://github.com/MananPatel95" target="_blank">MananPatel95</a></dd>
+                            <dd><a href="https://github.com/MananPatel95" target="_blank" rel="noopener">MananPatel95</a></dd>
                             <dt>Leetcode:</dt>
                             <dd><a href="https://leetcode.com/mananpatel1/">MananPatel1</a></dd>
                             <dt>Location:</dt>
@@ -102,7 +102,7 @@
                         </dl>
                     </div>
                     <p class="personal-profile__social">
-                        <a href="https://github.com/MananPatel95" target="_blank"><i class="fa fa-github"></i></a>
+                        <a href="https://github.com/MananPatel95" target="_blank" rel="noopener"><i class="fa fa-github"></i></a>
                     </p>
                 </div>
             </div>
@@ -561,7 +561,7 @@
             <div class="footer">
                 <p>Manan Patel</p>
                 <p class="personal-profile__social">
-                    <a href="https://github.com/MananPatel95" target="_blank"><i class="fa fa-github"></i></a>
+                    <a href="https://github.com/MananPatel95" target="_blank" rel="noopener"><i class="fa fa-github"></i></a>
                 </p>
             </div>
         </div>
@@ -580,7 +580,7 @@
                 </div>
                 <div class="modal-body col-md-11 col-lg-9 ml-auto mr-auto">
                     <p class="portfolio-modal__title">WeatherCan App</p>
-                    <img class="portfolio-modal__img" src="images/Projects/WeatherCan/weatherCan.png" alt="modal_img">
+                    <img class="portfolio-modal__img" src="images/Projects/WeatherCan/weatherCan.png" alt="modal_img" loading="lazy">
                     <p class="portfolio-modal__description">
                         WeatherCan is the official mobile weather application for Environment Canada where I was one of
                         2 developers

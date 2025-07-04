@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iOS Unit Testing with Mock Objects | Manan Patel</title>
+    <meta name="description" content="Advanced unit testing strategies using mock objects, dependency injection, and test-driven development for iOS applications.">
+    <meta name="keywords" content="iOS testing, unit tests, mock objects, dependency injection, TDD, XCTest">
+    <meta name="author" content="Manan Patel">
+    <link rel="canonical" href="https://mananpatel.info/blog/ios-unit-testing-mock-objects.html">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">Manan Patel</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html">Blog</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../index.html#contact">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mt-5 pt-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <article>
+                    <header class="mb-5">
+                        <span class="badge bg-danger px-3 py-2">Testing</span>
+                        <h1 class="display-5 fw-bold mb-3">iOS Unit Testing with Mock Objects</h1>
+                        <p class="lead">Written on December 22, 2023</p>
+                    </header>
+
+                    <div class="mb-4">
+                        <h2>Why Unit Testing Matters</h2>
+                        <p>Unit testing is essential for maintaining code quality and preventing regressions. Mock objects allow us to isolate the code under test and verify behavior without external dependencies.</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h2>1. Basic Mock Objects</h2>
+                        <pre><code class="language-swift">// Protocol for dependency injection
+protocol UserServiceProtocol {
+    func fetchUser(id: String) async throws -> User
+    func createUser(_ user: CreateUserRequest) async throws -> User
+}
+
+// Mock implementation
+class MockUserService: UserServiceProtocol {
+    var fetchUserResult: Result<User, Error>?
+    var createUserResult: Result<User, Error>?
+    
+    var fetchUserCallCount = 0
+    var createUserCallCount = 0
+    
+    func fetchUser(id: String) async throws -> User {
+        fetchUserCallCount += 1
+        
+        guard let result = fetchUserResult else {
+            throw NSError(domain: "MockError", code: 0, userInfo: nil)
+        }
+        
+        return try result.get()
+    }
+    
+    func createUser(_ user: CreateUserRequest) async throws -> User {
+        createUserCallCount += 1
+        
+        guard let result = createUserResult else {
+            throw NSError(domain: "MockError", code: 0, userInfo: nil)
+        }
+        
+        return try result.get()
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="mb-4">
+                        <h2>2. Testing ViewModels</h2>
+                        <pre><code class="language-swift">// ViewModel under test
+@MainActor
+class UserViewModel: ObservableObject {
+    @Published var user: User?
+    @Published var isLoading = false
+    @Published var errorMessage: String?
+    
+    private let userService: UserServiceProtocol
+    
+    init(userService: UserServiceProtocol) {
+        self.userService = userService
+    }
+    
+    func loadUser(id: String) async {
+        isLoading = true
+        errorMessage = nil
+        
+        do {
+            user = try await userService.fetchUser(id: id)
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+        
+        isLoading = false
+    }
+}
+
+// Test cases
+class UserViewModelTests: XCTestCase {
+    var viewModel: UserViewModel!
+    var mockUserService: MockUserService!
+    
+    override func setUp() {
+        super.setUp()
+        mockUserService = MockUserService()
+        viewModel = UserViewModel(userService: mockUserService)
+    }
+    
+    @MainActor
+    func testLoadUserSuccess() async {
+        // Given
+        let expectedUser = User(id: "1", name: "John Doe", email: "john@example.com")
+        mockUserService.fetchUserResult = .success(expectedUser)
+        
+        // When
+        await viewModel.loadUser(id: "1")
+        
+        // Then
+        XCTAssertEqual(viewModel.user?.name, "John Doe")
+        XCTAssertEqual(viewModel.user?.email, "john@example.com")
+        XCTAssertFalse(viewModel.isLoading)
+        XCTAssertNil(viewModel.errorMessage)
+        XCTAssertEqual(mockUserService.fetchUserCallCount, 1)
+    }
+    
+    @MainActor
+    func testLoadUserFailure() async {
+        // Given
+        let expectedError = NSError(domain: "TestError", code: 404, userInfo: [NSLocalizedDescriptionKey: "User not found"])
+        mockUserService.fetchUserResult = .failure(expectedError)
+        
+        // When
+        await viewModel.loadUser(id: "1")
+        
+        // Then
+        XCTAssertNil(viewModel.user)
+        XCTAssertFalse(viewModel.isLoading)
+        XCTAssertEqual(viewModel.errorMessage, "User not found")
+        XCTAssertEqual(mockUserService.fetchUserCallCount, 1)
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="mb-4">
+                        <h2>3. Advanced Mock Techniques</h2>
+                        <pre><code class="language-swift">// Spy pattern for behavior verification
+class SpyUserService: UserServiceProtocol {
+    var capturedFetchUserIDs: [String] = []
+    var capturedCreateUserRequests: [CreateUserRequest] = []
+    
+    func fetchUser(id: String) async throws -> User {
+        capturedFetchUserIDs.append(id)
+        return User(id: id, name: "Test User", email: "test@example.com")
+    }
+    
+    func createUser(_ user: CreateUserRequest) async throws -> User {
+        capturedCreateUserRequests.append(user)
+        return User(id: "123", name: user.name, email: user.email)
+    }
+}
+
+// Stub pattern for returning predefined data
+class StubUserService: UserServiceProtocol {
+    let stubbedUser = User(id: "1", name: "Stubbed User", email: "stub@example.com")
+    
+    func fetchUser(id: String) async throws -> User {
+        return stubbedUser
+    }
+    
+    func createUser(_ user: CreateUserRequest) async throws -> User {
+        return stubbedUser
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="mb-4">
+                        <h2>4. Testing Async Operations</h2>
+                        <pre><code class="language-swift">class AsyncTestingExamples: XCTestCase {
+    func testAsyncOperationWithExpectation() {
+        let expectation = expectation(description: "Data loaded")
+        let mockService = MockUserService()
+        mockService.fetchUserResult = .success(User(id: "1", name: "Test", email: "test@example.com"))
+        
+        Task {
+            do {
+                let user = try await mockService.fetchUser(id: "1")
+                XCTAssertEqual(user.name, "Test")
+                expectation.fulfill()
+            } catch {
+                XCTFail("Unexpected error: \(error)")
+            }
+        }
+        
+        wait(for: [expectation], timeout: 2.0)
+    }
+    
+    func testAsyncOperationWithAsyncAwait() async throws {
+        let mockService = MockUserService()
+        mockService.fetchUserResult = .success(User(id: "1", name: "Test", email: "test@example.com"))
+        
+        let user = try await mockService.fetchUser(id: "1")
+        XCTAssertEqual(user.name, "Test")
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="mb-4">
+                        <h2>5. Test-Driven Development (TDD)</h2>
+                        <pre><code class="language-swift">// TDD Example: Red-Green-Refactor cycle
+class CalculatorTests: XCTestCase {
+    var calculator: Calculator!
+    
+    override func setUp() {
+        super.setUp()
+        calculator = Calculator()
+    }
+    
+    // Red: Write failing test
+    func testAddition() {
+        let result = calculator.add(2, 3)
+        XCTAssertEqual(result, 5)
+    }
+    
+    // Green: Implement minimal code to pass
+    func testSubtraction() {
+        let result = calculator.subtract(5, 3)
+        XCTAssertEqual(result, 2)
+    }
+    
+    // Refactor: Improve code while keeping tests green
+    func testMultiplication() {
+        let result = calculator.multiply(4, 3)
+        XCTAssertEqual(result, 12)
+    }
+}
+
+class Calculator {
+    func add(_ a: Int, _ b: Int) -> Int {
+        return a + b
+    }
+    
+    func subtract(_ a: Int, _ b: Int) -> Int {
+        return a - b
+    }
+    
+    func multiply(_ a: Int, _ b: Int) -> Int {
+        return a * b
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="mb-4">
+                        <h2>6. Testing Best Practices</h2>
+                        <ul>
+                            <li><strong>Use dependency injection</strong> to make testing easier</li>
+                            <li><strong>Follow the AAA pattern</strong> (Arrange, Act, Assert)</li>
+                            <li><strong>Test one thing at a time</strong> with focused, small tests</li>
+                            <li><strong>Use descriptive test names</strong> that explain what is being tested</li>
+                            <li><strong>Mock external dependencies</strong> but not internal logic</li>
+                            <li><strong>Test edge cases and error conditions</strong></li>
+                        </ul>
+                    </div>
+
+                    <footer class="mt-5 pt-4 border-top">
+                        <p><a href="https://github.com/MananPatel95/iOS-Notes" target="_blank" rel="noopener">View complete testing examples on GitHub</a></p>
+                    </footer>
+                </article>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 
