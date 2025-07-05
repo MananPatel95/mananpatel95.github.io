@@ -34,7 +34,7 @@
 <body>
     <!--Main menu-->
     <div class="menu" role="navigation" aria-label="Main navigation">
-        <div class="container">
+        <div class="container" style="position: relative; z-index: 1;">
             <div class="row">
                 <div class="menu__wrapper col-md-12">
                     <nav class="" role="navigation">
@@ -53,28 +53,28 @@
 
     <!--Header-->
     <header class="main-header" style="" role="banner" aria-label="Swift Concurrency Blog Post">
-        <div class="container">
+        <div class="container" style="position: relative; z-index: 1;">
             <div class="row personal-profile">
                 <div class="col-md-12 text-center">
-                    <div class="d-flex justify-content-center align-items-center gap-3 mb-3">
+                    <div class="d-flex justify-content-center align-items-center gap-3 mb-3" style="position: relative; z-index: 2;">
                         <span class="badge" style="background-color: #fff; color: #6d56c1; padding: 8px 16px; font-size: 14px; font-weight: 600;">Concurrency</span>
-                        <small style="color: #fff; opacity: 0.8;">
+                        <small style="color: #fff; opacity: 0.9 !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
                             <i class="fas fa-calendar"></i> February 28, 2024
                         </small>
-                        <small style="color: #fff; opacity: 0.8;">
+                        <small style="color: #fff; opacity: 0.9 !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
                             <i class="fas fa-clock"></i> 12 min read
                         </small>
                     </div>
-                    <h1 style="color: #fff !important; font-size: 36px; font-weight: 700; margin-bottom: 20px; line-height: 1.2; opacity: 1 !important; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">Mastering Swift Concurrency and Multithreading</h1>
-                    <p style="color: #fff !important; margin-bottom: 30px; font-size: 18px; opacity: 1 !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+                    <h1 style="color: #fff !important; font-size: 36px; font-weight: 700; margin-bottom: 20px; line-height: 1.2; opacity: 1 !important; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); position: relative; z-index: 2;">Mastering Swift Concurrency and Multithreading</h1>
+                    <p style="color: #fff !important; margin-bottom: 30px; font-size: 18px; opacity: 1 !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); position: relative; z-index: 2;">
                         From GCD to Swift Actors: A complete guide to handling concurrent operations in modern iOS development, 
                         based on real-world production experience.
                     </p>
-                    <div class="d-flex justify-content-center align-items-center gap-3 mb-4">
+                    <div class="d-flex justify-content-center align-items-center gap-3 mb-4" style="position: relative; z-index: 2;">
                         <img src="../images/Headshot1.jpg" alt="Manan Patel" class="rounded-circle" width="50" height="50" style="border: 3px solid #fff; opacity: 1 !important;">
                         <div style="color: #fff !important; text-align: left; opacity: 1 !important;">
-                            <strong style="font-size: 16px; color: #fff !important; opacity: 1 !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">Manan Patel</strong><br>
-                            <small style="color: #fff !important; opacity: 1 !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">Senior iOS Developer</small>
+                            <strong style="font-size: 16px; color: #fff !important; opacity: 1 !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); position: relative; z-index: 2;">Manan Patel</strong><br>
+                            <small style="color: #fff !important; opacity: 1 !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); position: relative; z-index: 2;">Senior iOS Developer</small>
                         </div>
                     </div>
                 </div>
@@ -83,7 +83,7 @@
     </header>
     <!--Header-->
 
-    <main class="container mt-5">
+    <main class="container" style="margin-top: 40px; padding-top: 40px;">
         <div class="row">
             <div class="col-lg-8 mx-auto">
                 <article>
