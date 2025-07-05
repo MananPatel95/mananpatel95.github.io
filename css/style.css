@@ -98,6 +98,7 @@ input[type="button"] {
 .personal-profile .personal-profile__name {
   font-size: 44px;
   line-height: 50px;
+  font-family: Roboto Mono, monospace;
   font-weight: 700;
   margin-top: 0;
   margin-bottom: 10px;

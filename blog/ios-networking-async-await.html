@@ -27,10 +27,10 @@
                             <li role="none"><a href="../index.html#resume" role="menuitem" aria-label="Resume and Experience">Resume</a></li>
                         </ul>
                     </nav>
-                </div>
-            </div>
-        </div>
-    </div>
+                </div><br>
+            </div><br>
+        </div><br>
+    </div><br>
     <!--Main menu-->
 
     <!--Header-->
@@ -46,21 +46,21 @@
                         <small style="color: #fff; opacity: 0.9 !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
                             <i class="fas fa-clock"></i> 11 min read
                         </small>
-                    </div>
+                    </div><br>
                     <h1 style="color: #fff !important; font-size: 36px; font-weight: 700; margin-bottom: 20px; line-height: 1.2; opacity: 1 !important; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); position: relative; z-index: 2;">Modern iOS Networking with Async/Await</h1>
                     <p style="color: #fff !important; margin-bottom: 30px; font-size: 18px; opacity: 1 !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); position: relative; z-index: 2;">
                         Building robust networking layers using Swift's modern async/await pattern and protocol-oriented programming.
-                    </p>
+                    </p><br>
                     <div class="d-flex justify-content-center align-items-center gap-3 mb-4" style="position: relative; z-index: 2;">
                         <img src="../images/Headshot1.jpg" alt="Manan Patel" class="rounded-circle" width="50" height="50" style="border: 3px solid #fff; opacity: 1 !important;">
                         <div style="color: #fff !important; text-align: left; opacity: 1 !important;">
                             <strong style="font-size: 16px; color: #fff !important; opacity: 1 !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); position: relative; z-index: 2;">Manan Patel</strong><br>
                             <small style="color: #fff !important; opacity: 1 !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); position: relative; z-index: 2;">Senior iOS Developer</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                        </div><br>
+                    </div><br>
+                </div><br>
+            </div><br>
+        </div><br>
     </header>
     <!--Header-->
 
@@ -69,13 +69,13 @@
             <div class="col-lg-8 mx-auto">
                 <article style="font-size: 18px; line-height: 30px; color: #555;">
 
-                    <div class="mb-4">
-                        <h2>Modern Networking Architecture</h2>
-                        <p>Building robust networking layers using Swift's modern async/await pattern and protocol-oriented programming. These patterns are used in production iOS applications.</p>
-                    </div>
+                    <div style="margin-bottom: 60px;">
+                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">Modern Networking Architecture</h2>
+                        <p style="margin-bottom: 25px; line-height: 30px;">Building robust networking layers using Swift's modern async/await pattern and protocol-oriented programming. These patterns are used in production iOS applications.</p><br>
+                    </div><br>
 
-                    <div class="mb-4">
-                        <h2>1. Protocol-Oriented Network Layer</h2>
+                    <div style="margin-bottom: 60px;">
+                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">1. Protocol-Oriented Network Layer</h2>
                         <pre><code class="language-swift">// Network service protocol
 protocol NetworkServiceProtocol {
     func request<T: Codable>(_ endpoint: Endpoint) async throws -> T
@@ -128,11 +128,11 @@ actor NetworkService: NetworkServiceProtocol {
         
         return try JSONDecoder().decode(T.self, from: data)
     }
-}</code></pre>
-                    </div>
+}</code></pre><br><br><br><br>
+                    </div><br>
 
-                    <div class="mb-4">
-                        <h2>2. Error Handling</h2>
+                    <div style="margin-bottom: 60px;">
+                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">2. Error Handling</h2>
                         <pre><code class="language-swift">enum NetworkError: Error, LocalizedError {
     case invalidURL
     case invalidResponse
@@ -160,11 +160,11 @@ actor NetworkService: NetworkServiceProtocol {
             return "Server error"
         }
     }
-}</code></pre>
-                    </div>
+}</code></pre><br><br><br><br>
+                    </div><br>
 
-                    <div class="mb-4">
-                        <h2>3. Practical Usage Examples</h2>
+                    <div style="margin-bottom: 60px;">
+                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">3. Practical Usage Examples</h2>
                         <pre><code class="language-swift">// API service for user management
 class UserService {
     private let networkService: NetworkServiceProtocol
@@ -222,11 +222,11 @@ class UserViewModel: ObservableObject {
         
         isLoading = false
     }
-}</code></pre>
-                    </div>
+}</code></pre><br><br><br><br>
+                    </div><br>
 
-                    <div class="mb-4">
-                        <h2>4. Authentication & Token Management</h2>
+                    <div style="margin-bottom: 60px;">
+                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">4. Authentication & Token Management</h2>
                         <pre><code class="language-swift">actor AuthenticatedNetworkService: NetworkServiceProtocol {
     private let baseService: NetworkServiceProtocol
     private var authToken: String?
@@ -266,11 +266,11 @@ class UserViewModel: ObservableObject {
     private func refreshToken() async throws {
         // Implement token refresh logic
     }
-}</code></pre>
-                    </div>
+}</code></pre><br><br><br><br>
+                    </div><br>
 
-                    <div class="mb-4">
-                        <h2>5. Caching Strategy</h2>
+                    <div style="margin-bottom: 60px;">
+                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">5. Caching Strategy</h2>
                         <pre><code class="language-swift">actor CachingNetworkService: NetworkServiceProtocol {
     private let baseService: NetworkServiceProtocol
     private var cache: [String: CachedResponse] = [:]
@@ -314,11 +314,11 @@ class UserViewModel: ObservableObject {
         
         return result
     }
-}</code></pre>
-                    </div>
+}</code></pre><br><br><br><br>
+                    </div><br>
 
-                    <div class="mb-4">
-                        <h2>6. Testing Network Code</h2>
+                    <div style="margin-bottom: 60px;">
+                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">6. Testing Network Code</h2>
                         <pre><code class="language-swift">// Mock network service for testing
 class MockNetworkService: NetworkServiceProtocol {
     var responses: [String: Result<Data, Error>] = [:]
@@ -353,27 +353,27 @@ class UserServiceTests: XCTestCase {
         XCTAssertEqual(user.name, "John Doe")
         XCTAssertEqual(user.email, "john@example.com")
     }
-}</code></pre>
-                    </div>
+}</code></pre><br><br><br><br>
+                    </div><br>
 
-                    <div class="mb-4">
-                        <h2>Best Practices</h2>
-                        <ul>
-                            <li><strong>Use actors for network services</strong> to ensure thread safety</li>
-                            <li><strong>Implement proper error handling</strong> with custom error types</li>
-                            <li><strong>Add authentication layers</strong> for secure API access</li>
-                            <li><strong>Cache responses when appropriate</strong> to improve performance</li>
-                            <li><strong>Use protocol-oriented design</strong> for testability</li>
-                            <li><strong>Handle network timeouts and retries</strong> gracefully</li>
+                    <div style="margin-bottom: 60px;">
+                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">Best Practices</h2>
+                        <ul style="margin-bottom: 30px; line-height: 28px;">
+                            <li style="margin-bottom: 8px;"><strong>Use actors for network services</strong> to ensure thread safety</li>
+                            <li style="margin-bottom: 8px;"><strong>Implement proper error handling</strong> with custom error types</li>
+                            <li style="margin-bottom: 8px;"><strong>Add authentication layers</strong> for secure API access</li>
+                            <li style="margin-bottom: 8px;"><strong>Cache responses when appropriate</strong> to improve performance</li>
+                            <li style="margin-bottom: 8px;"><strong>Use protocol-oriented design</strong> for testability</li>
+                            <li style="margin-bottom: 8px;"><strong>Handle network timeouts and retries</strong> gracefully</li>
                         </ul>
-                    </div>
+                    </div><br>
 
                     <footer class="mt-5 pt-4 border-top">
-                        <p><a href="https://github.com/MananPatel95/iOS-Notes" target="_blank" rel="noopener">View complete networking examples on GitHub</a></p>
+                        <p style="margin-bottom: 25px; line-height: 30px;"><a href="https://github.com/MananPatel95/iOS-Notes" target="_blank" rel="noopener">View complete networking examples on GitHub</a></p><br>
                     </footer>
                 </article>
-            </div>
-        </div>
+            </div><br>
+        </div><br>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

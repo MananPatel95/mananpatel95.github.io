@@ -72,10 +72,10 @@
                             <li role="none"><a href="../index.html#resume" role="menuitem" aria-label="Resume and Experience">Resume</a></li>
                         </ul>
                     </nav>
-                </div>
-            </div>
-        </div>
-    </div>
+                </div><br>
+            </div><br>
+        </div><br>
+    </div><br>
     <!--Main menu-->
 
     <!--Header-->
@@ -91,7 +91,7 @@
                         <small style="color: #fff !important; opacity: 0.9 !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
                             <i class="fas fa-clock"></i> 8 min read
                         </small>
-                    </div>
+                    </div><br>
                     <h1 style="color: #fff !important; font-size: 36px; font-weight: 700; margin-bottom: 20px; line-height: 1.2; opacity: 1 !important; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); position: relative; z-index: 2;">iOS Architecture Patterns: MVC vs MVVM vs VIPER</h1>
                     <p style="color: #fff !important; margin-bottom: 30px; font-size: 18px; opacity: 1 !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); position: relative; z-index: 2;">
                         A comprehensive guide to choosing the right architecture pattern for your iOS applications, 
@@ -102,11 +102,11 @@
                         <div style="color: #fff !important; text-align: left; opacity: 1 !important;">
                             <strong style="font-size: 16px; color: #fff !important; opacity: 1 !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">Manan Patel</strong><br>
                             <small style="color: #fff !important; opacity: 1 !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">Senior iOS Developer</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                        </div><br>
+                    </div><br>
+                </div><br>
+            </div><br>
+        </div><br>
     </header>
     <!--Header-->
 
@@ -127,23 +127,25 @@
                             <strong>MVC</strong>, <strong>MVVM</strong>, and <strong>VIPER</strong>, along with practical guidance 
                             on when to use each one.
                         </p>
-                    </div>
+                    </div><br>
 
-                    <div class="mb-4">
-                        <h2>1. Model-View-Controller (MVC)</h2>
-                        <p>
+                    <div style="margin-bottom: 60px;">
+                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; color: #333; font-family: Roboto Mono, monospace;">1. Model-View-Controller (MVC)</h2>
+                        <p style="margin-bottom: 30px;">
                             MVC is the default architecture pattern in UIKit and the one most iOS developers start with. 
                             Despite criticism about "Massive View Controllers," MVC can be effective when implemented correctly.
                         </p>
+                        <br>
 
-                        <h3>How MVC Works</h3>
-                        <ul>
-                            <li><strong>Model:</strong> Data and business logic</li>
-                            <li><strong>View:</strong> UI components (UIView, UIButton, etc.)</li>
-                            <li><strong>Controller:</strong> Mediates between Model and View (UIViewController)</li>
+                        <h3 style="font-size: 22px; line-height: 28px; font-weight: 600; margin-bottom: 20px; margin-top: 40px; color: #444;">How MVC Works</h3>
+                        <ul style="margin-bottom: 30px; line-height: 28px;">
+                            <li style="margin-bottom: 8px;"><strong>Model:</strong> Data and business logic</li>
+                            <li style="margin-bottom: 8px;"><strong>View:</strong> UI components (UIView, UIButton, etc.)</li>
+                            <li style="margin-bottom: 8px;"><strong>Controller:</strong> Mediates between Model and View (UIViewController)</li>
                         </ul>
+                        <br>
 
-                        <h3>Code Example</h3>
+                        <h3 style="font-size: 22px; line-height: 28px; font-weight: 600; margin-bottom: 20px; margin-top: 40px; color: #444;">Code Example</h3>
                         <pre><code class="language-swift">// Model
 struct User {
     let id: String
@@ -177,51 +179,55 @@ class UserViewController: UIViewController {
         nameLabel.text = user?.name
         emailLabel.text = user?.email
     }
-}</code></pre>
+}</code></pre><br><br>
+                        <br><br>
 
-                        <h3>When to Use MVC</h3>
-                        <ul>
-                            <li>Simple applications with straightforward UI</li>
-                            <li>Prototypes and MVPs</li>
-                            <li>When team is new to iOS development</li>
-                            <li>Small projects with limited complexity</li>
+                        <h3 style="font-size: 22px; line-height: 28px; font-weight: 600; margin-bottom: 20px; margin-top: 40px; color: #444;">When to Use MVC</h3>
+                        <ul style="margin-bottom: 30px; line-height: 28px;">
+                            <li style="margin-bottom: 8px;">Simple applications with straightforward UI</li>
+                            <li style="margin-bottom: 8px;">Prototypes and MVPs</li>
+                            <li style="margin-bottom: 8px;">When team is new to iOS development</li>
+                            <li style="margin-bottom: 8px;">Small projects with limited complexity</li>
                         </ul>
+                        <br>
 
-                        <h3>Pros & Cons</h3>
-                        <div class="row">
+                        <h3 style="font-size: 22px; line-height: 28px; font-weight: 600; margin-bottom: 20px; margin-top: 40px; color: #444;">Pros & Cons</h3>
+                        <div class="row" style="margin-bottom: 30px;">
                             <div class="col-md-6">
-                                <h4 class="text-success">Pros</h4>
-                                <ul>
-                                    <li>Simple to understand</li>
-                                    <li>Built into UIKit</li>
-                                    <li>Fast to implement</li>
-                                    <li>Good for small projects</li>
+                                <h4 class="text-success" style="font-size: 18px; margin-bottom: 15px;">Pros</h4>
+                                <ul style="line-height: 26px;">
+                                    <li style="margin-bottom: 6px;">Simple to understand</li>
+                                    <li style="margin-bottom: 6px;">Built into UIKit</li>
+                                    <li style="margin-bottom: 6px;">Fast to implement</li>
+                                    <li style="margin-bottom: 6px;">Good for small projects</li>
                                 </ul>
-                            </div>
+                            </div><br>
                             <div class="col-md-6">
-                                <h4 class="text-danger">Cons</h4>
-                                <ul>
-                                    <li>View Controllers can become massive</li>
-                                    <li>Difficult to unit test</li>
-                                    <li>Tight coupling between components</li>
-                                    <li>Poor separation of concerns</li>
+                                <h4 class="text-danger" style="font-size: 18px; margin-bottom: 15px;">Cons</h4>
+                                <ul style="line-height: 26px;">
+                                    <li style="margin-bottom: 6px;">View Controllers can become massive</li>
+                                    <li style="margin-bottom: 6px;">Difficult to unit test</li>
+                                    <li style="margin-bottom: 6px;">Tight coupling between components</li>
+                                    <li style="margin-bottom: 6px;">Poor separation of concerns</li>
                                 </ul>
-                            </div>
-                        </div>
-                    </div>
+                            </div><br>
+                        </div><br>
+                    </div><br>
+                    <br><br>
 
-                    <div class="mb-4">
-                        <h2>2. Model-View-ViewModel (MVVM)</h2>
-                        <p>
+                    <div style="margin-bottom: 60px;">
+                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; color: #333; font-family: Roboto Mono, monospace;">2. Model-View-ViewModel (MVVM)</h2>
+                        <p style="margin-bottom: 30px;">
                             MVVM addresses many of MVC's shortcomings by introducing a ViewModel layer that handles presentation logic 
                             and provides better testability. I've used MVVM extensively in production apps with great success.
                         </p>
+                        <br>
 
-                        <h3>How MVVM Works</h3>
-                        <ul>
-                            <li><strong>Model:</strong> Data and business logic</li>
-                            <li><strong>View:</strong> UI components + View Controller (presentation layer)</li>
-                            <li><strong>ViewModel:</strong> Presentation logic and state management</li>
+                        <h3 style="font-size: 22px; line-height: 28px; font-weight: 600; margin-bottom: 20px; margin-top: 40px; color: #444;">How MVVM Works</h3>
+                        <ul style="margin-bottom: 30px; line-height: 28px;">
+                            <li style="margin-bottom: 8px;"><strong>Model:</strong> Data and business logic</li>
+                            <li style="margin-bottom: 8px;"><strong>View:</strong> UI components + View Controller (presentation layer)</li>
+                            <li style="margin-bottom: 8px;"><strong>ViewModel:</strong> Presentation logic and state management</li>
                         </ul>
 
                         <h3>Code Example</h3>
@@ -292,53 +298,53 @@ class UserViewController: UIViewController {
             }
             .store(in: &cancellables)
     }
-}</code></pre>
+}</code></pre><br><br>
 
                         <h3>When to Use MVVM</h3>
-                        <ul>
-                            <li>Medium to large applications</li>
-                            <li>When testability is important</li>
-                            <li>Apps with complex UI logic</li>
-                            <li>When using data binding (Combine/RxSwift)</li>
+                        <ul style="margin-bottom: 30px; line-height: 28px;">
+                            <li style="margin-bottom: 8px;">Medium to large applications</li>
+                            <li style="margin-bottom: 8px;">When testability is important</li>
+                            <li style="margin-bottom: 8px;">Apps with complex UI logic</li>
+                            <li style="margin-bottom: 8px;">When using data binding (Combine/RxSwift)</li>
                         </ul>
 
                         <h3>Pros & Cons</h3>
                         <div class="row">
                             <div class="col-md-6">
                                 <h4 class="text-success">Pros</h4>
-                                <ul>
-                                    <li>Better separation of concerns</li>
-                                    <li>Highly testable</li>
-                                    <li>Reusable ViewModels</li>
-                                    <li>Works well with Combine/SwiftUI</li>
+                                <ul style="margin-bottom: 30px; line-height: 28px;">
+                                    <li style="margin-bottom: 8px;">Better separation of concerns</li>
+                                    <li style="margin-bottom: 8px;">Highly testable</li>
+                                    <li style="margin-bottom: 8px;">Reusable ViewModels</li>
+                                    <li style="margin-bottom: 8px;">Works well with Combine/SwiftUI</li>
                                 </ul>
-                            </div>
+                            </div><br>
                             <div class="col-md-6">
                                 <h4 class="text-danger">Cons</h4>
-                                <ul>
-                                    <li>More initial setup</li>
-                                    <li>Overkill for simple screens</li>
-                                    <li>Learning curve for data binding</li>
-                                    <li>Memory leaks if not careful with bindings</li>
+                                <ul style="margin-bottom: 30px; line-height: 28px;">
+                                    <li style="margin-bottom: 8px;">More initial setup</li>
+                                    <li style="margin-bottom: 8px;">Overkill for simple screens</li>
+                                    <li style="margin-bottom: 8px;">Learning curve for data binding</li>
+                                    <li style="margin-bottom: 8px;">Memory leaks if not careful with bindings</li>
                                 </ul>
-                            </div>
-                        </div>
-                    </div>
+                            </div><br>
+                        </div><br>
+                    </div><br>
 
                     <div class="mb-4">
                         <h2>3. View-Interactor-Presenter-Entity-Router (VIPER)</h2>
-                        <p>
+                        <p style="margin-bottom: 25px; line-height: 30px;">
                             VIPER is a more complex architecture that provides maximum separation of concerns. 
                             I've used it in large enterprise applications where multiple teams work on the same codebase.
                         </p>
 
                         <h3>How VIPER Works</h3>
-                        <ul>
-                            <li><strong>View:</strong> UI components and user interaction</li>
-                            <li><strong>Interactor:</strong> Business logic and data operations</li>
-                            <li><strong>Presenter:</strong> Presentation logic and formatting</li>
-                            <li><strong>Entity:</strong> Data models</li>
-                            <li><strong>Router:</strong> Navigation logic</li>
+                        <ul style="margin-bottom: 30px; line-height: 28px;">
+                            <li style="margin-bottom: 8px;"><strong>View:</strong> UI components and user interaction</li>
+                            <li style="margin-bottom: 8px;"><strong>Interactor:</strong> Business logic and data operations</li>
+                            <li style="margin-bottom: 8px;"><strong>Presenter:</strong> Presentation logic and formatting</li>
+                            <li style="margin-bottom: 8px;"><strong>Entity:</strong> Data models</li>
+                            <li style="margin-bottom: 8px;"><strong>Router:</strong> Navigation logic</li>
                         </ul>
 
                         <h3>Code Example</h3>
@@ -409,42 +415,42 @@ class UserPresenter: UserPresenterProtocol {
     func didReceiveError(_ error: Error) {
         view?.displayError(error.localizedDescription)
     }
-}</code></pre>
+}</code></pre><br><br>
 
                         <h3>When to Use VIPER</h3>
-                        <ul>
-                            <li>Large, complex applications</li>
-                            <li>Enterprise applications with multiple teams</li>
-                            <li>When maximum testability is required</li>
-                            <li>Apps with complex navigation flows</li>
+                        <ul style="margin-bottom: 30px; line-height: 28px;">
+                            <li style="margin-bottom: 8px;">Large, complex applications</li>
+                            <li style="margin-bottom: 8px;">Enterprise applications with multiple teams</li>
+                            <li style="margin-bottom: 8px;">When maximum testability is required</li>
+                            <li style="margin-bottom: 8px;">Apps with complex navigation flows</li>
                         </ul>
 
                         <h3>Pros & Cons</h3>
                         <div class="row">
                             <div class="col-md-6">
                                 <h4 class="text-success">Pros</h4>
-                                <ul>
-                                    <li>Maximum separation of concerns</li>
-                                    <li>Highly testable</li>
-                                    <li>Great for large teams</li>
-                                    <li>Clear navigation patterns</li>
+                                <ul style="margin-bottom: 30px; line-height: 28px;">
+                                    <li style="margin-bottom: 8px;">Maximum separation of concerns</li>
+                                    <li style="margin-bottom: 8px;">Highly testable</li>
+                                    <li style="margin-bottom: 8px;">Great for large teams</li>
+                                    <li style="margin-bottom: 8px;">Clear navigation patterns</li>
                                 </ul>
-                            </div>
+                            </div><br>
                             <div class="col-md-6">
                                 <h4 class="text-danger">Cons</h4>
-                                <ul>
-                                    <li>High complexity and boilerplate</li>
-                                    <li>Overkill for most applications</li>
-                                    <li>Steep learning curve</li>
-                                    <li>Slower initial development</li>
+                                <ul style="margin-bottom: 30px; line-height: 28px;">
+                                    <li style="margin-bottom: 8px;">High complexity and boilerplate</li>
+                                    <li style="margin-bottom: 8px;">Overkill for most applications</li>
+                                    <li style="margin-bottom: 8px;">Steep learning curve</li>
+                                    <li style="margin-bottom: 8px;">Slower initial development</li>
                                 </ul>
-                            </div>
-                        </div>
-                    </div>
+                            </div><br>
+                        </div><br>
+                    </div><br>
 
                     <div class="mb-4">
                         <h2>My Recommendations</h2>
-                        <p>Based on my experience building iOS apps in different contexts, here's when I recommend each pattern:</p>
+                        <p style="margin-bottom: 25px; line-height: 30px;">Based on my experience building iOS apps in different contexts, here's when I recommend each pattern:</p>
                         
                         <div class="table-responsive">
                             <table class="table table-striped">
@@ -478,19 +484,19 @@ class UserPresenter: UserPresenterProtocol {
                                     </tr>
                                 </tbody>
                             </table>
-                        </div>
-                    </div>
+                        </div><br>
+                    </div><br>
 
                     <div class="mb-4">
                         <h2>Key Takeaways</h2>
                         <ol>
-                            <li><strong>Start Simple:</strong> Don't over-engineer early. Begin with MVC for prototypes.</li>
-                            <li><strong>Consider Your Team:</strong> Choose patterns your team can understand and maintain.</li>
-                            <li><strong>Plan for Growth:</strong> MVVM provides the best balance for most production apps.</li>
-                            <li><strong>Test Early:</strong> Architecture patterns that support testing lead to higher quality apps.</li>
-                            <li><strong>Be Consistent:</strong> Whatever pattern you choose, use it consistently throughout your app.</li>
+                            <li style="margin-bottom: 8px;"><strong>Start Simple:</strong> Don't over-engineer early. Begin with MVC for prototypes.</li>
+                            <li style="margin-bottom: 8px;"><strong>Consider Your Team:</strong> Choose patterns your team can understand and maintain.</li>
+                            <li style="margin-bottom: 8px;"><strong>Plan for Growth:</strong> MVVM provides the best balance for most production apps.</li>
+                            <li style="margin-bottom: 8px;"><strong>Test Early:</strong> Architecture patterns that support testing lead to higher quality apps.</li>
+                            <li style="margin-bottom: 8px;"><strong>Be Consistent:</strong> Whatever pattern you choose, use it consistently throughout your app.</li>
                         </ol>
-                    </div>
+                    </div><br>
 
                     <div class="alert alert-info">
                         <h4><i class="fas fa-lightbulb"></i> Pro Tip</h4>
@@ -499,7 +505,7 @@ class UserPresenter: UserPresenterProtocol {
                             <a href="https://github.com/MananPatel95/iOS-Notes" target="_blank" rel="noopener">iOS-Notes repository</a>. 
                             The code has been tested in production applications and includes unit tests for each pattern.
                         </p>
-                    </div>
+                    </div><br>
 
                     <footer class="mt-5 pt-4 border-top">
                         <div class="row">
@@ -514,20 +520,20 @@ class UserPresenter: UserPresenterProtocol {
                                        class="btn btn-outline-primary btn-sm" target="_blank" rel="noopener">
                                         <i class="fab fa-linkedin"></i> LinkedIn
                                     </a>
-                                </div>
-                            </div>
+                                </div><br>
+                            </div><br>
                             <div class="col-md-6 text-md-end">
                                 <h5>Related Posts</h5>
                                 <ul class="list-unstyled">
-                                    <li><a href="swift-concurrency-multithreading.html">Swift Concurrency and Multithreading</a></li>
-                                    <li><a href="ios-unit-testing-mock-objects.html">iOS Unit Testing with Mock Objects</a></li>
+                                    <li style="margin-bottom: 8px;"><a href="swift-concurrency-multithreading.html">Swift Concurrency and Multithreading</a></li>
+                                    <li style="margin-bottom: 8px;"><a href="ios-unit-testing-mock-objects.html">iOS Unit Testing with Mock Objects</a></li>
                                 </ul>
-                            </div>
-                        </div>
+                            </div><br>
+                        </div><br>
                     </footer>
                 </article>
-            </div>
-        </div>
+            </div><br>
+        </div><br>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

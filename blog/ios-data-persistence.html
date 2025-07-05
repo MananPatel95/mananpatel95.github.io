@@ -27,10 +27,10 @@
                             <li role="none"><a href="../index.html#resume" role="menuitem" aria-label="Resume and Experience">Resume</a></li>
                         </ul>
                     </nav>
-                </div>
-            </div>
-        </div>
-    </div>
+                </div><br>
+            </div><br>
+        </div><br>
+    </div><br>
     <!--Main menu-->
 
     <!--Header-->
@@ -46,21 +46,21 @@
                         <small style="color: #fff; opacity: 0.9 !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
                             <i class="fas fa-clock"></i> 15 min read
                         </small>
-                    </div>
+                    </div><br>
                     <h1 style="color: #fff !important; font-size: 36px; font-weight: 700; margin-bottom: 20px; line-height: 1.2; opacity: 1 !important; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); position: relative; z-index: 2;">iOS Data Persistence: Complete Guide</h1>
                     <p style="color: #fff !important; margin-bottom: 30px; font-size: 18px; opacity: 1 !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); position: relative; z-index: 2;">
                         Comprehensive comparison of UserDefaults, CoreData, Keychain, and SwiftData for iOS app data storage.
-                    </p>
+                    </p><br>
                     <div class="d-flex justify-content-center align-items-center gap-3 mb-4" style="position: relative; z-index: 2;">
                         <img src="../images/Headshot1.jpg" alt="Manan Patel" class="rounded-circle" width="50" height="50" style="border: 3px solid #fff; opacity: 1 !important;">
                         <div style="color: #fff !important; text-align: left; opacity: 1 !important;">
                             <strong style="font-size: 16px; color: #fff !important; opacity: 1 !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); position: relative; z-index: 2;">Manan Patel</strong><br>
                             <small style="color: #fff !important; opacity: 1 !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); position: relative; z-index: 2;">Senior iOS Developer</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                        </div><br>
+                    </div><br>
+                </div><br>
+            </div><br>
+        </div><br>
     </header>
     <!--Header-->
 
@@ -69,13 +69,13 @@
             <div class="col-lg-8 mx-auto">
                 <article style="font-size: 18px; line-height: 30px; color: #555;">
 
-                    <div class="mb-4">
-                        <h2>Overview of iOS Storage Options</h2>
-                        <p>Choosing the right data persistence method is crucial for iOS app performance and user experience. This guide covers all major storage options with real-world examples.</p>
-                    </div>
+                    <div style="margin-bottom: 60px;">
+                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">Overview of iOS Storage Options</h2>
+                        <p style="margin-bottom: 25px; line-height: 30px;">Choosing the right data persistence method is crucial for iOS app performance and user experience. This guide covers all major storage options with real-world examples.</p><br>
+                    </div><br>
 
-                    <div class="mb-4">
-                        <h2>1. UserDefaults - Simple Key-Value Storage</h2>
+                    <div style="margin-bottom: 60px;">
+                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">1. UserDefaults - Simple Key-Value Storage</h2>
                         <pre><code class="language-swift">// Basic UserDefaults usage
 UserDefaults.standard.set("John Doe", forKey: "username")
 UserDefaults.standard.set(true, forKey: "isFirstLaunch")
@@ -96,19 +96,19 @@ struct UserPreferences: Codable {
 let preferences = UserPreferences(theme: "dark", notifications: true, language: "en")
 if let encoded = try? JSONEncoder().encode(preferences) {
     UserDefaults.standard.set(encoded, forKey: "userPreferences")
-}</code></pre>
+}</code></pre><br><br><br><br>
 
-                        <h3>When to Use UserDefaults</h3>
-                        <ul>
-                            <li>App settings and preferences</li>
-                            <li>Simple configuration data</li>
-                            <li>Small amounts of data (&lt;1MB)</li>
-                            <li>Data that needs to persist between app launches</li>
+                        <h3 style="font-size: 22px; line-height: 28px; font-weight: 600; margin-bottom: 20px; margin-top: 40px; color: #444;">When to Use UserDefaults</h3>
+                        <ul style="margin-bottom: 30px; line-height: 28px;">
+                            <li style="margin-bottom: 8px;">App settings and preferences</li>
+                            <li style="margin-bottom: 8px;">Simple configuration data</li>
+                            <li style="margin-bottom: 8px;">Small amounts of data (&lt;1MB)</li>
+                            <li style="margin-bottom: 8px;">Data that needs to persist between app launches</li>
                         </ul>
-                    </div>
+                    </div><br>
 
-                    <div class="mb-4">
-                        <h2>2. CoreData - Object-Relational Mapping</h2>
+                    <div style="margin-bottom: 60px;">
+                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">2. CoreData - Object-Relational Mapping</h2>
                         <pre><code class="language-swift">// CoreData setup
 import CoreData
 
@@ -134,19 +134,19 @@ class CoreDataManager {
             try? context.save()
         }
     }
-}</code></pre>
+}</code></pre><br><br><br><br>
 
-                        <h3>When to Use CoreData</h3>
-                        <ul>
-                            <li>Complex relational data</li>
-                            <li>Large datasets</li>
-                            <li>Need for queries and filtering</li>
-                            <li>Data synchronization requirements</li>
+                        <h3 style="font-size: 22px; line-height: 28px; font-weight: 600; margin-bottom: 20px; margin-top: 40px; color: #444;">When to Use CoreData</h3>
+                        <ul style="margin-bottom: 30px; line-height: 28px;">
+                            <li style="margin-bottom: 8px;">Complex relational data</li>
+                            <li style="margin-bottom: 8px;">Large datasets</li>
+                            <li style="margin-bottom: 8px;">Need for queries and filtering</li>
+                            <li style="margin-bottom: 8px;">Data synchronization requirements</li>
                         </ul>
-                    </div>
+                    </div><br>
 
-                    <div class="mb-4">
-                        <h2>3. Keychain - Secure Storage</h2>
+                    <div style="margin-bottom: 60px;">
+                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">3. Keychain - Secure Storage</h2>
                         <pre><code class="language-swift">// Keychain wrapper
 class KeychainManager {
     static let shared = KeychainManager()
@@ -175,19 +175,19 @@ class KeychainManager {
         }
         return nil
     }
-}</code></pre>
+}</code></pre><br><br><br><br>
 
-                        <h3>When to Use Keychain</h3>
-                        <ul>
-                            <li>Passwords and authentication tokens</li>
-                            <li>Sensitive user data</li>
-                            <li>Cryptographic keys</li>
-                            <li>Data that should survive app deletion</li>
+                        <h3 style="font-size: 22px; line-height: 28px; font-weight: 600; margin-bottom: 20px; margin-top: 40px; color: #444;">When to Use Keychain</h3>
+                        <ul style="margin-bottom: 30px; line-height: 28px;">
+                            <li style="margin-bottom: 8px;">Passwords and authentication tokens</li>
+                            <li style="margin-bottom: 8px;">Sensitive user data</li>
+                            <li style="margin-bottom: 8px;">Cryptographic keys</li>
+                            <li style="margin-bottom: 8px;">Data that should survive app deletion</li>
                         </ul>
-                    </div>
+                    </div><br>
 
-                    <div class="mb-4">
-                        <h2>4. SwiftData - Modern Data Persistence</h2>
+                    <div style="margin-bottom: 60px;">
+                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">4. SwiftData - Modern Data Persistence</h2>
                         <pre><code class="language-swift">// SwiftData model
 import SwiftData
 
@@ -223,19 +223,19 @@ struct ContentView: View {
         context.insert(newUser)
         try? context.save()
     }
-}</code></pre>
+}</code></pre><br><br><br><br>
 
-                        <h3>When to Use SwiftData</h3>
-                        <ul>
-                            <li>SwiftUI applications</li>
-                            <li>Modern iOS development (iOS 17+)</li>
-                            <li>Type-safe data modeling</li>
-                            <li>Replacing CoreData in new projects</li>
+                        <h3 style="font-size: 22px; line-height: 28px; font-weight: 600; margin-bottom: 20px; margin-top: 40px; color: #444;">When to Use SwiftData</h3>
+                        <ul style="margin-bottom: 30px; line-height: 28px;">
+                            <li style="margin-bottom: 8px;">SwiftUI applications</li>
+                            <li style="margin-bottom: 8px;">Modern iOS development (iOS 17+)</li>
+                            <li style="margin-bottom: 8px;">Type-safe data modeling</li>
+                            <li style="margin-bottom: 8px;">Replacing CoreData in new projects</li>
                         </ul>
-                    </div>
+                    </div><br>
 
-                    <div class="mb-4">
-                        <h2>Decision Matrix</h2>
+                    <div style="margin-bottom: 60px;">
+                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">Decision Matrix</h2>
                         <table class="table table-striped">
                             <thead>
                                 <tr>
@@ -272,14 +272,14 @@ struct ContentView: View {
                                 </tr>
                             </tbody>
                         </table>
-                    </div>
+                    </div><br>
 
                     <footer class="mt-5 pt-4 border-top">
-                        <p><a href="https://github.com/MananPatel95/iOS-Notes" target="_blank" rel="noopener">View source code examples on GitHub</a></p>
+                        <p style="margin-bottom: 25px; line-height: 30px;"><a href="https://github.com/MananPatel95/iOS-Notes" target="_blank" rel="noopener">View source code examples on GitHub</a></p><br>
                     </footer>
                 </article>
-            </div>
-        </div>
+            </div><br>
+        </div><br>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

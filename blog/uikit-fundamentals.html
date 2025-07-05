@@ -27,10 +27,10 @@
                             <li role="none"><a href="../index.html#resume" role="menuitem" aria-label="Resume and Experience">Resume</a></li>
                         </ul>
                     </nav>
-                </div>
-            </div>
-        </div>
-    </div>
+                </div><br>
+            </div><br>
+        </div><br>
+    </div><br>
     <!--Main menu-->
 
     <!--Header-->
@@ -46,21 +46,21 @@
                         <small style="color: #fff; opacity: 0.9 !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
                             <i class="fas fa-clock"></i> 13 min read
                         </small>
-                    </div>
+                    </div><br>
                     <h1 style="color: #fff !important; font-size: 36px; font-weight: 700; margin-bottom: 20px; line-height: 1.2; opacity: 1 !important; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); position: relative; z-index: 2;">UIKit Fundamentals: Views, Lifecycle, and Layout</h1>
                     <p style="color: #fff !important; margin-bottom: 30px; font-size: 18px; opacity: 1 !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); position: relative; z-index: 2;">
                         Deep dive into UIKit essentials: view lifecycle, responder chain, AutoLayout, and Frame vs Bounds.
-                    </p>
+                    </p><br>
                     <div class="d-flex justify-content-center align-items-center gap-3 mb-4" style="position: relative; z-index: 2;">
                         <img src="../images/Headshot1.jpg" alt="Manan Patel" class="rounded-circle" width="50" height="50" style="border: 3px solid #fff; opacity: 1 !important;">
                         <div style="color: #fff !important; text-align: left; opacity: 1 !important;">
                             <strong style="font-size: 16px; color: #fff !important; opacity: 1 !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); position: relative; z-index: 2;">Manan Patel</strong><br>
                             <small style="color: #fff !important; opacity: 1 !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); position: relative; z-index: 2;">Senior iOS Developer</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                        </div><br>
+                    </div><br>
+                </div><br>
+            </div><br>
+        </div><br>
     </header>
     <!--Header-->
 
@@ -69,9 +69,9 @@
             <div class="col-lg-8 mx-auto">
                 <article style="font-size: 18px; line-height: 30px; color: #555;">
 
-                    <div class="mb-4">
-                        <h2>View Controller Lifecycle</h2>
-                        <p>Understanding the view controller lifecycle is crucial for iOS development. Each method serves a specific purpose in the view's lifetime.</p>
+                    <div style="margin-bottom: 60px;">
+                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">View Controller Lifecycle</h2>
+                        <p style="margin-bottom: 25px; line-height: 30px;">Understanding the view controller lifecycle is crucial for iOS development. Each method serves a specific purpose in the view's lifetime.</p><br>
                         
                         <pre><code class="language-swift">class ExampleViewController: UIViewController {
     override func viewDidLoad() {
@@ -109,11 +109,11 @@
         // Stop timers, pause expensive operations
         stopLocationServices()
     }
-}</code></pre>
-                    </div>
+}</code></pre><br><br><br><br>
+                    </div><br>
 
-                    <div class="mb-4">
-                        <h2>AutoLayout Fundamentals</h2>
+                    <div style="margin-bottom: 60px;">
+                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">AutoLayout Fundamentals</h2>
                         <pre><code class="language-swift">class AutoLayoutExample: UIViewController {
     private let titleLabel = UILabel()
     private let descriptionLabel = UILabel()
@@ -170,11 +170,11 @@
             actionButton.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
-}</code></pre>
-                    </div>
+}</code></pre><br><br><br><br>
+                    </div><br>
 
-                    <div class="mb-4">
-                        <h2>Frame vs Bounds</h2>
+                    <div style="margin-bottom: 60px;">
+                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">Frame vs Bounds</h2>
                         <pre><code class="language-swift">// Frame: Position and size relative to superview
 // Bounds: Internal coordinate system of the view
 
@@ -208,11 +208,11 @@ class FrameBoundsExample: UIViewController {
         print("After rotation - Bounds: \(containerView.bounds)")
         // Bounds remain the same: (0.0, 0.0, 200.0, 200.0)
     }
-}</code></pre>
-                    </div>
+}</code></pre><br><br><br><br>
+                    </div><br>
 
-                    <div class="mb-4">
-                        <h2>Responder Chain</h2>
+                    <div style="margin-bottom: 60px;">
+                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">Responder Chain</h2>
                         <pre><code class="language-swift">class CustomView: UIView {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         print("Touch began in CustomView")
@@ -252,11 +252,11 @@ class CustomViewController: UIViewController {
             print("Device shaken!")
         }
     }
-}</code></pre>
-                    </div>
+}</code></pre><br><br><br><br>
+                    </div><br>
 
-                    <div class="mb-4">
-                        <h2>Custom Views</h2>
+                    <div style="margin-bottom: 60px;">
+                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">Custom Views</h2>
                         <pre><code class="language-swift">class CustomButton: UIView {
     private let titleLabel = UILabel()
     private let iconImageView = UIImageView()
@@ -327,27 +327,27 @@ class CustomViewController: UIViewController {
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         backgroundColor = .systemBlue
     }
-}</code></pre>
-                    </div>
+}</code></pre><br><br><br><br>
+                    </div><br>
 
-                    <div class="mb-4">
-                        <h2>Best Practices</h2>
-                        <ul>
-                            <li><strong>Use AutoLayout</strong> for responsive design across devices</li>
-                            <li><strong>Understand the view lifecycle</strong> to optimize performance</li>
-                            <li><strong>Leverage the responder chain</strong> for event handling</li>
-                            <li><strong>Create reusable custom views</strong> for consistency</li>
-                            <li><strong>Use safe area guides</strong> for proper layout on all devices</li>
-                            <li><strong>Test on multiple screen sizes</strong> and orientations</li>
+                    <div style="margin-bottom: 60px;">
+                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">Best Practices</h2>
+                        <ul style="margin-bottom: 30px; line-height: 28px;">
+                            <li style="margin-bottom: 8px;"><strong>Use AutoLayout</strong> for responsive design across devices</li>
+                            <li style="margin-bottom: 8px;"><strong>Understand the view lifecycle</strong> to optimize performance</li>
+                            <li style="margin-bottom: 8px;"><strong>Leverage the responder chain</strong> for event handling</li>
+                            <li style="margin-bottom: 8px;"><strong>Create reusable custom views</strong> for consistency</li>
+                            <li style="margin-bottom: 8px;"><strong>Use safe area guides</strong> for proper layout on all devices</li>
+                            <li style="margin-bottom: 8px;"><strong>Test on multiple screen sizes</strong> and orientations</li>
                         </ul>
-                    </div>
+                    </div><br>
 
                     <footer class="mt-5 pt-4 border-top">
-                        <p><a href="https://github.com/MananPatel95/iOS-Notes" target="_blank" rel="noopener">View UIKit examples on GitHub</a></p>
+                        <p style="margin-bottom: 25px; line-height: 30px;"><a href="https://github.com/MananPatel95/iOS-Notes" target="_blank" rel="noopener">View UIKit examples on GitHub</a></p><br>
                     </footer>
                 </article>
-            </div>
-        </div>
+            </div><br>
+        </div><br>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

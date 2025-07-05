@@ -27,10 +27,10 @@
                             <li role="none"><a href="../index.html#resume" role="menuitem" aria-label="Resume and Experience">Resume</a></li>
                         </ul>
                     </nav>
-                </div>
-            </div>
-        </div>
-    </div>
+                </div><br>
+            </div><br>
+        </div><br>
+    </div><br>
     <!--Main menu-->
 
     <!--Header-->
@@ -46,21 +46,21 @@
                         <small style="color: #fff; opacity: 0.9 !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
                             <i class="fas fa-clock"></i> 9 min read
                         </small>
-                    </div>
+                    </div><br>
                     <h1 style="color: #fff !important; font-size: 36px; font-weight: 700; margin-bottom: 20px; line-height: 1.2; opacity: 1 !important; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); position: relative; z-index: 2;">iOS Unit Testing with Mock Objects</h1>
                     <p style="color: #fff !important; margin-bottom: 30px; font-size: 18px; opacity: 1 !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); position: relative; z-index: 2;">
                         Advanced unit testing strategies using mock objects, dependency injection, and test-driven development.
-                    </p>
+                    </p><br>
                     <div class="d-flex justify-content-center align-items-center gap-3 mb-4" style="position: relative; z-index: 2;">
                         <img src="../images/Headshot1.jpg" alt="Manan Patel" class="rounded-circle" width="50" height="50" style="border: 3px solid #fff; opacity: 1 !important;">
                         <div style="color: #fff !important; text-align: left; opacity: 1 !important;">
                             <strong style="font-size: 16px; color: #fff !important; opacity: 1 !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); position: relative; z-index: 2;">Manan Patel</strong><br>
                             <small style="color: #fff !important; opacity: 1 !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); position: relative; z-index: 2;">Senior iOS Developer</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                        </div><br>
+                    </div><br>
+                </div><br>
+            </div><br>
+        </div><br>
     </header>
     <!--Header-->
 
@@ -69,13 +69,13 @@
             <div class="col-lg-8 mx-auto">
                 <article style="font-size: 18px; line-height: 30px; color: #555;">
 
-                    <div class="mb-4">
-                        <h2>Why Unit Testing Matters</h2>
-                        <p>Unit testing is essential for maintaining code quality and preventing regressions. Mock objects allow us to isolate the code under test and verify behavior without external dependencies.</p>
-                    </div>
+                    <div style="margin-bottom: 60px;">
+                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">Why Unit Testing Matters</h2>
+                        <p style="margin-bottom: 25px; line-height: 30px;">Unit testing is essential for maintaining code quality and preventing regressions. Mock objects allow us to isolate the code under test and verify behavior without external dependencies.</p><br>
+                    </div><br>
 
-                    <div class="mb-4">
-                        <h2>1. Basic Mock Objects</h2>
+                    <div style="margin-bottom: 60px;">
+                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">1. Basic Mock Objects</h2>
                         <pre><code class="language-swift">// Protocol for dependency injection
 protocol UserServiceProtocol {
     func fetchUser(id: String) async throws -> User
@@ -109,11 +109,11 @@ class MockUserService: UserServiceProtocol {
         
         return try result.get()
     }
-}</code></pre>
-                    </div>
+}</code></pre><br><br><br><br>
+                    </div><br>
 
-                    <div class="mb-4">
-                        <h2>2. Testing ViewModels</h2>
+                    <div style="margin-bottom: 60px;">
+                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">2. Testing ViewModels</h2>
                         <pre><code class="language-swift">// ViewModel under test
 @MainActor
 class UserViewModel: ObservableObject {
@@ -184,11 +184,11 @@ class UserViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.errorMessage, "User not found")
         XCTAssertEqual(mockUserService.fetchUserCallCount, 1)
     }
-}</code></pre>
-                    </div>
+}</code></pre><br><br><br><br>
+                    </div><br>
 
-                    <div class="mb-4">
-                        <h2>3. Advanced Mock Techniques</h2>
+                    <div style="margin-bottom: 60px;">
+                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">3. Advanced Mock Techniques</h2>
                         <pre><code class="language-swift">// Spy pattern for behavior verification
 class SpyUserService: UserServiceProtocol {
     var capturedFetchUserIDs: [String] = []
@@ -216,11 +216,11 @@ class StubUserService: UserServiceProtocol {
     func createUser(_ user: CreateUserRequest) async throws -> User {
         return stubbedUser
     }
-}</code></pre>
-                    </div>
+}</code></pre><br><br><br><br>
+                    </div><br>
 
-                    <div class="mb-4">
-                        <h2>4. Testing Async Operations</h2>
+                    <div style="margin-bottom: 60px;">
+                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">4. Testing Async Operations</h2>
                         <pre><code class="language-swift">class AsyncTestingExamples: XCTestCase {
     func testAsyncOperationWithExpectation() {
         let expectation = expectation(description: "Data loaded")
@@ -247,11 +247,11 @@ class StubUserService: UserServiceProtocol {
         let user = try await mockService.fetchUser(id: "1")
         XCTAssertEqual(user.name, "Test")
     }
-}</code></pre>
-                    </div>
+}</code></pre><br><br><br><br>
+                    </div><br>
 
-                    <div class="mb-4">
-                        <h2>5. Test-Driven Development (TDD)</h2>
+                    <div style="margin-bottom: 60px;">
+                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">5. Test-Driven Development (TDD)</h2>
                         <pre><code class="language-swift">// TDD Example: Red-Green-Refactor cycle
 class CalculatorTests: XCTestCase {
     var calculator: Calculator!
@@ -292,27 +292,27 @@ class Calculator {
     func multiply(_ a: Int, _ b: Int) -> Int {
         return a * b
     }
-}</code></pre>
-                    </div>
+}</code></pre><br><br><br><br>
+                    </div><br>
 
-                    <div class="mb-4">
-                        <h2>6. Testing Best Practices</h2>
-                        <ul>
-                            <li><strong>Use dependency injection</strong> to make testing easier</li>
-                            <li><strong>Follow the AAA pattern</strong> (Arrange, Act, Assert)</li>
-                            <li><strong>Test one thing at a time</strong> with focused, small tests</li>
-                            <li><strong>Use descriptive test names</strong> that explain what is being tested</li>
-                            <li><strong>Mock external dependencies</strong> but not internal logic</li>
-                            <li><strong>Test edge cases and error conditions</strong></li>
+                    <div style="margin-bottom: 60px;">
+                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">6. Testing Best Practices</h2>
+                        <ul style="margin-bottom: 30px; line-height: 28px;">
+                            <li style="margin-bottom: 8px;"><strong>Use dependency injection</strong> to make testing easier</li>
+                            <li style="margin-bottom: 8px;"><strong>Follow the AAA pattern</strong> (Arrange, Act, Assert)</li>
+                            <li style="margin-bottom: 8px;"><strong>Test one thing at a time</strong> with focused, small tests</li>
+                            <li style="margin-bottom: 8px;"><strong>Use descriptive test names</strong> that explain what is being tested</li>
+                            <li style="margin-bottom: 8px;"><strong>Mock external dependencies</strong> but not internal logic</li>
+                            <li style="margin-bottom: 8px;"><strong>Test edge cases and error conditions</strong></li>
                         </ul>
-                    </div>
+                    </div><br>
 
                     <footer class="mt-5 pt-4 border-top">
-                        <p><a href="https://github.com/MananPatel95/iOS-Notes" target="_blank" rel="noopener">View complete testing examples on GitHub</a></p>
+                        <p style="margin-bottom: 25px; line-height: 30px;"><a href="https://github.com/MananPatel95/iOS-Notes" target="_blank" rel="noopener">View complete testing examples on GitHub</a></p><br>
                     </footer>
                 </article>
-            </div>
-        </div>
+            </div><br>
+        </div><br>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

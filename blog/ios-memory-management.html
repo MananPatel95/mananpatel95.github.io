@@ -45,10 +45,10 @@
                             <li role="none"><a href="../index.html#resume" role="menuitem" aria-label="Resume and Experience">Resume</a></li>
                         </ul>
                     </nav>
-                </div>
-            </div>
-        </div>
-    </div>
+                </div><br>
+            </div><br>
+        </div><br>
+    </div><br>
     <!--Main menu-->
 
     <!--Header-->
@@ -64,22 +64,22 @@
                         <small style="color: #fff; opacity: 0.9 !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
                             <i class="fas fa-clock"></i> 10 min read
                         </small>
-                    </div>
+                    </div><br>
                     <h1 style="color: #fff !important; font-size: 36px; font-weight: 700; margin-bottom: 20px; line-height: 1.2; opacity: 1 !important; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); position: relative; z-index: 2;">iOS Memory Management: Weak vs Strong vs Unowned</h1>
                     <p style="color: #fff !important; margin-bottom: 30px; font-size: 18px; opacity: 1 !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); position: relative; z-index: 2;">
                         Understanding ARC, preventing memory leaks, and choosing the right reference types for optimal performance. 
                         Real-world examples from production iOS applications.
-                    </p>
+                    </p><br>
                     <div class="d-flex justify-content-center align-items-center gap-3 mb-4" style="position: relative; z-index: 2;">
                         <img src="../images/Headshot1.jpg" alt="Manan Patel" class="rounded-circle" width="50" height="50" style="border: 3px solid #fff; opacity: 1 !important;">
                         <div style="color: #fff !important; text-align: left; opacity: 1 !important;">
                             <strong style="font-size: 16px; color: #fff !important; opacity: 1 !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); position: relative; z-index: 2;">Manan Patel</strong><br>
                             <small style="color: #fff !important; opacity: 1 !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); position: relative; z-index: 2;">Senior iOS Developer</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                        </div><br>
+                    </div><br>
+                </div><br>
+            </div><br>
+        </div><br>
     </header>
     <!--Header-->
 
@@ -88,26 +88,26 @@
             <div class="col-lg-8 mx-auto">
                 <article style="font-size: 18px; line-height: 30px; color: #555;">
 
-                    <div class="mb-4">
-                        <h2>Understanding Automatic Reference Counting (ARC)</h2>
-                        <p>
+                    <div style="margin-bottom: 60px;">
+                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">Understanding Automatic Reference Counting (ARC)</h2>
+                        <p style="margin-bottom: 25px; line-height: 30px;">
                             Automatic Reference Counting (ARC) manages memory automatically in Swift by tracking how many references 
                             point to each object. When the reference count reaches zero, ARC deallocates the object.
-                        </p>
-                        <p>
+                        </p><br>
+                        <p style="margin-bottom: 25px; line-height: 30px;">
                             However, ARC can't handle reference cycles automatically. This is where understanding different reference 
                             types becomes crucial for preventing memory leaks and crashes.
-                        </p>
-                    </div>
+                        </p><br>
+                    </div><br>
 
-                    <div class="mb-4">
-                        <h2>1. Strong References (Default)</h2>
-                        <p>
+                    <div style="margin-bottom: 60px;">
+                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">1. Strong References (Default)</h2>
+                        <p style="margin-bottom: 25px; line-height: 30px;">
                             Strong references are the default in Swift. They increase the reference count and prevent the object 
                             from being deallocated while the reference exists.
-                        </p>
+                        </p><br>
 
-                        <h3>Basic Strong Reference Example</h3>
+                        <h3 style="font-size: 22px; line-height: 28px; font-weight: 600; margin-bottom: 20px; margin-top: 40px; color: #444;">Basic Strong Reference Example</h3>
                         <pre><code class="language-swift">class Person {
     let name: String
     
@@ -126,25 +126,25 @@ var person1: Person? = Person(name: "John") // Reference count: 1
 var person2: Person? = person1              // Reference count: 2
 
 person1 = nil                               // Reference count: 1
-person2 = nil                               // Reference count: 0, object is deallocated</code></pre>
+person2 = nil                               // Reference count: 0, object is deallocated</code></pre><br><br><br><br>
 
-                        <h3>When to Use Strong References</h3>
-                        <ul>
-                            <li>Parent-to-child relationships</li>
-                            <li>Owner-to-owned object relationships</li>
-                            <li>When you need to ensure the object stays alive</li>
-                            <li>Default choice for most properties</li>
+                        <h3 style="font-size: 22px; line-height: 28px; font-weight: 600; margin-bottom: 20px; margin-top: 40px; color: #444;">When to Use Strong References</h3>
+                        <ul style="margin-bottom: 30px; line-height: 28px;">
+                            <li style="margin-bottom: 8px;">Parent-to-child relationships</li>
+                            <li style="margin-bottom: 8px;">Owner-to-owned object relationships</li>
+                            <li style="margin-bottom: 8px;">When you need to ensure the object stays alive</li>
+                            <li style="margin-bottom: 8px;">Default choice for most properties</li>
                         </ul>
-                    </div>
+                    </div><br>
 
-                    <div class="mb-4">
-                        <h2>2. Weak References</h2>
-                        <p>
+                    <div style="margin-bottom: 60px;">
+                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">2. Weak References</h2>
+                        <p style="margin-bottom: 25px; line-height: 30px;">
                             Weak references don't increase the reference count and automatically become nil when the referenced 
                             object is deallocated. They must always be optional variables.
-                        </p>
+                        </p><br>
 
-                        <h3>Weak Reference Example</h3>
+                        <h3 style="font-size: 22px; line-height: 28px; font-weight: 600; margin-bottom: 20px; margin-top: 40px; color: #444;">Weak Reference Example</h3>
                         <pre><code class="language-swift">class Apartment {
     let number: Int
     weak var tenant: Person?  // weak reference
@@ -179,9 +179,9 @@ john?.apartment = apartment    // Person strongly references Apartment
 apartment?.tenant = john       // Apartment weakly references Person
 
 john = nil                     // Person is deallocated
-print(apartment?.tenant)       // nil - weak reference automatically set to nil</code></pre>
+print(apartment?.tenant)       // nil - weak reference automatically set to nil</code></pre><br><br><br><br>
 
-                        <h3>Common Weak Reference Patterns</h3>
+                        <h3 style="font-size: 22px; line-height: 28px; font-weight: 600; margin-bottom: 20px; margin-top: 40px; color: #444;">Common Weak Reference Patterns</h3>
                         <pre><code class="language-swift">// Delegate pattern
 protocol NetworkManagerDelegate: AnyObject {
     func didReceiveData(_ data: Data)
@@ -218,26 +218,26 @@ class ViewController: UIViewController {
     private func updateUI(with data: Data) {
         // Update UI
     }
-}</code></pre>
+}</code></pre><br><br><br><br>
 
-                        <h3>When to Use Weak References</h3>
-                        <ul>
-                            <li>Delegate properties</li>
-                            <li>Child-to-parent references</li>
-                            <li>Breaking retain cycles in closures</li>
-                            <li>Observer patterns</li>
-                            <li>When the referenced object might be deallocated</li>
+                        <h3 style="font-size: 22px; line-height: 28px; font-weight: 600; margin-bottom: 20px; margin-top: 40px; color: #444;">When to Use Weak References</h3>
+                        <ul style="margin-bottom: 30px; line-height: 28px;">
+                            <li style="margin-bottom: 8px;">Delegate properties</li>
+                            <li style="margin-bottom: 8px;">Child-to-parent references</li>
+                            <li style="margin-bottom: 8px;">Breaking retain cycles in closures</li>
+                            <li style="margin-bottom: 8px;">Observer patterns</li>
+                            <li style="margin-bottom: 8px;">When the referenced object might be deallocated</li>
                         </ul>
-                    </div>
+                    </div><br>
 
-                    <div class="mb-4">
-                        <h2>3. Unowned References</h2>
-                        <p>
+                    <div style="margin-bottom: 60px;">
+                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">3. Unowned References</h2>
+                        <p style="margin-bottom: 25px; line-height: 30px;">
                             Unowned references don't increase the reference count but assume the referenced object will always 
                             be available. They're not optional and will crash if accessed after the object is deallocated.
-                        </p>
+                        </p><br>
 
-                        <h3>Unowned Reference Example</h3>
+                        <h3 style="font-size: 22px; line-height: 28px; font-weight: 600; margin-bottom: 20px; margin-top: 40px; color: #444;">Unowned Reference Example</h3>
                         <pre><code class="language-swift">class Customer {
     let name: String
     var creditCard: CreditCard?
@@ -269,9 +269,9 @@ class CreditCard {
 var john: Customer? = Customer(name: "John Appleseed")
 john?.creditCard = CreditCard(number: 1234_5678_9012_3456, customer: john!)
 
-john = nil  // Both Customer and CreditCard are deallocated</code></pre>
+john = nil  // Both Customer and CreditCard are deallocated</code></pre><br><br><br><br>
 
-                        <h3>Unowned vs Weak Decision Tree</h3>
+                        <h3 style="font-size: 22px; line-height: 28px; font-weight: 600; margin-bottom: 20px; margin-top: 40px; color: #444;">Unowned vs Weak Decision Tree</h3>
                         <pre><code class="language-swift">// Use weak when the reference might become nil
 class Parent {
     var children: [Child] = []
@@ -314,21 +314,21 @@ class UserViewController: UIViewController {
             self.updateUI(with: user)  // Will crash if self is deallocated
         }
     }
-}</code></pre>
+}</code></pre><br><br><br><br>
 
-                        <h3>When to Use Unowned References</h3>
-                        <ul>
-                            <li>When the referenced object will always outlive the current object</li>
-                            <li>One-to-one relationships where objects have the same lifetime</li>
-                            <li>When you want to avoid optional unwrapping</li>
-                            <li>Performance-critical code (slight performance advantage over weak)</li>
+                        <h3 style="font-size: 22px; line-height: 28px; font-weight: 600; margin-bottom: 20px; margin-top: 40px; color: #444;">When to Use Unowned References</h3>
+                        <ul style="margin-bottom: 30px; line-height: 28px;">
+                            <li style="margin-bottom: 8px;">When the referenced object will always outlive the current object</li>
+                            <li style="margin-bottom: 8px;">One-to-one relationships where objects have the same lifetime</li>
+                            <li style="margin-bottom: 8px;">When you want to avoid optional unwrapping</li>
+                            <li style="margin-bottom: 8px;">Performance-critical code (slight performance advantage over weak)</li>
                         </ul>
-                    </div>
+                    </div><br>
 
-                    <div class="mb-4">
-                        <h2>Memory Leaks in Real Applications</h2>
+                    <div style="margin-bottom: 60px;">
+                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">Memory Leaks in Real Applications</h2>
                         
-                        <h3>Common Retain Cycle Scenarios</h3>
+                        <h3 style="font-size: 22px; line-height: 28px; font-weight: 600; margin-bottom: 20px; margin-top: 40px; color: #444;">Common Retain Cycle Scenarios</h3>
                         <pre><code class="language-swift">// 1. Timer retain cycles
 class TimerViewController: UIViewController {
     var timer: Timer?
@@ -391,9 +391,9 @@ class NetworkViewController: UIViewController {
             self?.processData(data)
         }.resume()
     }
-}</code></pre>
+}</code></pre><br><br><br><br>
 
-                        <h3>Advanced Memory Management Patterns</h3>
+                        <h3 style="font-size: 22px; line-height: 28px; font-weight: 600; margin-bottom: 20px; margin-top: 40px; color: #444;">Advanced Memory Management Patterns</h3>
                         <pre><code class="language-swift">// Custom weak reference wrapper
 class WeakWrapper<T: AnyObject> {
     weak var value: T?
@@ -436,20 +436,20 @@ class ExpensiveResource {
 
 class ResourceOwner {
     lazy var resource: ExpensiveResource = ExpensiveResource(owner: self)
-}</code></pre>
-                    </div>
+}</code></pre><br><br><br><br>
+                    </div><br>
 
-                    <div class="mb-4">
-                        <h2>Debugging Memory Issues</h2>
+                    <div style="margin-bottom: 60px;">
+                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">Debugging Memory Issues</h2>
                         
-                        <h3>Using Instruments</h3>
+                        <h3 style="font-size: 22px; line-height: 28px; font-weight: 600; margin-bottom: 20px; margin-top: 40px; color: #444;">Using Instruments</h3>
                         <ol>
-                            <li><strong>Leaks Instrument:</strong> Detects retain cycles and memory leaks</li>
-                            <li><strong>Allocations Instrument:</strong> Tracks memory usage patterns</li>
-                            <li><strong>VM Tracker:</strong> Monitors virtual memory usage</li>
+                            <li style="margin-bottom: 8px;"><strong>Leaks Instrument:</strong> Detects retain cycles and memory leaks</li>
+                            <li style="margin-bottom: 8px;"><strong>Allocations Instrument:</strong> Tracks memory usage patterns</li>
+                            <li style="margin-bottom: 8px;"><strong>VM Tracker:</strong> Monitors virtual memory usage</li>
                         </ol>
 
-                        <h3>Debug Techniques</h3>
+                        <h3 style="font-size: 22px; line-height: 28px; font-weight: 600; margin-bottom: 20px; margin-top: 40px; color: #444;">Debug Techniques</h3>
                         <pre><code class="language-swift">// Add deinit methods to verify deallocation
 class MyViewController: UIViewController {
     deinit {
@@ -476,11 +476,11 @@ class DebuggableWeakRef<T: AnyObject> {
     init(_ value: T) {
         self.value = value
     }
-}</code></pre>
-                    </div>
+}</code></pre><br><br><br><br>
+                    </div><br>
 
-                    <div class="mb-4">
-                        <h2>Best Practices Summary</h2>
+                    <div style="margin-bottom: 60px;">
+                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">Best Practices Summary</h2>
                         
                         <div class="table-responsive">
                             <table class="table table-striped">
@@ -509,28 +509,28 @@ class DebuggableWeakRef<T: AnyObject> {
                                     </tr>
                                 </tbody>
                             </table>
-                        </div>
+                        </div><br>
 
-                        <h3>Quick Decision Guide</h3>
+                        <h3 style="font-size: 22px; line-height: 28px; font-weight: 600; margin-bottom: 20px; margin-top: 40px; color: #444;">Quick Decision Guide</h3>
                         <ol>
-                            <li><strong>Default to strong</strong> unless you have a specific reason</li>
-                            <li><strong>Use weak for delegates</strong> and back-references</li>
-                            <li><strong>Use weak in closures</strong> that might outlive the object</li>
-                            <li><strong>Use unowned sparingly</strong> and only when you're certain of lifetimes</li>
-                            <li><strong>Always test memory management</strong> with Instruments</li>
+                            <li style="margin-bottom: 8px;"><strong>Default to strong</strong> unless you have a specific reason</li>
+                            <li style="margin-bottom: 8px;"><strong>Use weak for delegates</strong> and back-references</li>
+                            <li style="margin-bottom: 8px;"><strong>Use weak in closures</strong> that might outlive the object</li>
+                            <li style="margin-bottom: 8px;"><strong>Use unowned sparingly</strong> and only when you're certain of lifetimes</li>
+                            <li style="margin-bottom: 8px;"><strong>Always test memory management</strong> with Instruments</li>
                         </ol>
-                    </div>
+                    </div><br>
 
                     <div class="alert alert-danger">
                         <h4><i class="fas fa-exclamation-triangle"></i> Common Mistakes to Avoid</h4>
                         <ul class="mb-0">
-                            <li>Using unowned when the object might be deallocated (causes crashes)</li>
-                            <li>Forgetting to use weak in delegate properties</li>
-                            <li>Creating retain cycles with closures</li>
-                            <li>Not invalidating timers in deinit</li>
-                            <li>Assuming ARC handles all memory management automatically</li>
+                            <li style="margin-bottom: 8px;">Using unowned when the object might be deallocated (causes crashes)</li>
+                            <li style="margin-bottom: 8px;">Forgetting to use weak in delegate properties</li>
+                            <li style="margin-bottom: 8px;">Creating retain cycles with closures</li>
+                            <li style="margin-bottom: 8px;">Not invalidating timers in deinit</li>
+                            <li style="margin-bottom: 8px;">Assuming ARC handles all memory management automatically</li>
                         </ul>
-                    </div>
+                    </div><br>
 
                     <div class="alert alert-info">
                         <h4><i class="fas fa-lightbulb"></i> Production Experience</h4>
@@ -538,8 +538,8 @@ class DebuggableWeakRef<T: AnyObject> {
                             These patterns and debugging techniques are documented in my 
                             <a href="https://github.com/MananPatel95/iOS-Notes" target="_blank" rel="noopener">iOS-Notes repository</a>, 
                             including examples of memory leaks I've encountered and fixed in production applications.
-                        </p>
-                    </div>
+                        </p><br>
+                    </div><br>
 
                     <footer class="mt-5 pt-4 border-top">
                         <div class="row">
@@ -554,20 +554,20 @@ class DebuggableWeakRef<T: AnyObject> {
                                        class="btn btn-outline-primary btn-sm" target="_blank" rel="noopener">
                                         <i class="fab fa-linkedin"></i> LinkedIn
                                     </a>
-                                </div>
-                            </div>
+                                </div><br>
+                            </div><br>
                             <div class="col-md-6 text-md-end">
                                 <h5>Related Posts</h5>
                                 <ul class="list-unstyled">
-                                    <li><a href="swift-concurrency-multithreading.html">Swift Concurrency and Multithreading</a></li>
-                                    <li><a href="ios-architecture-patterns.html">iOS Architecture Patterns</a></li>
+                                    <li style="margin-bottom: 8px;"><a href="swift-concurrency-multithreading.html">Swift Concurrency and Multithreading</a></li>
+                                    <li style="margin-bottom: 8px;"><a href="ios-architecture-patterns.html">iOS Architecture Patterns</a></li>
                                 </ul>
-                            </div>
-                        </div>
+                            </div><br>
+                        </div><br>
                     </footer>
                 </article>
-            </div>
-        </div>
+            </div><br>
+        </div><br>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
