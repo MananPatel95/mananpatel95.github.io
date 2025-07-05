@@ -83,21 +83,25 @@ input[type="button"] {
   color: #fff;
   font-family: Roboto Mono, monospace;
   padding-top: 90px;
+  display: flex;
+  align-items: center;
+  min-height: 500px;
 }
 .personal-profile .personal-profile__avatar img {
   border-radius: 15px;
   box-shadow: 0 0 27px rgba(96, 96, 96, 0.34);
   width: 90%;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
   margin-top: 10px;
   position: relative;
-  top: 40px;
+  top: 0;
 }
 .personal-profile .personal-profile__name {
   font-size: 44px;
   line-height: 50px;
   font-weight: 700;
-  margin-top: 40px;
+  margin-top: 0;
   margin-bottom: 10px;
 }
 .personal-profile .personal-profile__work {
