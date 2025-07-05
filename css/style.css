@@ -372,6 +372,11 @@ input[type="button"] {
   padding: 50px 50px 0px 30px;
 }
 
+/* Extra left padding when text is on the left side */
+.project-card .col-md-6:first-child .project-card__info {
+  padding-left: 50px;
+}
+
 .project-card .project-card__title {
   font-size: 18px;
   line-height: 30px;
