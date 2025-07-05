@@ -372,8 +372,9 @@ input[type="button"] {
   padding: 50px 50px 0px 30px;
 }
 
-/* Extra left padding when text is on the left side */
-.project-card .col-md-6:first-child .project-card__info {
+/* Increased left padding for work cards with text on the left side */
+.project-card .col-md-6:first-child .project-card__info,
+.goalgetter-card .project-card__info {
   padding-left: 50px;
 }
 
