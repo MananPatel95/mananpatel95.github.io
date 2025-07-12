@@ -1158,11 +1158,16 @@ input[type="button"] {
   /* RentPlay carousel specific styles - prevent iPad images from blowing up */
   .mySlides3 {
     position: relative;
-    display: flex;
+    display: none; /* Hide all slides by default */
     flex-direction: column;
     align-items: center;
     padding: 20px 0;
     height: 600px; /* Fixed height to match other project cards */
+  }
+  
+  /* Show the active slide */
+  .mySlides3[style*="display: block"] {
+    display: flex !important;
   }
   
   .mySlides3 img {
