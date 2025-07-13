@@ -1201,6 +1201,44 @@ input[type="button"] {
     border-radius: 4px;
   }
   
+  /* RentPlay carousel navigation arrows */
+  .project-card__img .prev, .project-card__img .next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid #ccc;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+  
+  .project-card__img .prev {
+    left: 10px;
+  }
+  
+  .project-card__img .next {
+    right: 10px;
+  }
+  
+  .project-card__img .prev:hover, .project-card__img .next:hover {
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-color: #333;
+    text-decoration: none;
+  }
+  
   /* GoalGetter specific - align text with top of phone image */
   .goalgetter-card .project-card__info {
     padding-top: 100px; /* Push text down to align with phone top */
