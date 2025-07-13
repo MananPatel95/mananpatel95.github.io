@@ -1208,35 +1208,38 @@ input[type="button"] {
     top: 50%;
     transform: translateY(-50%);
     z-index: 10;
-    background: rgba(255, 255, 255, 0.9);
-    border: 2px solid #ccc;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    width: 45px;
+    height: 45px;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 0;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: bold;
-    color: #333;
+    color: #666;
     text-decoration: none;
     transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   }
   
   .project-card__img .prev {
-    left: 10px;
+    left: 15px;
   }
   
   .project-card__img .next {
-    right: 10px;
+    right: 15px;
   }
   
   .project-card__img .prev:hover, .project-card__img .next:hover {
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
-    border-color: #333;
+    background: rgba(255, 255, 255, 1);
+    color: #333;
     text-decoration: none;
+    border-color: #bbb;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transform: translateY(-50%) scale(1.05);
   }
   
   /* GoalGetter specific - align text with top of phone image */
