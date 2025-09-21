@@ -1,830 +1,152 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XB5GY3D6E1"></script>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Manan Patel's Portfolio</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
     <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-XB5GY3D6E1');
-    </script>
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    
-    <!-- Primary Meta Tags -->
-    <title>Manan Patel - Software Engineer & Entrepreneur | Calgary</title>
-    <meta name="title" content="Manan Patel - Software Engineer & Entrepreneur, iOS Developer, Tech Entrepreneur & Fintech Expert | Calgary">
-    <meta name="description" content="Experienced software engineer and entrepreneur specializing in iOS development, fintech, mobile applications, and startup leadership. Co-founder of RentPlay, former TD Bank iOS developer, and WeatherCan team lead with 7+ years building apps for millions of users.">
-    <meta name="keywords" content="software engineer, entrepreneur, iOS developer, Swift developer, fintech expert, tech entrepreneur, mobile app development, startup CTO, venture capital, technical finance, React Native, Calgary developer, iPhone app developer, mobile engineering, software architect, technical founder, investment advisor, mobile payments, financial technology, iOS engineer, Swift programming, mobile startup, venture capital technical advisor, fintech mobile apps, entrepreneurship, mobile innovation, technical leadership, app store optimization, mobile product development">
-    <meta name="author" content="Manan Patel">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://mananpatel.info/">
-    
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://mananpatel.info/">
-    <meta property="og:title" content="Manan Patel - Software Engineer & Entrepreneur, iOS Developer, Tech Entrepreneur & Fintech Expert">
-    <meta property="og:description" content="Experienced software engineer and entrepreneur specializing in iOS development, fintech, mobile applications, and startup leadership. Co-founder of RentPlay with 7+ years building apps for millions of users.">
-    <meta property="og:image" content="https://mananpatel.info/images/Headshot1.jpg">
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://mananpatel.info/">
-    <meta property="twitter:title" content="Manan Patel - Software Engineer & Entrepreneur, iOS Developer, Tech Entrepreneur & Fintech Expert">
-    <meta property="twitter:description" content="Experienced software engineer and entrepreneur specializing in iOS development, fintech, mobile applications, and startup leadership. Co-founder of RentPlay with 7+ years building apps for millions of users.">
-    <meta property="twitter:image" content="https://mananpatel.info/images/Headshot1.jpg">
-    
-    <!-- Schema.org structured data -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "Person",
-        "name": "Manan Patel",
-        "jobTitle": ["Software Engineer", "Entrepreneur", "iOS Developer", "Tech Entrepreneur", "Co-Founder & CTO"],
-        "description": "Experienced software engineer and entrepreneur specializing in iOS development, fintech, mobile applications, and startup leadership",
-        "url": "https://mananpatel.info",
-        "email": "manan.patel@outlook.com",
-        "address": {
-            "@type": "PostalAddress",
-            "addressLocality": "Calgary",
-            "addressRegion": "Alberta",
-            "addressCountry": "Canada"
-        },
-        "alumniOf": {
-            "@type": "Organization",
-            "name": "University of Toronto"
-        },
-        "worksFor": [
-            {
-                "@type": "Organization",
-                "name": "RentPlay",
-                "description": "Fintech community rewards platform"
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                primary: "#E83D99",
+                "background-light": "#FFFFFF",
+                "background-dark": "#121212",
+                "text-light": "#111827",
+                "text-dark": "#E5E7EB",
+                "secondary-text-light": "#6B7280",
+                "secondary-text-dark": "#9CA3AF",
+                "border-light": "#E5E7EB",
+                "border-dark": "#374151",
+                "card-light": "#F9FAFB",
+                "card-dark": "#1F2937",
+              },
+              fontFamily: {
+                sans: ['Inter', 'sans-serif'],
+              },
+              borderRadius: {
+                DEFAULT: '0.5rem',
+                lg: '0.75rem',
+                full: '9999px',
+              },
             },
-            {
-                "@type": "Organization", 
-                "name": "Environment and Climate Change Canada",
-                "description": "Government weather applications"
-            }
-        ],
-        "knowsAbout": ["Software Engineering", "Entrepreneurship", "iOS Development", "Swift Programming", "Fintech", "Mobile Applications", "Technical Leadership", "Venture Capital", "React Native", "Mobile Engineering"],
-        "sameAs": [
-            "https://www.linkedin.com/in/mananpatel95/",
-            "https://github.com/MananPatel95"
-        ]
-    }
-    </script>
-
-    <link rel="stylesheet" href="css/style.css" />
-    <link href="css/font-faces.css" rel="stylesheet" />
-    <link rel="stylesheet" href="css/normalize.css" />
-    <link rel="stylesheet" href="js/www.w3schools.com/w3css/4/w3.css" />
-    <link rel="stylesheet" href="js/cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-
-    <script src="js/ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="js/cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+          },
+        };
+      </script>
+    <style>
+        .material-icons {
+          font-size: inherit;
+        }
+        .secondary-text {
+          font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+          font-size: 0.875rem;
+        }
+        .blog-description {
+          font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+          font-size: 0.75rem;
+        }
+      </style>
 </head>
-
-
-
-<body>
-    <!--Main menu-->
-    <div class="menu" role="navigation" aria-label="Main navigation">
-        <div class="container">
-            <div class="row">
-                <div class="menu__wrapper col-md-12">
-                    <nav class="" role="navigation">
-                        <ul role="menubar" aria-label="Main menu">
-                            <li role="none"><a href="#hello" role="menuitem" aria-label="Home - Manan Patel Portfolio">Home</a></li>
-                            <li role="none"><a href="#about" role="menuitem" aria-label="About Manan Patel">About Me</a></li>
-                            <li role="none"><a href="#portfolio" role="menuitem" aria-label="Portfolio and Work">Work</a></li>
-                            <li role="none"><a href="#resume" role="menuitem" aria-label="Resume and Experience">Resume</a></li>
-                            <li role="none"><a href="blog/" role="menuitem" aria-label="Technical Blog and iOS Development Insights">Blog</a></li>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--Main menu-->
-
-    <!--Header-->
-    <header class="main-header" style="" role="banner" aria-label="Manan Patel - iOS Developer and Tech Entrepreneur">
-        <div id="hello" class="container">
-            <div class="row personal-profile">
-                <div class="col-md-4 personal-profile__avatar">
-                    <img class="" src="images/Headshot1.jpg" alt="Manan Patel - iOS Developer and Tech Entrepreneur professional headshot" role="img" aria-label="Professional headshot of Manan Patel, iOS developer and tech entrepreneur">
-                </div>
-                <div class="col-md-8" style="margin-top: 80px;">
-                    <h1 class="personal-profile__name">Manan Patel</h1>
-                    <h2 class="personal-profile__work">Software Engineer & Entrepreneur</h2>
-                    <div class="personal-profile__contacts" role="contentinfo" aria-label="Contact information">
-                        <dl class="contact-list contact-list__opacity-titles">
-                            <dt>Email:</dt>
-                            <dd><a href="mailto:manan.patel@outlook.com" aria-label="Email Manan Patel">manan.patel@outlook.com</a></dd>
-                            <dt>GitHub:</dt>
-                            <dd><a href="https://github.com/MananPatel95" target="_blank" rel="noopener" aria-label="Manan Patel GitHub Profile">MananPatel95</a></dd>
-                            <dt>LinkedIn:</dt>
-                            <dd><a href="https://www.linkedin.com/in/mananpatel95/" target="_blank" rel="noopener" aria-label="Manan Patel LinkedIn Profile">mananpatel95</a></dd>
-                            <dt>Location:</dt>
-                            <dd>Calgary,Canada (Mountain Timezone)</dd>
-                        </dl>
-                    </div>
-                    <div class="personal-profile__social" role="navigation" aria-label="Social media links">
-                        <a href="https://github.com/MananPatel95" target="_blank" rel="noopener" aria-label="GitHub Profile"><i class="fa fa-github" aria-hidden="true"></i></a>
-                        <a href="https://www.linkedin.com/in/mananpatel95/" target="_blank" rel="noopener" aria-label="LinkedIn Profile"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
-    <!--Header-->
-
-    <!--About-->
-    <section id="about" class="container section" role="main" aria-labelledby="about_me_header">
-        <div class="row">
-            <div class="col-md-12">
-                <h2 id="about_me_header" class="section__title">About Me_</h2>
-                <div class="about-content">
-                    <p class="section__description about-text">
-                        As a <span class="highlight">tech entrepreneur</span> and <span class="highlight">iOS specialist</span>, I transform complex business challenges into elegant digital solutions. With over <span class="highlight">7 years</span> of experience crafting apps used by millions, I bring a unique blend of technical expertise and business acumen to every project.
-                    </p>
-    
-                    <p class="about-text">My expertise includes:</p>
-                    <ul class="about-list">
-                        <li><i class="fa fa-rocket"></i><span>Building scalable mobile applications from concept to millions of users</span></li>
-                        <li><i class="fa fa-code"></i><span>Full-stack development with modern tech stacks (Swift, SwiftUI, Node.js, AWS)</span></li>
-                        <li><i class="fa fa-line-chart"></i><span>Data-driven development focusing on user engagement and retention</span></li>
-                        <li><i class="fa fa-users"></i><span>Leading cross-functional teams and managing complex project lifecycles</span></li>
-                    </ul>
-                    </br>
-                    <p class="section__description about-text">
-                        From government-scale weather apps to social platforms with millions of users, I've consistently delivered solutions that exceed expectations. Recently co-founded <a href="https://rentplay.ca" target="_blank" rel="noopener">RentPlay</a> - a community rewards platform that reached 1,000 users at peak, helping renters earn cash through the SuperSaver system.
-                    </br></br>
-                    <strong>Ready to build something amazing? <a href="mailto:manan.patel@outlook.com">Let's connect</a> and bring your vision to life!</strong>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!--About-->
-    
-    <hr>
-
-    <!--Portfolio-->
-    <section id="portfolio" class="container section" role="main" aria-labelledby="work_header">
-        <div class="row">
-            <div class="col-md-12">
-                <h2 id="work_header" class="section__title">Work_</h2>
-            </div>
-
-        <div class="portfolio-cards">
-            <!-- RentPlay (image | text) -->
-            <div class="row project-card">
-                <div class="col-md-6 col-lg-5 project-card__img">
-                    <!-- Full-width images with number text -->
-                    <div class="mySlides3">
-                        <div class="numbertext">1 / 5</div>
-                        <img src="images/Projects/RentPlay/1.png" alt="RentPlay App Screen 1" loading="lazy">
-                        <div class="caption-container">
-                            <p>RentPlay App 📱</p>
-                        </div>
-                    </div>
-
-                    <div class="mySlides3">
-                        <div class="numbertext">2 / 5</div>
-                        <img src="images/Projects/RentPlay/2.png" alt="RentPlay App Screen 2" loading="lazy">
-                        <div class="caption-container">
-                            <p>SuperSaver Mode 🎯</p>
-                        </div>
-                    </div>
-
-                    <div class="mySlides3">
-                        <div class="numbertext">3 / 5</div>
-                        <img src="images/Projects/RentPlay/3.png" alt="RentPlay App Screen 3" loading="lazy">
-                        <div class="caption-container">
-                            <p>Receipt Upload 📄</p>
-                        </div>
-                    </div>
-
-                    <div class="mySlides3">
-                        <div class="numbertext">4 / 5</div>
-                        <img src="images/Projects/RentPlay/4.png" alt="RentPlay App Screen 4" loading="lazy">
-                        <div class="caption-container">
-                            <p>PlayCoins Rewards 🪙</p>
-                        </div>
-                    </div>
-
-                    <div class="mySlides3">
-                        <div class="numbertext">5 / 5</div>
-                        <img src="images/Projects/RentPlay/5.png" alt="RentPlay App Screen 5" loading="lazy">
-                        <div class="caption-container">
-                            <p>Cash Rewards 💰</p>
-                        </div>
-                    </div>
-
-                    <!-- Next and previous buttons -->
-                    <a class="prev" onclick="plusSlides3(-1)">&#10094;</a>
-                    <a class="next" onclick="plusSlides3(1)">&#10095;</a>
-                </div>
-                <div class="col-md-6 col-lg-7 project-card__info">
-                    <h3 class="project-card__title">RentPlay 💰</h3>
-                    <p class="project-card__description">
-                        Co-founder of RentPlay - a community rewards platform that helps renters earn cash by reporting rent and shopping local. Built with React Native/Expo Go, TypeScript, and Node.js, reaching 1,000 users at peak.
-                        
-                        <h6>Key Features</h6>
-                        <li>SuperSaver Mode: Report rent monthly to unlock 2X PlayCoins on first 5 receipts</li>
-                        <li>Receipt scanning with photo upload & QR code scanning at partner stores to earn PlayCoins</li>
-                        <li>Redeem 5,000 PlayCoins for $5 cash via e-transfer</li>
-                        <li>Map-based business search with location-based notifications & targeted offers</li>
-                        <li>Google/Apple OAuth authentication & push notifications system</li>
-                        <li>Admin dashboard for business partnerships & community leaderboards</li>
-                        
-                    </p>
-                    <p class="project-card__stack">Stack:</p>
-                    <ul class="tags">
-                        <li>React Native</li>
-                        <li>Expo Go</li>
-                        <li>TypeScript</li>
-                        <li>Node.js</li>
-                        <li>AWS</li>
-                    </ul>
-                    <div class="project-card__links">
-                        <a href="https://rentplay.ca/" class="project-card__link">RentPlay Website</a>    
-                        <a href="https://apps.apple.com/us/app/rentplay/id6746700183" class="project-card__link">App Store: RentPlay</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- GoalGetter (text | video) -->
-            <div class="row project-card goalgetter-card" onclick="window.open('https://apps.apple.com/ca/app/goalgetter-habit-tracker/id6737703423', '_blank')" style="cursor: pointer;">
-                <div class="col-md-6 col-lg-7 project-card__info">
-                    <h3 class="project-card__title">Goal Getter ⭐️</h3>
-                    <p class="project-card__description">
-                        A beautifully designed habit tracking companion that helps transform your life and reach all your goals. I built this app to replace my own personal habit tracker that followed the X card principle. No more spreadsheets and no more excuses!
-                        </br>
-                        <h6>Key Features</h6>
-                        <li>Intuitive interface that makes consistency effortless</li>
-                        <li>Customizable goals with completion tracking, frequency, and priority settings</li>
-                        <li>Countdown goals for special dates and abstinence tracking</li>
-                        <li>Comprehensive progress views - daily, weekly, monthly, and yearly</li>
-                        <li>Home Screen and Lock Screen widgets for quick insights</li>
-                        <li>Detailed statistics and progress reports for accountability</li>
-                        </br>
-                        <strong>FREE, No Ads, No In-App Purchases!</strong>
-                    </p>
-                    </br>
-                    <p class="project-card__stack">Stack:</p>
-                    <ul class="tags">
-                        <li>Swift</li>
-                        <li>SwiftUI</li>
-                        <li>WidgetKit</li>
-                        <li>CoreData</li>
-                        <li>CloudKit</li>
-                    </ul>
-                    <a href="https://apps.apple.com/ca/app/goalgetter-habit-tracker/id6737703423" class="project-card__link">App Store: Goal Getter</a>
-                </div>
-                <div class="col-md-6 col-lg-5 project-card__img">
-                    <!-- Full-width images with number text -->
-                    <div class="mySlides2">
-                        <div class="numbertext">1 / 4</div>
-                        <img src="images/Projects/GoalGetter/3d - 1.png" alt="GoalGetter Home">
-                        <div class="caption-container">
-                            <p>Home Daily View ⭐️</p>
-                        </div>
-                    </div>
-
-                    <div class="mySlides2">
-                        <div class="numbertext">2 / 4</div>
-                        <img src="images/Projects/GoalGetter/3d - 2.png" alt="GoalGetter Stats">
-                        <div class="caption-container">
-                            <p>Weekly View 📊</p>
-                        </div>
-                    </div>
-
-                    <div class="mySlides2">
-                        <div class="numbertext">3 / 4</div>
-                        <img src="images/Projects/GoalGetter/3d - 3.png" alt="GoalGetter Calendar">
-                        <div class="caption-container">
-                            <p>Monthly View 📅</p>
-                        </div>
-                    </div>
-
-                    <div class="mySlides2">
-                        <div class="numbertext">4 / 4</div>
-                        <img src="images/Projects/GoalGetter/3d - 4.png" alt="GoalGetter Settings">
-                        <div class="caption-container">
-                            <p>Yearly View ⚙️</p>
-                        </div>
-                    </div>
-
-                    <!-- Next and previous buttons -->
-                    <a class="prev" onclick="event.stopPropagation(); plusSlides2(-1)">&#10094;</a>
-                    <a class="next" onclick="event.stopPropagation(); plusSlides2(1)">&#10095;</a>
-                </div>
-            </div>
-
-            <!-- WeatherCan (video | text) -->
-            <div class="row project-card" onclick="window.open('https://apps.apple.com/ca/app/weathercan/id1334221563', '_blank')" style="cursor: pointer;">
-                <div class="col-md-6 col-lg-5 project-card__img">
-                    <video autoplay muted loop class="" src="images/Projects/WeatherCan/weatherCan.mp4" alt="Login">
-                    </video>
-                </div>
-                <div class="col-md-6 col-lg-7 project-card__info">
-                    <h3 class="project-card__title">WeatherCan 	&#9925</h3>
-                    <p class="project-card__description">
-                        WeatherCan is the official mobile weather application for Environment Canada where I was one of
-                        2 developers responsible for creating the iOS version from concept to completion within 12 months.
-
-                        </br></br><br><strong>#2 Weather Application in Canada with over 5 million monthly active users!</strong>
-
-                        <h6>Notable Features</h6>
-                        <li>Real-time Weather Alert Notifcations, GPS based and for Saved Locations</li>
-                        <li>Sole engineer responsible for "Now" & "7 Day" pages, Lightning Layer on Map, and also the Widgets</li>
-                        <li>Implemented localization and unit translations</li>
-                        <li>Used CoreData to store persistant data</li>
-                    </p>
-                    <p class="project-card__stack">Stack:</p>
-                    <ul class="tags">
-                        <li>Swift</li>
-                        <li>Firebase</li>
-                        <li>CoreData</li>
-                        <li>CoreGraphics</li>
-                        <li>UIKit</li>
-                    </ul>
-                    <a href="https://apps.apple.com/ca/app/weathercan/id1334221563" class="project-card__link">App Store: WeatherCan</a>
-                </div>
-            </div>
-
-            <!-- Wattpad (text | video) -->
-            <div class="row project-card" onclick="window.open('https://apps.apple.com/us/app/wattpad-read-write-stories/id306310789', '_blank')" style="cursor: pointer;">
-                <div class="col-md-6 col-lg-7 project-card__info">
-                    <h3 class="project-card__title">Wattpad &#128214</h3>
-                    <p class="project-card__description">
-                        As an iOS Engineer, worked on widely used user facing features for Comments, User Safety, Ads,
-                        and Content Moderation, often as a solo developer.
-
-                        <h6>Notable Projects</h6>
-                        &#9000 <em>Comments Revamp:<br></em>
-                        <li>iOS Tech Lead, managed a team of 3, from concept to release</li>
-                        <li>Complete overhaul from ObjC to Swift and introduced comment liking, in-line replies, design
-                            system components, and ads in between comments!</li>
-                        <li>Produced a <strong>massive</strong> bump in engagement, revenue, and retention in the comments
-                            experience</li><br>
-
-                        &#128245 <em>User & Story Mute:<br></em>
-                        <li>Added ability to mute/block a specific person across the application from viewing any of your
-                            content or information</li>
-                        <li><strong>Most used user safety feature on Wattpad by far!</strong></li>
-                        <li>Sole engineer on project from concept to release</li><br>
-
-                        &#10035 <em>Signup Strengthening:<br></em>
-                        <li>Implemented new set of verification rules for new signups (email, username, password, & birthday) and account info changes
-                        </li>
-                        <li>Super short timeline saved company from fines from regulatory body</li><br>
-                    </p>
-                    <p class="project-card__stack">Stack:</p>
-                    <ul class="tags">
-                        <li>Swift</li>
-                        <li>SwiftUI</li>
-                        <li>Objective-C</li>
-                    </ul>
-                    <a href="https://apps.apple.com/us/app/wattpad-read-write-stories/id306310789" class="project-card__link">App Store: Wattpad</a>
-                </div>
-                <div class="col-md-6 col-lg-5 project-card__img">
-                    <!-- Full-width images with number text -->
-                    <div class="mySlides">
-                        <div class="numbertext">1 / 4</div>
-                        <video autoplay muted loop src="images/Projects/Wattpad/after-gif.mp4" alt="After"></video>
-                        <div class="caption-container">
-                            <p>New Comments Experience &#128525;</p>
-                        </div>
-                    </div>
-
-                    <div class="mySlides">
-                        <div class="numbertext">2 / 4</div>
-                        <video autoplay muted loop src="images/Projects/Wattpad/before-gif.mp4" alt="Before"></video>
-                        <div class="caption-container">
-                            <p>Old Comments Experience &#129296;</p>
-                        </div>
-                    </div>
-
-                    <div class="mySlides">
-                        <div class="numbertext">3 / 4</div>
-                        <video autoplay muted loop src="images/Projects/Wattpad/mute.mp4" alt="Mute"></video>
-                        <div class="caption-container">
-                            <p>Mute User Flow &#128245;</p>
-                        </div>
-                    </div>
-
-                    <div class="mySlides">
-                        <div class="numbertext">4 / 4</div>
-                        <video autoplay muted loop src="images/Projects/Wattpad/login.mp4" alt="Login"></video>
-                        <div class="caption-container">
-                            <p>Password Strengthening &#10035;</p>
-                        </div>
-                    </div>
-
-                    <!-- Next and previous buttons -->
-                    <a class="prev" onclick="event.stopPropagation(); plusSlides(-1)">&#10094;</a>
-                    <a class="next" onclick="event.stopPropagation(); plusSlides(1)">&#10095;</a>
-                </div>
-            </div>
-
-            <!-- Countries Quiz (video | text) -->
-            <div class="row project-card" onclick="window.open('https://mananpatel.info/countries-quiz/', '_blank')" style="cursor: pointer;">
-                <div class="col-md-6 col-lg-5 project-card__img">
-                    <video autoplay muted loop class="" src="images/Projects/CountriesQuiz/countriesQuiz.mov" alt="CountriesQuiz">
-                    </video>
-                </div>
-                <div class="col-md-6 col-lg-7 project-card__info">
-                    <h3 class="project-card__title">Countries Quiz 🌍</h3>
-                    <p class="project-card__description">
-                        Inspired by my favorite JetPunk game, I created this iOS app to satisfy my passion for geography on the go. This interactive quiz helps your learn about countries, flags, and capitals of the world.
-                        </br>
-                        <h6>Key Features</h6>
-                        <li>Multiple game modes, country quiz, capital quiz, and flag quiz</li>
-                        <li>Interactive World Map with custom GeoJSON polygons</li>
-                        <li>Clean animations, user experience, and sounds that I also generated!</li>
-                        <li><strong>FREE, No Ads, No In-App Purchases</strong></li>
-                        </ul>
-                    </p>
-                    </br>
-                    <p class="project-card__stack">Stack:</p>
-                    <ul class="tags">
-                        <li>Swift</li>
-                        <li>SwiftUI</li>
-                        <li>MapKit</li>
-                        <li>AVFoundation</li>
-                        <li>Firebase</li>
-                    </ul>
-                    <a href="https://apps.apple.com/us/app/countriesquiz/id6698896459?platform=iphone" class="project-card__link">App Store: CountriesQuiz</a>
-                </div>
-            </div>
-
-            <!-- UberClone (text | image) -->
-            <div class="row project-card" onclick="window.open('https://github.com/MananPatel95/CloneOfUber', '_blank')" style="cursor: pointer;">
-                <div class="col-md-6 col-lg-7 project-card__info">
-                    <h3 class="project-card__title">UberClone &#128661</h3>
-                    <p class="project-card__description">
-                        Created a clone of the Uber app using Swift to learn more about Firebase and MapKit in
-                        particular.
-                        </br></br>
-                        This project started as an experiment using Firebase. The idea was simple: create an uber clone
-                        with authentication and separate functionality for a passenger and a driver.
-                        For the maps and places I decided to go with Apple's MapKit as I had already tried Google maps
-                        and places in my other projects.
-                    </p>
-                    <p class="project-card__stack">Stack:</p>
-                    <ul class="tags">
-                        <li>Swift</li>
-                        <li>MapKit</li>
-                        <li>UIKit</li>
-                        <li>Firebase</li>
-                    </ul>
-                    <a href="https://github.com/MananPatel95/CloneOfUber" class="project-card__link">Github:
-                        UberClone</a>
-                </div>
-                <div class="col-md-6 col-lg-5 project-card__img">
-                    <img class="" src="images/Projects/Clones/UberClone.jpg" alt="project-img">
-                </div>
-            </div>
-
-            <!-- SwiftYoutube (image | text) -->
-            <div class="row project-card" onclick="window.open('https://github.com/MananPatel95/SwiftYoutube', '_blank')" style="cursor: pointer;">
-                <div class="col-md-6 col-lg-5 project-card__img">
-                    <img class="" src="images/Projects/SwiftYoutube/swiftyoutube.png" alt="project-img">
-                </div>
-                <div class="col-md-6 col-lg-7 project-card__info">
-                    <h3 class="project-card__title">SwiftYoutube</h3>
-                    <p class="project-card__description">
-                        Created a mock version of the Youtube iOS application to play around with UIKit, AVKit, and a
-                        consumer facing real-time REST API.
-
-                        </br></br> This project helped me learn more about UICollectionViews, TabBarControllers, AVKit
-                        components like UISlider and AVPlayer, and attaching multiple JSON feeds from a real-time public
-                        API into a project.
-                    </p>
-                    <p class="project-card__stack">Stack:</p>
-                    <ul class="tags">
-                        <li>Swift</li>
-                        <li>UIKit</li>
-                        <li>AVKit</li>
-                        <li>REST API</li>
-                    </ul>
-                    <a href="https://github.com/MananPatel95/SwiftYoutube" class="project-card__link">Github:
-                        SwiftYoutube</a>
-                </div>
-            </div>
-
-            <!-- UiTube (text | image) -->
-            <div class="row project-card" onclick="window.open('https://github.com/MananPatel95/UiTube', '_blank')" style="cursor: pointer;">
-                <div class="col-md-6 col-lg-7 project-card__info">
-                    <h3 class="project-card__title">UITube - Youtube Chrome Extension</h3>
-                    <p class="project-card__description">
-                        A chrome extension that changes the Youtube UI so that users can view the video, read comments,
-                        get the video info and related videos all in 1 page. There is also an auto night mode that
-                        appears while mouse is on the video and additional settings such as annotations, playback speed, and
-                        captions available from the menu.
-                    </p>
-                    <p class="project-card__stack">Stack:</p>
-                    <ul class="tags">
-                        <li>JavaScript</li>
-                        <li>CSS</li>
-                        <li>HTML</li>
-                    </ul>
-                    <a href="https://github.com/MananPatel95/UiTube" class="project-card__link">Github: UITube</a>
-                </div>
-                <div class="col-md-6 col-lg-5 project-card__img">
-                    <img class="" src="images/Projects/UiTube/uitube.PNG" alt="project-img">
-                </div>
-            </div>
-            </div>
-        </div>
-    </section>
-    <!--Portfolio-->
-
-    <hr>
-
-    <!--Resume-->
-    <section id="resume" class="container section">
-        <div class="row">
-            <div class="col-md-9 section__resume resume-list">
-                <h2 id="resume_header" class="section__title" style="text-indent: -9999px;">Resume_</h2>
-                <h3 class="resume-list_title">Employment</h3>
-
-                <!-- RentPlay -->
-                <div class="resume-list__block">
-                    <p class="resume-list__block-title">RentPlay</p>
-                    <p class="resume-list__block-date">Jan 2025 -- Jul 2025</p>
-                    <p><strong>Co-Founder & Chief Technology Officer</strong></p>
-                    <p> - Co-founded fintech startup combining rent payment rewards with local marketplace to help renters earn cashback on community spending</p>
-                    <p> - Architected full-stack platform using React Native/Expo frontend, Node.js backend, and TypeScript, scaling to 1,000+ users and almost 100 merchants</p>
-                    <p> - Built OCR-based rewards system with targeted offers and lead generation engine to drive users to local merchants</p>
-                    <p> - Raised $100K SAFE note and secured $100K in grants from Alberta Innovates and Government of Canada</p>
-                    <p> - Successfully returned 90% of investor capital after strategic decision to pivot focus, gaining valuable insights into product-market fit validation</p>
-                </div>
-
-                <!-- ECCC -->
-                <div class="resume-list__block">
-                    <p class="resume-list__block-title">Environment and Climate Change Canada</p>
-                    <p class="resume-list__block-date">Mar 2023 -- Dec 2024</p>
-                    <p><strong>Team Lead & iOS Developer</strong></p>
-                    <p> - Lead Weather Dissemination team creating weather components for Weather.gc.ca website and iOS/Android applications</p>
-                    <p> - Lead iOS Engineer for WeatherCan app serving 5+ million monthly active users, Canada's #3 weather app</p>
-                    <p> - Made product decision to prioritize GPS-based alerts over advanced radar, driving 40% increase in user engagement</p>
-                    <p> - Managed cross-functional team of 3 full-time developers and 2 co-op students to achieve KPIs and project timelines</p>
-                    <p> - Expanded Radar product to support real-time Lightning, Hurricane, and Tornado events across Canada</p>
-                </div>
-
-                <!-- Wattpad -->
-                <div class="resume-list__block">
-                    <p class="resume-list__block-title">Wattpad Inc.</p>
-                    <p class="resume-list__block-date">Aug 2021 -- Mar 2023</p>
-                    <p><strong>iOS Engineer</strong></p>
-                    <p> - Swift, SwiftUI, and Objective-C engineering for iOS Wattpad App serving 90+ million global users</p>
-                    <p> - Lead iOS Engineer for new Wattpad Comments experience, complete overhaul from Obj-C to SwiftUI</p>
-                    <p> - Advocated for simplified user experience over feature complexity, improving user retention by 15% across 90+ million users</p>
-                    <p> - Introduced comment liking, in-line replies, and design system components that significantly improved user engagement</p>
-                    <p> - Implemented WP Design System via atomic design methodology for unified product and developer experience</p>
-                    <p> - Managed bi-monthly release cycles including testing, monitoring, and App Store releases</p>
-                </div>
-
-                <!-- TD -->
-                <div class="resume-list__block">
-                    <p class="resume-list__block-title">TD Bank Group</p>
-                    <p class="resume-list__block-date">Jan 2020 -- Aug 2021</p>
-                    <p><strong>iOS Developer</strong></p>
-                    <p> - Designed and built iOS application features for TD App offering seamless banking services for 3+ million customers</p>
-                    <p> - Championed biometric authentication implementation, understanding how security friction impacts user adoption in fintech</p>
-                    <p> - Collaborated with backend developers to integrate financial APIs securely with multi-factor authentication</p>
-                    <p> - Provided technical guidance and mentorship to junior developers, conducting code reviews and ensuring coding standards</p>
-                </div>
-
-                <!-- ECCC -->
-                <div class="resume-list__block">
-                    <p class="resume-list__block-title">Environment and Climate Change Canada</p>
-                    <p class="resume-list__block-date">May 2017 -- Jan 2020</p>
-                    <p><strong>iOS and Software Developer</strong></p>
-                    <p> - Led concept-to-completion development of Canadian governmental WeatherCAN app with 2-person team under 1-year timeline</p>
-                    <p> - Established real-time consumer-facing databases and backend APIs for mobile applications</p>
-                    <p> - Developed VueJS components for Weather.gc.ca website redesign including lightning strikes and radar visualization</p>
-                    <p> - Created and maintained XML Parsers and Product Generators supporting weather observations, forecasts, and alerts</p>
-                </div>
-
-                <!-- UOFT Research Assistant -->
-                <div class="resume-list__block">
-                    <p class="resume-list__block-title">Department of Economics, University of Toronto</p>
-                    <p class="resume-list__block-date">Sept 2016 - Dec 2016</p>
-                    <p><strong>Statistical Research Assistant</strong></p>
-                    <p> - Developed machine learning models of economic information about the countries of Peru and
-                        Canada to analyze the effect of trade policies on regional trade output</p>
-                    <p> - Created databases using Python and R based pre-processing techniques which were used to
-                        formulate and train machine learning models to generate inferences about efficient trade
-                        policies</p>
-                </div>
-
-                <!-- AACC -->
-                <div class="resume-list__block">
-                    <p class="resume-list__block-title">Academic Advising & Career Centre, University of Toronto</p>
-                    <p class="resume-list__block-date">May 2015 - Aug 2016</p>
-                    <p><strong>iOS and Web Developer</strong></p>
-                    <p> - Native Swift development using UIKit, Google Maps, and injesting API</p>
-                    <p> - Helped create the <a
-                            href="https://apps.apple.com/us/app/utsc-student-experience/id1178722133"> UTSC Student
-                            Expereince App </a>
-                    <p> - Created interal social media ticket system which boosted traffic 30% and reduced time taken
-                        for posts</p>
-                    <p> - Creating marketing materials and webpages for student workshops, events, and services</p>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-9 section__resume resume-list">
-                <h3 class="resume-list_title">
-                    Education
-                </h3>
-                <div class="resume-list__block">
-                    <p class="resume-list__block-title">University of Toronto</p>
-                    <p class="resume-list__block-date">2013 - 2019</p>
-                    <p>BSc (Hons) Computer and Statistical Science - Co-op</p>
-                    <p>GPA: 3.2</p>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-9 section__resume resume-list">
-                <a href="files/MananPatelResume.pdf" target="_blank" class="section_btn site-btn"><span><i
-                    class="fa fa-download" aria-hidden="true"></i></span>Resume</a>
-            </div>
-        </div>
-    </section>
-
-    <hr>
-
-    <!-- Footer -->
-    <div class="background">
-        <div class="section">
-            <div class="footer">
-                <p>Manan Patel</p>
-                <p class="personal-profile__social">
-                    <a href="https://github.com/MananPatel95" target="_blank" rel="noopener"><i class="fa fa-github"></i></a>
-                    <a href="https://www.linkedin.com/in/mananpatel95/" target="_blank" rel="noopener"><i class="fa fa-linkedin"></i></a>
-                </p>
-            </div>
-        </div>
-    </div>
-    <!-- Footer -->
-
-    <script src="js/min/jquery.waypoints.min.js"></script>
-    <script src="js/min/mbclicker.min.js"></script>
-
-    <script src="js/menu.js"></script>
-    <script src="js/section.js"></script>
-    <script src="js/portfolio-filter.js"></script>
-    <script src="js/mobile-menu.js"></script>
-    <script src="js/site-btn.js"></script>
-
-    <script>
-        var slideIndex = 1;
-        showSlides(slideIndex);
-
-        function plusSlides(n) {
-            showSlides(slideIndex += n);
-        }
-
-        function currentSlide(n) {
-            showSlides(slideIndex = n);
-        }
-
-        function showSlides(n) {
-            var i;
-            var slides = document.getElementsByClassName("mySlides");
-
-            if (n > slides.length) { slideIndex = 1 }
-            if (n < 1) { slideIndex = slides.length }
-
-            for (i = 0; i < slides.length; i++) {
-                slides[i].style.display = "none";
-            }
-
-            slides[slideIndex - 1].style.display = "block";
-        }
-    </script>
-
-    <script>
-        var slideIndex2 = 1;
-        var slideInterval2;
-        showSlides2(slideIndex2);
-        
-        // Start auto-advance
-        startSlideshow();
-        
-        function startSlideshow() {
-            // Clear any existing interval first
-            clearInterval(slideInterval2);
-            // Start new interval
-            slideInterval2 = setInterval(function() {
-                plusSlides2(1);
-            }, 3000); // 3000ms = 3 seconds
-        }
-
-        function pauseSlideshow() {
-            clearInterval(slideInterval2);
-            // Restart slideshow after 5 seconds of inactivity
-            setTimeout(startSlideshow, 5000);
-        }
-
-        function plusSlides2(n) {
-            showSlides2(slideIndex2 += n);
-            // Pause slideshow when user interacts
-            pauseSlideshow();
-        }
-
-        function currentSlide2(n) {
-            showSlides2(slideIndex2 = n);
-            // Pause slideshow when user interacts
-            pauseSlideshow();
-        }
-
-        function showSlides2(n) {
-            var i;
-            var slides = document.getElementsByClassName("mySlides2");
-
-            if (n > slides.length) { slideIndex2 = 1 }
-            if (n < 1) { slideIndex2 = slides.length }
-
-            for (i = 0; i < slides.length; i++) {
-                slides[i].style.display = "none";
-            }
-
-            slides[slideIndex2 - 1].style.display = "block";
-        }
-    </script>
-
-    <script>
-        var slideIndex3 = 1;
-        var slideInterval3;
-        showSlides3(slideIndex3);
-        
-        // Start auto-advance
-        startSlideshow3();
-        
-        function startSlideshow3() {
-            // Clear any existing interval first
-            clearInterval(slideInterval3);
-            // Start new interval
-            slideInterval3 = setInterval(function() {
-                plusSlides3(1);
-            }, 3000); // 3000ms = 3 seconds
-        }
-
-        function pauseSlideshow3() {
-            clearInterval(slideInterval3);
-            // Restart slideshow after 5 seconds of inactivity
-            setTimeout(startSlideshow3, 5000);
-        }
-
-        function plusSlides3(n) {
-            showSlides3(slideIndex3 += n);
-            // Pause slideshow when user interacts
-            pauseSlideshow3();
-        }
-
-        function currentSlide3(n) {
-            showSlides3(slideIndex3 = n);
-            // Pause slideshow when user interacts
-            pauseSlideshow3();
-        }
-
-        function showSlides3(n) {
-            var i;
-            var slides = document.getElementsByClassName("mySlides3");
-
-            if (n > slides.length) { slideIndex3 = 1 }
-            if (n < 1) { slideIndex3 = slides.length }
-
-            for (i = 0; i < slides.length; i++) {
-                slides[i].style.display = "none";
-            }
-
-            slides[slideIndex3 - 1].style.display = "block";
-        }
-    </script>
-
-    <!-- Essential SEO content -->
-    <div class="sr-only" aria-hidden="true">
-        <p>Manan Patel iOS developer Calgary Alberta technical entrepreneur fintech mobile applications Swift React Native venture capital startup CTO</p>
-    </div>
-
-
-
-</body>
-
-</html>
+<body class="bg-background-light dark:bg-background-dark font-sans text-text-light dark:text-text-dark transition-colors duration-300">
+<div class="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8 pt-8 sm:pt-12 lg:pt-16">
+<header class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+<div class="flex-1">
+<h1 class="text-xl sm:text-2xl font-bold text-text-light dark:text-text-dark">Manan Patel</h1>
+<p class="text-xs text-secondary-text-light dark:text-secondary-text-dark mt-1 secondary-text">Tinkering and Sharing</p>
+<div class="flex items-center text-secondary-text-light dark:text-secondary-text-dark mt-2 text-xs secondary-text">
+<span>🏔️ Calgary, Canada</span>
+</div>
+<div class="flex space-x-2 mt-2">
+<a class="w-8 h-8 border border-gray-300 rounded flex items-center justify-center hover:bg-gray-50" href="https://www.linkedin.com/in/mananpatel95/" target="_blank" rel="noopener">
+<svg aria-hidden="true" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z"></path></svg>
+</a>
+<a class="w-8 h-8 border border-gray-300 rounded flex items-center justify-center hover:bg-gray-50" href="https://github.com/MananPatel95" target="_blank" rel="noopener">
+<svg aria-hidden="true" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.285 2.866 7.92 6.737 9.208.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.942.359.308.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z" fill-rule="evenodd"></path></svg>
+</a>
+<a class="w-8 h-8 border border-gray-300 rounded flex items-center justify-center hover:bg-gray-50" href="https://x.com/mananpatel95" target="_blank" rel="noopener">
+<svg aria-hidden="true" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+</a>
+</div>
+</div>
+<div class="mt-6 sm:mt-0 sm:ml-6 flex-shrink-0">
+<img alt="Portrait of Manan Patel" class="h-32 w-32 rounded-lg object-cover" src="images/Headshot1.jpeg"/>
+</div>
+</header>
+<main>
+<section class="mb-4 pt-4">
+<h2 class="text-xl font-bold text-text-light dark:text-text-dark mb-4">About</h2>
+        <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text">
+          I was a software engineer at several corporations, primarily focused on mobile development, but I caught the entrepreneurial bug and am now building things I want to see in the world!
+        </p>
+        <p class="text-secondary-text-light dark:text-secondary-text-dark mt-2 secondary-text">
+          Interested in AI, AR, Algo Trading, Lifestyle Businesses, Impactful Charities
+        </p>
+</section>
+<section class="mb-8 pt-8">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-xl font-bold text-text-light dark:text-text-dark">Projects</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<a href="https://www.goalgetterapp.ca/" target="_blank" rel="noopener" class="block p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1 flex items-center"><img src="images/goalGetter.png" alt="GoalGetter" class="w-4 h-4 mr-2 rounded-sm"> GoalGetter <span class="text-green-500 ml-2">●</span></h3>
+                <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text">Habit Tracking App That Helps You Reach Your Goals</p>
+</a>
+<a href="https://mananpatel.info/countries-quiz/" target="_blank" rel="noopener" class="block p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1 flex items-center"><img src="images/countriesQuiz.png" alt="Countries Quiz" class="w-4 h-4 mr-2 rounded-sm"> Countries Quiz <span class="text-green-500 ml-2">●</span></h3>
+<p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text">Educational Geography Quiz App</p>
+</a>
+<a href="#" class="block p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1 flex items-center">📊 Custom Trading Bot <span class="text-green-500 ml-2">●</span></h3>
+                <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text">Custom 24/7 Futures Bot That I've Been Optimizing For Years</p>
+</a>
+<a href="https://rentplay.ca/" target="_blank" rel="noopener" class="block p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1 flex items-center"><img src="images/rentplay.png" alt="RentPlay" class="w-4 h-4 mr-2 rounded-sm"> RentPlay <span class="text-red-500 ml-2">●</span></h3>
+                <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text">Community Rewards Platform For Renters And For Shopping Local</p>
+</a>
+<a href="https://tryeverything.ca/" target="_blank" rel="noopener" class="block p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1 flex items-center"><img src="images/try-everything.jpeg" alt="Try Everything" class="w-4 h-4 mr-2 rounded-sm"> Try Everything <span class="text-red-500 ml-2">●</span></h3>
+                <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text">Try Everything On The Menu At New Restaurants</p>
+</a>
+<a href="https://rocketagency.ca/" target="_blank" rel="noopener" class="block p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1 flex items-center"><img src="images/rocketAgency.png" alt="Rocket Agency" class="w-4 h-4 mr-2 rounded-sm"> Rocket Agency <span class="text-red-500 ml-2">●</span></h3>
+                <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text">Digital Marketing Agency For Real Estate</p>
+</a>
+</div>
+</section>
+<section class="mb-8">
+<h2 class="text-xl font-bold text-text-light dark:text-text-dark mb-6">Blog</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<a href="blog/swiftui-modern-development.html" class="block p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">SwiftUI Modern Development</h3>
+                <p class="text-secondary-text-light dark:text-secondary-text-dark blog-description">Exploring the latest SwiftUI features and modern iOS development practices</p>
+</a>
+<a href="blog/swift-concurrency-multithreading.html" class="block p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">Swift Concurrency & Multithreading</h3>
+<p class="text-secondary-text-light dark:text-secondary-text-dark blog-description">Understanding async/await and structured concurrency in Swift</p>
+</a>
+<a href="blog/ios-unit-testing-mock-objects.html" class="block p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">iOS Unit Testing & Mock Objects</h3>
+<p class="text-secondary-text-light dark:text-secondary-text-dark blog-description">Best practices for testing iOS applications with mock objects</p>
+</a>
+<a href="blog/ios-networking-async-await.html" class="block p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">iOS Networking with Async/Await</h3>
+<p class="text-secondary-text-light dark:text-secondary-text-dark blog-description">Modern networking patterns in iOS using async/await</p>
+</a>
+<a href="blog/ios-data-persistence.html" class="block p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">iOS Data Persistence</h3>
+<p class="text-secondary-text-light dark:text-secondary-text-dark blog-description">Core Data, UserDefaults, and other data storage solutions</p>
+</a>
+<a href="blog/ios-architecture-patterns.html" class="block p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">iOS Architecture Patterns</h3>
+<p class="text-secondary-text-light dark:text-secondary-text-dark blog-description">MVVM, MVC, and other architectural patterns for iOS development</p>
+</a>
+</div>
+</section>
+</main>
+</div>
+
+</body></html>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+    <!-- Main portfolio page -->
+    <url>
+        <loc>https://mananpatel.info/</loc>
+        <lastmod>2025-01-10</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>1.0</priority>
+    </url>
+
+    <!-- Expertise page -->
+    <url>
+        <loc>https://mananpatel.info/index_expertise.html</loc>
+        <lastmod>2025-01-10</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- Resume PDF -->
+    <url>
+        <loc>https://mananpatel.info/files/MananPatelResume.pdf</loc>
+        <lastmod>2025-01-10</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+    <!-- LLM.txt for AI systems -->
+    <url>
+        <loc>https://mananpatel.info/llm.txt</loc>
+        <lastmod>2025-01-10</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <!-- Individual sections (deep linking) -->
+    <url>
+        <loc>https://mananpatel.info/#about</loc>
+        <lastmod>2025-01-10</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://mananpatel.info/#portfolio</loc>
+        <lastmod>2025-01-10</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+    <url>
+        <loc>https://mananpatel.info/#resume</loc>
+        <lastmod>2025-01-10</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- Blog section -->
+    <url>
+        <loc>https://mananpatel.info/blog/</loc>
+        <lastmod>2024-07-04</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+    <!-- Blog posts -->
+    <url>
+        <loc>https://mananpatel.info/blog/ios-architecture-patterns.html</loc>
+        <lastmod>2024-03-15</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://mananpatel.info/blog/swift-concurrency-multithreading.html</loc>
+        <lastmod>2024-02-28</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://mananpatel.info/blog/ios-memory-management.html</loc>
+        <lastmod>2024-02-14</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://mananpatel.info/blog/ios-data-persistence.html</loc>
+        <lastmod>2024-01-30</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://mananpatel.info/blog/ios-networking-async-await.html</loc>
+        <lastmod>2024-01-16</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://mananpatel.info/blog/ios-unit-testing-mock-objects.html</loc>
+        <lastmod>2023-12-22</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://mananpatel.info/blog/uikit-fundamentals.html</loc>
+        <lastmod>2023-12-08</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://mananpatel.info/blog/swiftui-modern-development.html</loc>
+        <lastmod>2023-11-24</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+</urlset> 
