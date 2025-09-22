@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swift Concurrency & Multithreading | Manan Patel</title>
+    <meta name="description" content="Understanding async/await and structured concurrency in Swift">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        .material-icons {
+          font-size: inherit;
+        }
+        .secondary-text {
+          font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+          font-size: 0.75rem;
+        }
+        pre {
+          background-color: #f8f9fa;
+          border: 1px solid #e9ecef;
+          border-radius: 0.375rem;
+          padding: 1rem;
+          overflow-x: auto;
+          font-size: 0.875rem;
+          line-height: 1.5;
+        }
+        code {
+          font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+          font-size: 0.875rem;
+        }
+      </style>
+</head>
+<body class="bg-white">
+    <div class="max-w-4xl mx-auto p-6 pt-20">
+        <a href="index.html" class="inline-flex items-center text-gray-600 hover:text-gray-900 mb-8 transition-colors">
+            <span class="material-icons mr-2">arrow_back</span>
+            Back to Blog
+        </a>
+        
+        <article>
+            <header class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-4">⚡ Swift Concurrency & Multithreading</h1>
+                <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text mb-4">Understanding async/await and structured concurrency in Swift</p>
+                <div class="flex items-center text-sm text-gray-500">
+                    <span class="material-icons mr-1 text-sm">schedule</span>
+                    <span class="mr-4">12 min read</span>
+                    <span class="material-icons mr-1 text-sm">calendar_today</span>
+                    <span>February 28, 2024</span>
+                </div>
+            </header>
+
+            <div class="prose prose-lg max-w-none">
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4">The Evolution of Concurrency in Swift</h2>
+                <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text mb-6">
+                    iOS apps need to handle multiple tasks simultaneously: network requests, UI updates, data processing, 
+                    and user interactions. Over the years, I've used various concurrency approaches in production apps, 
+                    from NSOperationQueue to GCD to modern async/await.
+                </p>
+                <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text mb-8">
+                    In this comprehensive guide, I'll walk you through all the major concurrency tools available to iOS developers, 
+                    with real examples from apps I've built and maintained.
+                </p>
+
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4">1. Grand Central Dispatch (GCD)</h2>
+                <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text mb-4">
+                    GCD remains the foundation of iOS concurrency. Understanding queues and how they work is essential 
+                    for any iOS developer.
+                </p>
+
+                <h3 class="text-xl font-semibold text-gray-900 mb-3">Serial vs Concurrent Queues</h3>
+                <pre><code class="language-swift">// Serial Queue - tasks execute one after another
+let serialQueue = DispatchQueue(label: "com.app.serial")
+
+serialQueue.async {
+    print("Task 1 started")
+    Thread.sleep(forTimeInterval: 2)
+    print("Task 1 completed")
+}
+
+serialQueue.async {
+    print("Task 2 started") // Waits for Task 1 to complete
+    print("Task 2 completed")
+}
+
+// Concurrent Queue - tasks can execute simultaneously
+let concurrentQueue = DispatchQueue(label: "com.app.concurrent", 
+                                   attributes: .concurrent)
+
+concurrentQueue.async {
+    print("Task A started")
+    Thread.sleep(forTimeInterval: 2)
+    print("Task A completed")
+}
+
+concurrentQueue.async {
+    print("Task B started") // Starts immediately
+    print("Task B completed")
+}</code></pre>
+
+                <h3 class="text-xl font-semibold text-gray-900 mb-3 mt-8">Common GCD Patterns</h3>
+                <pre><code class="language-swift">// Background work with main thread UI update
+DispatchQueue.global(qos: .userInitiated).async {
+    // Heavy computation on background thread
+    let result = performHeavyCalculation()
+    
+    DispatchQueue.main.async {
+        // Update UI on main thread
+        self.updateUI(with: result)
+    }
+}
+
+// Delayed execution
+DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+    self.showDelayedMessage()
+}
+
+// Quality of Service levels
+DispatchQueue.global(qos: .userInteractive).async { /* High priority */ }
+DispatchQueue.global(qos: .userInitiated).async { /* User initiated */ }
+DispatchQueue.global(qos: .default).async { /* Default priority */ }
+DispatchQueue.global(qos: .utility).async { /* Long-running tasks */ }
+DispatchQueue.global(qos: .background).async { /* Background tasks */ }</code></pre>
+
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4 mt-8">2. Operations and OperationQueue</h2>
+                <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text mb-4">
+                    For complex task management with dependencies and cancellation, Operations provide more control than GCD.
+                </p>
+
+                <h3 class="text-xl font-semibold text-gray-900 mb-3">Custom Operations</h3>
+                <pre><code class="language-swift">class ImageDownloadOperation: Operation {
+    private let url: URL
+    private let completion: (UIImage?) -> Void
+    
+    init(url: URL, completion: @escaping (UIImage?) -> Void) {
+        self.url = url
+        self.completion = completion
+        super.init()
+    }
+    
+    override func main() {
+        guard !isCancelled else { return }
+        
+        do {
+            let data = try Data(contentsOf: url)
+            let image = UIImage(data: data)
+            
+            DispatchQueue.main.async {
+                self.completion(image)
+            }
+        } catch {
+            DispatchQueue.main.async {
+                self.completion(nil)
+            }
+        }
+    }
+}
+
+// Using Operations with dependencies
+let downloadQueue = OperationQueue()
+downloadQueue.maxConcurrentOperationCount = 3
+
+let downloadOp = ImageDownloadOperation(url: imageURL) { image in
+    // Handle downloaded image
+}
+
+let processOp = BlockOperation {
+    // Process the downloaded image
+}
+
+processOp.addDependency(downloadOp) // processOp waits for downloadOp
+downloadQueue.addOperations([downloadOp, processOp], waitUntilFinished: false)</code></pre>
+
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4 mt-8">3. Modern Swift Concurrency (async/await)</h2>
+                <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text mb-4">
+                    Swift 5.5 introduced structured concurrency with async/await, making asynchronous code more readable 
+                    and less error-prone. I've migrated several production apps to use this modern approach.
+                </p>
+
+                <h3 class="text-xl font-semibold text-gray-900 mb-3">Basic async/await</h3>
+                <pre><code class="language-swift">// Traditional completion handler approach
+func fetchUser(completion: @escaping (Result<User, Error>) -> Void) {
+    URLSession.shared.dataTask(with: userURL) { data, response, error in
+        if let error = error {
+            completion(.failure(error))
+            return
+        }
+        
+        guard let data = data else {
+            completion(.failure(NetworkError.noData))
+            return
+        }
+        
+        do {
+            let user = try JSONDecoder().decode(User.self, from: data)
+            completion(.success(user))
+        } catch {
+            completion(.failure(error))
+        }
+    }.resume()
+}
+
+// Modern async/await approach
+func fetchUser() async throws -> User {
+    let (data, _) = try await URLSession.shared.data(from: userURL)
+    let user = try JSONDecoder().decode(User.self, from: data)
+    return user
+}
+
+// Usage
+Task {
+    do {
+        let user = try await fetchUser()
+        await updateUI(with: user)
+    } catch {
+        await showError(error)
+    }
+}</code></pre>
+
+                <h3 class="text-xl font-semibold text-gray-900 mb-3 mt-8">Concurrent Operations</h3>
+                <pre><code class="language-swift">// Sequential execution (slow)
+func loadDataSequentially() async throws {
+    let user = try await fetchUser()
+    let posts = try await fetchPosts()
+    let comments = try await fetchComments()
+    
+    // Process data...
+}
+
+// Concurrent execution (fast)
+func loadDataConcurrently() async throws {
+    async let user = fetchUser()
+    async let posts = fetchPosts()
+    async let comments = fetchComments()
+    
+    // All three requests happen simultaneously
+    let (userData, postsData, commentsData) = try await (user, posts, comments)
+    
+    // Process data...
+}
+
+// Using TaskGroup for dynamic concurrency
+func downloadImages(urls: [URL]) async -> [UIImage] {
+    await withTaskGroup(of: UIImage?.self) { group in
+        var images: [UIImage] = []
+        
+        for url in urls {
+            group.addTask {
+                return try? await downloadImage(from: url)
+            }
+        }
+        
+        for await image in group {
+            if let image = image {
+                images.append(image)
+            }
+        }
+        
+        return images
+    }
+}</code></pre>
+
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4 mt-8">4. Actors - Safe Concurrent Programming</h2>
+                <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text mb-4">
+                    Actors solve the problem of data races in concurrent code by ensuring that their mutable state 
+                    can only be accessed from one task at a time.
+                </p>
+
+                <h3 class="text-xl font-semibold text-gray-900 mb-3">Basic Actor Usage</h3>
+                <pre><code class="language-swift">actor Counter {
+    private var value = 0
+    
+    func increment() {
+        value += 1
+    }
+    
+    func getValue() -> Int {
+        return value
+    }
+}
+
+// Usage
+let counter = Counter()
+
+// All actor methods are async
+Task {
+    await counter.increment()
+    let value = await counter.getValue()
+    print("Counter value: \(value)")
+}
+
+// Multiple concurrent accesses are safe
+Task.detached {
+    for _ in 0..<1000 {
+        await counter.increment()
+    }
+}
+
+Task.detached {
+    for _ in 0..<1000 {
+        await counter.increment()
+    }
+}</code></pre>
+
+                <h3 class="text-xl font-semibold text-gray-900 mb-3 mt-8">MainActor for UI Updates</h3>
+                <pre><code class="language-swift">@MainActor
+class ViewModel: ObservableObject {
+    @Published var isLoading = false
+    @Published var data: [Item] = []
+    @Published var errorMessage: String?
+    
+    func loadData() async {
+        isLoading = true
+        errorMessage = nil
+        
+        do {
+            // This network call happens on a background thread
+            let newData = try await dataService.fetchData()
+            
+            // UI updates happen on MainActor automatically
+            self.data = newData
+            self.isLoading = false
+        } catch {
+            self.errorMessage = error.localizedDescription
+            self.isLoading = false
+        }
+    }
+}
+
+// Mixed actor usage
+actor DataManager {
+    private var cache: [String: Data] = [:]
+    
+    func getData(for key: String) -> Data? {
+        return cache[key]
+    }
+    
+    func setData(_ data: Data, for key: String) {
+        cache[key] = data
+    }
+    
+    @MainActor
+    func updateUI(with data: Data) {
+        // This method runs on the main actor
+        // Safe to update UI here
+    }
+}</code></pre>
+
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4 mt-8">5. Real-World Patterns I Use</h2>
+                
+                <h3 class="text-xl font-semibold text-gray-900 mb-3">Network Layer with async/await</h3>
+                <pre><code class="language-swift">protocol NetworkServiceProtocol {
+    func request<T: Codable>(_ endpoint: Endpoint) async throws -> T
+}
+
+actor NetworkService: NetworkServiceProtocol {
+    private let session: URLSession
+    private var cache: [String: Data] = [:]
+    
+    init(session: URLSession = .shared) {
+        self.session = session
+    }
+    
+    func request<T: Codable>(_ endpoint: Endpoint) async throws -> T {
+        let cacheKey = endpoint.cacheKey
+        
+        // Check cache first
+        if let cachedData = cache[cacheKey],
+           let cachedResponse = try? JSONDecoder().decode(T.self, from: cachedData) {
+            return cachedResponse
+        }
+        
+        // Make network request
+        let request = try endpoint.urlRequest()
+        let (data, response) = try await session.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse,
+              200...299 ~= httpResponse.statusCode else {
+            throw NetworkError.invalidResponse
+        }
+        
+        // Cache successful response
+        cache[cacheKey] = data
+        
+        let decodedResponse = try JSONDecoder().decode(T.self, from: data)
+        return decodedResponse
+    }
+}</code></pre>
+
+                <h3 class="text-xl font-semibold text-gray-900 mb-3 mt-8">Image Loading with Cancellation</h3>
+                <pre><code class="language-swift">actor ImageLoader {
+    private var cache: [URL: UIImage] = [:]
+    private var ongoingTasks: [URL: Task<UIImage, Error>] = [:]
+    
+    func loadImage(from url: URL) async throws -> UIImage {
+        // Return cached image if available
+        if let cachedImage = cache[url] {
+            return cachedImage
+        }
+        
+        // Return ongoing task if already loading
+        if let ongoingTask = ongoingTasks[url] {
+            return try await ongoingTask.value
+        }
+        
+        // Create new loading task
+        let task = Task<UIImage, Error> {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            guard let image = UIImage(data: data) else {
+                throw ImageError.invalidData
+            }
+            return image
+        }
+        
+        ongoingTasks[url] = task
+        
+        do {
+            let image = try await task.value
+            cache[url] = image
+            ongoingTasks.removeValue(forKey: url)
+            return image
+        } catch {
+            ongoingTasks.removeValue(forKey: url)
+            throw error
+        }
+    }
+    
+    func cancelLoading(for url: URL) {
+        ongoingTasks[url]?.cancel()
+        ongoingTasks.removeValue(forKey: url)
+    }
+}</code></pre>
+
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4 mt-8">Performance Considerations</h2>
+                
+                <h3 class="text-xl font-semibold text-gray-900 mb-3">Thread Pool Management</h3>
+                <ul class="text-secondary-text-light dark:text-secondary-text-dark secondary-text mb-6 space-y-2">
+                    <li><strong>Don't create too many threads:</strong> More threads ≠ better performance</li>
+                    <li><strong>Use appropriate QoS levels:</strong> Help the system prioritize your work</li>
+                    <li><strong>Avoid blocking the main thread:</strong> Keep UI responsive</li>
+                </ul>
+
+                <h3 class="text-xl font-semibold text-gray-900 mb-3">Memory Management</h3>
+                <pre><code class="language-swift">// Avoid retain cycles in async contexts
+class DataManager {
+    func loadData() async {
+        // ❌ Strong reference cycle
+        let data = await networkService.fetchData { [self] result in
+            self.processData(result)
+        }
+        
+        // ✅ Weak reference
+        let data = await networkService.fetchData { [weak self] result in
+            self?.processData(result)
+        }
+    }
+}</code></pre>
+
+                <h3 class="text-xl font-semibold text-gray-900 mb-3 mt-8">Testing Concurrent Code</h3>
+                <pre><code class="language-swift">class NetworkServiceTests: XCTestCase {
+    func testConcurrentRequests() async throws {
+        let networkService = NetworkService()
+        
+        // Test multiple concurrent requests
+        await withTaskGroup(of: Void.self) { group in
+            for i in 0..<10 {
+                group.addTask {
+                    do {
+                        let result: TestResponse = try await networkService.request(.test(id: i))
+                        XCTAssertEqual(result.id, i)
+                    } catch {
+                        XCTFail("Request \(i) failed: \(error)")
+                    }
+                }
+            }
+        }
+    }
+}</code></pre>
+
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4 mt-8">Migration Strategy</h2>
+                <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text mb-4">If you're working with existing code, here's how I approach migration to modern concurrency:</p>
+                
+                <ol class="text-secondary-text-light dark:text-secondary-text-dark secondary-text mb-6 space-y-2">
+                    <li><strong>Start with new features:</strong> Use async/await for all new code</li>
+                    <li><strong>Create async wrappers:</strong> Wrap existing completion-based APIs</li>
+                    <li><strong>Gradually migrate:</strong> Convert high-impact areas first</li>
+                    <li><strong>Use @MainActor:</strong> Annotate UI-related classes</li>
+                    <li><strong>Test thoroughly:</strong> Concurrent bugs can be subtle</li>
+                </ol>
+
+                <pre><code class="language-swift">// Wrapper for legacy completion-based API
+extension LegacyNetworkManager {
+    func fetchData() async throws -> Data {
+        return try await withCheckedThrowingContinuation { continuation in
+            self.fetchData { result in
+                switch result {
+                case .success(let data):
+                    continuation.resume(returning: data)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+}</code></pre>
+
+                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 my-8">
+                    <h4 class="text-lg font-semibold text-yellow-800 mb-2">⚠️ Common Pitfalls</h4>
+                    <ul class="text-yellow-700 space-y-1">
+                        <li>Don't mix async/await with completion handlers unnecessarily</li>
+                        <li>Be careful with actor isolation - understand when code runs on which actor</li>
+                        <li>Avoid creating too many concurrent tasks - use TaskGroup for bounded concurrency</li>
+                        <li>Remember that actors are reference types - they can still have retain cycles</li>
+                    </ul>
+                </div>
+
+                <div class="bg-blue-50 border-l-4 border-blue-400 p-4 my-8">
+                    <h4 class="text-lg font-semibold text-blue-800 mb-2">💡 Production Tips</h4>
+                    <p class="text-blue-700">
+                        All these patterns and examples are available in my 
+                        <a href="https://github.com/MananPatel95/iOS-Notes/tree/main/Concurrency" target="_blank" rel="noopener" class="underline">Concurrency folder</a> 
+                        on GitHub, including unit tests and performance benchmarks I've collected from real apps.
+                    </p>
+                </div>
+            </div>
+        </article>
+    </div>
+</body>
+</html>

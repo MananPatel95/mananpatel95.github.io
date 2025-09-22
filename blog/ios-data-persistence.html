@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iOS Data Persistence | Manan Patel</title>
+    <meta name="description" content="Core Data, UserDefaults, and other data persistence options in iOS">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        .material-icons {
+          font-size: inherit;
+        }
+        .secondary-text {
+          font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+          font-size: 0.75rem;
+        }
+        pre {
+          background-color: #f8f9fa;
+          border: 1px solid #e9ecef;
+          border-radius: 0.375rem;
+          padding: 1rem;
+          overflow-x: auto;
+          font-size: 0.875rem;
+          line-height: 1.5;
+        }
+        code {
+          font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+          font-size: 0.875rem;
+        }
+      </style>
+</head>
+<body class="bg-white">
+    <div class="max-w-4xl mx-auto p-6 pt-20">
+        <a href="index.html" class="inline-flex items-center text-gray-600 hover:text-gray-900 mb-8 transition-colors">
+            <span class="material-icons mr-2">arrow_back</span>
+            Back to Blog
+        </a>
+        
+        <article>
+            <header class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-4">💾 iOS Data Persistence</h1>
+                <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text mb-4">Core Data, UserDefaults, and other data persistence options in iOS</p>
+                <div class="flex items-center text-sm text-gray-500">
+                    <span class="material-icons mr-1 text-sm">schedule</span>
+                    <span class="mr-4">7 min read</span>
+                    <span class="material-icons mr-1 text-sm">calendar_today</span>
+                    <span>January 8, 2024</span>
+                </div>
+            </header>
+
+            <div class="prose prose-lg max-w-none">
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4">Data Persistence Options</h2>
+                <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text mb-6">
+                    iOS provides several options for persisting data, each with its own use cases and trade-offs.
+                </p>
+
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4">1. UserDefaults</h2>
+                <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text mb-4">
+                    Simple key-value storage for user preferences and app settings.
+                </p>
+
+                <pre><code class="language-swift">// Storing data
+UserDefaults.standard.set("John Doe", forKey: "username")
+UserDefaults.standard.set(25, forKey: "age")
+UserDefaults.standard.set(true, forKey: "isFirstLaunch")
+
+// Retrieving data
+let username = UserDefaults.standard.string(forKey: "username")
+let age = UserDefaults.standard.integer(forKey: "age")
+let isFirstLaunch = UserDefaults.standard.bool(forKey: "isFirstLaunch")
+
+// Custom UserDefaults wrapper
+extension UserDefaults {
+    enum Keys {
+        static let username = "username"
+        static let age = "age"
+        static let isFirstLaunch = "isFirstLaunch"
+    }
+    
+    var username: String? {
+        get { string(forKey: Keys.username) }
+        set { set(newValue, forKey: Keys.username) }
+    }
+}</code></pre>
+
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4 mt-8">2. Core Data</h2>
+                <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text mb-4">
+                    Apple's object graph and persistence framework for complex data models.
+                </p>
+
+                <pre><code class="language-swift">// Core Data Stack
+class CoreDataStack {
+    static let shared = CoreDataStack()
+    
+    lazy var persistentContainer: NSPersistentContainer = {
+        let container = NSPersistentContainer(name: "DataModel")
+        container.loadPersistentStores { _, error in
+            if let error = error {
+                fatalError("Core Data error: \(error)")
+            }
+        }
+        return container
+    }()
+    
+    var context: NSManagedObjectContext {
+        return persistentContainer.viewContext
+    }
+    
+    func saveContext() {
+        if context.hasChanges {
+            do {
+                try context.save()
+            } catch {
+                print("Save error: \(error)")
+            }
+        }
+    }
+}
+
+// Using Core Data
+class UserManager {
+    private let context = CoreDataStack.shared.context
+    
+    func createUser(name: String, email: String) {
+        let user = User(context: context)
+        user.name = name
+        user.email = email
+        user.id = UUID()
+        
+        CoreDataStack.shared.saveContext()
+    }
+    
+    func fetchUsers() -> [User] {
+        let request: NSFetchRequest<User> = User.fetchRequest()
+        do {
+            return try context.fetch(request)
+        } catch {
+            print("Fetch error: \(error)")
+            return []
+        }
+    }
+}</code></pre>
+
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4 mt-8">3. File System</h2>
+                <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text mb-4">
+                    Direct file system access for custom data formats and large files.
+                </p>
+
+                <pre><code class="language-swift">class FileManager {
+    static let shared = FileManager()
+    
+    private let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+    
+    func saveData(_ data: Data, to fileName: String) {
+        let fileURL = documentsDirectory.appendingPathComponent(fileName)
+        do {
+            try data.write(to: fileURL)
+        } catch {
+            print("Save error: \(error)")
+        }
+    }
+    
+    func loadData(from fileName: String) -> Data? {
+        let fileURL = documentsDirectory.appendingPathComponent(fileName)
+        return try? Data(contentsOf: fileURL)
+    }
+    
+    func saveJSON<T: Codable>(_ object: T, to fileName: String) {
+        do {
+            let data = try JSONEncoder().encode(object)
+            saveData(data, to: fileName)
+        } catch {
+            print("JSON encoding error: \(error)")
+        }
+    }
+    
+    func loadJSON<T: Codable>(_ type: T.Type, from fileName: String) -> T? {
+        guard let data = loadData(from: fileName) else { return nil }
+        do {
+            return try JSONDecoder().decode(type, from: data)
+        } catch {
+            print("JSON decoding error: \(error)")
+            return nil
+        }
+    }
+}</code></pre>
+
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4 mt-8">4. Keychain</h2>
+                <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text mb-4">
+                    Secure storage for sensitive data like passwords and tokens.
+                </p>
+
+                <pre><code class="language-swift">import Security
+
+class KeychainManager {
+    static let shared = KeychainManager()
+    
+    private let service = "com.yourapp.keychain"
+    
+    func save(_ data: Data, for key: String) {
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrService as String: service,
+            kSecAttrAccount as String: key,
+            kSecValueData as String: data
+        ]
+        
+        SecItemDelete(query as CFDictionary)
+        SecItemAdd(query as CFDictionary, nil)
+    }
+    
+    func load(for key: String) -> Data? {
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrService as String: service,
+            kSecAttrAccount as String: key,
+            kSecReturnData as String: true
+        ]
+        
+        var result: AnyObject?
+        let status = SecItemCopyMatching(query as CFDictionary, &result)
+        
+        return status == errSecSuccess ? result as? Data : nil
+    }
+    
+    func delete(for key: String) {
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrService as String: service,
+            kSecAttrAccount as String: key
+        ]
+        
+        SecItemDelete(query as CFDictionary)
+    }
+}</code></pre>
+
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4 mt-8">5. Best Practices</h2>
+                
+                <div class="bg-green-50 border-l-4 border-green-400 p-4 my-8">
+                    <h4 class="text-lg font-semibold text-green-800 mb-2">✅ Do's</h4>
+                    <ul class="text-green-700 space-y-1">
+                        <li>Use UserDefaults for simple preferences</li>
+                        <li>Use Core Data for complex relational data</li>
+                        <li>Use Keychain for sensitive data</li>
+                        <li>Handle errors gracefully</li>
+                        <li>Consider data migration strategies</li>
+                    </ul>
+                </div>
+
+                <div class="bg-red-50 border-l-4 border-red-400 p-4 my-8">
+                    <h4 class="text-lg font-semibold text-red-800 mb-2">❌ Don'ts</h4>
+                    <ul class="text-red-700 space-y-1">
+                        <li>Don't store sensitive data in UserDefaults</li>
+                        <li>Don't perform heavy operations on the main thread</li>
+                        <li>Don't ignore Core Data migration</li>
+                        <li>Don't store large files in Core Data</li>
+                    </ul>
+                </div>
+            </div>
+        </article>
+    </div>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iOS Memory Management | Manan Patel</title>
+    <meta name="description" content="Understanding ARC, weak references, and memory management in iOS">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        .material-icons {
+          font-size: inherit;
+        }
+        .secondary-text {
+          font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+          font-size: 0.75rem;
+        }
+        pre {
+          background-color: #f8f9fa;
+          border: 1px solid #e9ecef;
+          border-radius: 0.375rem;
+          padding: 1rem;
+          overflow-x: auto;
+          font-size: 0.875rem;
+          line-height: 1.5;
+        }
+        code {
+          font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+          font-size: 0.875rem;
+        }
+      </style>
+</head>
+<body class="bg-white">
+    <div class="max-w-4xl mx-auto p-6 pt-20">
+        <a href="index.html" class="inline-flex items-center text-gray-600 hover:text-gray-900 mb-8 transition-colors">
+            <span class="material-icons mr-2">arrow_back</span>
+            Back to Blog
+        </a>
+        
+        <article>
+            <header class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-4">🧠 iOS Memory Management</h1>
+                <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text mb-4">Understanding ARC, weak references, and memory management in iOS</p>
+                <div class="flex items-center text-sm text-gray-500">
+                    <span class="material-icons mr-1 text-sm">schedule</span>
+                    <span class="mr-4">8 min read</span>
+                    <span class="material-icons mr-1 text-sm">calendar_today</span>
+                    <span>February 14, 2024</span>
+                </div>
+            </header>
+
+            <div class="prose prose-lg max-w-none">
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4">Understanding ARC</h2>
+                <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text mb-6">
+                    ARC automatically manages memory by counting references to objects. When the reference count reaches zero, the object is deallocated.
+                </p>
+
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4">Strong vs Weak References</h2>
+                <pre><code class="language-swift">// Strong reference (default) - creates retain cycle
+class Person {
+    let name: String
+    var friend: Person? // Strong reference
+    
+    init(name: String) {
+        self.name = name
+    }
+}
+
+// Weak reference - breaks retain cycle
+class Person {
+    let name: String
+    weak var friend: Person? // Weak reference
+    
+    init(name: String) {
+        self.name = name
+    }
+}</code></pre>
+
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4 mt-8">Common Memory Leak Scenarios</h2>
+                
+                <h3 class="text-xl font-semibold text-gray-900 mb-3">Closures</h3>
+                <pre><code class="language-swift">// ❌ Creates retain cycle
+class NetworkManager {
+    var onComplete: (() -> Void)?
+    
+    func fetchData() {
+        onComplete = {
+            self.processData() // Strong reference to self
+        }
+    }
+}
+
+// ✅ Use weak self
+class NetworkManager {
+    var onComplete: (() -> Void)?
+    
+    func fetchData() {
+        onComplete = { [weak self] in
+            self?.processData() // Weak reference to self
+        }
+    }
+}</code></pre>
+
+                <h3 class="text-xl font-semibold text-gray-900 mb-3 mt-8">Delegates</h3>
+                <pre><code class="language-swift">protocol ViewControllerDelegate: AnyObject {
+    func didFinish()
+}
+
+class ViewController: UIViewController {
+    weak var delegate: ViewControllerDelegate? // Always weak for delegates
+}</code></pre>
+
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4 mt-8">Best Practices</h2>
+                
+                <div class="bg-green-50 border-l-4 border-green-400 p-4 my-8">
+                    <h4 class="text-lg font-semibold text-green-800 mb-2">✅ Do's</h4>
+                    <ul class="text-green-700 space-y-1">
+                        <li>Use weak references for delegates</li>
+                        <li>Use weak self in closures</li>
+                        <li>Use @StateObject for view models in SwiftUI</li>
+                        <li>Clean up resources in deinit</li>
+                    </ul>
+                </div>
+
+                <div class="bg-red-50 border-l-4 border-red-400 p-4 my-8">
+                    <h4 class="text-lg font-semibold text-red-800 mb-2">❌ Don'ts</h4>
+                    <ul class="text-red-700 space-y-1">
+                        <li>Don't create retain cycles</li>
+                        <li>Don't use strong references for delegates</li>
+                        <li>Don't ignore memory warnings</li>
+                    </ul>
+                </div>
+            </div>
+        </article>
+    </div>
+</body>
+</html>
