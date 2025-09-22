@@ -56,4 +56,7 @@ node_modules/
 *.sublime-workspace
 
 # OS generated files
-Icon? 
+Icon?
+
+# Playwright MCP screenshots
+.playwright-mcp/ 
