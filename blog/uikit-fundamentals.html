@@ -3,356 +3,307 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UIKit Fundamentals: Views, Lifecycle, and Layout | Manan Patel</title>
-    <meta name="description" content="Deep dive into UIKit essentials: view lifecycle, responder chain, AutoLayout, and Frame vs Bounds. Master iOS UI development fundamentals.">
-    <meta name="keywords" content="UIKit, iOS UI, view lifecycle, AutoLayout, responder chain, UIViewController">
-    <meta name="author" content="Manan Patel">
-    <link rel="canonical" href="https://mananpatel.info/blog/uikit-fundamentals.html">
-    
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
+    <title>UIKit Fundamentals | Manan Patel</title>
+    <meta name="description" content="Essential UIKit concepts and patterns for iOS development">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        .material-icons {
+          font-size: inherit;
+        }
+        .secondary-text {
+          font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+          font-size: 0.75rem;
+        }
+        pre {
+          background-color: #f8f9fa;
+          border: 1px solid #e9ecef;
+          border-radius: 0.375rem;
+          padding: 1rem;
+          overflow-x: auto;
+          font-size: 0.875rem;
+          line-height: 1.5;
+        }
+        code {
+          font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+          font-size: 0.875rem;
+        }
+      </style>
 </head>
-<body>
-    <!--Main menu-->
-    <div class="menu" role="navigation" aria-label="Main navigation">
-        <div class="container" style="position: relative; z-index: 1;">
-            <div class="row">
-                <div class="menu__wrapper col-md-12">
-                    <nav class="" role="navigation">
-                        <ul role="menubar" aria-label="Main menu">
-                            <li role="none"><a href="../index.html#hello" role="menuitem" aria-label="Home">Home</a></li>
-                            <li role="none"><a href="../index.html#about" role="menuitem" aria-label="About Manan Patel">About Me</a></li>
-                            <li role="none"><a href="../index.html#portfolio" role="menuitem" aria-label="Portfolio and Work">Work</a></li>
-                            <li role="none"><a href="../index.html#resume" role="menuitem" aria-label="Resume and Experience">Resume</a></li>
-                            <li role="none"><a href="index.html" role="menuitem" aria-label="Technical Blog and iOS Development Insights">Blog</a></li>
-                </ul>
-    </nav>
-                </div><br>
-            </div><br>
-        </div><br>
-    </div><br>
-    <!--Main menu-->
-
-    <!--Header-->
-    <header class="main-header" style="padding-bottom: 60px;" role="banner" aria-label="UIKit Fundamentals Blog Post">
-        <div class="container" style="position: relative; z-index: 1;">
-            <div class="row personal-profile">
-                <div class="col-md-12 text-center">
-                    <div class="d-flex justify-content-center align-items-center gap-3 mb-3" style="position: relative; z-index: 2;">
-                        <span class="badge" style="background-color: #fff; color: #6d56c1; padding: 8px 16px; font-size: 14px; font-weight: 600;">UIKit</span>
-                        <small style="color: #fff; opacity: 0.9 !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
-                            <i class="fas fa-calendar"></i> December 8, 2023
-                        </small>
-                        <small style="color: #fff; opacity: 0.9 !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
-                            <i class="fas fa-clock"></i> 13 min read
-                        </small>
-                    </div><br>
-                    <h1 style="color: #fff !important; font-size: 36px; font-weight: 700; margin-bottom: 20px; line-height: 1.2; opacity: 1 !important; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); position: relative; z-index: 2;">UIKit Fundamentals: Views, Lifecycle, and Layout</h1>
-                    <p style="color: #fff !important; margin-bottom: 30px; font-size: 18px; opacity: 1 !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); position: relative; z-index: 2;">
-                        Deep dive into UIKit essentials: view lifecycle, responder chain, AutoLayout, and Frame vs Bounds.
-                    </p><br>
-                    <div class="d-flex justify-content-center align-items-center gap-3 mb-4" style="position: relative; z-index: 2;">
-                        <img src="../images/Headshot1.jpg" alt="Manan Patel" class="rounded-circle" width="50" height="50" style="border: 3px solid #fff; opacity: 1 !important;">
-                        <div style="color: #fff !important; text-align: left; opacity: 1 !important;">
-                            <strong style="font-size: 16px; color: #fff !important; opacity: 1 !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); position: relative; z-index: 2;">Manan Patel</strong><br>
-                            <small style="color: #fff !important; opacity: 1 !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); position: relative; z-index: 2;">Software Engineer & Entrepreneur</small>
-                        </div><br>
-                    </div><br>
-                </div><br>
-            </div><br>
-        </div><br>
+<body class="bg-white">
+    <div class="max-w-4xl mx-auto p-6 pt-20">
+        <a href="index.html" class="inline-flex items-center text-gray-600 hover:text-gray-900 mb-8 transition-colors">
+            <span class="material-icons mr-2">arrow_back</span>
+            Back to Blog
+        </a>
+        
+        <article>
+            <header class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-4">📱 UIKit Fundamentals</h1>
+                <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text mb-4">Essential UIKit concepts and patterns for iOS development</p>
+                <div class="flex items-center text-sm text-gray-500">
+                    <span class="material-icons mr-1 text-sm">schedule</span>
+                    <span class="mr-4">7 min read</span>
+                    <span class="material-icons mr-1 text-sm">calendar_today</span>
+                    <span>December 25, 2023</span>
+                </div>
     </header>
-    <!--Header-->
 
-    <main class="container" style="margin-top: 60px; padding-top: 60px;">
-        <div class="row">
-            <div class="col-lg-8 mx-auto">
-                <article style="font-size: 18px; line-height: 30px; color: #555;">
+            <div class="prose prose-lg max-w-none">
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4">UIKit Basics</h2>
+                <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text mb-6">
+                    Understanding UIKit fundamentals is essential for iOS development, even in the SwiftUI era.
+                </p>
 
-                    <div style="margin-bottom: 60px;">
-                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">View Controller Lifecycle</h2>
-                        <p style="margin-bottom: 25px; line-height: 30px;">Understanding the view controller lifecycle is crucial for iOS development. Each method serves a specific purpose in the view's lifetime.</p><br>
-                        
-                        <pre><code class="language-swift">class ExampleViewController: UIViewController {
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4">1. View Controllers</h2>
+                <pre><code class="language-swift">class UserViewController: UIViewController {
+    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var nameLabel: UILabel!
+    
+    private var users: [User] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Called once when view loads into memory
-        // Set up UI elements, create constraints
-        // Views have bounds but may not have correct frame
         setupUI()
+        loadUsers()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        // Called every time before view appears
-        // Refresh data, start animations
-        refreshData()
+    private func setupUI() {
+        title = "Users"
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            barButtonSystemItem: .add,
+            target: self,
+            action: #selector(addUserTapped)
+        )
+        
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(UserCell.self, forCellReuseIdentifier: "UserCell")
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        // Called after view appears
-        // Start location services, timers
-        startLocationServices()
+    @objc private func addUserTapped() {
+        // Handle add user action
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        // Called before view disappears
-        // Save user input, pause video
-        saveUserData()
+    private func loadUsers() {
+        // Load users from API
     }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        // Called after view disappears
-        // Stop timers, pause expensive operations
-        stopLocationServices()
-    }
-}</code></pre><br><br><br><br>
-                    </div><br>
+}</code></pre>
 
-                    <div style="margin-bottom: 60px;">
-                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">AutoLayout Fundamentals</h2>
-                        <pre><code class="language-swift">class AutoLayoutExample: UIViewController {
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4 mt-8">2. Auto Layout</h2>
+                <pre><code class="language-swift">class CustomView: UIView {
     private let titleLabel = UILabel()
-    private let descriptionLabel = UILabel()
+    private let subtitleLabel = UILabel()
     private let actionButton = UIButton(type: .system)
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         setupViews()
         setupConstraints()
     }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     private func setupViews() {
-        // Configure views
-        titleLabel.text = "Welcome"
-        titleLabel.font = UIFont.systemFont(ofSize: 24, weight: .bold)
-        titleLabel.textAlignment = .center
+        addSubview(titleLabel)
+        addSubview(subtitleLabel)
+        addSubview(actionButton)
         
-        descriptionLabel.text = "This is a description"
-        descriptionLabel.numberOfLines = 0
-        descriptionLabel.textAlignment = .center
+        titleLabel.text = "Title"
+        titleLabel.font = UIFont.boldSystemFont(ofSize: 18)
         
-        actionButton.setTitle("Get Started", for: .normal)
+        subtitleLabel.text = "Subtitle"
+        subtitleLabel.font = UIFont.systemFont(ofSize: 14)
+        subtitleLabel.textColor = .gray
+        
+        actionButton.setTitle("Action", for: .normal)
         actionButton.backgroundColor = .systemBlue
         actionButton.setTitleColor(.white, for: .normal)
         actionButton.layer.cornerRadius = 8
-        
-        // Add to view hierarchy
-        view.addSubview(titleLabel)
-        view.addSubview(descriptionLabel)
-        view.addSubview(actionButton)
-        
-        // Disable autoresizing masks
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
-        actionButton.translatesAutoresizingMaskIntoConstraints = false
     }
     
     private func setupConstraints() {
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        actionButton.translatesAutoresizingMaskIntoConstraints = false
+        
         NSLayoutConstraint.activate([
             // Title label constraints
-            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
-            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 16),
+            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             
-            // Description label constraints
-            descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
-            descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            // Subtitle label constraints
+            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
+            subtitleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            subtitleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             
             // Action button constraints
-            actionButton.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 30),
-            actionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            actionButton.widthAnchor.constraint(equalToConstant: 200),
-            actionButton.heightAnchor.constraint(equalToConstant: 50)
+            actionButton.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: 16),
+            actionButton.centerXAnchor.constraint(equalTo: centerXAnchor),
+            actionButton.widthAnchor.constraint(equalToConstant: 120),
+            actionButton.heightAnchor.constraint(equalToConstant: 44),
+            actionButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16)
         ])
     }
-}</code></pre><br><br><br><br>
-                    </div><br>
+}</code></pre>
 
-                    <div style="margin-bottom: 60px;">
-                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">Frame vs Bounds</h2>
-                        <pre><code class="language-swift">// Frame: Position and size relative to superview
-// Bounds: Internal coordinate system of the view
-
-class FrameBoundsExample: UIViewController {
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        let containerView = UIView()
-        containerView.backgroundColor = .systemBlue
-        containerView.frame = CGRect(x: 50, y: 100, width: 200, height: 200)
-        view.addSubview(containerView)
-        
-        print("Container Frame: \(containerView.frame)")
-        // Output: (50.0, 100.0, 200.0, 200.0)
-        
-        print("Container Bounds: \(containerView.bounds)")
-        // Output: (0.0, 0.0, 200.0, 200.0)
-        
-        // Add subview using bounds
-        let subview = UIView()
-        subview.backgroundColor = .systemRed
-        subview.frame = CGRect(x: 10, y: 10, width: 50, height: 50)
-        containerView.addSubview(subview)
-        
-        // Transform affects frame but not bounds
-        containerView.transform = CGAffineTransform(rotationAngle: .pi/4)
-        
-        print("After rotation - Frame: \(containerView.frame)")
-        // Frame changes to encompass rotated view
-        
-        print("After rotation - Bounds: \(containerView.bounds)")
-        // Bounds remain the same: (0.0, 0.0, 200.0, 200.0)
-    }
-}</code></pre><br><br><br><br>
-                    </div><br>
-
-                    <div style="margin-bottom: 60px;">
-                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">Responder Chain</h2>
-                        <pre><code class="language-swift">class CustomView: UIView {
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        print("Touch began in CustomView")
-        
-        // Handle touch or pass to next responder
-        if shouldHandleTouch(touches) {
-            handleTouch(touches)
-        } else {
-            super.touchesBegan(touches, with: event)
-        }
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4 mt-8">3. Table Views</h2>
+                <pre><code class="language-swift">extension UserViewController: UITableViewDataSource, UITableViewDelegate {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return users.count
     }
     
-    private func shouldHandleTouch(_ touches: Set<UITouch>) -> Bool {
-        // Custom logic to determine if this view should handle the touch
-        return true
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "UserCell", for: indexPath) as! UserCell
+        let user = users[indexPath.row]
+        cell.configure(with: user)
+        return cell
     }
     
-    private func handleTouch(_ touches: Set<UITouch>) {
-        // Handle the touch event
-        print("Touch handled by CustomView")
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let user = users[indexPath.row]
+        // Navigate to user detail
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 60
     }
 }
 
-class CustomViewController: UIViewController {
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        print("Touch began in CustomViewController")
-        super.touchesBegan(touches, with: event)
-    }
+class UserCell: UITableViewCell {
+    private let nameLabel = UILabel()
+    private let emailLabel = UILabel()
     
-    // First responder management
-    override var canBecomeFirstResponder: Bool {
-        return true
-    }
-    
-    override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
-        if motion == .motionShake {
-            print("Device shaken!")
-        }
-    }
-}</code></pre><br><br><br><br>
-                    </div><br>
-
-                    <div style="margin-bottom: 60px;">
-                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">Custom Views</h2>
-                        <pre><code class="language-swift">class CustomButton: UIView {
-    private let titleLabel = UILabel()
-    private let iconImageView = UIImageView()
-    
-    var title: String? {
-        didSet {
-            titleLabel.text = title
-        }
-    }
-    
-    var icon: UIImage? {
-        didSet {
-            iconImageView.image = icon
-        }
-    }
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setupView()
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupViews()
     }
     
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        setupView()
+        fatalError("init(coder:) has not been implemented")
     }
     
-    private func setupView() {
-        backgroundColor = .systemBlue
-        layer.cornerRadius = 8
+    private func setupViews() {
+        contentView.addSubview(nameLabel)
+        contentView.addSubview(emailLabel)
         
-        // Setup title label
-        titleLabel.textColor = .white
-        titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        titleLabel.textAlignment = .center
+        nameLabel.font = UIFont.boldSystemFont(ofSize: 16)
+        emailLabel.font = UIFont.systemFont(ofSize: 14)
+        emailLabel.textColor = .gray
         
-        // Setup icon
-        iconImageView.contentMode = .scaleAspectFit
-        iconImageView.tintColor = .white
-        
-        // Add subviews
-        addSubview(iconImageView)
-        addSubview(titleLabel)
-        
-        // Setup constraints
-        iconImageView.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            iconImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            iconImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            iconImageView.widthAnchor.constraint(equalToConstant: 24),
-            iconImageView.heightAnchor.constraint(equalToConstant: 24),
-            
-            titleLabel.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 8),
-            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor)
-        ])
+        // Setup constraints...
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        backgroundColor = .systemBlue.withAlphaComponent(0.7)
+    func configure(with user: User) {
+        nameLabel.text = user.name
+        emailLabel.text = user.email
     }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        backgroundColor = .systemBlue
-    }
-    
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        backgroundColor = .systemBlue
-    }
-}</code></pre><br><br><br><br>
-                    </div><br>
+}</code></pre>
 
-                    <div style="margin-bottom: 60px;">
-                        <h2 style="font-size: 28px; line-height: 36px; font-weight: 600; margin-bottom: 30px; margin-top: 40px; color: #333; font-family: Roboto Mono, monospace;">Best Practices</h2>
-                        <ul style="margin-bottom: 30px; line-height: 28px;">
-                            <li style="margin-bottom: 8px;"><strong>Use AutoLayout</strong> for responsive design across devices</li>
-                            <li style="margin-bottom: 8px;"><strong>Understand the view lifecycle</strong> to optimize performance</li>
-                            <li style="margin-bottom: 8px;"><strong>Leverage the responder chain</strong> for event handling</li>
-                            <li style="margin-bottom: 8px;"><strong>Create reusable custom views</strong> for consistency</li>
-                            <li style="margin-bottom: 8px;"><strong>Use safe area guides</strong> for proper layout on all devices</li>
-                            <li style="margin-bottom: 8px;"><strong>Test on multiple screen sizes</strong> and orientations</li>
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4 mt-8">4. Navigation</h2>
+                <pre><code class="language-swift">class MainViewController: UIViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupNavigation()
+    }
+    
+    private func setupNavigation() {
+        // Programmatic navigation
+        let userVC = UserViewController()
+        let navController = UINavigationController(rootViewController: userVC)
+        present(navController, animated: true)
+        
+        // Push navigation
+        navigationController?.pushViewController(userVC, animated: true)
+        
+        // Modal presentation
+        let modalVC = ModalViewController()
+        modalVC.modalPresentationStyle = .pageSheet
+        present(modalVC, animated: true)
+    }
+}
+
+// Navigation delegate
+extension MainViewController: UINavigationControllerDelegate {
+    func navigationController(_ navigationController: UINavigationController, 
+                            willShow viewController: UIViewController, 
+                            animated: Bool) {
+        // Handle navigation events
+    }
+}</code></pre>
+
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4 mt-8">5. Delegates and Protocols</h2>
+                <pre><code class="language-swift">protocol UserSelectionDelegate: AnyObject {
+    func didSelectUser(_ user: User)
+    func didDeselectUser(_ user: User)
+}
+
+class UserListViewController: UIViewController {
+    weak var delegate: UserSelectionDelegate?
+    private var selectedUsers: Set<User> = []
+    
+    private func handleUserSelection(_ user: User) {
+        if selectedUsers.contains(user) {
+            selectedUsers.remove(user)
+            delegate?.didDeselectUser(user)
+        } else {
+            selectedUsers.insert(user)
+            delegate?.didSelectUser(user)
+        }
+    }
+}
+
+class ParentViewController: UIViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        let userListVC = UserListViewController()
+        userListVC.delegate = self
+        addChild(userListVC)
+        view.addSubview(userListVC.view)
+        userListVC.didMove(toParent: self)
+    }
+}
+
+extension ParentViewController: UserSelectionDelegate {
+    func didSelectUser(_ user: User) {
+        print("Selected user: \(user.name)")
+    }
+    
+    func didDeselectUser(_ user: User) {
+        print("Deselected user: \(user.name)")
+    }
+}</code></pre>
+
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4 mt-8">6. Best Practices</h2>
+                
+                <div class="bg-green-50 border-l-4 border-green-400 p-4 my-8">
+                    <h4 class="text-lg font-semibold text-green-800 mb-2">✅ Do's</h4>
+                    <ul class="text-green-700 space-y-1">
+                        <li>Use weak references for delegates</li>
+                        <li>Implement proper memory management</li>
+                        <li>Use Auto Layout for responsive design</li>
+                        <li>Follow MVC or MVVM patterns</li>
+                        <li>Test your view controllers</li>
                         </ul>
-                    </div><br>
+                </div>
 
-                    <footer class="mt-5 pt-4 border-top">
-                        <p style="margin-bottom: 25px; line-height: 30px;"><a href="https://github.com/MananPatel95/iOS-Notes" target="_blank" rel="noopener">View UIKit examples on GitHub</a></p><br>
-                    </footer>
+                <div class="bg-red-50 border-l-4 border-red-400 p-4 my-8">
+                    <h4 class="text-lg font-semibold text-red-800 mb-2">❌ Don'ts</h4>
+                    <ul class="text-red-700 space-y-1">
+                        <li>Don't retain delegates strongly</li>
+                        <li>Don't perform heavy operations on main thread</li>
+                        <li>Don't ignore memory warnings</li>
+                        <li>Don't mix UI and business logic</li>
+                    </ul>
+                </div>
+            </div>
                 </article>
-            </div><br>
-        </div><br>
-    </main>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    </div>
 </body>
 </html> 

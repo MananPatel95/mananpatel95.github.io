@@ -1,0 +1,27 @@
+User-agent: *
+Allow: /
+Allow: /llm.txt
+Allow: /sitemap.xml
+Disallow: /Old Site/
+
+# Sitemap location
+Sitemap: https://mananpatel.info/sitemap.xml
+
+# Allow all search engines to access LLM.txt
+User-agent: GPTBot
+Allow: /llm.txt
+
+User-agent: ChatGPT-User
+Allow: /llm.txt
+
+User-agent: CCBot
+Allow: /llm.txt
+
+User-agent: anthropic-ai
+Allow: /llm.txt
+
+User-agent: Claude-Web
+Allow: /llm.txt
+
+# Crawl delay (optional - helps with server load)
+Crawl-delay: 1 
