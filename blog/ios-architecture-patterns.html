@@ -48,7 +48,7 @@
                     <span class="material-icons mr-1 text-sm">calendar_today</span>
                     <span>January 15, 2024</span>
                 </div>
-            </header>
+                    </header>
 
             <div class="prose prose-lg max-w-none">
                 <h2 class="text-2xl font-semibold text-gray-900 mb-4">Why Architecture Matters</h2>
@@ -61,7 +61,7 @@
                     The traditional iOS architecture pattern. Views handle UI, Controllers manage the flow, and Models represent data.
                 </p>
 
-                <pre><code class="language-swift">// Model
+                        <pre><code class="language-swift">// Model
 struct User {
     let id: String
     let name: String
@@ -101,7 +101,7 @@ class UserViewController: UIViewController {
                     MVVM separates the view logic from the view controller, making it more testable and maintainable.
                 </p>
 
-                <pre><code class="language-swift">// ViewModel
+                        <pre><code class="language-swift">// ViewModel
 class UserViewModel: ObservableObject {
     @Published var user: User?
     @Published var isLoading = false
@@ -142,7 +142,7 @@ struct UserView: View {
                         <li>Use protocols for dependency injection</li>
                         <li>Separate business logic from UI logic</li>
                         <li>Make your code testable</li>
-                    </ul>
+                        </ul>
                 </div>
 
                 <div class="bg-red-50 border-l-4 border-red-400 p-4 my-8">
@@ -151,10 +151,10 @@ struct UserView: View {
                         <li>Don't put business logic in views</li>
                         <li>Don't create god objects</li>
                         <li>Don't mix different patterns in the same module</li>
-                    </ul>
+                                </ul>
                 </div>
             </div>
-        </article>
+                </article>
     </div>
 </body>
-</html>
+</html> 
