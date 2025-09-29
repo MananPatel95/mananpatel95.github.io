@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alberta Contractor Tax Calculator 2025 | Free Take-Home Pay Calculator</title>
+    <meta name="description" content="Free Alberta contractor tax calculator for 2025. Calculate your take-home pay, federal tax, provincial tax, CPP, and EI contributions as a self-employed contractor in Alberta, Canada.">
+    <meta name="keywords" content="alberta contractor tax calculator, alberta self employed tax calculator, canada contractor tax calculator, alberta tax calculator 2025, contractor take home pay calculator, alberta income tax calculator">
+    <meta name="author" content="Manan Patel">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mananpatel95.github.io/tools/alberta-contractor-calculator.html">
+    <meta property="og:title" content="Alberta Contractor Tax Calculator 2025 | Free Take-Home Pay Calculator">
+    <meta property="og:description" content="Calculate your take-home pay as a contractor in Alberta. Free tax calculator for self-employed individuals in Canada.">
+    <meta property="og:image" content="https://mananpatel95.github.io/images/calculator-preview.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://mananpatel95.github.io/tools/alberta-contractor-calculator.html">
+    <meta property="twitter:title" content="Alberta Contractor Tax Calculator 2025 | Free Take-Home Pay Calculator">
+    <meta property="twitter:description" content="Calculate your take-home pay as a contractor in Alberta. Free tax calculator for self-employed individuals in Canada.">
+    <meta property="twitter:image" content="https://mananpatel95.github.io/images/calculator-preview.jpg">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://mananpatel95.github.io/tools/alberta-contractor-calculator.html">
+    
+    <!-- Back to Portfolio -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f8fafc;
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            color: #6B7280;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+        
+        .back-link:hover {
+            color: #111827;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #e5e7eb;
+        }
+        
+        h1 {
+            color: #1f2937;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 32px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #6B7280;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        
+        .input-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+            font-size: 14px;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+        
+        .result-card {
+            background: #1f2937;
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(31, 41, 55, 0.2);
+            border: 1px solid #374151;
+        }
+        
+        .result-card h3 {
+            margin: 0 0 15px 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .result-card .amount {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .breakdown {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 25px;
+        }
+        
+        .breakdown h3 {
+            color: #1f2937;
+            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 15px;
+        }
+        
+        .breakdown-item:last-child {
+            border-bottom: none;
+            font-weight: 700;
+            color: #1f2937;
+            font-size: 16px;
+            padding-top: 15px;
+            margin-top: 10px;
+            border-top: 2px solid #e5e7eb;
+        }
+        
+        .business-account-section {
+            background: #f0f9ff;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 25px;
+            border-left: 5px solid #3b82f6;
+        }
+        
+        .business-account-section h3 {
+            color: #1e40af;
+            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .business-account-section h4 {
+            color: #1e40af;
+            margin: 20px 0 10px 0;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .business-account-section ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        
+        .business-account-section li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+            color: #1e40af;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 25px;
+            color: #856404;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .disclaimer {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 25px;
+            color: #6c757d;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        
+        .references {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 25px;
+        }
+        
+        .references h3 {
+            color: #1f2937;
+            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .references ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .references li {
+            margin-bottom: 8px;
+            color: #1f2937;
+        }
+        
+        .references a {
+            color: #3b82f6;
+            text-decoration: none;
+        }
+        
+        .references a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .results {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="back-link">
+            <span class="material-icons" style="font-size: 18px; margin-right: 8px;">arrow_back</span>
+            Back to Portfolio
+        </a>
+        
+        <h1>🧮 Alberta Contractor Tax Calculator</h1>
+        <p class="subtitle">Calculate your take-home pay as a self-employed contractor in Alberta, Canada (2025)</p>
+        
+        <div class="input-section">
+            <div class="input-group">
+                <label for="hourlyRate">Hourly Rate ($CAD)</label>
+                <input type="number" id="hourlyRate" value="100" min="1" step="0.01" placeholder="Enter your hourly rate">
+            </div>
+            
+            <div class="input-group">
+                <label for="hoursPerWeek">Hours per Week</label>
+                <input type="number" id="hoursPerWeek" value="40" min="1" max="80" step="0.5" placeholder="Enter hours worked per week">
+            </div>
+            
+            <div class="input-group">
+                <label for="weeksPerYear">Working Weeks per Year</label>
+                <input type="number" id="weeksPerYear" value="50" min="1" max="52" step="1" placeholder="Enter working weeks per year">
+            </div>
+        </div>
+        
+        <div class="results">
+            <div class="result-card">
+                <h3>Gross Annual Income</h3>
+                <div class="amount" id="grossAnnual">$200,000</div>
+                <small>Before taxes and deductions</small>
+            </div>
+            
+            <div class="result-card">
+                <h3>Net Monthly Take-Home</h3>
+                <div class="amount" id="netMonthly">$11,767</div>
+                <small>After all taxes and CPP/EI</small>
+            </div>
+        </div>
+        
+        <div class="breakdown">
+            <h3>📊 Annual Tax Breakdown (2025)</h3>
+            <div class="breakdown-item">
+                <span>Gross Income:</span>
+                <span id="breakdownGross">$200,000</span>
+            </div>
+            <div class="breakdown-item">
+                <span>Federal Income Tax:</span>
+                <span id="federalTax">-$31,500</span>
+            </div>
+            <div class="breakdown-item">
+                <span>Alberta Provincial Tax:</span>
+                <span id="provincialTax">-$17,750</span>
+            </div>
+            <div class="breakdown-item">
+                <span>CPP Contributions (Base + Enhanced):</span>
+                <span id="cppContrib">-$8,464</span>
+            </div>
+            <div class="breakdown-item">
+                <span>EI Contributions (Optional):</span>
+                <span id="eiContrib">-$1,075</span>
+            </div>
+            <div class="breakdown-item">
+                <span><strong>Net Annual Income:</strong></span>
+                <span id="netAnnual"><strong>$141,211</strong></span>
+            </div>
+        </div>
+        
+        <div class="business-account-section">
+            <h3>💼 Managing Your Business Account as a Contractor</h3>
+            <p><strong>As a sole proprietor contractor, here's how to properly manage your business account funds:</strong></p>
+            
+            <h4>✅ What you CAN do:</h4>
+            <ul>
+                <li><strong>Pay yourself regularly:</strong> Transfer money to your personal account as "owner's draw" - this is your take-home pay</li>
+                <li><strong>Business expenses:</strong> Office supplies, software subscriptions, professional development, equipment</li>
+                <li><strong>Home office deduction:</strong> Portion of utilities, internet, phone bills (keep detailed records)</li>
+                <li><strong>Professional services:</strong> Accountant fees, legal fees, business insurance</li>
+                <li><strong>Vehicle expenses:</strong> If used for business (gas, maintenance, insurance portion)</li>
+                <li><strong>Save for taxes:</strong> Set aside 25-30% of each payment for quarterly tax installments</li>
+            </ul>
+            
+            <h4>❌ What you should NOT do:</h4>
+            <ul>
+                <li>Use business funds for personal expenses (groceries, entertainment, personal shopping)</li>
+                <li>Mix business and personal transactions without proper documentation</li>
+                <li>Forget to track business vs personal use of expenses</li>
+            </ul>
+            
+            <h4>💡 Smart Money Management Tips:</h4>
+            <ul>
+                <li><strong>Separate accounts:</strong> Keep business and personal finances completely separate</li>
+                <li><strong>Regular transfers:</strong> Pay yourself monthly like a salary (e.g., $11,767/month based on your net)</li>
+                <li><strong>Tax savings:</strong> Open a separate high-interest savings account for tax obligations</li>
+                <li><strong>Track everything:</strong> Use accounting software like QuickBooks or Wave</li>
+                <li><strong>Quarterly installments:</strong> If you owe >$3,000 annually, pay CRA quarterly to avoid interest</li>
+            </ul>
+        </div>
+        
+        <div class="warning">
+            <strong>⚠️ Important Notes:</strong><br>
+            • These calculations are estimates based on 2025 tax rates and brackets<br>
+            • You'll need to file T1 General + T2125 forms annually<br>
+            • If earning >$30k/year, register for GST/HST and charge clients accordingly<br>
+            • Consider consulting a tax professional for your specific situation<br>
+            • EI is optional for self-employed but recommended for income protection<br>
+            • Tax rates and brackets are subject to change annually
+        </div>
+        
+        <div class="disclaimer">
+            <strong>📋 Disclaimer:</strong> This calculator is for informational purposes only and should not be considered as professional tax advice. Tax laws and rates change frequently, and individual circumstances vary. Always consult with a qualified tax professional or accountant for personalized advice regarding your specific tax situation. The calculations provided are estimates and may not reflect your actual tax obligations.
+        </div>
+        
+        <div class="references">
+            <h3>📚 Official Tax References</h3>
+            <ul>
+                <li><a href="https://www.canada.ca/en/revenue-agency/services/tax/individuals/topics/about-your-tax-return/tax-return/completing-a-tax-return/personal-amounts.html" target="_blank" rel="noopener">Canada.ca - Personal Amounts and Tax Brackets</a></li>
+                <li><a href="https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/payroll/payroll-deductions-contributions/canada-pension-plan-cpp.html" target="_blank" rel="noopener">Canada.ca - Canada Pension Plan (CPP) Contributions</a></li>
+                <li><a href="https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/payroll/payroll-deductions-contributions/employment-insurance-ei.html" target="_blank" rel="noopener">Canada.ca - Employment Insurance (EI) Contributions</a></li>
+                <li><a href="https://www.alberta.ca/personal-income-tax.aspx" target="_blank" rel="noopener">Alberta.ca - Personal Income Tax Information</a></li>
+                <li><a href="https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/sole-proprietorships-partnerships.html" target="_blank" rel="noopener">Canada.ca - Sole Proprietorships and Partnerships</a></li>
+                <li><a href="https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/sole-proprietorships-partnerships/income-tax-return.html" target="_blank" rel="noopener">Canada.ca - Self-Employed Income Tax Return (T2125)</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // 2025 Tax Brackets and Rates for Alberta
+        const federalBrackets = [
+            { min: 0, max: 55867, rate: 0.15 },
+            { min: 55867, max: 111733, rate: 0.205 },
+            { min: 111733, max: 173205, rate: 0.26 },
+            { min: 173205, max: 246752, rate: 0.29 },
+            { min: 246752, max: Infinity, rate: 0.33 }
+        ];
+        
+        const albertaBrackets = [
+            { min: 0, max: 148269, rate: 0.10 },
+            { min: 148269, max: 177922, rate: 0.12 },
+            { min: 177922, max: 237675, rate: 0.13 },
+            { min: 237675, max: 355513, rate: 0.14 },
+            { min: 355513, max: Infinity, rate: 0.15 }
+        ];
+        
+        // 2025 Constants
+        const basicPersonalAmount = 22323; // Alberta BPA for 2025
+        const cppBasicExemption = 3500;
+        const cppMaxEarnings = 71300;
+        const cppRate = 0.119; // Self-employed rate (both employee + employer)
+        const cppMaxContrib = 4034.10 * 2; // Self-employed pays both portions
+        
+        // CPP2 (Enhanced CPP) for 2025
+        const cpp2MaxEarnings = 81200;
+        const cpp2Rate = 0.08; // Self-employed rate for enhanced portion
+        const cpp2MaxContrib = 396 * 2; // Self-employed pays both portions
+        
+        const eiMaxEarnings = 63200;
+        const eiRate = 0.017; // 1.7% for 2025
+        const eiMaxContrib = 1074.40;
+        
+        function calculateTax(income, brackets) {
+            let tax = 0;
+            let taxableIncome = Math.max(0, income - basicPersonalAmount);
+            
+            for (let bracket of brackets) {
+                if (taxableIncome <= 0) break;
+                
+                let taxableInBracket = Math.min(taxableIncome, bracket.max - bracket.min);
+                tax += taxableInBracket * bracket.rate;
+                taxableIncome -= taxableInBracket;
+            }
+            
+            return tax;
+        }
+        
+        function calculateCPP(income) {
+            if (income <= cppBasicExemption) return 0;
+            
+            // Base CPP calculation
+            let pensionableEarnings = Math.min(income, cppMaxEarnings) - cppBasicExemption;
+            let baseCpp = pensionableEarnings * cppRate;
+            
+            // CPP2 (Enhanced) calculation
+            let cpp2 = 0;
+            if (income > cppMaxEarnings) {
+                let cpp2Earnings = Math.min(income, cpp2MaxEarnings) - cppMaxEarnings;
+                cpp2 = cpp2Earnings * cpp2Rate;
+            }
+            
+            return Math.min(baseCpp, cppMaxContrib) + Math.min(cpp2, cpp2MaxContrib);
+        }
+        
+        function calculateEI(income) {
+            if (income <= 0) return 0;
+            let insurable = Math.min(income, eiMaxEarnings);
+            return Math.min(insurable * eiRate, eiMaxContrib);
+        }
+        
+        function updateCalculations() {
+            const hourlyRate = parseFloat(document.getElementById('hourlyRate').value) || 0;
+            const hoursPerWeek = parseFloat(document.getElementById('hoursPerWeek').value) || 0;
+            const weeksPerYear = parseFloat(document.getElementById('weeksPerYear').value) || 0;
+            
+            const grossAnnual = hourlyRate * hoursPerWeek * weeksPerYear;
+            
+            const federalTax = calculateTax(grossAnnual, federalBrackets);
+            const provincialTax = calculateTax(grossAnnual, albertaBrackets);
+            const cppContrib = calculateCPP(grossAnnual);
+            const eiContrib = calculateEI(grossAnnual); // Optional for self-employed
+            
+            const totalTax = federalTax + provincialTax + cppContrib + eiContrib;
+            const netAnnual = grossAnnual - totalTax;
+            const netMonthly = netAnnual / 12;
+            
+            // Update display
+            document.getElementById('grossAnnual').textContent = '$' + grossAnnual.toLocaleString('en-CA', {maximumFractionDigits: 0});
+            document.getElementById('netMonthly').textContent = '$' + netMonthly.toLocaleString('en-CA', {maximumFractionDigits: 0});
+            
+            document.getElementById('breakdownGross').textContent = '$' + grossAnnual.toLocaleString('en-CA', {maximumFractionDigits: 0});
+            document.getElementById('federalTax').textContent = '-$' + federalTax.toLocaleString('en-CA', {maximumFractionDigits: 0});
+            document.getElementById('provincialTax').textContent = '-$' + provincialTax.toLocaleString('en-CA', {maximumFractionDigits: 0});
+            document.getElementById('cppContrib').textContent = '-$' + cppContrib.toLocaleString('en-CA', {maximumFractionDigits: 0});
+            document.getElementById('eiContrib').textContent = '-$' + eiContrib.toLocaleString('en-CA', {maximumFractionDigits: 0});
+            document.getElementById('netAnnual').textContent = '$' + netAnnual.toLocaleString('en-CA', {maximumFractionDigits: 0});
+        }
+        
+        // Event listeners
+        document.getElementById('hourlyRate').addEventListener('input', updateCalculations);
+        document.getElementById('hoursPerWeek').addEventListener('input', updateCalculations);
+        document.getElementById('weeksPerYear').addEventListener('input', updateCalculations);
+        
+        // Initial calculation
+        updateCalculations();
+    </script>
+</body>
+</html>
