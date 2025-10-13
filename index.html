@@ -163,26 +163,24 @@
             <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1 flex items-center">🧮 Tax Suite — Contractor & T4 (AB • BC • ON) <span class="text-green-500 ml-2">●</span></h3>
             <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text">Unified calculators with clean UI and up-to-date 2025 rates</p>
         </a>
-        <a href="tools/year-progress-calculator.html" class="block p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-            <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1 flex items-center">📅 2025 Year Progress Calculator <span class="text-green-500 ml-2">●</span></h3>
-            <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text">Track How Much Of 2025 Has Passed And What's Left</p>
+        <a href="tools/stripe-fee-calculator.html" class="block p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+            <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1 flex items-center">💸 Stripe Fee Calculator <span class="text-green-500 ml-2">●</span></h3>
+            <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text">100% Free, Multiple Currencies Supported</p>
         </a>
     </div>
 </section>
 <section class="mb-8">
-<div class="p-3 rounded-lg border border-border-light dark:border-border-dark bg-card-light dark:bg-card-dark">
+<div class="p-3 rounded-lg border border-border-light dark:border-border-dark bg-card-light dark:bg-card-dark cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" onclick="window.open('tools/year-progress-calculator.html', '_blank')">
 <div class="flex items-center justify-between mb-2">
 <span class="text-xs font-medium">Year Progress</span>
-<span class="text-xs secondary-text"><span id="yearProgressPct">0%</span> of <span id="yearProgressYear"></span> complete</span>
+<span class="text-xs secondary-text"><span id="yearProgressPct">78.4%</span> of <span id="yearProgressYear">2025</span> complete | <span id="yearProgressRemaining">21.6%</span> of <span id="yearProgressYear2">2025</span> remaining</span>
 </div>
 <div class="h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
 <div id="yearProgressBar" class="h-full bg-primary" style="width:0%"></div>
  </div>
-<div class="mt-2 grid grid-cols-4 gap-2 text-[10px] secondary-text">
-<div><span id="daysPassed" class="font-semibold text-text-light dark:text-text-dark">0</span> days</div>
-<div><span id="daysRemaining" class="font-semibold text-text-light dark:text-text-dark">0</span> left</div>
-<div><span id="weeksPassed" class="font-semibold text-text-light dark:text-text-dark">0</span> wks</div>
-<div><span id="monthsPassed" class="font-semibold text-text-light dark:text-text-dark">0</span> mos</div>
+<div class="mt-2 grid grid-cols-2 gap-2 text-[10px] secondary-text">
+<div><span id="daysPassed" class="font-semibold text-text-light dark:text-text-dark">286</span> days | <span id="weeksPassed" class="font-semibold text-text-light dark:text-text-dark">40</span> weeks | <span id="monthsPassed" class="font-semibold text-text-light dark:text-text-dark">10</span>ms elapsed</div>
+<div><span id="daysRemaining" class="font-semibold text-text-light dark:text-text-dark">79</span> days | <span id="weeksRemaining" class="font-semibold text-text-light dark:text-text-dark">11</span> weeks | <span id="monthsRemaining" class="font-semibold text-text-light dark:text-text-dark">2</span>ms remaining</div>
 </div>
 </div>
 </section>
@@ -206,18 +204,28 @@
   var pctEl = document.getElementById('yearProgressPct');
   var barEl = document.getElementById('yearProgressBar');
   var yearEl = document.getElementById('yearProgressYear');
-  if (pctEl && barEl && yearEl) {
+  var yearEl2 = document.getElementById('yearProgressYear2');
+  var remainingEl = document.getElementById('yearProgressRemaining');
+  if (pctEl && barEl && yearEl && yearEl2 && remainingEl) {
     pctEl.textContent = pctText;
     barEl.style.width = pct.toFixed(1) + '%';
     yearEl.textContent = year;
+    yearEl2.textContent = year;
+    remainingEl.textContent = (100 - pct).toFixed(1) + '%';
     var dp = document.getElementById('daysPassed');
     var dr = document.getElementById('daysRemaining');
     var wp = document.getElementById('weeksPassed');
     var mp = document.getElementById('monthsPassed');
+    var wr = document.getElementById('weeksRemaining');
+    var mr = document.getElementById('monthsRemaining');
+    var weeksRemaining = Math.floor(daysRemaining / 7);
+    var monthsRemaining = 12 - monthsPassed;
     if (dp) dp.textContent = daysPassed.toLocaleString('en-CA');
     if (dr) dr.textContent = daysRemaining.toLocaleString('en-CA');
     if (wp) wp.textContent = weeksPassed.toString();
     if (mp) mp.textContent = monthsPassed.toString();
+    if (wr) wr.textContent = weeksRemaining.toString();
+    if (mr) mr.textContent = monthsRemaining.toString();
   }
 })();
 </script>
