@@ -159,9 +159,9 @@
 <section class="mb-8">
     <h2 class="text-xl font-bold text-text-light dark:text-text-dark mb-6">Tools</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <a href="tools/alberta-contractor-calculator.html" class="block p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-            <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1 flex items-center">🧮 Alberta Contractor Tax Calculator <span class="text-green-500 ml-2">●</span></h3>
-            <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text">Calculate Your Take-Home Pay As A Contractor In Alberta</p>
+        <a href="tools/tax-suite.html" class="block p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+            <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1 flex items-center">🧮 Tax Suite — Contractor & T4 (AB • BC • ON) <span class="text-green-500 ml-2">●</span></h3>
+            <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text">Unified calculators with clean UI and up-to-date 2025 rates</p>
         </a>
         <a href="tools/year-progress-calculator.html" class="block p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
             <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1 flex items-center">📅 2025 Year Progress Calculator <span class="text-green-500 ml-2">●</span></h3>
@@ -169,7 +169,58 @@
         </a>
     </div>
 </section>
+<section class="mb-8">
+<div class="p-3 rounded-lg border border-border-light dark:border-border-dark bg-card-light dark:bg-card-dark">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs font-medium">Year Progress</span>
+<span class="text-xs secondary-text"><span id="yearProgressPct">0%</span> of <span id="yearProgressYear"></span> complete</span>
+</div>
+<div class="h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+<div id="yearProgressBar" class="h-full bg-primary" style="width:0%"></div>
+ </div>
+<div class="mt-2 grid grid-cols-4 gap-2 text-[10px] secondary-text">
+<div><span id="daysPassed" class="font-semibold text-text-light dark:text-text-dark">0</span> days</div>
+<div><span id="daysRemaining" class="font-semibold text-text-light dark:text-text-dark">0</span> left</div>
+<div><span id="weeksPassed" class="font-semibold text-text-light dark:text-text-dark">0</span> wks</div>
+<div><span id="monthsPassed" class="font-semibold text-text-light dark:text-text-dark">0</span> mos</div>
+</div>
+</div>
+</section>
 </main>
+<script>
+(function(){
+  var now = new Date();
+  var year = now.getFullYear();
+  var start = new Date(year,0,1);
+  var end = new Date(year+1,0,1);
+  var msDay = 24*60*60*1000;
+  var totalDays = Math.round((end - start) / msDay);
+  var daysPassed = Math.floor((now - start) / msDay) + 1;
+  if (daysPassed < 0) daysPassed = 0;
+  if (daysPassed > totalDays) daysPassed = totalDays;
+  var daysRemaining = totalDays - daysPassed;
+  var weeksPassed = Math.floor(daysPassed / 7);
+  var monthsPassed = now.getMonth() + 1;
+  var pct = (daysPassed / totalDays) * 100;
+  var pctText = pct.toFixed(1) + '%';
+  var pctEl = document.getElementById('yearProgressPct');
+  var barEl = document.getElementById('yearProgressBar');
+  var yearEl = document.getElementById('yearProgressYear');
+  if (pctEl && barEl && yearEl) {
+    pctEl.textContent = pctText;
+    barEl.style.width = pct.toFixed(1) + '%';
+    yearEl.textContent = year;
+    var dp = document.getElementById('daysPassed');
+    var dr = document.getElementById('daysRemaining');
+    var wp = document.getElementById('weeksPassed');
+    var mp = document.getElementById('monthsPassed');
+    if (dp) dp.textContent = daysPassed.toLocaleString('en-CA');
+    if (dr) dr.textContent = daysRemaining.toLocaleString('en-CA');
+    if (wp) wp.textContent = weeksPassed.toString();
+    if (mp) mp.textContent = monthsPassed.toString();
+  }
+})();
+</script>
 </div>
 
 </body></html>

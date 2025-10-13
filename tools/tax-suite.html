@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tax Suite 2025 — Contractor & T4 Calculators (AB • BC • ON)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; max-width: 1100px; margin: 0 auto; padding: 20px; background:#f8fafc; color:#111827; }
+    .container { background:#fff; border:1px solid #e5e7eb; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.06); }
+    .header { padding:24px 24px 0 24px; }
+    .tabs { display:flex; gap:8px; padding:0 24px; border-bottom:1px solid #e5e7eb; }
+    .tab { padding:10px 14px; font-weight:600; font-size:14px; color:#374151; border:1px solid transparent; border-top-left-radius:8px; border-top-right-radius:8px; cursor:pointer; }
+    .tab.active { color:#111827; background:#fff; border-color:#e5e7eb; border-bottom-color:#fff; }
+    .section { padding:24px; display:none; }
+    .section.active { display:block; }
+    .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap:16px; }
+    label { font-size:13px; font-weight:600; color:#374151; display:block; margin-bottom:6px; }
+    input, select { width:100%; padding:10px 12px; border:2px solid #e5e7eb; border-radius:8px; font-size:15px; }
+    input:focus, select:focus { outline:none; border-color:#3b82f6; box-shadow:0 0 0 3px rgba(59,130,246,0.1); }
+    .cards { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:16px; margin-top:16px; }
+    .card { background:#111827; color:white; padding:20px; border-radius:12px; border:1px solid #374151; text-align:center; }
+    .card h3 { margin:0 0 8px 0; font-size:16px; font-weight:600; }
+    .card .amount { font-size:24px; font-weight:700; }
+    .panel { background:#f8f9fa; border-radius:12px; padding:20px; margin-top:16px; border:1px solid #e5e7eb; }
+    .row { display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #e5e7eb; font-size:14px; }
+    .row:last-child { border-bottom:none; font-weight:700; }
+    .links { padding:0 24px 24px 24px; }
+    .links h4 { margin:0 0 10px 0; font-size:14px; color:#111827; }
+    .links a { display:block; color:#2563eb; font-size:13px; text-decoration:none; margin:4px 0; }
+    .links a:hover { text-decoration:underline; }
+    .back { display:inline-flex; align-items:center; gap:6px; color:#6b7280; text-decoration:none; font-size:14px; margin-bottom:12px; }
+    .back:hover { color:#111827; }
+    @media (max-width: 640px) { .header h1{font-size:22px;} }
+  </style>
+</head>
+<body>
+  <a href="../index.html" class="back"><span class="material-icons" style="font-size:18px;">arrow_back</span>Back to Portfolio</a>
+  <div class="container">
+    <div class="header">
+      <h1 style="margin:0 0 6px 0;">Tax Suite 2025</h1>
+      <div style="color:#6b7280; font-size:14px;">Contractor (Self‑Employed) • T4 Employee — AB • BC • ON</div>
+    </div>
+    <div class="tabs">
+      <button class="tab active" data-tab="contractor">Contractor</button>
+      <button class="tab" data-tab="t4">T4 Employee</button>
+    </div>
+
+    <!-- Contractor Section -->
+    <section id="contractor" class="section active">
+      <div class="grid">
+        <div>
+          <label for="c_province">Province</label>
+          <select id="c_province">
+            <option value="AB">Alberta</option>
+            <option value="BC">British Columbia</option>
+            <option value="ON">Ontario</option>
+          </select>
+        </div>
+        <div>
+          <label for="c_rate">Hourly Rate ($)</label>
+          <input id="c_rate" type="number" value="150" min="1" step="0.01">
+        </div>
+        <div>
+          <label for="c_hours">Hours / Week</label>
+          <input id="c_hours" type="number" value="40" min="1" max="80" step="0.5">
+        </div>
+        <div>
+          <label for="c_weeks">Working Weeks / Year</label>
+          <input id="c_weeks" type="number" value="50" min="1" max="52" step="1">
+        </div>
+      </div>
+      <div class="cards">
+        <div class="card"><h3>Gross Annual</h3><div id="c_gross" class="amount">$300,000</div></div>
+        <div class="card"><h3>Net Monthly</h3><div id="c_net_month" class="amount">$18,500</div></div>
+      </div>
+      <div class="panel">
+        <div class="row"><span>Gross Income</span><span id="c_gross_b">$300,000</span></div>
+        <div class="row"><span>Federal Tax</span><span id="c_fed">-$0</span></div>
+        <div class="row"><span id="c_prov_label">Alberta Provincial Tax</span><span id="c_prov">-$0</span></div>
+        <div class="row"><span>CPP (Self‑Employed)</span><span id="c_cpp">-$0</span></div>
+        <div class="row"><span>EI (Optional)</span><span id="c_ei">-$0</span></div>
+        <div class="row"><span>Net Annual</span><span id="c_net">$0</span></div>
+      </div>
+    </section>
+
+    <!-- T4 Section -->
+    <section id="t4" class="section">
+      <div class="grid">
+        <div>
+          <label for="t_province">Province</label>
+          <select id="t_province">
+            <option value="AB">Alberta</option>
+            <option value="BC">British Columbia</option>
+            <option value="ON">Ontario</option>
+          </select>
+        </div>
+        <div>
+          <label for="t_income">Annual Gross Salary ($)</label>
+          <input id="t_income" type="number" value="75000" min="0" step="1000">
+        </div>
+        <div>
+          <label for="t_pay">Pay Frequency</label>
+          <select id="t_pay">
+            <option value="12">Monthly</option>
+            <option value="26" selected>Bi‑weekly</option>
+            <option value="24">Semi‑monthly</option>
+            <option value="52">Weekly</option>
+          </select>
+        </div>
+        <div>
+          <label for="t_rrsp">RRSP Contributions ($)</label>
+          <input id="t_rrsp" type="number" value="5000" min="0" step="500">
+        </div>
+        <div>
+          <label for="t_union">Union Dues ($)</label>
+          <input id="t_union" type="number" value="0" min="0" step="100">
+        </div>
+      </div>
+      <div class="cards">
+        <div class="card"><h3>Gross Annual</h3><div id="t_gross" class="amount">$75,000</div></div>
+        <div class="card"><h3>Net Annual</h3><div id="t_net" class="amount">$58,500</div></div>
+        <div class="card"><h3>Per Pay</h3><div id="t_perpay" class="amount">$2,250</div></div>
+        <div class="card"><h3>Effective Rate</h3><div id="t_effective" class="amount">22.0%</div></div>
+      </div>
+      <div class="panel">
+        <div class="row"><span>Taxable Income</span><span id="t_taxable">$70,000</span></div>
+        <div class="row"><span>Federal Tax</span><span id="t_fed">-$7,200</span></div>
+        <div class="row"><span>Provincial Tax</span><span id="t_prov">-$4,770</span></div>
+        <div class="row"><span>CPP</span><span id="t_cpp">-$3,867</span></div>
+        <div class="row"><span>EI</span><span id="t_ei">-$1,275</span></div>
+      </div>
+    </section>
+
+    <div class="links">
+      <h4>Official Links</h4>
+      <a href="https://www.canada.ca/en/revenue-agency/services/tax/individuals/frequently-asked-questions-individuals/tax-credits-deductions-returns/basic-personal-amount.html" target="_blank" rel="noopener">Canada.ca — Personal Amounts and Tax Brackets</a>
+      <a href="https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/payroll/payroll-deductions-contributions/canada-pension-plan-cpp.html" target="_blank" rel="noopener">Canada.ca — Canada Pension Plan (CPP)</a>
+      <a href="https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/payroll/payroll-deductions-contributions/employment-insurance-ei.html" target="_blank" rel="noopener">Canada.ca — Employment Insurance (EI)</a>
+      <a href="https://www.alberta.ca/personal-income-tax.aspx" target="_blank" rel="noopener">Alberta.ca — Personal Income Tax</a>
+      <a href="https://www2.gov.bc.ca/gov/content/taxes/income-taxes/personal" target="_blank" rel="noopener">BC.gov.ca — Personal Income Tax</a>
+      <a href="https://www.ontario.ca/page/personal-income-tax" target="_blank" rel="noopener">Ontario.ca — Personal Income Tax</a>
+      <a href="https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/sole-proprietorships-partnerships.html" target="_blank" rel="noopener">Canada.ca — Sole Proprietorships and Partnerships</a>
+      <a href="https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/sole-proprietorships-partnerships/report-business-income-expenses/complete-fill-out-t2125-statement-business-activities.html" target="_blank" rel="noopener">Canada.ca — Self‑Employed Income Tax Return (T2125)</a>
+    </div>
+  </div>
+
+  <script>
+    // Shared data
+    const FED = [
+      {min:0,max:55867,rate:0.15},
+      {min:55867,max:111733,rate:0.205},
+      {min:111733,max:173205,rate:0.26},
+      {min:173205,max:246752,rate:0.29},
+      {min:246752,max:Infinity,rate:0.33}
+    ];
+    const PROV = {
+      AB:[{min:0,max:148269,rate:0.10},{min:148269,max:177922,rate:0.12},{min:177922,max:237675,rate:0.13},{min:237675,max:355513,rate:0.14},{min:355513,max:Infinity,rate:0.15}],
+      BC:[{min:0,max:50000,rate:0.0506},{min:50000,max:100000,rate:0.077},{min:100000,max:120000,rate:0.105},{min:120000,max:160000,rate:0.1229},{min:160000,max:220000,rate:0.147},{min:220000,max:Infinity,rate:0.168}],
+      ON:[{min:0,max:51446,rate:0.0505},{min:51446,max:102894,rate:0.0915},{min:102894,max:150000,rate:0.1116},{min:150000,max:220000,rate:0.1216},{min:220000,max:Infinity,rate:0.1316}]
+    };
+
+    // Contractor constants
+    const C_BPA = 22323; // basic personal amount (used in simple model)
+    const CPP_BASIC_EXEMPT = 3500, CPP_MAX_EARN = 71300, CPP_RATE_SELF = 0.119, CPP_MAX_CONTRIB = 4034.10*2;
+    const CPP2_MAX_EARN = 81200, CPP2_RATE_SELF = 0.08, CPP2_MAX_CONTRIB = 396*2;
+    const EI_MAX_EARN=63200, EI_RATE=0.017, EI_MAX=1074.40;
+
+    function calcProgressive(income, brackets, subtractBpa=false, bpa=0){
+      let taxable = subtractBpa ? Math.max(0, income - bpa) : income;
+      let tax = 0; let remaining = taxable;
+      for(const b of brackets){ if(remaining<=0) break; const width = b.max - b.min; const taxed = Math.min(remaining, width); tax += taxed*b.rate; remaining -= taxed; }
+      return tax;
+    }
+
+    function calcCPPself(income){
+      if(income<=CPP_BASIC_EXEMPT) return 0;
+      let base = Math.min(income, CPP_MAX_EARN) - CPP_BASIC_EXEMPT; base = Math.max(0, base);
+      let t1 = base*CPP_RATE_SELF; let t2=0;
+      if(income>CPP_MAX_EARN){ const add = Math.min(income, CPP2_MAX_EARN) - CPP_MAX_EARN; t2 = Math.max(0, add)*CPP2_RATE_SELF; }
+      return Math.min(t1, CPP_MAX_CONTRIB) + Math.min(t2, CPP2_MAX_CONTRIB);
+    }
+
+    function calcEI(income){
+      const ins = Math.min(Math.max(0,income), EI_MAX_EARN); return Math.min(ins*EI_RATE, EI_MAX);
+    }
+
+    // Contractor update
+    function updateContractor(){
+      const prov = document.getElementById('c_province').value;
+      const rate = parseFloat(document.getElementById('c_rate').value)||0;
+      const hrs = parseFloat(document.getElementById('c_hours').value)||0;
+      const wks = parseFloat(document.getElementById('c_weeks').value)||0;
+      const gross = rate*hrs*wks;
+      const fed = calcProgressive(Math.max(0,gross - C_BPA), FED);
+      const prv = calcProgressive(Math.max(0,gross - C_BPA), PROV[prov]);
+      const cpp = calcCPPself(gross);
+      const ei = calcEI(gross);
+      const net = gross - (fed+prv+cpp+ei);
+      const netMonth = net/12;
+      const provName = {AB:'Alberta',BC:'British Columbia',ON:'Ontario'}[prov];
+
+      document.getElementById('c_gross').textContent = currency(gross);
+      document.getElementById('c_net_month').textContent = currency(netMonth);
+      document.getElementById('c_gross_b').textContent = currency(gross);
+      document.getElementById('c_fed').textContent = '-' + currency(fed);
+      document.getElementById('c_prov').textContent = '-' + currency(prv);
+      document.getElementById('c_prov_label').textContent = provName + ' Provincial Tax';
+      document.getElementById('c_cpp').textContent = '-' + currency(cpp);
+      document.getElementById('c_ei').textContent = '-' + currency(ei);
+      document.getElementById('c_net').textContent = currency(net);
+    }
+
+    // T4 constants
+    const T_BPA = 22323; // simplified
+    const CPP_RATE_EMP = 0.0595, CPP_MAX_EMP = 4034.10;
+
+    function calcCPPemp(income){
+      if(income<=CPP_BASIC_EXEMPT) return 0; const pens = Math.min(income, CPP_MAX_EARN) - CPP_BASIC_EXEMPT; return Math.min(pens*CPP_RATE_EMP, CPP_MAX_EMP);
+    }
+
+    function currency(v){ return '$' + (isFinite(v)? Math.round(v).toLocaleString('en-CA') : '0'); }
+
+    function updateT4(){
+      const prov = document.getElementById('t_province').value;
+      const income = parseFloat(document.getElementById('t_income').value)||0;
+      const pay = parseInt(document.getElementById('t_pay').value)||26;
+      const rrsp = parseFloat(document.getElementById('t_rrsp').value)||0;
+      const union = parseFloat(document.getElementById('t_union').value)||0;
+
+      const taxable = Math.max(0, income - rrsp - union - T_BPA);
+      const fed = calcProgressive(taxable, FED);
+      const prv = calcProgressive(taxable, PROV[prov]);
+      const cpp = calcCPPemp(income);
+      const ei = calcEI(income);
+      const net = income - (fed+prv+cpp+ei+rrsp+union);
+      const perPay = net / pay;
+      const effective = income>0 ? ((fed+prv+cpp+ei)/income)*100 : 0;
+
+      document.getElementById('t_gross').textContent = currency(income);
+      document.getElementById('t_net').textContent = currency(net);
+      document.getElementById('t_perpay').textContent = currency(perPay);
+      document.getElementById('t_effective').textContent = effective.toFixed(1) + '%';
+      document.getElementById('t_taxable').textContent = currency(income - rrsp - union);
+      document.getElementById('t_fed').textContent = '-' + currency(fed);
+      document.getElementById('t_prov').textContent = '-' + currency(prv);
+      document.getElementById('t_cpp').textContent = '-' + currency(cpp);
+      document.getElementById('t_ei').textContent = '-' + currency(ei);
+    }
+
+    // Tabs
+    document.querySelectorAll('.tab').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+        document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    // Wire inputs
+    ['c_province','c_rate','c_hours','c_weeks'].forEach(id=> document.getElementById(id).addEventListener('input', updateContractor));
+    ['t_province','t_income','t_pay','t_rrsp','t_union'].forEach(id=> document.getElementById(id).addEventListener('input', updateT4));
+
+    // Initial
+    updateContractor();
+    updateT4();
+  </script>
+</body>
+</html>

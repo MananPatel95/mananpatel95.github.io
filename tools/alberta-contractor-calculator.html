@@ -3,24 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alberta Contractor Tax Calculator 2025 | Free Take-Home Pay Calculator</title>
-    <meta name="description" content="Free Alberta contractor tax calculator for 2025. Calculate your take-home pay, federal tax, provincial tax, CPP, and EI contributions as a self-employed contractor in Alberta, Canada.">
-    <meta name="keywords" content="alberta contractor tax calculator, alberta self employed tax calculator, canada contractor tax calculator, alberta tax calculator 2025, contractor take home pay calculator, alberta income tax calculator">
+    <title>Canadian Contractor Tax Calculator 2025 | BC, Ontario, Alberta | Free Take-Home Pay Calculator</title>
+    <meta name="description" content="Free Canadian contractor tax calculator for 2025. Calculate your take-home pay, federal tax, provincial tax, CPP, and EI contributions as a self-employed contractor in BC, Ontario, or Alberta, Canada.">
+    <meta name="keywords" content="canadian contractor tax calculator, bc contractor tax calculator, ontario contractor tax calculator, alberta contractor tax calculator, canada self employed tax calculator, contractor take home pay calculator, canadian income tax calculator">
     <meta name="author" content="Manan Patel">
     <meta name="robots" content="index, follow">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://mananpatel95.github.io/tools/alberta-contractor-calculator.html">
-    <meta property="og:title" content="Alberta Contractor Tax Calculator 2025 | Free Take-Home Pay Calculator">
-    <meta property="og:description" content="Calculate your take-home pay as a contractor in Alberta. Free tax calculator for self-employed individuals in Canada.">
+    <meta property="og:title" content="Canadian Contractor Tax Calculator 2025 | BC, Ontario, Alberta | Free Take-Home Pay Calculator">
+    <meta property="og:description" content="Calculate your take-home pay as a contractor in BC, Ontario, or Alberta. Free tax calculator for self-employed individuals in Canada.">
     <meta property="og:image" content="https://mananpatel95.github.io/images/calculator-preview.jpg">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://mananpatel95.github.io/tools/alberta-contractor-calculator.html">
-    <meta property="twitter:title" content="Alberta Contractor Tax Calculator 2025 | Free Take-Home Pay Calculator">
-    <meta property="twitter:description" content="Calculate your take-home pay as a contractor in Alberta. Free tax calculator for self-employed individuals in Canada.">
+    <meta property="twitter:title" content="Canadian Contractor Tax Calculator 2025 | BC, Ontario, Alberta | Free Take-Home Pay Calculator">
+    <meta property="twitter:description" content="Calculate your take-home pay as a contractor in BC, Ontario, or Alberta. Free tax calculator for self-employed individuals in Canada.">
     <meta property="twitter:image" content="https://mananpatel95.github.io/images/calculator-preview.jpg">
 
     <!-- Canonical URL -->
@@ -290,13 +290,22 @@
             Back to Portfolio
         </a>
         
-        <h1>🧮 Alberta Contractor Tax Calculator</h1>
-        <p class="subtitle">Calculate your take-home pay as a self-employed contractor in Alberta, Canada (2025)</p>
+        <h1>🧮 Canadian Contractor Tax Calculator</h1>
+        <p class="subtitle">Calculate your take-home pay as a self-employed contractor in BC, Ontario, or Alberta, Canada (2025)</p>
         
         <div class="input-section">
             <div class="input-group">
+                <label for="province">Province</label>
+                <select id="province">
+                    <option value="AB">Alberta</option>
+                    <option value="BC">British Columbia</option>
+                    <option value="ON">Ontario</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
                 <label for="hourlyRate">Hourly Rate ($CAD)</label>
-                <input type="number" id="hourlyRate" value="100" min="1" step="0.01" placeholder="Enter your hourly rate">
+                <input type="number" id="hourlyRate" value="150" min="1" step="0.01" placeholder="Enter your hourly rate">
             </div>
             
             <div class="input-group">
@@ -313,13 +322,13 @@
         <div class="results">
             <div class="result-card">
                 <h3>Gross Annual Income</h3>
-                <div class="amount" id="grossAnnual">$200,000</div>
+                <div class="amount" id="grossAnnual">$300,000</div>
                 <small>Before taxes and deductions</small>
             </div>
             
             <div class="result-card">
                 <h3>Net Monthly Take-Home</h3>
-                <div class="amount" id="netMonthly">$11,767</div>
+                <div class="amount" id="netMonthly">$18,500</div>
                 <small>After all taxes and CPP/EI</small>
             </div>
         </div>
@@ -328,15 +337,15 @@
             <h3>📊 Annual Tax Breakdown (2025)</h3>
             <div class="breakdown-item">
                 <span>Gross Income:</span>
-                <span id="breakdownGross">$200,000</span>
+                <span id="breakdownGross">$300,000</span>
             </div>
             <div class="breakdown-item">
                 <span>Federal Income Tax:</span>
-                <span id="federalTax">-$31,500</span>
+                <span id="federalTax">-$52,500</span>
             </div>
             <div class="breakdown-item">
-                <span>Alberta Provincial Tax:</span>
-                <span id="provincialTax">-$17,750</span>
+                <span id="provincialTaxLabel">Alberta Provincial Tax:</span>
+                <span id="provincialTax">-$30,000</span>
             </div>
             <div class="breakdown-item">
                 <span>CPP Contributions (Base + Enhanced):</span>
@@ -348,7 +357,7 @@
             </div>
             <div class="breakdown-item">
                 <span><strong>Net Annual Income:</strong></span>
-                <span id="netAnnual"><strong>$141,211</strong></span>
+                <span id="netAnnual"><strong>$207,961</strong></span>
             </div>
         </div>
         
@@ -376,7 +385,7 @@
             <h4>💡 Smart Money Management Tips:</h4>
             <ul>
                 <li><strong>Separate accounts:</strong> Keep business and personal finances completely separate</li>
-                <li><strong>Regular transfers:</strong> Pay yourself monthly like a salary (e.g., $11,767/month based on your net)</li>
+                <li><strong>Regular transfers:</strong> Pay yourself monthly like a salary (e.g., $18,500/month based on your net)</li>
                 <li><strong>Tax savings:</strong> Open a separate high-interest savings account for tax obligations</li>
                 <li><strong>Track everything:</strong> Use accounting software like QuickBooks or Wave</li>
                 <li><strong>Quarterly installments:</strong> If you owe >$3,000 annually, pay CRA quarterly to avoid interest</li>
@@ -404,6 +413,8 @@
                 <li><a href="https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/payroll/payroll-deductions-contributions/canada-pension-plan-cpp.html" target="_blank" rel="noopener">Canada.ca - Canada Pension Plan (CPP) Contributions</a></li>
                 <li><a href="https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/payroll/payroll-deductions-contributions/employment-insurance-ei.html" target="_blank" rel="noopener">Canada.ca - Employment Insurance (EI) Contributions</a></li>
                 <li><a href="https://www.alberta.ca/personal-income-tax.aspx" target="_blank" rel="noopener">Alberta.ca - Personal Income Tax Information</a></li>
+                <li><a href="https://www2.gov.bc.ca/gov/content/taxes/income-taxes/personal" target="_blank" rel="noopener">BC.gov.ca - Personal Income Tax</a></li>
+                <li><a href="https://www.ontario.ca/page/personal-income-tax" target="_blank" rel="noopener">Ontario.ca - Personal Income Tax</a></li>
                 <li><a href="https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/sole-proprietorships-partnerships.html" target="_blank" rel="noopener">Canada.ca - Sole Proprietorships and Partnerships</a></li>
                 <li><a href="https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/sole-proprietorships-partnerships/income-tax-return.html" target="_blank" rel="noopener">Canada.ca - Self-Employed Income Tax Return (T2125)</a></li>
             </ul>
@@ -411,7 +422,7 @@
     </div>
 
     <script>
-        // 2025 Tax Brackets and Rates for Alberta
+        // 2025 Tax Brackets and Rates
         const federalBrackets = [
             { min: 0, max: 55867, rate: 0.15 },
             { min: 55867, max: 111733, rate: 0.205 },
@@ -420,13 +431,30 @@
             { min: 246752, max: Infinity, rate: 0.33 }
         ];
         
-        const albertaBrackets = [
-            { min: 0, max: 148269, rate: 0.10 },
-            { min: 148269, max: 177922, rate: 0.12 },
-            { min: 177922, max: 237675, rate: 0.13 },
-            { min: 237675, max: 355513, rate: 0.14 },
-            { min: 355513, max: Infinity, rate: 0.15 }
-        ];
+        const provincialBrackets = {
+            AB: [ // Alberta
+                { min: 0, max: 148269, rate: 0.10 },
+                { min: 148269, max: 177922, rate: 0.12 },
+                { min: 177922, max: 237675, rate: 0.13 },
+                { min: 237675, max: 355513, rate: 0.14 },
+                { min: 355513, max: Infinity, rate: 0.15 }
+            ],
+            BC: [ // British Columbia
+                { min: 0, max: 50000, rate: 0.0506 },
+                { min: 50000, max: 100000, rate: 0.077 },
+                { min: 100000, max: 120000, rate: 0.105 },
+                { min: 120000, max: 160000, rate: 0.1229 },
+                { min: 160000, max: 220000, rate: 0.147 },
+                { min: 220000, max: Infinity, rate: 0.168 }
+            ],
+            ON: [ // Ontario
+                { min: 0, max: 51446, rate: 0.0505 },
+                { min: 51446, max: 102894, rate: 0.0915 },
+                { min: 102894, max: 150000, rate: 0.1116 },
+                { min: 150000, max: 220000, rate: 0.1216 },
+                { min: 220000, max: Infinity, rate: 0.1316 }
+            ]
+        };
         
         // 2025 Constants
         const basicPersonalAmount = 22323; // Alberta BPA for 2025
@@ -483,6 +511,7 @@
         }
         
         function updateCalculations() {
+            const province = document.getElementById('province').value;
             const hourlyRate = parseFloat(document.getElementById('hourlyRate').value) || 0;
             const hoursPerWeek = parseFloat(document.getElementById('hoursPerWeek').value) || 0;
             const weeksPerYear = parseFloat(document.getElementById('weeksPerYear').value) || 0;
@@ -490,13 +519,21 @@
             const grossAnnual = hourlyRate * hoursPerWeek * weeksPerYear;
             
             const federalTax = calculateTax(grossAnnual, federalBrackets);
-            const provincialTax = calculateTax(grossAnnual, albertaBrackets);
+            const provincialTax = calculateTax(grossAnnual, provincialBrackets[province]);
             const cppContrib = calculateCPP(grossAnnual);
             const eiContrib = calculateEI(grossAnnual); // Optional for self-employed
             
             const totalTax = federalTax + provincialTax + cppContrib + eiContrib;
             const netAnnual = grossAnnual - totalTax;
             const netMonthly = netAnnual / 12;
+            
+            // Update province label
+            const provinceNames = {
+                'AB': 'Alberta',
+                'BC': 'British Columbia',
+                'ON': 'Ontario'
+            };
+            document.getElementById('provincialTaxLabel').textContent = provinceNames[province] + ' Provincial Tax:';
             
             // Update display
             document.getElementById('grossAnnual').textContent = '$' + grossAnnual.toLocaleString('en-CA', {maximumFractionDigits: 0});
@@ -511,6 +548,7 @@
         }
         
         // Event listeners
+        document.getElementById('province').addEventListener('change', updateCalculations);
         document.getElementById('hourlyRate').addEventListener('input', updateCalculations);
         document.getElementById('hoursPerWeek').addEventListener('input', updateCalculations);
         document.getElementById('weeksPerYear').addEventListener('input', updateCalculations);
