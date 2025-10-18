@@ -1,0 +1,104 @@
+{
+  "posts": [
+    {
+      "id": "swiftui-modern-development",
+      "title": "SwiftUI Modern Development",
+      "description": "Exploring the latest SwiftUI features and modern iOS development practices. Learn how to build beautiful, performant iOS apps with SwiftUI's declarative syntax.",
+      "date": "2024-12-15",
+      "category": "iOS",
+      "tags": ["iOS", "SwiftUI", "Mobile Development"],
+      "readTime": "5 min read",
+      "featured": true,
+      "file": "blog/swiftui-modern-development.html"
+    },
+    {
+      "id": "swift-concurrency-multithreading",
+      "title": "Swift Concurrency & Multithreading",
+      "description": "Understanding async/await and structured concurrency in Swift. Master modern concurrency patterns for iOS development.",
+      "date": "2024-12-10",
+      "category": "iOS",
+      "tags": ["iOS", "Swift", "Concurrency"],
+      "readTime": "7 min read",
+      "featured": false,
+      "file": "blog/swift-concurrency-multithreading.html"
+    },
+    {
+      "id": "ios-unit-testing-mock-objects",
+      "title": "iOS Unit Testing & Mock Objects",
+      "description": "Best practices for testing iOS applications with mock objects. Build robust, testable iOS apps.",
+      "date": "2024-12-05",
+      "category": "iOS",
+      "tags": ["iOS", "Testing", "Unit Tests"],
+      "readTime": "6 min read",
+      "featured": false,
+      "file": "blog/ios-unit-testing-mock-objects.html"
+    },
+    {
+      "id": "ios-networking-async-await",
+      "title": "iOS Networking with Async/Await",
+      "description": "Modern networking patterns in iOS using async/await. Build efficient, maintainable network layers.",
+      "date": "2024-11-28",
+      "category": "iOS",
+      "tags": ["iOS", "Networking", "Async/Await"],
+      "readTime": "8 min read",
+      "featured": false,
+      "file": "blog/ios-networking-async-await.html"
+    }
+  ],
+  "categories": [
+    {
+      "name": "iOS Development",
+      "slug": "ios",
+      "count": 4,
+      "color": "blue"
+    },
+    {
+      "name": "Software Development",
+      "slug": "software-dev",
+      "count": 0,
+      "color": "green"
+    },
+    {
+      "name": "Entrepreneurship",
+      "slug": "entrepreneurship",
+      "count": 0,
+      "color": "purple"
+    },
+    {
+      "name": "Trading",
+      "slug": "trading",
+      "count": 0,
+      "color": "orange"
+    },
+    {
+      "name": "Finance",
+      "slug": "finance",
+      "count": 0,
+      "color": "emerald"
+    },
+    {
+      "name": "Business",
+      "slug": "business",
+      "count": 0,
+      "color": "indigo"
+    },
+    {
+      "name": "Book Reviews",
+      "slug": "book-reviews",
+      "count": 0,
+      "color": "pink"
+    },
+    {
+      "name": "Credit Cards",
+      "slug": "credit-cards",
+      "count": 0,
+      "color": "red"
+    }
+  ],
+  "site": {
+    "title": "Manan Patel's Blog",
+    "description": "Personal blog covering iOS development, software engineering, entrepreneurship, trading, finance, and business insights.",
+    "url": "https://mananpatel.info/blog",
+    "author": "Manan Patel"
+  }
+}

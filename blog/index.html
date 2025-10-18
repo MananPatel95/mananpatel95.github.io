@@ -1,109 +1,306 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog - Manan Patel</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <meta name="description" content="Personal blog covering iOS development, software engineering, entrepreneurship, trading, finance, and business insights.">
+    <meta name="keywords" content="iOS development, Swift, software engineering, entrepreneurship, trading, finance, business, book reviews, credit cards">
+    <link rel="canonical" href="https://blog.mananpatel.info">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://blog.mananpatel.info">
+    <meta property="og:title" content="Blog - Manan Patel">
+    <meta property="og:description" content="Personal blog covering iOS development, software engineering, entrepreneurship, trading, finance, and business insights.">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://blog.mananpatel.info">
+    <meta property="twitter:title" content="Blog - Manan Patel">
+    <meta property="twitter:description" content="Personal blog covering iOS development, software engineering, entrepreneurship, trading, finance, and business insights.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
-          darkMode: "class",
-          theme: {
-            extend: {
-              colors: {
-                primary: "#E83D99",
-                "background-light": "#FFFFFF",
-                "background-dark": "#121212",
-                "text-light": "#111827",
-                "text-dark": "#E5E7EB",
-                "secondary-text-light": "#6B7280",
-                "secondary-text-dark": "#9CA3AF",
-                "border-light": "#E5E7EB",
-                "border-dark": "#374151",
-                "card-light": "#F9FAFB",
-                "card-dark": "#1F2937",
-              },
-              fontFamily: {
-                sans: ['Inter', 'sans-serif'],
-              },
-              borderRadius: {
-                DEFAULT: '0.5rem',
-                lg: '0.75rem',
-                full: '9999px',
-              },
-            },
-          },
-        };
-      </script>
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'text-light': '#1f2937',
+                        'text-dark': '#f9fafb',
+                        'secondary-text-light': '#6b7280',
+                        'secondary-text-dark': '#9ca3af',
+                        'border-light': '#e5e7eb',
+                        'border-dark': '#374151',
+                        'bg-light': '#ffffff',
+                        'bg-dark': '#111827'
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        .material-icons {
-          font-size: inherit;
+        .blog-description {
+            font-size: 0.875rem;
+            line-height: 1.25rem;
         }
         .secondary-text {
-          font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 0.75rem;
+            line-height: 1rem;
         }
-      </style>
+    </style>
 </head>
-<body class="bg-background-light dark:bg-background-dark font-sans text-text-light dark:text-text-dark transition-colors duration-300">
-<div class="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
-<header class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-12">
-<div class="flex-1">
-<a href="../index.html" class="inline-flex items-center text-secondary-text-light dark:text-secondary-text-dark hover:text-text-light dark:hover:text-text-dark mb-6">
-<span class="material-icons text-base mr-2">arrow_back</span>
-<span>Back to Portfolio</span>
-</a>
-<h1 class="text-3xl sm:text-4xl font-bold text-text-light dark:text-text-dark">Blog</h1>
-<p class="text-lg text-secondary-text-light dark:text-secondary-text-dark mt-2 secondary-text">Thoughts on iOS development, entrepreneurship, and technology</p>
-</div>
-</header>
-<main>
-<section class="mb-12">
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-<div class="bg-card-light dark:bg-card-dark p-6 rounded-lg border border-border-light dark:border-border-dark">
-<h3 class="font-semibold text-lg text-text-light dark:text-text-dark mb-2">📱 SwiftUI Modern Development</h3>
-<p class="text-secondary-text-light dark:text-secondary-text-dark mb-4 secondary-text">Exploring the latest SwiftUI features and modern iOS development practices</p>
-<a href="swiftui-modern-development.html" class="text-primary hover:underline">Read more →</a>
-</div>
-<div class="bg-card-light dark:bg-card-dark p-6 rounded-lg border border-border-light dark:border-border-dark">
-<h3 class="font-semibold text-lg text-text-light dark:text-text-dark mb-2">⚡ Swift Concurrency & Multithreading</h3>
-<p class="text-secondary-text-light dark:text-secondary-text-dark mb-4 secondary-text">Understanding async/await and structured concurrency in Swift</p>
-<a href="swift-concurrency-multithreading.html" class="text-primary hover:underline">Read more →</a>
-</div>
-<div class="bg-card-light dark:bg-card-dark p-6 rounded-lg border border-border-light dark:border-border-dark">
-<h3 class="font-semibold text-lg text-text-light dark:text-text-dark mb-2">🧪 iOS Unit Testing & Mock Objects</h3>
-<p class="text-secondary-text-light dark:text-secondary-text-dark mb-4 secondary-text">Best practices for testing iOS applications with mock objects</p>
-<a href="ios-unit-testing-mock-objects.html" class="text-primary hover:underline">Read more →</a>
-</div>
-<div class="bg-card-light dark:bg-card-dark p-6 rounded-lg border border-border-light dark:border-border-dark">
-<h3 class="font-semibold text-lg text-text-light dark:text-text-dark mb-2">🌐 iOS Networking with Async/Await</h3>
-<p class="text-secondary-text-light dark:text-secondary-text-dark mb-4 secondary-text">Modern networking patterns in iOS using async/await</p>
-<a href="ios-networking-async-await.html" class="text-primary hover:underline">Read more →</a>
-</div>
-<div class="bg-card-light dark:bg-card-dark p-6 rounded-lg border border-border-light dark:border-border-dark">
-<h3 class="font-semibold text-lg text-text-light dark:text-text-dark mb-2">💾 iOS Data Persistence</h3>
-<p class="text-secondary-text-light dark:text-secondary-text-dark mb-4 secondary-text">Core Data, UserDefaults, and other data storage solutions</p>
-<a href="ios-data-persistence.html" class="text-primary hover:underline">Read more →</a>
-</div>
-<div class="bg-card-light dark:bg-card-dark p-6 rounded-lg border border-border-light dark:border-border-dark">
-<h3 class="font-semibold text-lg text-text-light dark:text-text-dark mb-2">🏗️ iOS Architecture Patterns</h3>
-<p class="text-secondary-text-light dark:text-secondary-text-dark mb-4 secondary-text">MVVM, MVC, and other architectural patterns for iOS development</p>
-<a href="ios-architecture-patterns.html" class="text-primary hover:underline">Read more →</a>
-</div>
-<div class="bg-card-light dark:bg-card-dark p-6 rounded-lg border border-border-light dark:border-border-dark">
-<h3 class="font-semibold text-lg text-text-light dark:text-text-dark mb-2">🧠 iOS Memory Management</h3>
-<p class="text-secondary-text-light dark:text-secondary-text-dark mb-4 secondary-text">Understanding ARC, weak references, and memory optimization</p>
-<a href="ios-memory-management.html" class="text-primary hover:underline">Read more →</a>
-</div>
-<div class="bg-card-light dark:bg-card-dark p-6 rounded-lg border border-border-light dark:border-border-dark">
-<h3 class="font-semibold text-lg text-text-light dark:text-text-dark mb-2">🎨 UIKit Fundamentals</h3>
-<p class="text-secondary-text-light dark:text-secondary-text-dark mb-4 secondary-text">Core UIKit concepts and building custom UI components</p>
-<a href="uikit-fundamentals.html" class="text-primary hover:underline">Read more →</a>
-</div>
-</div>
-</section>
-</main>
-</div>
+<body class="bg-bg-light dark:bg-bg-dark text-text-light dark:text-text-dark transition-colors">
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="border-b border-border-light dark:border-border-dark">
+            <div class="max-w-6xl mx-auto px-4 py-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-2xl font-bold text-text-light dark:text-text-dark">Blog</h1>
+                        <p class="text-secondary-text-light dark:text-secondary-text-dark mt-1">Thoughts on iOS, software development, and entrepreneurship</p>
+                    </div>
+                    <a href="/" class="text-sm text-secondary-text-light dark:text-secondary-text-dark hover:text-text-light dark:hover:text-text-dark transition-colors">
+                        ← Back to Home
+                    </a>
+                </div>
+            </div>
+        </header>
 
-</body></html>
+        <!-- Main Content -->
+        <main class="max-w-6xl mx-auto px-4 py-8">
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                <!-- Blog Posts -->
+                <div class="lg:col-span-3">
+                    <div class="space-y-6">
+                        <!-- Featured Post -->
+                        <article class="border border-border-light dark:border-border-dark rounded-lg p-6 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                            <div class="flex items-center gap-2 mb-3">
+                                <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs font-medium rounded">iOS</span>
+                                <span class="text-secondary-text-light dark:text-secondary-text-dark secondary-text">Dec 15, 2024</span>
+                            </div>
+                            <h2 class="text-xl font-bold text-text-light dark:text-text-dark mb-2">
+                                <a href="blog/swiftui-modern-development.html" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                                    SwiftUI Modern Development
+                                </a>
+                            </h2>
+                            <p class="text-secondary-text-light dark:text-secondary-text-dark blog-description mb-4">
+                                Exploring the latest SwiftUI features and modern iOS development practices. Learn how to build beautiful, performant iOS apps with SwiftUI's declarative syntax.
+                            </p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-4 text-xs text-secondary-text-light dark:text-secondary-text-dark">
+                                    <span>5 min read</span>
+                                    <span>•</span>
+                                    <span>Latest</span>
+                                </div>
+                                <a href="blog/swiftui-modern-development.html" class="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline">
+                                    Read more →
+                                </a>
+                            </div>
+                        </article>
+
+                        <!-- Regular Posts -->
+                        <article class="border border-border-light dark:border-border-dark rounded-lg p-6 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                            <div class="flex items-center gap-2 mb-3">
+                                <span class="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs font-medium rounded">iOS</span>
+                                <span class="text-secondary-text-light dark:text-secondary-text-dark secondary-text">Dec 10, 2024</span>
+                            </div>
+                            <h2 class="text-xl font-bold text-text-light dark:text-text-dark mb-2">
+                                <a href="blog/swift-concurrency-multithreading.html" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                                    Swift Concurrency & Multithreading
+                                </a>
+                            </h2>
+                            <p class="text-secondary-text-light dark:text-secondary-text-dark blog-description mb-4">
+                                Understanding async/await and structured concurrency in Swift. Master modern concurrency patterns for iOS development.
+                            </p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-4 text-xs text-secondary-text-light dark:text-secondary-text-dark">
+                                    <span>7 min read</span>
+                                </div>
+                                <a href="blog/swift-concurrency-multithreading.html" class="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline">
+                                    Read more →
+                                </a>
+                            </div>
+                        </article>
+
+                        <article class="border border-border-light dark:border-border-dark rounded-lg p-6 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                            <div class="flex items-center gap-2 mb-3">
+                                <span class="px-2 py-1 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 text-xs font-medium rounded">iOS</span>
+                                <span class="text-secondary-text-light dark:text-secondary-text-dark secondary-text">Dec 5, 2024</span>
+                            </div>
+                            <h2 class="text-xl font-bold text-text-light dark:text-text-dark mb-2">
+                                <a href="blog/ios-unit-testing-mock-objects.html" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                                    iOS Unit Testing & Mock Objects
+                                </a>
+                            </h2>
+                            <p class="text-secondary-text-light dark:text-secondary-text-dark blog-description mb-4">
+                                Best practices for testing iOS applications with mock objects. Build robust, testable iOS apps.
+                            </p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-4 text-xs text-secondary-text-light dark:text-secondary-text-dark">
+                                    <span>6 min read</span>
+                                </div>
+                                <a href="blog/ios-unit-testing-mock-objects.html" class="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline">
+                                    Read more →
+                                </a>
+                            </div>
+                        </article>
+
+                        <article class="border border-border-light dark:border-border-dark rounded-lg p-6 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                            <div class="flex items-center gap-2 mb-3">
+                                <span class="px-2 py-1 bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200 text-xs font-medium rounded">iOS</span>
+                                <span class="text-secondary-text-light dark:text-secondary-text-dark secondary-text">Nov 28, 2024</span>
+                            </div>
+                            <h2 class="text-xl font-bold text-text-light dark:text-text-dark mb-2">
+                                <a href="blog/ios-networking-async-await.html" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                                    iOS Networking with Async/Await
+                                </a>
+                            </h2>
+                            <p class="text-secondary-text-light dark:text-secondary-text-dark blog-description mb-4">
+                                Modern networking patterns in iOS using async/await. Build efficient, maintainable network layers.
+                            </p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-4 text-xs text-secondary-text-light dark:text-secondary-text-dark">
+                                    <span>8 min read</span>
+                                </div>
+                                <a href="blog/ios-networking-async-await.html" class="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline">
+                                    Read more →
+                                </a>
+                            </div>
+                        </article>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="mt-8 flex justify-center">
+                        <nav class="flex items-center gap-2">
+                            <button class="px-3 py-2 text-sm font-medium text-secondary-text-light dark:text-secondary-text-dark border border-border-light dark:border-border-dark rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" disabled>
+                                Previous
+                            </button>
+                            <button class="px-3 py-2 text-sm font-medium text-text-light dark:text-text-dark bg-blue-600 text-white rounded-lg">
+                                1
+                            </button>
+                            <button class="px-3 py-2 text-sm font-medium text-secondary-text-light dark:text-secondary-text-dark border border-border-light dark:border-border-dark rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                                2
+                            </button>
+                            <button class="px-3 py-2 text-sm font-medium text-secondary-text-light dark:text-secondary-text-dark border border-border-light dark:border-border-dark rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                                Next
+                            </button>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="lg:col-span-1">
+                    <div class="space-y-6">
+                        <!-- About -->
+                        <div class="border border-border-light dark:border-border-dark rounded-lg p-6">
+                            <h3 class="font-bold text-text-light dark:text-text-dark mb-3">About</h3>
+                            <p class="text-secondary-text-light dark:text-secondary-text-dark blog-description">
+                                iOS developer, entrepreneur, and tech enthusiast sharing insights on mobile development, business, and personal growth.
+                            </p>
+                        </div>
+
+                        <!-- Categories -->
+                        <div class="border border-border-light dark:border-border-dark rounded-lg p-6">
+                            <h3 class="font-bold text-text-light dark:text-text-dark mb-3">Categories</h3>
+                            <div class="space-y-2">
+                                <a href="#ios" class="block text-sm text-secondary-text-light dark:text-secondary-text-dark hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                                    iOS Development (4)
+                                </a>
+                                <a href="#software-dev" class="block text-sm text-secondary-text-light dark:text-secondary-text-dark hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                                    Software Development (0)
+                                </a>
+                                <a href="#entrepreneurship" class="block text-sm text-secondary-text-light dark:text-secondary-text-dark hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                                    Entrepreneurship (0)
+                                </a>
+                                <a href="#trading" class="block text-sm text-secondary-text-light dark:text-secondary-text-dark hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                                    Trading (0)
+                                </a>
+                                <a href="#finance" class="block text-sm text-secondary-text-light dark:text-secondary-text-dark hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                                    Finance (0)
+                                </a>
+                                <a href="#business" class="block text-sm text-secondary-text-light dark:text-secondary-text-dark hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                                    Business (0)
+                                </a>
+                                <a href="#book-reviews" class="block text-sm text-secondary-text-light dark:text-secondary-text-dark hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                                    Book Reviews (0)
+                                </a>
+                                <a href="#credit-cards" class="block text-sm text-secondary-text-light dark:text-secondary-text-dark hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                                    Credit Cards (0)
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Recent Posts -->
+                        <div class="border border-border-light dark:border-border-dark rounded-lg p-6">
+                            <h3 class="font-bold text-text-light dark:text-text-dark mb-3">Recent Posts</h3>
+                            <div class="space-y-3">
+                                <div>
+                                    <a href="blog/swiftui-modern-development.html" class="text-sm font-medium text-text-light dark:text-text-dark hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                                        SwiftUI Modern Development
+                                    </a>
+                                    <div class="text-xs text-secondary-text-light dark:text-secondary-text-dark mt-1">Dec 15, 2024</div>
+                                </div>
+                                <div>
+                                    <a href="blog/swift-concurrency-multithreading.html" class="text-sm font-medium text-text-light dark:text-text-dark hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                                        Swift Concurrency & Multithreading
+                                    </a>
+                                    <div class="text-xs text-secondary-text-light dark:text-secondary-text-dark mt-1">Dec 10, 2024</div>
+                                </div>
+                                <div>
+                                    <a href="blog/ios-unit-testing-mock-objects.html" class="text-sm font-medium text-text-light dark:text-text-dark hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                                        iOS Unit Testing & Mock Objects
+                                    </a>
+                                    <div class="text-xs text-secondary-text-light dark:text-secondary-text-dark mt-1">Dec 5, 2024</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Archive -->
+                        <div class="border border-border-light dark:border-border-dark rounded-lg p-6">
+                            <h3 class="font-bold text-text-light dark:text-text-dark mb-3">Archive</h3>
+                            <div class="space-y-2">
+                                <a href="#december-2024" class="block text-sm text-secondary-text-light dark:text-secondary-text-dark hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                                    December 2024 (3)
+                                </a>
+                                <a href="#november-2024" class="block text-sm text-secondary-text-light dark:text-secondary-text-dark hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                                    November 2024 (1)
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="border-t border-border-light dark:border-border-dark mt-12">
+            <div class="max-w-6xl mx-auto px-4 py-8">
+                <div class="text-center text-secondary-text-light dark:text-secondary-text-dark secondary-text">
+                    <p>&copy; 2024 Manan Patel. All rights reserved.</p>
+                    <p class="mt-2">
+                        <a href="/" class="hover:text-text-light dark:hover:text-text-dark transition-colors">Home</a>
+                        <span class="mx-2">•</span>
+                        <a href="../blog/" class="hover:text-text-light dark:hover:text-text-dark transition-colors">Blog</a>
+                    </p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Dark mode toggle -->
+    <script>
+        // Simple dark mode toggle
+        const toggleDarkMode = () => {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('darkMode', document.documentElement.classList.contains('dark'));
+        };
+
+        // Load saved preference
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+</body>
+</html>
