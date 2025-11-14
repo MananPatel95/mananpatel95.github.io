@@ -144,12 +144,16 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
+            align-items: start;
         }
         
         .input-group {
             margin-bottom: 0;
+            margin-top: 0;
             display: flex;
             flex-direction: column;
+            width: 100%;
+            min-width: 0;
         }
         
         .input-group.full-width {
@@ -159,6 +163,7 @@
         
         .input-group.exit-price {
             margin-top: 0;
+            margin-left: 0;
         }
         
         label {
@@ -186,6 +191,8 @@
             font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
             background: white;
             color: #111827;
+            box-sizing: border-box;
+            margin: 0;
         }
         
         body.dark input, body.dark select {
@@ -561,11 +568,16 @@
         const themeText = document.getElementById('themeText');
         
         // Check for saved theme preference or default to light mode
-        const savedTheme = localStorage.getItem('theme') || 'light';
+        const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'dark') {
             document.body.classList.add('dark');
             themeIcon.textContent = 'light_mode';
             themeText.textContent = 'Light';
+        } else {
+            // Default to light mode
+            document.body.classList.remove('dark');
+            themeIcon.textContent = 'dark_mode';
+            themeText.textContent = 'Dark';
         }
         
         themeToggle.addEventListener('click', () => {
