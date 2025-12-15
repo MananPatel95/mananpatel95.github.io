@@ -2,12 +2,12 @@
   "posts": [
     {
       "id": "systematic-trading-framework",
-      "title": "How I'm Building a Disciplined Trading Framework",
-      "description": "A personal journey from emotional trading to systematic strategies. The framework I'm using to build disciplined, repeatable trading systems that remove ego from the equation.",
+      "title": "From Retail Speculation to Systematic Alpha: A Quantitative Evolution",
+      "description": "A quantitative evolution from retail speculation to systematic alpha generation. Learn the institutional-grade workflow for engineering, validating, and deploying trading strategies.",
       "date": "2025-12-15",
       "category": "Trading",
-      "tags": ["Trading", "Finance", "Systems"],
-      "readTime": "8 min read",
+      "tags": ["Trading", "Finance", "Systems", "Quantitative"],
+      "readTime": "10 min read",
       "featured": true,
       "file": "blog/systematic-trading-framework.html"
     },
