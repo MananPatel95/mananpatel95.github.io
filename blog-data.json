@@ -1,6 +1,17 @@
 {
   "posts": [
     {
+      "id": "systematic-trading-framework",
+      "title": "From Gambling to Systems: Building a Disciplined Trading Framework",
+      "description": "A personal journey from emotional trading to systematic strategies. Learn the framework for building disciplined, repeatable trading systems that remove ego from the equation.",
+      "date": "2025-01-15",
+      "category": "Trading",
+      "tags": ["Trading", "Finance", "Systems"],
+      "readTime": "8 min read",
+      "featured": true,
+      "file": "blog/systematic-trading-framework.html"
+    },
+    {
       "id": "swiftui-modern-development",
       "title": "SwiftUI Modern Development",
       "description": "Exploring the latest SwiftUI features and modern iOS development practices. Learn how to build beautiful, performant iOS apps with SwiftUI's declarative syntax.",
@@ -8,7 +19,7 @@
       "category": "iOS",
       "tags": ["iOS", "SwiftUI", "Mobile Development"],
       "readTime": "5 min read",
-      "featured": true,
+      "featured": false,
       "file": "blog/swiftui-modern-development.html"
     },
     {
@@ -67,7 +78,7 @@
     {
       "name": "Trading",
       "slug": "trading",
-      "count": 0,
+      "count": 1,
       "color": "orange"
     },
     {

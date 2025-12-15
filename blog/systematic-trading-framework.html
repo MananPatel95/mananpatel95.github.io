@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>From Gambling to Systems: Building a Disciplined Trading Framework - Manan Patel</title>
+    <meta name="description" content="A personal journey from emotional trading to systematic strategies. Learn the framework for building disciplined, repeatable trading systems that remove ego from the equation.">
+    <meta name="keywords" content="trading, systematic trading, algorithmic trading, trading systems, finance, risk management, futures trading">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://blog.mananpatel.info/systematic-trading-framework">
+    <meta property="og:title" content="From Gambling to Systems: Building a Disciplined Trading Framework - Manan Patel">
+    <meta property="og:description" content="A personal journey from emotional trading to systematic strategies. Learn the framework for building disciplined, repeatable trading systems.">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://blog.mananpatel.info/systematic-trading-framework">
+    <meta property="twitter:title" content="From Gambling to Systems: Building a Disciplined Trading Framework - Manan Patel">
+    <meta property="twitter:description" content="A personal journey from emotional trading to systematic strategies. Learn the framework for building disciplined, repeatable trading systems.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'text-light': '#1f2937',
+                        'text-dark': '#f9fafb',
+                        'secondary-text-light': '#6b7280',
+                        'secondary-text-dark': '#9ca3af',
+                        'border-light': '#e5e7eb',
+                        'border-dark': '#374151',
+                        'bg-light': '#ffffff',
+                        'bg-dark': '#111827'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .blog-content {
+            line-height: 1.7;
+        }
+        .blog-content h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: inherit;
+        }
+        .blog-content h3 {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: inherit;
+        }
+        .blog-content p {
+            margin-bottom: 1rem;
+        }
+        .blog-content code {
+            background-color: #f3f4f6;
+            padding: 0.125rem 0.25rem;
+            border-radius: 0.25rem;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.875rem;
+        }
+        .dark .blog-content code {
+            background-color: #374151;
+        }
+        .blog-content pre {
+            background-color: #f3f4f6;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        .dark .blog-content pre {
+            background-color: #374151;
+        }
+        .blog-content ul, .blog-content ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .blog-content li {
+            margin-bottom: 0.5rem;
+        }
+        .blog-content strong {
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="bg-bg-light dark:bg-bg-dark text-text-light dark:text-text-dark transition-colors">
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="border-b border-border-light dark:border-border-dark">
+            <div class="max-w-4xl mx-auto px-4 py-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <a href="./" class="text-sm text-secondary-text-light dark:text-secondary-text-dark hover:text-text-light dark:hover:text-text-dark transition-colors">
+                            ← Back to Blog
+                        </a>
+                    </div>
+                    <a href="/" class="text-sm text-secondary-text-light dark:text-secondary-text-dark hover:text-text-light dark:hover:text-text-dark transition-colors">
+                        Home
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Article -->
+        <article class="max-w-4xl mx-auto px-4 py-8">
+            <!-- Article Header -->
+            <header class="mb-8">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="px-2 py-1 bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200 text-xs font-medium rounded">Trading</span>
+                    <span class="text-secondary-text-light dark:text-secondary-text-dark text-sm">Jan 15, 2025</span>
+                    <span class="text-secondary-text-light dark:text-secondary-text-dark text-sm">•</span>
+                    <span class="text-secondary-text-light dark:text-secondary-text-dark text-sm">8 min read</span>
+                </div>
+                <h1 class="text-3xl font-bold text-text-light dark:text-text-dark mb-4">From Gambling to Systems: Building a Disciplined Trading Framework</h1>
+                <p class="text-lg text-secondary-text-light dark:text-secondary-text-dark">
+                    A personal journey from emotional trading to systematic strategies. Learn the framework for building disciplined, repeatable trading systems that remove ego from the equation.
+                </p>
+            </header>
+
+            <!-- Article Content -->
+            <div class="blog-content prose prose-lg max-w-none">
+                <p>The pendulum of the markets swings forever between euphoria and depression, and for the better part of a decade, my own portfolio swung right along with it.</p>
+
+                <p>If I look back at my track record from 2017 to 2023, it serves as a perfect case study in the psychology of the retail trader. I began prudently enough with ETFs, but like so many, I was seduced by the sirens of the era. I chased the cannabis mania in 2018 and the crypto hype of 2019. In 2020 and 2021, I confused a rising tide with swimming ability, making substantial sums on SPY puts and the post-COVID "free money" rally.</p>
+
+                <p>But as I often say, trees don't grow to the sky. When the environment shifted in 2022 and 2023, my lack of a disciplined framework was exposed. I pivoted to selling options, then ultimately blew up the account during the tech selloff. It was a painful but necessary lesson: <strong>Volatility is not risk, but permanent loss of capital is.</strong></p>
+
+                <p>In 2024, I managed to rise from the ashes with some successful fundamental plays, but I knew I needed a change. I needed to stop guessing and start engineering.</p>
+
+                <h2>The Shift to Systems</h2>
+                <p>For years, I watched my father trade futures—specifically the MNQ—with a consistency that baffled me. I was skeptical. I operated under the efficient market hypothesis assumption that "there is no edge," and if systematic trading were truly viable, everyone would be wealthy.</p>
+
+                <p>I was wrong. The edge wasn't just in the math; it was in the discipline.</p>
+
+                <p>Since April 2024, I have partnered with him to build an automated strategy. The results—up 50% year-to-date—have been compelling, but more importantly, the process has been repeatable. We are no longer waking up and asking what the market "feels" like today. We are executing a plan.</p>
+
+                <p>Here is the framework we now use to ensure we are investing, not gambling.</p>
+
+                <h3>1. Strategy Formulation (The Thesis)</h3>
+                <p>Before a line of code is written, we must identify the economic rationale. Are we following a trend? Reverting to the mean? Exploiting a statistical arbitrage? We define entry, exit, and—most critically—position sizing. This takes months, not days. If you cannot define the edge, you don't have one.</p>
+
+                <h3>2. Historical Stress Testing</h3>
+                <p>We look backward to understand the future. We run backtests not to prove the strategy works, but to find where it breaks. We optimize parameters cautiously, ensuring that a slight change in inputs doesn't destroy the output. If a strategy is too fragile to handle parameter shifts, it is too fragile for the real world.</p>
+
+                <h3>3. The Simulation Phase</h3>
+                <p>Paper trading is the dress rehearsal. We run the algorithm in a live, simulated environment for months. This highlights execution bugs and gives us a feel for the "pain points"—the drawdowns that look easy on a spreadsheet but feel terrible in real life.</p>
+
+                <h3>4. Portfolio Fit</h3>
+                <p>No asset exists in a vacuum. We analyze how the new algorithm correlates with our existing book. Does it zig when others zag? We then calculate position size based on risk tolerance, not return targets.</p>
+
+                <h3>5. Probationary Deployment</h3>
+                <p>We never jump in with both feet. The algorithm enters the live portfolio at half-size for a 90-day probationary period. Only after it survives the rigors of live trading do we graduate it to a full allocation.</p>
+
+                <h2>The Takeaway</h2>
+                <p>After years of emotional whiplash, I have learned that the key to survival isn't predicting the future—it's managing your reaction to it.</p>
+
+                <p>Discretionary trading often devolves into a battle against one's own psychology. Systematic trading removes the ego from the equation. It is not a get-rich-quick scheme; it is a discipline.</p>
+            </div>
+
+            <!-- Article Footer -->
+            <footer class="mt-12 pt-8 border-t border-border-light dark:border-border-dark">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <span class="text-sm text-secondary-text-light dark:text-secondary-text-dark">Tags:</span>
+                        <div class="flex gap-2">
+                            <span class="px-2 py-1 bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200 text-xs font-medium rounded">Trading</span>
+                            <span class="px-2 py-1 bg-emerald-100 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200 text-xs font-medium rounded">Finance</span>
+                            <span class="px-2 py-1 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 text-xs font-medium rounded">Systems</span>
+                        </div>
+                    </div>
+                    <div class="text-sm text-secondary-text-light dark:text-secondary-text-dark">
+                        Published Jan 15, 2025
+                    </div>
+                </div>
+            </footer>
+        </article>
+
+        <!-- Footer -->
+        <footer class="border-t border-border-light dark:border-border-dark mt-12">
+            <div class="max-w-4xl mx-auto px-4 py-8">
+                <div class="text-center text-secondary-text-light dark:text-secondary-text-dark text-sm">
+                    <p>&copy; 2025 Manan Patel. All rights reserved.</p>
+                    <p class="mt-2">
+                        <a href="/" class="hover:text-text-light dark:hover:text-text-dark transition-colors">Home</a>
+                        <span class="mx-2">•</span>
+                        <a href="./" class="hover:text-text-light dark:hover:text-text-dark transition-colors">Blog</a>
+                    </p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Dark mode toggle -->
+    <script>
+        const toggleDarkMode = () => {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('darkMode', document.documentElement.classList.contains('dark'));
+        };
+
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+</body>
+</html>
+
