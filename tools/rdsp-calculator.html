@@ -16,10 +16,10 @@
         
         body {
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background: linear-gradient(to bottom right, #dbeafe, #e0e7ff);
+            background: #FFFFFF;
             min-height: 100vh;
             padding: 20px;
-            color: #1f2937;
+            color: #111827;
         }
         
         .back-link {
@@ -42,7 +42,7 @@
         }
         
         .bg-white {
-            background: white;
+            background: #FFFFFF;
         }
         
         .rounded-lg {
@@ -162,14 +162,14 @@
         h1 {
             font-size: 28px;
             font-weight: 700;
-            color: #312e81;
+            color: #111827;
             margin-bottom: 8px;
         }
         
         h3 {
             font-size: 18px;
             font-weight: 600;
-            color: #312e81;
+            color: #111827;
             margin-bottom: 16px;
         }
         
@@ -214,7 +214,7 @@
         }
         
         .text-indigo-900 {
-            color: #312e81;
+            color: #111827;
         }
         
         .text-white {
@@ -338,31 +338,31 @@
         }
         
         .bg-amber-50 {
-            background: #fffbeb;
+            background: #F9FAFB;
         }
         
         .bg-blue-50 {
-            background: #eff6ff;
+            background: #F9FAFB;
         }
         
         .bg-green-50 {
-            background: #f0fdf4;
+            background: #F9FAFB;
         }
         
         .bg-yellow-50 {
-            background: #fefce8;
+            background: #F9FAFB;
         }
         
         .bg-indigo-50 {
-            background: #eef2ff;
+            background: #F9FAFB;
         }
         
         .bg-orange-50 {
-            background: #fff7ed;
+            background: #F9FAFB;
         }
         
         .bg-gray-50 {
-            background: #f9fafb;
+            background: #F9FAFB;
         }
         
         .bg-gray-600 {
@@ -410,31 +410,31 @@
         }
         
         .border-amber-200 {
-            border-color: #fde68a;
+            border-color: #E5E7EB;
         }
         
         .border-blue-200 {
-            border-color: #bfdbfe;
+            border-color: #E5E7EB;
         }
         
         .border-green-200 {
-            border-color: #bbf7d0;
+            border-color: #E5E7EB;
         }
         
         .border-yellow-200 {
-            border-color: #fef08a;
+            border-color: #E5E7EB;
         }
         
         .border-indigo-200 {
-            border-color: #c7d2fe;
+            border-color: #E5E7EB;
         }
         
         .border-indigo-300 {
-            border-color: #a5b4fc;
+            border-color: #D1D5DB;
         }
         
         .border-orange-200 {
-            border-color: #fed7aa;
+            border-color: #E5E7EB;
         }
         
         .rounded-md {
@@ -592,22 +592,32 @@
         }
         
         .summary-card {
-            background: linear-gradient(to bottom right, var(--gradient-from), var(--gradient-to));
-            border-radius: 12px;
-            padding: 12px;
-            color: white;
+            background: #FFFFFF;
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+            padding: 16px;
             text-align: center;
+            transition: all 0.2s;
+        }
+        
+        .summary-card:hover {
+            border-color: #D1D5DB;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
         
         .summary-card .label {
             font-size: 12px;
-            opacity: 0.9;
-            margin-bottom: 4px;
+            color: #6B7280;
+            margin-bottom: 8px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         .summary-card .value {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 700;
+            color: #111827;
         }
         
         /* Range Slider Styles */
@@ -820,7 +830,16 @@
         }
         
         body.dark-mode .summary-card {
-            color: white;
+            background: #1F2937;
+            border-color: #374151;
+        }
+        
+        body.dark-mode .summary-card .label {
+            color: #9CA3AF;
+        }
+        
+        body.dark-mode .summary-card .value {
+            color: #E5E7EB;
         }
         
         body.dark-mode .text-gray-500 {
@@ -898,9 +917,6 @@
                     Reset
                 </button>
             </div>
-            
-            <!-- Summary Cards -->
-            <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mb-6" id="summaryCards"></div>
 
             <!-- Input Section -->
             <div class="grid md:grid-cols-2 gap-6 mb-6">
@@ -970,14 +986,14 @@
 
             <!-- Carry-Forward Section -->
             <div class="mb-6 bg-amber-50 border border-amber-200 rounded-lg p-4">
-                <h3 class="font-semibold text-lg text-indigo-900 mb-2">Carry-Forward Eligibility (Past 10 Years)</h3>
+                <h3 class="font-semibold text-lg text-gray-800 mb-2">Carry-Forward Eligibility (Past 10 Years)</h3>
                 <p class="text-sm text-gray-600 mb-4" id="carryForwardSummary"></p>
                 <div class="space-y-2 max-h-96 overflow-y-auto" id="carryForwardYears"></div>
             </div>
 
             <!-- Withdrawal Planning -->
             <div class="mb-6">
-                <h3 class="font-semibold text-lg text-indigo-900 border-b pb-2 mb-4">Withdrawal Strategy</h3>
+                <h3 class="font-semibold text-lg text-gray-800 border-b pb-2 mb-4">Withdrawal Strategy</h3>
                 
                 <!-- Strategy Comparison Toggle -->
                 <div class="bg-indigo-50 border border-indigo-200 rounded-lg p-4 mb-4">
@@ -1038,7 +1054,7 @@
 
             <!-- Chart Age Range Slider -->
             <div class="mb-6 bg-indigo-50 border border-indigo-200 rounded-lg p-4">
-                <h3 class="font-semibold text-lg text-indigo-900 mb-4">Chart Age Range</h3>
+                <h3 class="font-semibold text-lg text-gray-800 mb-4">Chart Age Range</h3>
                 <div class="space-y-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
@@ -1080,30 +1096,30 @@
 
             <!-- Charts -->
             <div class="mb-6">
-                <h3 class="font-semibold text-lg text-indigo-900 mb-4">Account Value Over Time</h3>
+                <h3 class="font-semibold text-lg text-gray-800 mb-4">Account Value Over Time</h3>
                 <div class="chart-container">
                     <canvas id="balanceChart"></canvas>
                 </div>
             </div>
 
             <div class="mb-6">
-                <h3 class="font-semibold text-lg text-indigo-900 mb-4">Annual Breakdown</h3>
+                <h3 class="font-semibold text-lg text-gray-800 mb-4">Annual Breakdown</h3>
                 <div class="chart-container-small">
                     <canvas id="breakdownChart"></canvas>
                 </div>
             </div>
 
             <div class="mb-6" id="withdrawalChartContainer" style="display: none;">
-                <h3 class="font-semibold text-lg text-indigo-900 mb-4">Withdrawal Breakdown</h3>
+                <h3 class="font-semibold text-lg text-gray-800 mb-4">Withdrawal Breakdown</h3>
                 <div class="chart-container-small">
                     <canvas id="withdrawalChart"></canvas>
                 </div>
             </div>
 
             <!-- Info Box -->
-            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-900">
-                <h4 class="font-semibold mb-2">Enhanced Features Based on CRA Rules:</h4>
-                <ul class="space-y-1 text-xs">
+            <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 text-sm text-gray-700">
+                <h4 class="font-semibold mb-2 text-gray-800">Enhanced Features Based on CRA Rules:</h4>
+                <ul class="space-y-1 text-xs text-gray-600">
                     <li>• <strong>LDAP (Lifetime Disability Assistance Payments):</strong> Automatic pension-style withdrawals starting at 60</li>
                     <li>• <strong>10-Year Repayment Rule:</strong> Early withdrawals (before 60) lose $3 of grants/bonds for every $1 withdrawn</li>
                     <li>• <strong>Taxable Withdrawals:</strong> Everything except personal contributions is taxed upon withdrawal</li>
@@ -1111,6 +1127,9 @@
                     <li>• <strong>Carry-forward:</strong> Catch up on past 10 DTC-approved years (max $10,500 grants + $11,000 bonds per year)</li>
                 </ul>
             </div>
+
+            <!-- Summary Cards -->
+            <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mt-6" id="summaryCards"></div>
         </div>
     </div>
 
@@ -1545,17 +1564,17 @@
 
         function updateSummaryCards(summary) {
             const cards = [
-                { label: 'Final Balance', value: summary.finalBalance, gradient: 'from-green-500 to-green-600' },
-                { label: 'Your Contributions', value: summary.totalContributions, gradient: 'from-blue-500 to-blue-600' },
-                { label: 'Total Grants', value: summary.totalGrants, gradient: 'from-purple-500 to-purple-600' },
-                { label: 'Total Bonds', value: summary.totalBonds, gradient: 'from-pink-500 to-pink-600' },
-                { label: 'Govt. Total', value: summary.totalGovernment, gradient: 'from-indigo-500 to-indigo-600' },
-                { label: 'Taxable Withdrawals', value: summary.totalTaxableWithdrawals, gradient: 'from-red-500 to-red-600' },
+                { label: 'Final Balance', value: summary.finalBalance },
+                { label: 'Your Contributions', value: summary.totalContributions },
+                { label: 'Total Grants', value: summary.totalGrants },
+                { label: 'Total Bonds', value: summary.totalBonds },
+                { label: 'Govt. Total', value: summary.totalGovernment },
+                { label: 'Taxable Withdrawals', value: summary.totalTaxableWithdrawals },
             ];
             
             const container = document.getElementById('summaryCards');
             container.innerHTML = cards.map(card => `
-                <div class="summary-card" style="--gradient-from: ${card.gradient.includes('green') ? '#22c55e' : card.gradient.includes('blue') ? '#3b82f6' : card.gradient.includes('purple') ? '#a855f7' : card.gradient.includes('pink') ? '#ec4899' : card.gradient.includes('indigo') ? '#6366f1' : '#ef4444'}; --gradient-to: ${card.gradient.includes('green') ? '#16a34a' : card.gradient.includes('blue') ? '#2563eb' : card.gradient.includes('purple') ? '#9333ea' : card.gradient.includes('pink') ? '#db2777' : card.gradient.includes('indigo') ? '#4f46e5' : '#dc2626'};">
+                <div class="summary-card">
                     <div class="label">${card.label}</div>
                     <div class="value">${formatCurrency(card.value)}</div>
                 </div>
