@@ -1,0 +1,1725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RDSP Calculator - Enhanced with Advanced Withdrawal Planning</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(to bottom right, #dbeafe, #e0e7ff);
+            min-height: 100vh;
+            padding: 20px;
+            color: #1f2937;
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #6b7280;
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+        
+        .back-link:hover {
+            color: #111827;
+        }
+        
+        .max-w-7xl {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+        
+        .bg-white {
+            background: white;
+        }
+        
+        .rounded-lg {
+            border-radius: 12px;
+        }
+        
+        .shadow-xl {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .p-6 {
+            padding: 24px;
+        }
+        
+        .mb-6 {
+            margin-bottom: 24px;
+        }
+        
+        .mb-4 {
+            margin-bottom: 16px;
+        }
+        
+        .mb-3 {
+            margin-bottom: 12px;
+        }
+        
+        .mb-2 {
+            margin-bottom: 8px;
+        }
+        
+        .mb-1 {
+            margin-bottom: 4px;
+        }
+        
+        .mt-1 {
+            margin-top: 4px;
+        }
+        
+        .mt-2 {
+            margin-top: 8px;
+        }
+        
+        .mt-3 {
+            margin-top: 12px;
+        }
+        
+        .mt-4 {
+            margin-top: 16px;
+        }
+        
+        .flex {
+            display: flex;
+        }
+        
+        .justify-between {
+            justify-content: space-between;
+        }
+        
+        .items-center {
+            align-items: center;
+        }
+        
+        .items-start {
+            align-items: flex-start;
+        }
+        
+        .gap-2 {
+            gap: 8px;
+        }
+        
+        .gap-3 {
+            gap: 12px;
+        }
+        
+        .gap-4 {
+            gap: 16px;
+        }
+        
+        .grid {
+            display: grid;
+        }
+        
+        .grid-cols-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .grid-cols-6 {
+            grid-template-columns: repeat(6, 1fr);
+        }
+        
+        .md\\:grid-cols-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .md\\:grid-cols-6 {
+            grid-template-columns: repeat(6, 1fr);
+        }
+        
+        @media (min-width: 768px) {
+            .md\\:grid-cols-2 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .md\\:grid-cols-6 {
+                grid-template-columns: repeat(6, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .grid-cols-2 {
+                grid-template-columns: 1fr;
+            }
+            .grid-cols-6 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #312e81;
+            margin-bottom: 8px;
+        }
+        
+        h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #312e81;
+            margin-bottom: 16px;
+        }
+        
+        .text-sm {
+            font-size: 14px;
+        }
+        
+        .text-xs {
+            font-size: 12px;
+        }
+        
+        .text-lg {
+            font-size: 18px;
+        }
+        
+        .text-3xl {
+            font-size: 30px;
+        }
+        
+        .font-bold {
+            font-weight: 700;
+        }
+        
+        .font-semibold {
+            font-weight: 600;
+        }
+        
+        .font-medium {
+            font-weight: 500;
+        }
+        
+        .text-gray-600 {
+            color: #4b5563;
+        }
+        
+        .text-gray-700 {
+            color: #374151;
+        }
+        
+        .text-gray-800 {
+            color: #1f2937;
+        }
+        
+        .text-indigo-900 {
+            color: #312e81;
+        }
+        
+        .text-white {
+            color: white;
+        }
+        
+        .text-green-600 {
+            color: #16a34a;
+        }
+        
+        .text-green-700 {
+            color: #15803d;
+        }
+        
+        .text-red-500 {
+            color: #ef4444;
+        }
+        
+        .text-red-600 {
+            color: #dc2626;
+        }
+        
+        .text-orange-600 {
+            color: #ea580c;
+        }
+        
+        .text-orange-700 {
+            color: #c2410c;
+        }
+        
+        .text-orange-800 {
+            color: #9a3412;
+        }
+        
+        .text-blue-600 {
+            color: #2563eb;
+        }
+        
+        .text-blue-700 {
+            color: #1d4ed8;
+        }
+        
+        .text-blue-800 {
+            color: #1e40af;
+        }
+        
+        .text-blue-900 {
+            color: #1e3a8a;
+        }
+        
+        .text-yellow-600 {
+            color: #ca8a04;
+        }
+        
+        .text-yellow-700 {
+            color: #a16207;
+        }
+        
+        .text-yellow-800 {
+            color: #854d0e;
+        }
+        
+        .text-purple-600 {
+            color: #9333ea;
+        }
+        
+        .text-pink-600 {
+            color: #db2777;
+        }
+        
+        .bg-gradient-to-br {
+            background: linear-gradient(to bottom right, var(--tw-gradient-stops));
+        }
+        
+        .from-green-500 {
+            --tw-gradient-from: #22c55e;
+        }
+        
+        .to-green-600 {
+            --tw-gradient-to: #16a34a;
+        }
+        
+        .from-blue-500 {
+            --tw-gradient-from: #3b82f6;
+        }
+        
+        .to-blue-600 {
+            --tw-gradient-to: #2563eb;
+        }
+        
+        .from-purple-500 {
+            --tw-gradient-from: #a855f7;
+        }
+        
+        .to-purple-600 {
+            --tw-gradient-to: #9333ea;
+        }
+        
+        .from-pink-500 {
+            --tw-gradient-from: #ec4899;
+        }
+        
+        .to-pink-600 {
+            --tw-gradient-to: #db2777;
+        }
+        
+        .from-indigo-500 {
+            --tw-gradient-from: #6366f1;
+        }
+        
+        .to-indigo-600 {
+            --tw-gradient-to: #4f46e5;
+        }
+        
+        .from-red-500 {
+            --tw-gradient-from: #ef4444;
+        }
+        
+        .to-red-600 {
+            --tw-gradient-to: #dc2626;
+        }
+        
+        .bg-amber-50 {
+            background: #fffbeb;
+        }
+        
+        .bg-blue-50 {
+            background: #eff6ff;
+        }
+        
+        .bg-green-50 {
+            background: #f0fdf4;
+        }
+        
+        .bg-yellow-50 {
+            background: #fefce8;
+        }
+        
+        .bg-indigo-50 {
+            background: #eef2ff;
+        }
+        
+        .bg-orange-50 {
+            background: #fff7ed;
+        }
+        
+        .bg-gray-50 {
+            background: #f9fafb;
+        }
+        
+        .bg-gray-600 {
+            background: #4b5563;
+        }
+        
+        .bg-gray-700 {
+            background: #374151;
+        }
+        
+        .bg-indigo-600 {
+            background: #4f46e5;
+        }
+        
+        .bg-indigo-700 {
+            background: #4338ca;
+        }
+        
+        .bg-green-600 {
+            background: #16a34a;
+        }
+        
+        .bg-green-700 {
+            background: #15803d;
+        }
+        
+        .bg-red-500 {
+            background: #ef4444;
+        }
+        
+        .bg-red-600 {
+            background: #dc2626;
+        }
+        
+        .border {
+            border-width: 1px;
+        }
+        
+        .border-gray-200 {
+            border-color: #e5e7eb;
+        }
+        
+        .border-gray-300 {
+            border-color: #d1d5db;
+        }
+        
+        .border-amber-200 {
+            border-color: #fde68a;
+        }
+        
+        .border-blue-200 {
+            border-color: #bfdbfe;
+        }
+        
+        .border-green-200 {
+            border-color: #bbf7d0;
+        }
+        
+        .border-yellow-200 {
+            border-color: #fef08a;
+        }
+        
+        .border-indigo-200 {
+            border-color: #c7d2fe;
+        }
+        
+        .border-indigo-300 {
+            border-color: #a5b4fc;
+        }
+        
+        .border-orange-200 {
+            border-color: #fed7aa;
+        }
+        
+        .rounded-md {
+            border-radius: 6px;
+        }
+        
+        .rounded-lg {
+            border-radius: 12px;
+        }
+        
+        .p-3 {
+            padding: 12px;
+        }
+        
+        .p-4 {
+            padding: 16px;
+        }
+        
+        .px-2 {
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+        
+        .px-3 {
+            padding-left: 12px;
+            padding-right: 12px;
+        }
+        
+        .px-4 {
+            padding-left: 16px;
+            padding-right: 16px;
+        }
+        
+        .py-1 {
+            padding-top: 4px;
+            padding-bottom: 4px;
+        }
+        
+        .py-2 {
+            padding-top: 8px;
+            padding-bottom: 8px;
+        }
+        
+        .w-full {
+            width: 100%;
+        }
+        
+        .w-5 {
+            width: 20px;
+        }
+        
+        .h-4 {
+            height: 16px;
+        }
+        
+        .h-5 {
+            height: 20px;
+        }
+        
+        input[type="number"],
+        input[type="text"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+        
+        input[type="number"]:focus,
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+        
+        input[type="checkbox"],
+        input[type="radio"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+        
+        button {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        button:hover {
+            opacity: 0.9;
+        }
+        
+        .space-y-1 > * + * {
+            margin-top: 4px;
+        }
+        
+        .space-y-2 > * + * {
+            margin-top: 8px;
+        }
+        
+        .space-y-3 > * + * {
+            margin-top: 12px;
+        }
+        
+        .space-y-4 > * + * {
+            margin-top: 16px;
+        }
+        
+        .space-x-2 > * + * {
+            margin-left: 8px;
+        }
+        
+        .opacity-90 {
+            opacity: 0.9;
+        }
+        
+        .disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .max-h-64 {
+            max-height: 256px;
+        }
+        
+        .max-h-96 {
+            max-height: 384px;
+        }
+        
+        .overflow-y-auto {
+            overflow-y: auto;
+        }
+        
+        .border-b {
+            border-bottom-width: 1px;
+        }
+        
+        .pb-2 {
+            padding-bottom: 8px;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-bottom: 24px;
+        }
+        
+        .chart-container-small {
+            position: relative;
+            height: 300px;
+            margin-bottom: 24px;
+        }
+        
+        .summary-card {
+            background: linear-gradient(to bottom right, var(--gradient-from), var(--gradient-to));
+            border-radius: 12px;
+            padding: 12px;
+            color: white;
+            text-align: center;
+        }
+        
+        .summary-card .label {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-bottom: 4px;
+        }
+        
+        .summary-card .value {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        /* Range Slider Styles */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+            cursor: pointer;
+        }
+        
+        input[type="range"]::-webkit-slider-track {
+            background: #e5e7eb;
+            height: 8px;
+            border-radius: 4px;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            background: #4f46e5;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            cursor: pointer;
+            margin-top: -6px;
+        }
+        
+        input[type="range"]::-moz-range-track {
+            background: #e5e7eb;
+            height: 8px;
+            border-radius: 4px;
+        }
+        
+        input[type="range"]::-moz-range-thumb {
+            background: #4f46e5;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+        }
+        
+        input[type="range"]:focus {
+            outline: none;
+        }
+        
+        input[type="range"]:focus::-webkit-slider-thumb {
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        }
+        
+        input[type="range"]:focus::-moz-range-thumb {
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="max-w-7xl">
+        <a href="../index.html" class="back-link">
+            <span class="material-icons" style="font-size:18px;">arrow_back</span>
+            Back to Portfolio
+        </a>
+        
+        <div class="bg-white rounded-lg shadow-xl p-6 mb-6">
+            <div class="flex justify-between items-center mb-4">
+                <div>
+                    <h1>Enhanced RDSP Calculator</h1>
+                    <p class="text-sm text-gray-600">Based on 2024/2025 CRA Rules with Advanced Withdrawal Planning</p>
+                </div>
+                <button onclick="resetCalculator()" class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    Reset
+                </button>
+            </div>
+            
+            <!-- Summary Cards -->
+            <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mb-6" id="summaryCards"></div>
+
+            <!-- Input Section -->
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <!-- Personal Information -->
+                <div class="space-y-4">
+                    <h3 class="border-b pb-2">Personal Information</h3>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Current Age</label>
+                        <input type="number" id="currentAge" value="30" min="0" max="100" oninput="updateCalculations()">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Age When DTC Approved</label>
+                        <input type="number" id="dtcStartAge" value="17" min="0" max="100" oninput="updateCalculations()">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Current Family Net Income (2025)</label>
+                        <input type="number" id="familyIncome" value="100000" min="0" oninput="updateCalculations()">
+                        <div class="text-xs text-gray-500 mt-1" id="incomeEligibility"></div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">End Projection at Age</label>
+                        <input type="number" id="endAge" value="90" min="0" max="120" oninput="updateCalculations()">
+                        <div class="text-xs text-gray-500 mt-1">Set the final age for projections and graph</div>
+                    </div>
+                </div>
+
+                <!-- Contribution & Investment Details -->
+                <div class="space-y-4">
+                    <h3 class="border-b pb-2">Contributions & Investment</h3>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Annual Contribution (until age 59)</label>
+                        <input type="number" id="annualContribution" value="1500" min="0" oninput="updateCalculations()">
+                        <div class="text-xs text-gray-500 mt-1">Lifetime max: $200,000. Optimal: $1,500/yr (low income) or $1,000/yr (high income)</div>
+                    </div>
+                    
+                    <div id="stopContribsContainer" style="display: none;">
+                        <div class="flex items-center space-x-2 bg-yellow-50 p-3 rounded-lg border border-yellow-200">
+                            <input type="checkbox" id="stopContribsAtWithdrawal" checked onchange="updateCalculations()">
+                            <label class="text-sm text-gray-700">
+                                Stop contributions when early retirement/withdrawals begin
+                                <div class="text-xs text-gray-600 mt-0.5">(Useful for early retirement scenarios at 45-50)</div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Annual Return Rate (%)</label>
+                        <input type="number" id="returnRate" value="5" min="0" max="20" step="0.1" oninput="updateCalculations()">
+                    </div>
+
+                    <div class="flex items-center space-x-2">
+                        <input type="checkbox" id="payDividends" onchange="updateCalculations()">
+                        <label class="text-sm font-medium text-gray-700">Pay Out Dividends</label>
+                    </div>
+
+                    <div id="dividendRateContainer" style="display: none;">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Dividend Rate (%)</label>
+                        <input type="number" id="dividendRate" value="2" min="0" max="20" step="0.1" oninput="updateCalculations()">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Carry-Forward Section -->
+            <div class="mb-6 bg-amber-50 border border-amber-200 rounded-lg p-4">
+                <h3 class="font-semibold text-lg text-indigo-900 mb-2">Carry-Forward Eligibility (Past 10 Years)</h3>
+                <p class="text-sm text-gray-600 mb-4" id="carryForwardSummary"></p>
+                <div class="space-y-2 max-h-96 overflow-y-auto" id="carryForwardYears"></div>
+            </div>
+
+            <!-- Withdrawal Planning -->
+            <div class="mb-6">
+                <h3 class="font-semibold text-lg text-indigo-900 border-b pb-2 mb-4">Withdrawal Strategy</h3>
+                
+                <!-- Strategy Comparison Toggle -->
+                <div class="bg-indigo-50 border border-indigo-200 rounded-lg p-4 mb-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center space-x-2">
+                            <input type="checkbox" id="showComparison" onchange="updateCalculations()">
+                            <label class="text-sm font-semibold text-gray-800">Compare LDAP vs Optimal Withdrawal Strategies</label>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-600">See side-by-side comparison of government LDAP formula vs growth-optimized withdrawals</p>
+                    
+                    <div id="comparisonAgeContainer" style="display: none;" class="mt-3 bg-white rounded-lg p-3 border border-indigo-300">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Retirement Age for Comparison</label>
+                        <input type="number" id="retirementAge" value="60" min="60" max="120" oninput="updateCalculations()">
+                        <div class="text-xs text-gray-600 mt-1">Both strategies will be compared starting at this age (LDAP requires 60+)</div>
+                    </div>
+                </div>
+                
+                <!-- Withdrawal Type Selection -->
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Withdrawal Type</label>
+                    <div class="space-y-2">
+                        <div class="flex items-center">
+                            <input type="radio" name="withdrawalType" id="ldap" value="ldap" checked onchange="updateCalculations()">
+                            <label for="ldap" class="ml-2 text-sm text-gray-700">
+                                <strong>LDAP (Lifetime Disability Assistance Payments)</strong> - Automatic pension starting at age 60
+                            </label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="radio" name="withdrawalType" id="manual" value="manual" onchange="updateCalculations()">
+                            <label for="manual" class="ml-2 text-sm text-gray-700">
+                                <strong>Manual Withdrawals (DAPs)</strong> - Custom one-time withdrawals (subject to 10-year rule if before 60)
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div id="ldapAgeContainer" class="mt-3">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Start LDAP at Age</label>
+                        <input type="number" id="ldapAge" value="60" min="60" max="120" oninput="updateCalculations()">
+                        <div class="text-xs text-gray-600 mt-1">LDAPs automatically calculate optimal withdrawals. Before 80: balance ÷ (83 - age). After 80: balance ÷ 3</div>
+                    </div>
+                </div>
+                
+                <!-- Manual Withdrawal Section -->
+                <div id="manualWithdrawalSection" style="display: none;">
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
+                        <div class="text-xs font-semibold text-yellow-800 mb-1">⚠️ 10-Year Repayment Rule</div>
+                        <div class="text-xs text-yellow-700">Withdrawals before age 60 require repaying $3 in grants/bonds for every $1 withdrawn (from last 10 years)</div>
+                    </div>
+                    
+                    <div id="withdrawalsList"></div>
+                    
+                    <button onclick="addWithdrawal()" class="w-full px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 mt-3">
+                        + Add Manual Withdrawal
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chart Age Range Slider -->
+            <div class="mb-6 bg-indigo-50 border border-indigo-200 rounded-lg p-4">
+                <h3 class="font-semibold text-lg text-indigo-900 mb-4">Chart Age Range</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Age Range: <span id="ageRangeDisplay">30 - 90</span>
+                        </label>
+                        <div class="flex items-center gap-4">
+                            <div class="flex-1">
+                                <label class="block text-xs text-gray-600 mb-1">Start Age</label>
+                                <input type="range" id="chartAgeMin" min="0" max="120" value="30" step="1" 
+                                    oninput="updateChartAgeRange()" 
+                                    class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                            </div>
+                            <div class="flex-1">
+                                <label class="block text-xs text-gray-600 mb-1">End Age</label>
+                                <input type="range" id="chartAgeMax" min="0" max="120" value="90" step="1" 
+                                    oninput="updateChartAgeRange()" 
+                                    class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                            </div>
+                        </div>
+                        <div class="flex justify-between text-xs text-gray-500 mt-2">
+                            <span id="chartAgeMinValue">30</span>
+                            <span id="chartAgeMaxValue">90</span>
+                        </div>
+                        <div class="mt-3 flex gap-2">
+                            <button onclick="setChartRange('early')" class="px-3 py-1 bg-indigo-600 text-white text-sm rounded-md hover:bg-indigo-700">
+                                Early Years (30-50)
+                            </button>
+                            <button onclick="setChartRange('mid')" class="px-3 py-1 bg-indigo-600 text-white text-sm rounded-md hover:bg-indigo-700">
+                                Mid Years (50-70)
+                            </button>
+                            <button onclick="setChartRange('late')" class="px-3 py-1 bg-indigo-600 text-white text-sm rounded-md hover:bg-indigo-700">
+                                Late Years (70-90)
+                            </button>
+                            <button onclick="setChartRange('all')" class="px-3 py-1 bg-gray-600 text-white text-sm rounded-md hover:bg-gray-700">
+                                All Years
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="mb-6">
+                <h3 class="font-semibold text-lg text-indigo-900 mb-4">Account Value Over Time</h3>
+                <div class="chart-container">
+                    <canvas id="balanceChart"></canvas>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <h3 class="font-semibold text-lg text-indigo-900 mb-4">Annual Breakdown</h3>
+                <div class="chart-container-small">
+                    <canvas id="breakdownChart"></canvas>
+                </div>
+            </div>
+
+            <div class="mb-6" id="withdrawalChartContainer" style="display: none;">
+                <h3 class="font-semibold text-lg text-indigo-900 mb-4">Withdrawal Breakdown</h3>
+                <div class="chart-container-small">
+                    <canvas id="withdrawalChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Info Box -->
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-900">
+                <h4 class="font-semibold mb-2">Enhanced Features Based on CRA Rules:</h4>
+                <ul class="space-y-1 text-xs">
+                    <li>• <strong>LDAP (Lifetime Disability Assistance Payments):</strong> Automatic pension-style withdrawals starting at 60</li>
+                    <li>• <strong>10-Year Repayment Rule:</strong> Early withdrawals (before 60) lose $3 of grants/bonds for every $1 withdrawn</li>
+                    <li>• <strong>Taxable Withdrawals:</strong> Everything except personal contributions is taxed upon withdrawal</li>
+                    <li>• <strong>LDAP Formula:</strong> Before 80: balance ÷ (83 - age), After 80: balance ÷ 3</li>
+                    <li>• <strong>Carry-forward:</strong> Catch up on past 10 DTC-approved years (max $10,500 grants + $11,000 bonds per year)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State management
+        let state = {
+            currentAge: 30,
+            familyIncome: 100000,
+            annualContribution: 1500,
+            returnRate: 5,
+            payDividends: false,
+            dividendRate: 2,
+            withdrawals: [],
+            dtcStartAge: 17,
+            endAge: 90,
+            showOptimalWithdrawal: false,
+            retirementAge: 60,
+            withdrawalType: 'ldap',
+            stopContribsAtWithdrawal: true,
+            showComparison: false,
+            carryForwardYears: [],
+            chartAgeRange: [30, 90]
+        };
+        
+        let allProjectionData = []; // Store all data for filtering
+
+        // Initialize carry-forward years (removed personal details)
+        function initializeCarryForwardYears() {
+            const currentYear = new Date().getFullYear();
+            const years = [];
+            
+            // Calculate years from past 10 years (as far back as CRA allows)
+            for (let year = currentYear - 10; year < currentYear; year++) {
+                const ageAtYear = state.currentAge - (currentYear - year);
+                
+                years.push({
+                    year,
+                    age: ageAtYear,
+                    grantEligible: ageAtYear >= state.dtcStartAge && ageAtYear <= 49,
+                    bondEligible: ageAtYear >= state.dtcStartAge && ageAtYear <= 49,
+                    income: 0 // User can input their own income
+                });
+            }
+            
+            return years;
+        }
+
+        // Format currency
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('en-CA', {
+                style: 'currency',
+                currency: 'CAD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+            }).format(value);
+        }
+
+        // Calculate annual grant
+        function calculateAnnualGrant(income, contribution, age) {
+            if (age > 49) return 0;
+            
+            let grant = 0;
+            
+            if (income <= 114750) {
+                const first500 = Math.min(contribution, 500);
+                grant += first500 * 3;
+                
+                if (contribution > 500) {
+                    const next1000 = Math.min(contribution - 500, 1000);
+                    grant += next1000 * 2;
+                }
+                return Math.min(grant, 3500);
+            } else {
+                return Math.min(contribution, 1000);
+            }
+        }
+
+        // Calculate annual bond
+        function calculateAnnualBond(income, age) {
+            if (age > 49) return 0;
+            
+            if (income <= 37487) {
+                return 1000;
+            } else if (income < 57375) {
+                const ratio = (57375 - income) / (57375 - 37487);
+                return Math.round(1000 * ratio);
+            }
+            return 0;
+        }
+
+        // Calculate carry-forward
+        function calculateCarryForward() {
+            let availableGrants = [];
+            let availableBonds = [];
+            
+            state.carryForwardYears.forEach(yearData => {
+                if (yearData.grantEligible && yearData.age <= 49 && yearData.age >= state.dtcStartAge) {
+                    const maxGrant = (yearData.income || 0) <= 114750 ? 3500 : 1000;
+                    availableGrants.push({ year: yearData.year, amount: maxGrant, age: yearData.age });
+                }
+                if (yearData.bondEligible && yearData.age <= 49 && yearData.age >= state.dtcStartAge) {
+                    const bond = calculateAnnualBond(yearData.income || 0, yearData.age);
+                    if (bond > 0) {
+                        availableBonds.push({ year: yearData.year, amount: bond, age: yearData.age });
+                    }
+                }
+            });
+            
+            return { grants: availableGrants, bonds: availableBonds };
+        }
+
+        // Calculate LDAP
+        function calculateLDAP(balance, age, govtContribs, personalContribs) {
+            if (age < 60) return 0;
+            
+            if (govtContribs > personalContribs) {
+                if (age < 80) {
+                    const yearsUntil83 = 83 - age;
+                    return balance / yearsUntil83;
+                } else {
+                    return balance / 3;
+                }
+            } else {
+                const minimum = age < 80 ? balance / (83 - age) : balance / 3;
+                const tenPercent = balance * 0.1;
+                return Math.max(minimum, tenPercent);
+            }
+        }
+
+        // Calculate projections
+        function calculateProjections() {
+            const data = [];
+            let accountBalance = 0;
+            let totalContributions = 0;
+            let totalGrants = 0;
+            let totalBonds = 0;
+            let totalWithdrawals = 0;
+            let totalTaxableWithdrawals = 0;
+            let lifetimeGrantTotal = 0;
+            let lifetimeBondTotal = 0;
+            let grantsInLast10Years = [];
+            
+            const carryForward = calculateCarryForward();
+            let remainingCarryForwardGrants = [...carryForward.grants];
+            let remainingCarryForwardBonds = [...carryForward.bonds];
+            
+            const maxAge = state.endAge || 90;
+            
+            for (let age = state.currentAge; age <= maxAge; age++) {
+                const year = age - state.currentAge;
+                let yearlyContribution = 0;
+                let yearlyGrant = 0;
+                let yearlyBond = 0;
+                let yearlyWithdrawal = 0;
+                let yearlyGrowth = 0;
+                let yearlyDividend = 0;
+                let repaymentPenalty = 0;
+                let taxableWithdrawal = 0;
+                
+                const currentDate = new Date().getFullYear() + (age - state.currentAge);
+                grantsInLast10Years = grantsInLast10Years.filter(g => currentDate - g.year < 10);
+                
+                const shouldStopContribs = state.stopContribsAtWithdrawal && 
+                                         state.withdrawalType === 'manual' && 
+                                         state.withdrawals.some(w => w.age <= age && w.age < state.retirementAge);
+                
+                if (age <= 59 && totalContributions < 200000 && !shouldStopContribs) {
+                    yearlyContribution = Math.min(state.annualContribution, 200000 - totalContributions);
+                    totalContributions += yearlyContribution;
+                    accountBalance += yearlyContribution;
+                }
+                
+                if (age <= 49 && lifetimeGrantTotal < 70000) {
+                    let grantsThisYear = 0;
+                    const currentYearGrant = yearlyContribution > 0 ? calculateAnnualGrant(state.familyIncome, yearlyContribution, age) : 0;
+                    
+                    while (remainingCarryForwardGrants.length > 0 && grantsThisYear < 10500 && lifetimeGrantTotal < 70000) {
+                        const carryForwardGrant = remainingCarryForwardGrants[0];
+                        const spaceInYear = Math.min(10500 - grantsThisYear, 70000 - lifetimeGrantTotal);
+                        const grantToAdd = Math.min(carryForwardGrant.amount, spaceInYear);
+                        
+                        grantsThisYear += grantToAdd;
+                        lifetimeGrantTotal += grantToAdd;
+                        grantsInLast10Years.push({ amount: grantToAdd, year: currentDate, type: 'grant' });
+                        
+                        if (grantToAdd >= carryForwardGrant.amount) {
+                            remainingCarryForwardGrants.shift();
+                        } else {
+                            carryForwardGrant.amount -= grantToAdd;
+                            break;
+                        }
+                    }
+                    
+                    if (grantsThisYear + currentYearGrant <= 10500 && lifetimeGrantTotal + currentYearGrant <= 70000) {
+                        grantsThisYear += currentYearGrant;
+                        lifetimeGrantTotal += currentYearGrant;
+                        grantsInLast10Years.push({ amount: currentYearGrant, year: currentDate, type: 'grant' });
+                    }
+                    
+                    yearlyGrant = grantsThisYear;
+                    totalGrants += yearlyGrant;
+                    accountBalance += yearlyGrant;
+                }
+                
+                if (age <= 49 && lifetimeBondTotal < 20000) {
+                    let bondsThisYear = 0;
+                    const currentYearBond = calculateAnnualBond(state.familyIncome, age);
+                    
+                    while (remainingCarryForwardBonds.length > 0 && bondsThisYear < 11000 && lifetimeBondTotal < 20000) {
+                        const carryForwardBond = remainingCarryForwardBonds[0];
+                        const spaceInYear = Math.min(11000 - bondsThisYear, 20000 - lifetimeBondTotal);
+                        const bondToAdd = Math.min(carryForwardBond.amount, spaceInYear);
+                        
+                        bondsThisYear += bondToAdd;
+                        lifetimeBondTotal += bondToAdd;
+                        grantsInLast10Years.push({ amount: bondToAdd, year: currentDate, type: 'bond' });
+                        
+                        if (bondToAdd >= carryForwardBond.amount) {
+                            remainingCarryForwardBonds.shift();
+                        } else {
+                            carryForwardBond.amount -= bondToAdd;
+                            break;
+                        }
+                    }
+                    
+                    if (bondsThisYear + currentYearBond <= 11000 && lifetimeBondTotal + currentYearBond <= 20000) {
+                        bondsThisYear += currentYearBond;
+                        lifetimeBondTotal += currentYearBond;
+                        grantsInLast10Years.push({ amount: currentYearBond, year: currentDate, type: 'bond' });
+                    }
+                    
+                    yearlyBond = bondsThisYear;
+                    totalBonds += yearlyBond;
+                    accountBalance += yearlyBond;
+                }
+                
+                if (accountBalance > 0) {
+                    const growthRate = state.payDividends ? (state.returnRate - state.dividendRate) / 100 : state.returnRate / 100;
+                    yearlyGrowth = accountBalance * growthRate;
+                    accountBalance += yearlyGrowth;
+                    
+                    if (state.payDividends) {
+                        yearlyDividend = accountBalance * (state.dividendRate / 100);
+                    }
+                }
+                
+                const assistanceHoldback = grantsInLast10Years.reduce((sum, g) => sum + g.amount, 0);
+                const govtContributions = totalGrants + totalBonds;
+                
+                if (state.withdrawalType === 'ldap' && age >= state.retirementAge) {
+                    const ldapAmount = calculateLDAP(accountBalance, age, govtContributions, totalContributions);
+                    yearlyWithdrawal = Math.min(ldapAmount, accountBalance);
+                    
+                    const personalContribPortion = Math.min(yearlyWithdrawal, totalContributions / (totalContributions + govtContributions + yearlyGrowth) * yearlyWithdrawal);
+                    taxableWithdrawal = yearlyWithdrawal - personalContribPortion;
+                    
+                } else if (state.withdrawalType === 'manual') {
+                    const withdrawal = state.withdrawals.find(w => w.age === age);
+                    if (withdrawal) {
+                        yearlyWithdrawal = Math.min(withdrawal.amount, accountBalance);
+                        
+                        if (age < 60 && assistanceHoldback > 0) {
+                            const maxRepayment = Math.min(assistanceHoldback, yearlyWithdrawal * 3);
+                            repaymentPenalty = maxRepayment;
+                            
+                            accountBalance -= repaymentPenalty;
+                            
+                            let remainingPenalty = repaymentPenalty;
+                            grantsInLast10Years = grantsInLast10Years.filter(g => {
+                                if (remainingPenalty > 0) {
+                                    const toRemove = Math.min(g.amount, remainingPenalty);
+                                    remainingPenalty -= toRemove;
+                                    g.amount -= toRemove;
+                                    return g.amount > 0;
+                                }
+                                return true;
+                            });
+                        }
+                        
+                        const personalContribPortion = Math.min(yearlyWithdrawal, totalContributions / (totalContributions + govtContributions) * yearlyWithdrawal);
+                        taxableWithdrawal = yearlyWithdrawal - personalContribPortion;
+                    }
+                }
+                
+                accountBalance -= yearlyWithdrawal;
+                totalWithdrawals += yearlyWithdrawal;
+                totalTaxableWithdrawals += taxableWithdrawal;
+                
+                data.push({
+                    age,
+                    year: year + 1,
+                    contribution: Math.round(yearlyContribution),
+                    grant: Math.round(yearlyGrant),
+                    bond: Math.round(yearlyBond),
+                    withdrawal: Math.round(yearlyWithdrawal),
+                    taxableWithdrawal: Math.round(taxableWithdrawal),
+                    repaymentPenalty: Math.round(repaymentPenalty),
+                    growth: Math.round(yearlyGrowth),
+                    dividend: Math.round(yearlyDividend),
+                    balance: Math.round(Math.max(0, accountBalance)),
+                    totalContributions: Math.round(totalContributions),
+                    totalGrants: Math.round(totalGrants),
+                    totalBonds: Math.round(totalBonds),
+                    assistanceHoldback: Math.round(assistanceHoldback),
+                    govtContributions: Math.round(govtContributions),
+                });
+            }
+            
+            return {
+                data,
+                summary: {
+                    finalBalance: Math.round(Math.max(0, accountBalance)),
+                    totalContributions: Math.round(totalContributions),
+                    totalGrants: Math.round(totalGrants),
+                    totalBonds: Math.round(totalBonds),
+                    totalGovernment: Math.round(totalGrants + totalBonds),
+                    totalWithdrawals: Math.round(totalWithdrawals),
+                    totalTaxableWithdrawals: Math.round(totalTaxableWithdrawals),
+                }
+            };
+        }
+
+        // Update UI
+        function updateCalculations() {
+            // Update state from inputs
+            state.currentAge = parseInt(document.getElementById('currentAge').value) || 30;
+            state.familyIncome = parseInt(document.getElementById('familyIncome').value) || 100000;
+            state.annualContribution = parseInt(document.getElementById('annualContribution').value) || 1500;
+            state.returnRate = parseFloat(document.getElementById('returnRate').value) || 5;
+            state.payDividends = document.getElementById('payDividends').checked;
+            state.dividendRate = parseFloat(document.getElementById('dividendRate').value) || 2;
+            state.dtcStartAge = parseInt(document.getElementById('dtcStartAge').value) || 17;
+            state.endAge = parseInt(document.getElementById('endAge').value) || 90;
+            state.retirementAge = parseInt(document.getElementById('retirementAge').value) || 60;
+            state.withdrawalType = document.querySelector('input[name="withdrawalType"]:checked').value;
+            state.stopContribsAtWithdrawal = document.getElementById('stopContribsAtWithdrawal')?.checked ?? true;
+            state.showComparison = document.getElementById('showComparison')?.checked ?? false;
+            
+            // Update carry-forward years ages
+            const currentYear = new Date().getFullYear();
+            state.carryForwardYears.forEach(yearData => {
+                yearData.age = state.currentAge - (currentYear - yearData.year);
+                yearData.grantEligible = yearData.age >= state.dtcStartAge && yearData.age <= 49;
+                yearData.bondEligible = yearData.age >= state.dtcStartAge && yearData.age <= 49;
+            });
+            
+            // Update UI visibility
+            document.getElementById('dividendRateContainer').style.display = state.payDividends ? 'block' : 'none';
+            document.getElementById('stopContribsContainer').style.display = state.withdrawalType === 'manual' ? 'block' : 'none';
+            document.getElementById('manualWithdrawalSection').style.display = state.withdrawalType === 'manual' ? 'block' : 'none';
+            document.getElementById('ldapAgeContainer').style.display = state.withdrawalType === 'ldap' ? 'block' : 'none';
+            document.getElementById('comparisonAgeContainer').style.display = state.showComparison ? 'block' : 'none';
+            
+            if (state.withdrawalType === 'ldap') {
+                state.retirementAge = parseInt(document.getElementById('ldapAge').value) || 60;
+            }
+            
+            // Update income eligibility
+            const income = state.familyIncome;
+            let eligibilityText = '';
+            if (income <= 37487) {
+                eligibilityText = '✓ Eligible for maximum bond ($1,000/yr)';
+            } else if (income < 57375) {
+                eligibilityText = '✓ Eligible for partial bond';
+            } else if (income <= 114750) {
+                eligibilityText = '✓ No bond, 3:1 & 2:1 grant matching';
+            } else {
+                eligibilityText = '✓ 1:1 grant matching only';
+            }
+            document.getElementById('incomeEligibility').textContent = eligibilityText;
+            
+            // Calculate projections
+            const projections = calculateProjections();
+            allProjectionData = projections.data; // Store all data
+            
+            // Update summary cards
+            updateSummaryCards(projections.summary);
+            
+            // Update carry-forward display
+            updateCarryForwardDisplay();
+            
+            // Update withdrawals display
+            updateWithdrawalsDisplay();
+            
+            // Update chart age range sliders
+            updateChartAgeRangeSliders();
+            
+            // Update charts with filtered data
+            updateCharts();
+        }
+
+        function updateSummaryCards(summary) {
+            const cards = [
+                { label: 'Final Balance', value: summary.finalBalance, gradient: 'from-green-500 to-green-600' },
+                { label: 'Your Contributions', value: summary.totalContributions, gradient: 'from-blue-500 to-blue-600' },
+                { label: 'Total Grants', value: summary.totalGrants, gradient: 'from-purple-500 to-purple-600' },
+                { label: 'Total Bonds', value: summary.totalBonds, gradient: 'from-pink-500 to-pink-600' },
+                { label: 'Govt. Total', value: summary.totalGovernment, gradient: 'from-indigo-500 to-indigo-600' },
+                { label: 'Taxable Withdrawals', value: summary.totalTaxableWithdrawals, gradient: 'from-red-500 to-red-600' },
+            ];
+            
+            const container = document.getElementById('summaryCards');
+            container.innerHTML = cards.map(card => `
+                <div class="summary-card" style="--gradient-from: ${card.gradient.includes('green') ? '#22c55e' : card.gradient.includes('blue') ? '#3b82f6' : card.gradient.includes('purple') ? '#a855f7' : card.gradient.includes('pink') ? '#ec4899' : card.gradient.includes('indigo') ? '#6366f1' : '#ef4444'}; --gradient-to: ${card.gradient.includes('green') ? '#16a34a' : card.gradient.includes('blue') ? '#2563eb' : card.gradient.includes('purple') ? '#9333ea' : card.gradient.includes('pink') ? '#db2777' : card.gradient.includes('indigo') ? '#4f46e5' : '#dc2626'};">
+                    <div class="label">${card.label}</div>
+                    <div class="value">${formatCurrency(card.value)}</div>
+                </div>
+            `).join('');
+        }
+
+        function updateCarryForwardDisplay() {
+            const cf = calculateCarryForward();
+            const totalGrants = cf.grants.reduce((sum, g) => sum + g.amount, 0);
+            const totalBonds = cf.bonds.reduce((sum, b) => sum + b.amount, 0);
+            
+            document.getElementById('carryForwardSummary').textContent = 
+                `Available: ${formatCurrency(totalGrants)} in grants (${cf.grants.length} years) + ${formatCurrency(totalBonds)} in bonds (${cf.bonds.length} years)`;
+            
+            const container = document.getElementById('carryForwardYears');
+            container.innerHTML = state.carryForwardYears.map((yearData, index) => `
+                <div class="bg-white p-3 rounded-lg border border-gray-200">
+                    <div class="grid grid-cols-6 gap-3 items-center">
+                        <div>
+                            <div class="text-xs text-gray-600">Year</div>
+                            <div class="font-semibold">${yearData.year}</div>
+                            <div class="text-xs text-gray-500">Age ${yearData.age}</div>
+                        </div>
+                        <div class="col-span-2">
+                            <label class="text-xs text-gray-600">Income that year</label>
+                            <input type="number" value="${yearData.income}" 
+                                oninput="updateCarryForwardYear(${index}, 'income', this.value)"
+                                class="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500 focus:border-transparent" min="0">
+                        </div>
+                        <div class="flex items-center">
+                            <input type="checkbox" ${yearData.grantEligible ? 'checked' : ''} 
+                                onchange="updateCarryForwardYear(${index}, 'grantEligible', this.checked)"
+                                ${yearData.age > 49 || yearData.age < state.dtcStartAge ? 'disabled' : ''}
+                                class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded disabled:opacity-50">
+                            <label class="ml-2 text-sm text-gray-700">Grant</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="checkbox" ${yearData.bondEligible ? 'checked' : ''} 
+                                onchange="updateCarryForwardYear(${index}, 'bondEligible', this.checked)"
+                                ${yearData.age > 49 || yearData.age < state.dtcStartAge ? 'disabled' : ''}
+                                class="h-4 w-4 text-pink-600 focus:ring-pink-500 border-gray-300 rounded disabled:opacity-50">
+                            <label class="ml-2 text-sm text-gray-700">Bond</label>
+                        </div>
+                        <div class="text-xs text-gray-600">
+                            ${yearData.grantEligible && yearData.age <= 49 ? `
+                                <div class="text-purple-600">
+                                    Grant: ${formatCurrency((yearData.income || 0) <= 114750 ? 3500 : 1000)}
+                                </div>
+                            ` : ''}
+                            ${yearData.bondEligible && yearData.age <= 49 ? `
+                                <div class="text-pink-600">
+                                    Bond: ${formatCurrency(calculateAnnualBond(yearData.income || 0, yearData.age))}
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateCarryForwardYear(index, field, value) {
+            if (field === 'income') {
+                state.carryForwardYears[index][field] = value === '' ? 0 : (parseInt(value) || 0);
+            } else {
+                state.carryForwardYears[index][field] = value;
+            }
+            updateCalculations();
+        }
+
+        function updateWithdrawalsDisplay() {
+            const container = document.getElementById('withdrawalsList');
+            if (state.withdrawals.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+            
+            container.innerHTML = `
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-3">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-sm font-semibold text-blue-800">
+                                ${state.withdrawals.length} withdrawal${state.withdrawals.length !== 1 ? 's' : ''} scheduled
+                            </div>
+                            ${state.withdrawals.some(w => w.age < 60) ? `
+                                <div class="text-xs text-blue-700 mt-1">
+                                    ${state.withdrawals.filter(w => w.age < 60).length} early withdrawal${state.withdrawals.filter(w => w.age < 60).length !== 1 ? 's' : ''} (before 60) - penalties will apply
+                                </div>
+                            ` : ''}
+                        </div>
+                        <button onclick="clearWithdrawals()" class="px-3 py-1 bg-red-500 text-white text-sm rounded-md hover:bg-red-600">
+                            Clear All
+                        </button>
+                    </div>
+                </div>
+                ${state.withdrawals.map((withdrawal, index) => `
+                    <div class="flex gap-3 items-center bg-gray-50 p-3 rounded-lg mb-2">
+                        <div class="flex-1">
+                            <label class="block text-xs text-gray-600 mb-1">Age</label>
+                            <input type="number" value="${withdrawal.age}" 
+                                oninput="updateWithdrawal(${index}, 'age', this.value)"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent" 
+                                min="${state.currentAge}">
+                        </div>
+                        <div class="flex-1">
+                            <label class="block text-xs text-gray-600 mb-1">Amount</label>
+                            <input type="number" value="${withdrawal.amount}" 
+                                oninput="updateWithdrawal(${index}, 'amount', this.value)"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent" 
+                                min="0">
+                        </div>
+                        <button onclick="removeWithdrawal(${index})" class="mt-5 px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">
+                            Remove
+                        </button>
+                    </div>
+                `).join('')}
+            `;
+        }
+
+        function addWithdrawal() {
+            state.withdrawals.push({ age: state.currentAge + 5, amount: 5000 });
+            updateWithdrawalsDisplay();
+            updateCalculations();
+        }
+
+        function removeWithdrawal(index) {
+            state.withdrawals.splice(index, 1);
+            updateWithdrawalsDisplay();
+            updateCalculations();
+        }
+
+        function updateWithdrawal(index, field, value) {
+            if (field === 'age') {
+                state.withdrawals[index][field] = value === '' ? state.currentAge : (parseInt(value) || state.currentAge);
+            } else {
+                state.withdrawals[index][field] = value === '' ? 0 : (parseFloat(value) || 0);
+            }
+            updateCalculations();
+        }
+
+        function clearWithdrawals() {
+            state.withdrawals = [];
+            updateWithdrawalsDisplay();
+            updateCalculations();
+        }
+
+        let balanceChart = null;
+        let breakdownChart = null;
+        let withdrawalChart = null;
+
+        function updateChartAgeRange() {
+            const minAge = parseInt(document.getElementById('chartAgeMin').value);
+            const maxAge = parseInt(document.getElementById('chartAgeMax').value);
+            
+            // Ensure min <= max
+            if (minAge > maxAge) {
+                if (document.getElementById('chartAgeMin').value == minAge) {
+                    document.getElementById('chartAgeMax').value = minAge;
+                } else {
+                    document.getElementById('chartAgeMin').value = maxAge;
+                }
+                state.chartAgeRange = [Math.min(minAge, maxAge), Math.max(minAge, maxAge)];
+            } else {
+                state.chartAgeRange = [minAge, maxAge];
+            }
+            
+            // Update display
+            document.getElementById('ageRangeDisplay').textContent = `${state.chartAgeRange[0]} - ${state.chartAgeRange[1]}`;
+            document.getElementById('chartAgeMinValue').textContent = state.chartAgeRange[0];
+            document.getElementById('chartAgeMaxValue').textContent = state.chartAgeRange[1];
+            
+            // Update charts with filtered data
+            updateCharts();
+        }
+
+        function updateChartAgeRangeSliders() {
+            // Set slider min/max values based on currentAge and endAge
+            const maxAge = state.endAge || 90;
+            const minAge = state.currentAge || 30;
+            
+            const minSlider = document.getElementById('chartAgeMin');
+            const maxSlider = document.getElementById('chartAgeMax');
+            
+            if (minSlider && maxSlider) {
+                minSlider.min = minAge;
+                minSlider.max = maxAge;
+                maxSlider.min = minAge;
+                maxSlider.max = maxAge;
+                
+                // Ensure current range is within bounds
+                if (state.chartAgeRange[0] > maxAge) state.chartAgeRange[0] = minAge;
+                if (state.chartAgeRange[1] > maxAge) state.chartAgeRange[1] = maxAge;
+                if (state.chartAgeRange[0] < minAge) state.chartAgeRange[0] = minAge;
+                if (state.chartAgeRange[1] < minAge) state.chartAgeRange[1] = minAge;
+                
+                // Ensure min <= max
+                if (state.chartAgeRange[0] > state.chartAgeRange[1]) {
+                    state.chartAgeRange[0] = minAge;
+                    state.chartAgeRange[1] = maxAge;
+                }
+                
+                // Update slider values
+                minSlider.value = state.chartAgeRange[0];
+                maxSlider.value = state.chartAgeRange[1];
+                
+                // Update display
+                document.getElementById('ageRangeDisplay').textContent = `${state.chartAgeRange[0]} - ${state.chartAgeRange[1]}`;
+                document.getElementById('chartAgeMinValue').textContent = state.chartAgeRange[0];
+                document.getElementById('chartAgeMaxValue').textContent = state.chartAgeRange[1];
+            }
+        }
+
+        function setChartRange(range) {
+            const maxAge = state.endAge || 90;
+            const minAge = state.currentAge || 30;
+            switch(range) {
+                case 'early':
+                    state.chartAgeRange = [minAge, Math.min(minAge + 20, maxAge)];
+                    break;
+                case 'mid':
+                    state.chartAgeRange = [Math.max(minAge, 50), Math.min(70, maxAge)];
+                    break;
+                case 'late':
+                    state.chartAgeRange = [Math.max(minAge, 70), maxAge];
+                    break;
+                case 'all':
+                    state.chartAgeRange = [minAge, maxAge];
+                    break;
+            }
+            updateChartAgeRangeSliders();
+            updateCharts();
+        }
+
+        function getFilteredChartData() {
+            if (!allProjectionData || allProjectionData.length === 0) return [];
+            return allProjectionData.filter(d => 
+                d.age >= state.chartAgeRange[0] && d.age <= state.chartAgeRange[1]
+            );
+        }
+
+        function updateCharts() {
+            const data = getFilteredChartData();
+            if (data.length === 0) return;
+            // Balance Chart
+            const balanceCtx = document.getElementById('balanceChart').getContext('2d');
+            if (balanceChart) balanceChart.destroy();
+            balanceChart = new Chart(balanceCtx, {
+                type: 'line',
+                data: {
+                    labels: data.map(d => d.age),
+                    datasets: [{
+                        label: 'Account Balance',
+                        data: data.map(d => d.balance),
+                        borderColor: '#4f46e5',
+                        backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: true },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return formatCurrency(context.parsed.y);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + (value / 1000).toFixed(0) + 'k';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Breakdown Chart
+            const breakdownCtx = document.getElementById('breakdownChart').getContext('2d');
+            if (breakdownChart) breakdownChart.destroy();
+            breakdownChart = new Chart(breakdownCtx, {
+                type: 'line',
+                data: {
+                    labels: data.map(d => d.age),
+                    datasets: [
+                        { label: 'Contributions', data: data.map(d => d.contribution), borderColor: '#3b82f6', tension: 0.4 },
+                        { label: 'Grants', data: data.map(d => d.grant), borderColor: '#8b5cf6', tension: 0.4 },
+                        { label: 'Bonds', data: data.map(d => d.bond), borderColor: '#ec4899', tension: 0.4 },
+                        { label: 'Growth', data: data.map(d => d.growth), borderColor: '#10b981', tension: 0.4 },
+                        { label: 'Withdrawals', data: data.map(d => d.withdrawal), borderColor: '#ef4444', tension: 0.4 },
+                        ...(state.withdrawalType === 'manual' ? [{
+                            label: '10-Year Penalty',
+                            data: data.map(d => d.repaymentPenalty),
+                            borderColor: '#f97316',
+                            borderDash: [5, 5],
+                            tension: 0.4
+                        }] : [])
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: true },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + formatCurrency(context.parsed.y);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + (value / 1000).toFixed(0) + 'k';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Withdrawal Chart
+            const withdrawalData = data.filter(d => d.withdrawal > 0);
+            if (withdrawalData.length > 0) {
+                document.getElementById('withdrawalChartContainer').style.display = 'block';
+                const withdrawalCtx = document.getElementById('withdrawalChart').getContext('2d');
+                if (withdrawalChart) withdrawalChart.destroy();
+                withdrawalChart = new Chart(withdrawalCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: withdrawalData.map(d => d.age),
+                        datasets: [
+                            { label: 'Total Withdrawal', data: withdrawalData.map(d => d.withdrawal), backgroundColor: '#3b82f6' },
+                            { label: 'Taxable Portion', data: withdrawalData.map(d => d.taxableWithdrawal), backgroundColor: '#ef4444' },
+                            ...(state.withdrawalType === 'manual' ? [{
+                                label: '10-Year Penalty',
+                                data: withdrawalData.map(d => d.repaymentPenalty),
+                                backgroundColor: '#f97316'
+                            }] : [])
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: true },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.dataset.label + ': ' + formatCurrency(context.parsed.y);
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                ticks: {
+                                    callback: function(value) {
+                                        return '$' + (value / 1000).toFixed(0) + 'k';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            } else {
+                document.getElementById('withdrawalChartContainer').style.display = 'none';
+            }
+        }
+
+        function resetCalculator() {
+            state.currentAge = 30;
+            state.familyIncome = 100000;
+            state.annualContribution = 1500;
+            state.returnRate = 5;
+            state.payDividends = false;
+            state.dividendRate = 2;
+            state.withdrawals = [];
+            state.dtcStartAge = 17;
+            state.endAge = 90;
+            state.showOptimalWithdrawal = false;
+            state.retirementAge = 60;
+            state.withdrawalType = 'ldap';
+            state.stopContribsAtWithdrawal = true;
+            state.showComparison = false;
+            state.carryForwardYears = initializeCarryForwardYears();
+            state.chartAgeRange = [30, 90];
+            
+            document.getElementById('currentAge').value = state.currentAge;
+            document.getElementById('familyIncome').value = state.familyIncome;
+            document.getElementById('annualContribution').value = state.annualContribution;
+            document.getElementById('returnRate').value = state.returnRate;
+            document.getElementById('payDividends').checked = state.payDividends;
+            document.getElementById('dividendRate').value = state.dividendRate;
+            document.getElementById('dtcStartAge').value = state.dtcStartAge;
+            document.getElementById('endAge').value = state.endAge;
+            document.getElementById('retirementAge').value = state.retirementAge;
+            document.getElementById('ldapAge').value = state.retirementAge;
+            document.querySelector('input[name="withdrawalType"][value="ldap"]').checked = true;
+            document.getElementById('stopContribsAtWithdrawal').checked = state.stopContribsAtWithdrawal;
+            document.getElementById('showComparison').checked = state.showComparison;
+            
+            updateCalculations();
+        }
+
+        // Initialize
+        state.carryForwardYears = initializeCarryForwardYears();
+        updateCalculations();
+    </script>
+</body>
+</html>
+
