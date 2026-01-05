@@ -616,12 +616,16 @@
             appearance: none;
             background: transparent;
             cursor: pointer;
+            width: 100%;
+            height: 20px;
+            margin: 10px 0;
         }
         
         input[type="range"]::-webkit-slider-track {
-            background: #e5e7eb;
-            height: 8px;
-            border-radius: 4px;
+            background: #9ca3af;
+            height: 6px;
+            border-radius: 3px;
+            border: none;
         }
         
         input[type="range"]::-webkit-slider-thumb {
@@ -632,13 +636,16 @@
             width: 20px;
             border-radius: 50%;
             cursor: pointer;
-            margin-top: -6px;
+            margin-top: -7px;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
         
         input[type="range"]::-moz-range-track {
-            background: #e5e7eb;
-            height: 8px;
-            border-radius: 4px;
+            background: #9ca3af;
+            height: 6px;
+            border-radius: 3px;
+            border: none;
         }
         
         input[type="range"]::-moz-range-thumb {
@@ -647,7 +654,8 @@
             width: 20px;
             border-radius: 50%;
             cursor: pointer;
-            border: none;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
         
         input[type="range"]:focus {
@@ -655,15 +663,222 @@
         }
         
         input[type="range"]:focus::-webkit-slider-thumb {
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2);
         }
         
         input[type="range"]:focus::-moz-range-thumb {
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        input[type="range"]:hover::-webkit-slider-thumb {
+            background: #4338ca;
+        }
+        
+        input[type="range"]:hover::-moz-range-thumb {
+            background: #4338ca;
+        }
+        
+        /* Dark Mode Styles - Matching Tax Suite Color Scheme */
+        body.dark-mode {
+            background: #111827;
+            color: #f8fafc;
+        }
+        
+        body.dark-mode .max-w-7xl {
+            background: transparent;
+        }
+        
+        body.dark-mode .bg-white {
+            background: #1f2937;
+            border-color: #374151;
+        }
+        
+        body.dark-mode .back-link {
+            color: #9ca3af;
+        }
+        
+        body.dark-mode .back-link:hover {
+            color: #f8fafc;
+        }
+        
+        body.dark-mode .text-gray-600,
+        body.dark-mode .text-gray-700 {
+            color: #d1d5db;
+        }
+        
+        body.dark-mode .text-gray-800 {
+            color: #f3f4f6;
+        }
+        
+        body.dark-mode .text-indigo-900 {
+            color: #c7d2fe;
+        }
+        
+        body.dark-mode input[type="number"],
+        body.dark-mode input[type="text"],
+        body.dark-mode select {
+            background: #374151;
+            border-color: #4b5563;
+            color: #f8fafc;
+        }
+        
+        body.dark-mode input[type="number"]:focus,
+        body.dark-mode input[type="text"]:focus,
+        body.dark-mode select:focus {
+            border-color: #3b82f6;
+            background: #4b5563;
+        }
+        
+        body.dark-mode .bg-amber-50 {
+            background: #78350f;
+            border-color: #92400e;
+        }
+        
+        body.dark-mode .bg-blue-50 {
+            background: #1e3a8a;
+            border-color: #1e40af;
+        }
+        
+        body.dark-mode .bg-green-50 {
+            background: #14532d;
+            border-color: #166534;
+        }
+        
+        body.dark-mode .bg-yellow-50 {
+            background: #713f12;
+            border-color: #854d0e;
+        }
+        
+        body.dark-mode .bg-indigo-50 {
+            background: #312e81;
+            border-color: #3730a3;
+        }
+        
+        body.dark-mode .bg-orange-50 {
+            background: #7c2d12;
+            border-color: #9a3412;
+        }
+        
+        body.dark-mode .bg-gray-50 {
+            background: #374151;
+            border-color: #4b5563;
+        }
+        
+        body.dark-mode .border-gray-200,
+        body.dark-mode .border-gray-300 {
+            border-color: #4b5563;
+        }
+        
+        body.dark-mode .border-amber-200 {
+            border-color: #92400e;
+        }
+        
+        body.dark-mode .border-blue-200 {
+            border-color: #1e40af;
+        }
+        
+        body.dark-mode .border-green-200 {
+            border-color: #166534;
+        }
+        
+        body.dark-mode .border-yellow-200 {
+            border-color: #854d0e;
+        }
+        
+        body.dark-mode .border-indigo-200,
+        body.dark-mode .border-indigo-300 {
+            border-color: #3730a3;
+        }
+        
+        body.dark-mode .border-orange-200 {
+            border-color: #9a3412;
+        }
+        
+        body.dark-mode input[type="range"]::-webkit-slider-track {
+            background: #4b5563;
+        }
+        
+        body.dark-mode input[type="range"]::-moz-range-track {
+            background: #4b5563;
+        }
+        
+        body.dark-mode .chart-container,
+        body.dark-mode .chart-container-small {
+            background: #1f2937;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        
+        body.dark-mode .text-blue-900 {
+            color: #bfdbfe;
+        }
+        
+        body.dark-mode h1,
+        body.dark-mode h3,
+        body.dark-mode h4 {
+            color: #f3f4f6;
+        }
+        
+        body.dark-mode .summary-card {
+            color: white;
+        }
+        
+        body.dark-mode .text-gray-500 {
+            color: #9ca3af;
+        }
+        
+        /* Dark Mode Toggle Button */
+        .dark-mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: #1f2937;
+            border: 2px solid #374151;
+            border-radius: 8px;
+            padding: 8px 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #f8fafc;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .dark-mode-toggle:hover {
+            background: #374151;
+            border-color: #4b5563;
+        }
+        
+        body.dark-mode .dark-mode-toggle {
+            background: #f8fafc;
+            border-color: #e5e7eb;
+            color: #111827;
+        }
+        
+        body.dark-mode .dark-mode-toggle:hover {
+            background: #e5e7eb;
+            border-color: #d1d5db;
+        }
+        
+        @media (max-width: 768px) {
+            .dark-mode-toggle {
+                top: 10px;
+                right: 10px;
+                padding: 6px 10px;
+                font-size: 12px;
+            }
         }
     </style>
 </head>
 <body>
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()" id="darkModeToggle">
+        <span class="material-icons" id="darkModeIcon">dark_mode</span>
+        <span id="darkModeText">Dark Mode</span>
+    </button>
+    
     <div class="max-w-7xl">
         <a href="../index.html" class="back-link">
             <span class="material-icons" style="font-size:18px;">arrow_back</span>
@@ -833,14 +1048,12 @@
                             <div class="flex-1">
                                 <label class="block text-xs text-gray-600 mb-1">Start Age</label>
                                 <input type="range" id="chartAgeMin" min="0" max="120" value="30" step="1" 
-                                    oninput="updateChartAgeRange()" 
-                                    class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                                    oninput="updateChartAgeRange()">
                             </div>
                             <div class="flex-1">
                                 <label class="block text-xs text-gray-600 mb-1">End Age</label>
                                 <input type="range" id="chartAgeMax" min="0" max="120" value="90" step="1" 
-                                    oninput="updateChartAgeRange()" 
-                                    class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                                    oninput="updateChartAgeRange()">
                             </div>
                         </div>
                         <div class="flex justify-between text-xs text-gray-500 mt-2">
@@ -923,6 +1136,47 @@
         };
         
         let allProjectionData = []; // Store all data for filtering
+
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            const body = document.body;
+            const isDark = body.classList.toggle('dark-mode');
+            
+            // Update icon and text
+            const icon = document.getElementById('darkModeIcon');
+            const text = document.getElementById('darkModeText');
+            
+            if (isDark) {
+                icon.textContent = 'light_mode';
+                text.textContent = 'Light Mode';
+            } else {
+                icon.textContent = 'dark_mode';
+                text.textContent = 'Dark Mode';
+            }
+            
+            // Save preference
+            localStorage.setItem('rdspDarkMode', isDark);
+            
+            // Update charts for dark mode
+            if (allProjectionData.length > 0) {
+                updateCharts();
+            }
+        }
+        
+        // Initialize dark mode from localStorage or system preference
+        function initDarkMode() {
+            const saved = localStorage.getItem('rdspDarkMode');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            if (saved === 'true' || (saved === null && prefersDark)) {
+                document.body.classList.add('dark-mode');
+                document.getElementById('darkModeIcon').textContent = 'light_mode';
+                document.getElementById('darkModeText').textContent = 'Light Mode';
+            }
+        }
+        
+        // Initialize on page load
+        initDarkMode();
 
         // Initialize carry-forward years (removed personal details)
         function initializeCarryForwardYears() {
@@ -1541,9 +1795,21 @@
             );
         }
 
+        // Get chart colors based on dark mode
+        function getChartColors() {
+            const isDark = document.body.classList.contains('dark-mode');
+            return {
+                text: isDark ? '#d1d5db' : '#374151',
+                grid: isDark ? '#374151' : '#e5e7eb',
+                background: isDark ? '#1f2937' : '#ffffff'
+            };
+        }
+
         function updateCharts() {
             const data = getFilteredChartData();
             if (data.length === 0) return;
+            const colors = getChartColors();
+            
             // Balance Chart
             const balanceCtx = document.getElementById('balanceChart').getContext('2d');
             if (balanceChart) balanceChart.destroy();
@@ -1564,8 +1830,14 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { display: true },
+                        legend: { 
+                            display: true,
+                            labels: { color: colors.text }
+                        },
                         tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#f8fafc',
+                            bodyColor: '#f8fafc',
                             callbacks: {
                                 label: function(context) {
                                     return formatCurrency(context.parsed.y);
@@ -1576,9 +1848,21 @@
                     scales: {
                         y: {
                             ticks: {
+                                color: colors.text,
                                 callback: function(value) {
                                     return '$' + (value / 1000).toFixed(0) + 'k';
                                 }
+                            },
+                            grid: {
+                                color: colors.grid
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: colors.text
+                            },
+                            grid: {
+                                color: colors.grid
                             }
                         }
                     }
@@ -1611,11 +1895,75 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { display: true },
+                        legend: { 
+                            display: true,
+                            labels: { color: colors.text }
+                        },
                         tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#f8fafc',
+                            bodyColor: '#f8fafc',
+                            padding: 12,
+                            titleFont: { size: 14, weight: 'bold' },
+                            bodyFont: { size: 13 },
                             callbacks: {
+                                title: function(tooltipItems) {
+                                    return `Age ${tooltipItems[0].label}`;
+                                },
                                 label: function(context) {
-                                    return context.dataset.label + ': ' + formatCurrency(context.parsed.y);
+                                    const value = context.parsed.y;
+                                    if (value === 0 || value === null) return null;
+                                    return context.dataset.label + ': ' + formatCurrency(value);
+                                },
+                                afterBody: function(tooltipItems) {
+                                    const age = parseInt(tooltipItems[0].label);
+                                    const dataPoint = data.find(d => d.age === age);
+                                    if (!dataPoint) return [];
+                                    
+                                    const lines = [];
+                                    lines.push('━━━━━━━━━━━━━━━━');
+                                    lines.push('💰 Account Balance: ' + formatCurrency(dataPoint.balance));
+                                    lines.push('━━━━━━━━━━━━━━━━');
+                                    lines.push('Annual Breakdown:');
+                                    
+                                    // Show all annual values
+                                    if (dataPoint.contribution > 0) {
+                                        lines.push('  • Contributions: ' + formatCurrency(dataPoint.contribution));
+                                    }
+                                    if (dataPoint.grant > 0) {
+                                        lines.push('  • Grants: ' + formatCurrency(dataPoint.grant));
+                                    }
+                                    if (dataPoint.bond > 0) {
+                                        lines.push('  • Bonds: ' + formatCurrency(dataPoint.bond));
+                                    }
+                                    if (dataPoint.growth > 0) {
+                                        lines.push('  • Growth: ' + formatCurrency(dataPoint.growth));
+                                    }
+                                    if (dataPoint.withdrawal > 0) {
+                                        lines.push('  • Withdrawals: ' + formatCurrency(dataPoint.withdrawal));
+                                    }
+                                    if (dataPoint.repaymentPenalty > 0) {
+                                        lines.push('  • 10-Year Penalty: ' + formatCurrency(dataPoint.repaymentPenalty));
+                                    }
+                                    
+                                    lines.push('━━━━━━━━━━━━━━━━');
+                                    lines.push('Cumulative Totals:');
+                                    if (dataPoint.totalContributions > 0) {
+                                        lines.push('  • Total Contributions: ' + formatCurrency(dataPoint.totalContributions));
+                                    }
+                                    if (dataPoint.totalGrants > 0) {
+                                        lines.push('  • Total Grants: ' + formatCurrency(dataPoint.totalGrants));
+                                    }
+                                    if (dataPoint.totalBonds > 0) {
+                                        lines.push('  • Total Bonds: ' + formatCurrency(dataPoint.totalBonds));
+                                    }
+                                    if (dataPoint.govtContributions > 0) {
+                                        lines.push('  • Total Govt. Contributions: ' + formatCurrency(dataPoint.govtContributions));
+                                    }
+                                    
+                                    return lines;
                                 }
                             }
                         }
@@ -1623,9 +1971,21 @@
                     scales: {
                         y: {
                             ticks: {
+                                color: colors.text,
                                 callback: function(value) {
                                     return '$' + (value / 1000).toFixed(0) + 'k';
                                 }
+                            },
+                            grid: {
+                                color: colors.grid
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: colors.text
+                            },
+                            grid: {
+                                color: colors.grid
                             }
                         }
                     }
@@ -1656,8 +2016,14 @@
                         responsive: true,
                         maintainAspectRatio: false,
                         plugins: {
-                            legend: { display: true },
+                            legend: { 
+                                display: true,
+                                labels: { color: colors.text }
+                            },
                             tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                titleColor: '#f8fafc',
+                                bodyColor: '#f8fafc',
                                 callbacks: {
                                     label: function(context) {
                                         return context.dataset.label + ': ' + formatCurrency(context.parsed.y);
@@ -1668,9 +2034,21 @@
                         scales: {
                             y: {
                                 ticks: {
+                                    color: colors.text,
                                     callback: function(value) {
                                         return '$' + (value / 1000).toFixed(0) + 'k';
                                     }
+                                },
+                                grid: {
+                                    color: colors.grid
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    color: colors.text
+                                },
+                                grid: {
+                                    color: colors.grid
                                 }
                             }
                         }

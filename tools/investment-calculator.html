@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investment Calculator - Compound Interest & Growth Projections</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #f4f4f9;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #6b7280;
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        
+        .back-link:hover {
+            color: #111827;
+        }
+        
+        .calculator-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        .controls {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .results {
+            flex: 2;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: 700;
+            color: #1f2937;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            color: #374151;
+        }
+        
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 15px;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+        
+        input[type="number"]:focus,
+        select:focus {
+            border-color: #3b82f6;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .mode-toggle {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            background: #f3f4f6;
+            padding: 4px;
+            border-radius: 8px;
+        }
+        
+        .mode-btn {
+            flex: 1;
+            padding: 10px 16px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            color: #6b7280;
+            transition: all 0.2s;
+        }
+        
+        .mode-btn:hover {
+            background: #e5e7eb;
+        }
+        
+        .mode-btn.active {
+            background: #3b82f6;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        #manual-rates-container {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 2px solid #e5e7eb;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+            margin-top: 10px;
+            background: #f9fafb;
+        }
+        
+        .year-rate-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+            padding: 8px;
+            background: white;
+            border-radius: 6px;
+        }
+        
+        .year-rate-row input {
+            width: 100px;
+            margin-left: 10px;
+            padding: 6px 10px;
+        }
+        
+        .slider-container {
+            margin-top: 20px;
+            text-align: center;
+            padding: 15px;
+            background: #f9fafb;
+            border-radius: 8px;
+        }
+        
+        input[type=range] {
+            width: 100%;
+            height: 8px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #e5e7eb;
+            border-radius: 4px;
+            outline: none;
+        }
+        
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #3b82f6;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+        
+        input[type=range]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #3b82f6;
+            cursor: pointer;
+            border: none;
+            border-radius: 50%;
+        }
+        
+        .slider-label {
+            font-size: 14px;
+            color: #6b7280;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+        
+        .summary {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .stat-box {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.9);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+        }
+        
+        button.calculate-btn {
+            width: 100%;
+            padding: 14px;
+            background: #10b981;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.2s;
+            margin-top: 10px;
+        }
+        
+        button.calculate-btn:hover {
+            background: #059669;
+        }
+        
+        hr {
+            border: none;
+            border-top: 1px solid #e5e7eb;
+            margin: 20px 0;
+        }
+        
+        #investChart {
+            max-height: 400px;
+        }
+        
+        @media (max-width: 768px) {
+            .calculator-container {
+                flex-direction: column;
+            }
+            
+            .summary {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <a href="../index.html" class="back-link">
+        <span class="material-icons" style="font-size:18px;">arrow_back</span>
+        Back to Portfolio
+    </a>
+
+    <div class="calculator-container">
+        <div class="controls">
+            <h2>Investment Calculator</h2>
+            
+            <div class="form-group">
+                <label>Starting Amount ($)</label>
+                <input type="number" id="startAmount" value="10000" min="0" step="100">
+            </div>
+
+            <div class="form-group">
+                <label>Investment Duration (Years)</label>
+                <input type="number" id="years" value="10" min="1" max="100" step="1">
+            </div>
+
+            <label>Interest Rate Strategy</label>
+            <div class="mode-toggle">
+                <button class="mode-btn active" onclick="setMode('fixed')">Fixed Rate</button>
+                <button class="mode-btn" onclick="setMode('manual')">Manual / Year</button>
+            </div>
+
+            <div class="form-group" id="fixed-rate-group">
+                <label>Annual Interest Rate (%)</label>
+                <input type="number" id="fixedRate" value="7" step="0.1" min="0" max="100">
+            </div>
+
+            <div id="manual-rates-container"></div>
+
+            <hr>
+
+            <div class="form-group">
+                <label>Additional Contribution ($)</label>
+                <input type="number" id="contribution" value="500" min="0" step="50">
+            </div>
+
+            <div class="form-group">
+                <label>Contribution Frequency</label>
+                <select id="contribFreq">
+                    <option value="12">Monthly</option>
+                    <option value="4">Quarterly</option>
+                    <option value="2">Semi-Annually</option>
+                    <option value="1">Yearly</option>
+                </select>
+            </div>
+
+            <button onclick="calculate()" class="calculate-btn">Calculate</button>
+        </div>
+
+        <div class="results">
+            <div class="summary">
+                <div class="stat-box">
+                    <div class="stat-label">Total Contributions</div>
+                    <div class="stat-value" id="totalContrib">$0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Final Balance</div>
+                    <div class="stat-value" id="finalBalance">$0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Total Growth</div>
+                    <div class="stat-value" id="totalGrowth">$0</div>
+                </div>
+            </div>
+
+            <canvas id="investChart"></canvas>
+
+            <div class="slider-container">
+                <input type="range" id="zoomSlider" min="1" max="10" value="10">
+                <div class="slider-label">Viewing: First <span id="sliderVal">10</span> Years</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let chartInstance = null;
+        let currentMode = 'fixed';
+        let globalLabels = [];
+        let globalData = [];
+        
+        // Initial Setup
+        document.addEventListener('DOMContentLoaded', () => {
+            generateManualInputs();
+            calculate();
+            
+            // Listeners for auto-updates
+            document.getElementById('years').addEventListener('change', () => {
+                generateManualInputs();
+                calculate();
+            });
+            
+            // Auto-calculate on input changes
+            document.getElementById('startAmount').addEventListener('input', calculate);
+            document.getElementById('fixedRate').addEventListener('input', calculate);
+            document.getElementById('contribution').addEventListener('input', calculate);
+            document.getElementById('contribFreq').addEventListener('change', calculate);
+            
+            // Slider listener
+            document.getElementById('zoomSlider').addEventListener('input', updateChartZoom);
+        });
+
+        function setMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if(mode === 'fixed') {
+                document.getElementById('fixed-rate-group').style.display = 'block';
+                document.getElementById('manual-rates-container').style.display = 'none';
+            } else {
+                document.getElementById('fixed-rate-group').style.display = 'none';
+                document.getElementById('manual-rates-container').style.display = 'block';
+                generateManualInputs();
+            }
+            calculate();
+        }
+
+        function generateManualInputs() {
+            const years = parseInt(document.getElementById('years').value) || 1;
+            const container = document.getElementById('manual-rates-container');
+            
+            // Save current values
+            const currentValues = {};
+            container.querySelectorAll('input').forEach(inp => {
+                currentValues[inp.dataset.year] = inp.value;
+            });
+
+            container.innerHTML = '<p style="margin-top:0; margin-bottom:10px; font-size:13px; color:#6b7280; font-weight:500;">Enter return % for each year:</p>';
+
+            for (let i = 1; i <= years; i++) {
+                const row = document.createElement('div');
+                row.className = 'year-rate-row';
+                
+                const label = document.createElement('span');
+                label.innerText = `Year ${i}:`;
+                label.style.fontWeight = '500';
+                
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.step = '0.1';
+                input.min = '0';
+                input.max = '100';
+                input.dataset.year = i;
+                input.value = currentValues[i] || 7;
+                input.addEventListener('input', calculate);
+                
+                const percent = document.createElement('span');
+                percent.innerText = '%';
+                percent.style.color = '#6b7280';
+                percent.style.marginLeft = '5px';
+                
+                row.appendChild(label);
+                row.appendChild(input);
+                row.appendChild(percent);
+                container.appendChild(row);
+            }
+        }
+
+        function calculate() {
+            const startAmount = parseFloat(document.getElementById('startAmount').value) || 0;
+            const years = parseInt(document.getElementById('years').value) || 1;
+            const contribution = parseFloat(document.getElementById('contribution').value) || 0;
+            const freq = parseInt(document.getElementById('contribFreq').value);
+            
+            let balance = startAmount;
+            let totalContributed = startAmount;
+            
+            // Arrays for Chart
+            globalLabels = [0]; // Year 0
+            globalData = [balance];
+
+            // Gather Manual Rates if needed
+            let manualRates = {};
+            if (currentMode === 'manual') {
+                document.querySelectorAll('#manual-rates-container input').forEach(inp => {
+                    manualRates[inp.dataset.year] = parseFloat(inp.value) || 0;
+                });
+            }
+            const fixedRate = parseFloat(document.getElementById('fixedRate').value) || 0;
+
+            for (let y = 1; y <= years; y++) {
+                let rate = (currentMode === 'fixed') ? fixedRate : (manualRates[y] || 0);
+                
+                // Convert annual rate to decimal
+                let r = rate / 100;
+
+                // Calculate contributions per period
+                let periodsPerYear = freq;
+                let contributionPerPeriod = contribution;
+                
+                // Apply compound interest with periodic contributions
+                // For each period in the year
+                for (let period = 0; period < periodsPerYear; period++) {
+                    // Apply interest for this period
+                    balance = balance * (1 + r / periodsPerYear);
+                    
+                    // Add contribution at end of period (except last period of year)
+                    if (period < periodsPerYear - 1) {
+                        balance += contributionPerPeriod;
+                        totalContributed += contributionPerPeriod;
+                    }
+                }
+                
+                // Add final contribution of the year
+                balance += contributionPerPeriod;
+                totalContributed += contributionPerPeriod;
+
+                globalLabels.push(y);
+                globalData.push(balance);
+            }
+
+            // Update Text Stats
+            const totalGrowth = balance - totalContributed;
+            document.getElementById('totalContrib').innerText = '$' + totalContributed.toLocaleString(undefined, {maximumFractionDigits: 0});
+            document.getElementById('finalBalance').innerText = '$' + balance.toLocaleString(undefined, {maximumFractionDigits: 0});
+            document.getElementById('totalGrowth').innerText = '$' + totalGrowth.toLocaleString(undefined, {maximumFractionDigits: 0});
+
+            // Update Slider Max
+            const slider = document.getElementById('zoomSlider');
+            slider.max = years;
+            if (parseInt(slider.value) > years) {
+                slider.value = years;
+            }
+            document.getElementById('sliderVal').innerText = Math.min(parseInt(slider.value) || years, years);
+
+            renderChart(globalLabels, globalData);
+        }
+
+        function updateChartZoom() {
+            const sliderVal = parseInt(document.getElementById('zoomSlider').value);
+            const maxYears = parseInt(document.getElementById('years').value) || 10;
+            const displayVal = Math.min(sliderVal, maxYears);
+            document.getElementById('sliderVal').innerText = displayVal;
+            
+            // Slice data
+            const slicedLabels = globalLabels.slice(0, displayVal + 1);
+            const slicedData = globalData.slice(0, displayVal + 1);
+            
+            renderChart(slicedLabels, slicedData);
+        }
+
+        function renderChart(labels, data) {
+            const ctx = document.getElementById('investChart').getContext('2d');
+            
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Portfolio Balance',
+                        data: data,
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return '$' + context.parsed.y.toLocaleString(undefined, {maximumFractionDigits: 0});
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString(undefined, {maximumFractionDigits: 0});
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Years',
+                                font: {
+                                    size: 14,
+                                    weight: '600'
+                                }
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>
+
