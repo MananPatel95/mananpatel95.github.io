@@ -16,35 +16,56 @@
         
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background: #f4f4f9;
+            background: #FFFFFF;
             padding: 20px;
-            color: #333;
+            color: #111827;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        body.dark {
+            background: #121212;
+            color: #E5E7EB;
         }
         
         .back-link {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            color: #6b7280;
+            color: #6B7280;
             text-decoration: none;
             font-size: 14px;
             margin-bottom: 20px;
+            transition: color 0.3s;
+        }
+        
+        body.dark .back-link {
+            color: #9CA3AF;
         }
         
         .back-link:hover {
             color: #111827;
         }
         
+        body.dark .back-link:hover {
+            color: #E5E7EB;
+        }
+        
         .calculator-container {
             max-width: 1200px;
             margin: 0 auto;
-            background: white;
+            background: #FFFFFF;
             padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 1px solid #E5E7EB;
             display: flex;
             flex-wrap: wrap;
             gap: 30px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        
+        body.dark .calculator-container {
+            background: #1F2937;
+            border-color: #374151;
         }
         
         .controls {
@@ -64,7 +85,12 @@
             margin-bottom: 20px;
             font-size: 24px;
             font-weight: 700;
-            color: #1f2937;
+            color: #111827;
+            transition: color 0.3s;
+        }
+        
+        body.dark h2 {
+            color: #E5E7EB;
         }
         
         .form-group {
@@ -77,33 +103,60 @@
             font-weight: 600;
             font-size: 14px;
             color: #374151;
+            transition: color 0.3s;
+        }
+        
+        body.dark label {
+            color: #9CA3AF;
         }
         
         input[type="number"],
         select {
             width: 100%;
             padding: 12px;
-            border: 2px solid #e5e7eb;
+            border: 2px solid #E5E7EB;
             border-radius: 8px;
             font-size: 15px;
             box-sizing: border-box;
-            transition: border-color 0.2s;
+            transition: border-color 0.2s, background-color 0.3s, color 0.3s;
+            background: #FFFFFF;
+            color: #111827;
+        }
+        
+        body.dark input[type="number"],
+        body.dark select {
+            background: #1F2937;
+            border-color: #374151;
+            color: #E5E7EB;
         }
         
         input[type="number"]:focus,
         select:focus {
-            border-color: #3b82f6;
+            border-color: #6B7280;
             outline: none;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            box-shadow: 0 0 0 3px rgba(107, 114, 128, 0.1);
+        }
+        
+        body.dark input[type="number"]:focus,
+        body.dark select:focus {
+            border-color: #9CA3AF;
+            box-shadow: 0 0 0 3px rgba(156, 163, 175, 0.2);
         }
         
         .mode-toggle {
             display: flex;
             gap: 8px;
             margin-bottom: 20px;
-            background: #f3f4f6;
+            background: #F9FAFB;
             padding: 4px;
             border-radius: 8px;
+            border: 1px solid #E5E7EB;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        
+        body.dark .mode-toggle {
+            background: #1F2937;
+            border-color: #374151;
         }
         
         .mode-btn {
@@ -115,29 +168,47 @@
             border-radius: 6px;
             font-weight: 600;
             font-size: 14px;
-            color: #6b7280;
+            color: #6B7280;
             transition: all 0.2s;
         }
         
+        body.dark .mode-btn {
+            color: #9CA3AF;
+        }
+        
         .mode-btn:hover {
-            background: #e5e7eb;
+            background: #E5E7EB;
+        }
+        
+        body.dark .mode-btn:hover {
+            background: #374151;
         }
         
         .mode-btn.active {
-            background: #3b82f6;
+            background: #111827;
             color: white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        body.dark .mode-btn.active {
+            background: #E5E7EB;
+            color: #111827;
         }
         
         #manual-rates-container {
             max-height: 300px;
             overflow-y: auto;
-            border: 2px solid #e5e7eb;
+            border: 1px solid #E5E7EB;
             padding: 15px;
             border-radius: 8px;
             display: none;
             margin-top: 10px;
-            background: #f9fafb;
+            background: #F9FAFB;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        
+        body.dark #manual-rates-container {
+            background: #1F2937;
+            border-color: #374151;
         }
         
         .year-rate-row {
@@ -147,8 +218,15 @@
             margin-bottom: 10px;
             font-size: 14px;
             padding: 8px;
-            background: white;
+            background: #FFFFFF;
             border-radius: 6px;
+            border: 1px solid #E5E7EB;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        
+        body.dark .year-rate-row {
+            background: #111827;
+            border-color: #374151;
         }
         
         .year-rate-row input {
@@ -161,8 +239,15 @@
             margin-top: 20px;
             text-align: center;
             padding: 15px;
-            background: #f9fafb;
+            background: #F9FAFB;
             border-radius: 8px;
+            border: 1px solid #E5E7EB;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        
+        body.dark .slider-container {
+            background: #1F2937;
+            border-color: #374151;
         }
         
         input[type=range] {
@@ -170,9 +255,44 @@
             height: 8px;
             -webkit-appearance: none;
             appearance: none;
-            background: #e5e7eb;
+            background: #E5E7EB;
             border-radius: 4px;
             outline: none;
+        }
+        
+        body.dark input[type=range] {
+            background: #374151;
+        }
+        
+        .fill-all-btn {
+            transition: background-color 0.2s;
+        }
+        
+        body.dark .fill-all-btn {
+            background: #374151 !important;
+        }
+        
+        body.dark .fill-all-btn:hover {
+            background: #4b5563 !important;
+        }
+        
+        body.dark .fill-all-btn:not(:hover) {
+            background: #374151 !important;
+        }
+        
+        .fill-all-input {
+            transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+        }
+        
+        body.dark .fill-all-input {
+            background: #1F2937;
+            border-color: #374151 !important;
+            color: #E5E7EB;
+        }
+        
+        body.dark .fill-all-input:focus {
+            border-color: #9CA3AF !important;
+            box-shadow: 0 0 0 3px rgba(156, 163, 175, 0.2);
         }
         
         input[type=range]::-webkit-slider-thumb {
@@ -180,35 +300,57 @@
             appearance: none;
             width: 20px;
             height: 20px;
-            background: #3b82f6;
+            background: #374151;
             cursor: pointer;
             border-radius: 50%;
+            border: 2px solid white;
+        }
+        
+        body.dark input[type=range]::-webkit-slider-thumb {
+            background: #9CA3AF;
+            border-color: #1F2937;
         }
         
         input[type=range]::-moz-range-thumb {
             width: 20px;
             height: 20px;
-            background: #3b82f6;
+            background: #374151;
             cursor: pointer;
-            border: none;
+            border: 2px solid white;
             border-radius: 50%;
+        }
+        
+        body.dark input[type=range]::-moz-range-thumb {
+            background: #9CA3AF;
+            border-color: #1F2937;
         }
         
         .slider-label {
             font-size: 14px;
-            color: #6b7280;
+            color: #6B7280;
             margin-top: 10px;
             font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        body.dark .slider-label {
+            color: #9CA3AF;
         }
         
         .summary {
             display: flex;
             gap: 20px;
             margin-bottom: 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #F9FAFB;
             padding: 20px;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 1px solid #E5E7EB;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        
+        body.dark .summary {
+            background: #1F2937;
+            border-color: #374151;
         }
         
         .stat-box {
@@ -218,23 +360,33 @@
         
         .stat-label {
             font-size: 12px;
-            color: rgba(255, 255, 255, 0.9);
+            color: #6B7280;
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-bottom: 8px;
             font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        body.dark .stat-label {
+            color: #9CA3AF;
         }
         
         .stat-value {
             font-size: 28px;
             font-weight: 700;
-            color: white;
+            color: #111827;
+            transition: color 0.3s;
+        }
+        
+        body.dark .stat-value {
+            color: #E5E7EB;
         }
         
         button.calculate-btn {
             width: 100%;
             padding: 14px;
-            background: #10b981;
+            background: #111827;
             color: white;
             border: none;
             border-radius: 8px;
@@ -246,13 +398,27 @@
         }
         
         button.calculate-btn:hover {
-            background: #059669;
+            background: #1F2937;
+        }
+        
+        body.dark button.calculate-btn {
+            background: #E5E7EB;
+            color: #111827;
+        }
+        
+        body.dark button.calculate-btn:hover {
+            background: #D1D5DB;
         }
         
         hr {
             border: none;
-            border-top: 1px solid #e5e7eb;
+            border-top: 1px solid #E5E7EB;
             margin: 20px 0;
+            transition: border-color 0.3s;
+        }
+        
+        body.dark hr {
+            border-color: #374151;
         }
         
         #investChart {
@@ -268,10 +434,60 @@
                 flex-direction: column;
                 gap: 15px;
             }
+            
+            .dark-mode-toggle {
+                top: 10px;
+                right: 10px;
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+            
+            .dark-mode-toggle span:last-child {
+                display: none;
+            }
+        }
+        /* Dark Mode Toggle */
+        .dark-mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: #FFFFFF;
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+            padding: 8px 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #111827;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .dark-mode-toggle:hover {
+            background: #F9FAFB;
+            border-color: #D1D5DB;
+        }
+        
+        body.dark .dark-mode-toggle {
+            background: #1F2937;
+            border-color: #374151;
+            color: #E5E7EB;
+        }
+        
+        body.dark .dark-mode-toggle:hover {
+            background: #374151;
+            border-color: #4B5563;
         }
     </style>
 </head>
 <body>
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()" id="darkModeToggle">
+        <span class="material-icons" id="darkModeIcon">dark_mode</span>
+        <span id="darkModeText">Dark Mode</span>
+    </button>
 
     <a href="../index.html" class="back-link">
         <span class="material-icons" style="font-size:18px;">arrow_back</span>
@@ -295,7 +511,7 @@
             <label>Interest Rate Strategy</label>
             <div class="mode-toggle">
                 <button class="mode-btn active" onclick="setMode('fixed')">Fixed Rate</button>
-                <button class="mode-btn" onclick="setMode('manual')">Manual / Year</button>
+                <button class="mode-btn" onclick="setMode('manual')">Per-Year Rates</button>
             </div>
 
             <div class="form-group" id="fixed-rate-group">
@@ -356,6 +572,44 @@
         let globalLabels = [];
         let globalData = [];
         
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            const body = document.body;
+            const isDark = body.classList.toggle('dark');
+            
+            const icon = document.getElementById('darkModeIcon');
+            const text = document.getElementById('darkModeText');
+            
+            if (isDark) {
+                icon.textContent = 'light_mode';
+                text.textContent = 'Light Mode';
+            } else {
+                icon.textContent = 'dark_mode';
+                text.textContent = 'Dark Mode';
+            }
+            
+            localStorage.setItem('investmentDarkMode', isDark);
+            
+            if (chartInstance) {
+                renderChart(globalLabels, globalData);
+            }
+        }
+        
+        // Initialize dark mode
+        function initDarkMode() {
+            const saved = localStorage.getItem('investmentDarkMode');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            if (saved === 'true' || (saved === null && prefersDark)) {
+                document.body.classList.add('dark');
+                document.getElementById('darkModeIcon').textContent = 'light_mode';
+                document.getElementById('darkModeText').textContent = 'Light Mode';
+            }
+        }
+        
+        // Initialize on page load
+        initDarkMode();
+        
         // Initial Setup
         document.addEventListener('DOMContentLoaded', () => {
             generateManualInputs();
@@ -403,7 +657,60 @@
                 currentValues[inp.dataset.year] = inp.value;
             });
 
-            container.innerHTML = '<p style="margin-top:0; margin-bottom:10px; font-size:13px; color:#6b7280; font-weight:500;">Enter return % for each year:</p>';
+            container.innerHTML = '<p style="margin-top:0; margin-bottom:10px; font-size:13px; color:#6b7280; font-weight:500;">Enter annual return % for each year (adjustable per year):</p>';
+            
+            // Add "Fill All" button
+            const fillAllDiv = document.createElement('div');
+            fillAllDiv.style.marginBottom = '15px';
+            fillAllDiv.style.display = 'flex';
+            fillAllDiv.style.gap = '10px';
+            fillAllDiv.style.alignItems = 'center';
+            
+            const fillAllInput = document.createElement('input');
+            fillAllInput.type = 'number';
+            fillAllInput.step = '0.1';
+            fillAllInput.min = '0';
+            fillAllInput.max = '100';
+            fillAllInput.placeholder = 'Enter rate %';
+            fillAllInput.style.width = '120px';
+            fillAllInput.style.padding = '6px 10px';
+            fillAllInput.style.border = '2px solid #E5E7EB';
+            fillAllInput.style.borderRadius = '6px';
+            fillAllInput.className = 'fill-all-input';
+            
+            const fillAllBtn = document.createElement('button');
+            fillAllBtn.textContent = 'Fill All Years';
+            fillAllBtn.style.padding = '6px 12px';
+            fillAllBtn.className = 'fill-all-btn';
+            fillAllBtn.style.padding = '6px 12px';
+            fillAllBtn.style.background = '#111827';
+            fillAllBtn.style.color = 'white';
+            fillAllBtn.style.border = 'none';
+            fillAllBtn.style.borderRadius = '6px';
+            fillAllBtn.style.cursor = 'pointer';
+            fillAllBtn.style.fontSize = '13px';
+            fillAllBtn.style.fontWeight = '500';
+            fillAllBtn.style.transition = 'background-color 0.2s';
+            fillAllBtn.onmouseover = function() {
+                this.style.background = document.body.classList.contains('dark') ? '#4b5563' : '#374151';
+            };
+            fillAllBtn.onmouseout = function() {
+                this.style.background = document.body.classList.contains('dark') ? '#374151' : '#111827';
+            };
+            
+            fillAllBtn.onclick = () => {
+                const rate = parseFloat(fillAllInput.value) || 0;
+                if (rate > 0) {
+                    container.querySelectorAll('input[data-year]').forEach(inp => {
+                        inp.value = rate;
+                    });
+                    calculate();
+                }
+            };
+            
+            fillAllDiv.appendChild(fillAllInput);
+            fillAllDiv.appendChild(fillAllBtn);
+            container.appendChild(fillAllDiv);
 
             for (let i = 1; i <= years; i++) {
                 const row = document.createElement('div');
@@ -519,10 +826,14 @@
 
         function renderChart(labels, data) {
             const ctx = document.getElementById('investChart').getContext('2d');
+            const isDark = document.body.classList.contains('dark');
             
             if (chartInstance) {
                 chartInstance.destroy();
             }
+
+            const textColor = isDark ? '#D1D5DB' : '#374151';
+            const gridColor = isDark ? '#374151' : 'rgba(0, 0, 0, 0.05)';
 
             chartInstance = new Chart(ctx, {
                 type: 'line',
@@ -531,8 +842,8 @@
                     datasets: [{
                         label: 'Portfolio Balance',
                         data: data,
-                        borderColor: '#3b82f6',
-                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderColor: isDark ? '#9CA3AF' : '#374151',
+                        backgroundColor: isDark ? 'rgba(156, 163, 175, 0.1)' : 'rgba(55, 65, 81, 0.1)',
                         borderWidth: 3,
                         fill: true,
                         tension: 0.4,
@@ -546,9 +857,15 @@
                     plugins: {
                         legend: {
                             display: true,
-                            position: 'top'
+                            position: 'top',
+                            labels: {
+                                color: textColor
+                            }
                         },
                         tooltip: {
+                            backgroundColor: isDark ? 'rgba(31, 41, 55, 0.9)' : 'rgba(0, 0, 0, 0.8)',
+                            titleColor: isDark ? '#E5E7EB' : '#FFFFFF',
+                            bodyColor: isDark ? '#E5E7EB' : '#FFFFFF',
                             callbacks: {
                                 label: function(context) {
                                     return '$' + context.parsed.y.toLocaleString(undefined, {maximumFractionDigits: 0});
@@ -560,22 +877,27 @@
                         y: {
                             beginAtZero: false,
                             ticks: {
+                                color: textColor,
                                 callback: function(value) {
                                     return '$' + value.toLocaleString(undefined, {maximumFractionDigits: 0});
                                 }
                             },
                             grid: {
-                                color: 'rgba(0, 0, 0, 0.05)'
+                                color: gridColor
                             }
                         },
                         x: {
                             title: {
                                 display: true,
                                 text: 'Years',
+                                color: textColor,
                                 font: {
                                     size: 14,
                                     weight: '600'
                                 }
+                            },
+                            ticks: {
+                                color: textColor
                             },
                             grid: {
                                 display: false

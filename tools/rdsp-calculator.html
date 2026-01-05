@@ -20,20 +20,35 @@
             min-height: 100vh;
             padding: 20px;
             color: #111827;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        body.dark-mode {
+            background: #121212;
+            color: #E5E7EB;
         }
         
         .back-link {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            color: #6b7280;
+            color: #6B7280;
             text-decoration: none;
             font-size: 14px;
             margin-bottom: 12px;
+            transition: color 0.3s;
+        }
+        
+        body.dark-mode .back-link {
+            color: #9CA3AF;
         }
         
         .back-link:hover {
             color: #111827;
+        }
+        
+        body.dark-mode .back-link:hover {
+            color: #E5E7EB;
         }
         
         .max-w-7xl {
@@ -43,6 +58,13 @@
         
         .bg-white {
             background: #FFFFFF;
+            border: 1px solid #E5E7EB;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        
+        body.dark-mode .bg-white {
+            background: #1F2937;
+            border-color: #374151;
         }
         
         .rounded-lg {
@@ -50,7 +72,7 @@
         }
         
         .shadow-xl {
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
         
         .p-6 {
@@ -202,7 +224,7 @@
         }
         
         .text-gray-600 {
-            color: #4b5563;
+            color: #6B7280;
         }
         
         .text-gray-700 {
@@ -210,7 +232,7 @@
         }
         
         .text-gray-800 {
-            color: #1f2937;
+            color: #111827;
         }
         
         .text-indigo-900 {
@@ -498,16 +520,32 @@
         input[type="text"] {
             width: 100%;
             padding: 10px 12px;
-            border: 2px solid #e5e7eb;
+            border: 2px solid #E5E7EB;
             border-radius: 8px;
             font-size: 15px;
+            background: #FFFFFF;
+            color: #111827;
+            transition: border-color 0.2s, background-color 0.3s, color 0.3s;
+        }
+        
+        body.dark-mode input[type="number"],
+        body.dark-mode input[type="text"] {
+            background: #1F2937;
+            border-color: #374151;
+            color: #E5E7EB;
         }
         
         input[type="number"]:focus,
         input[type="text"]:focus {
             outline: none;
-            border-color: #4f46e5;
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            border-color: #6B7280;
+            box-shadow: 0 0 0 3px rgba(107, 114, 128, 0.1);
+        }
+        
+        body.dark-mode input[type="number"]:focus,
+        body.dark-mode input[type="text"]:focus {
+            border-color: #9CA3AF;
+            box-shadow: 0 0 0 3px rgba(156, 163, 175, 0.2);
         }
         
         input[type="checkbox"],
@@ -631,8 +669,12 @@
             margin: 10px 0;
         }
         
+        input[type="range"] {
+            background: transparent;
+        }
+        
         input[type="range"]::-webkit-slider-track {
-            background: #9ca3af;
+            background: #9CA3AF;
             height: 6px;
             border-radius: 3px;
             border: none;
@@ -641,7 +683,7 @@
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            background: #4f46e5;
+            background: #111827;
             height: 20px;
             width: 20px;
             border-radius: 50%;
@@ -652,14 +694,14 @@
         }
         
         input[type="range"]::-moz-range-track {
-            background: #9ca3af;
+            background: #9CA3AF;
             height: 6px;
             border-radius: 3px;
             border: none;
         }
         
         input[type="range"]::-moz-range-thumb {
-            background: #4f46e5;
+            background: #111827;
             height: 20px;
             width: 20px;
             border-radius: 50%;
@@ -673,19 +715,51 @@
         }
         
         input[type="range"]:focus::-webkit-slider-thumb {
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.2), 0 2px 4px rgba(0, 0, 0, 0.2);
         }
         
         input[type="range"]:focus::-moz-range-thumb {
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.2), 0 2px 4px rgba(0, 0, 0, 0.2);
         }
         
         input[type="range"]:hover::-webkit-slider-thumb {
-            background: #4338ca;
+            background: #374151;
         }
         
         input[type="range"]:hover::-moz-range-thumb {
-            background: #4338ca;
+            background: #374151;
+        }
+        
+        body.dark-mode input[type="range"]::-webkit-slider-track {
+            background: #4B5563;
+        }
+        
+        body.dark-mode input[type="range"]::-moz-range-track {
+            background: #4B5563;
+        }
+        
+        body.dark-mode input[type="range"]::-webkit-slider-thumb {
+            background: #9CA3AF;
+            border-color: #1F2937;
+        }
+        
+        body.dark-mode input[type="range"]::-moz-range-thumb {
+            background: #9CA3AF;
+            border-color: #1F2937;
+        }
+        
+        /* Slider container background for visibility */
+        .slider-wrapper {
+            background: #FFFFFF;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #E5E7EB;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        
+        body.dark-mode .slider-wrapper {
+            background: #1F2937;
+            border-color: #374151;
         }
         
         /* Dark Mode Styles - Matching Tax Suite Color Scheme */
@@ -735,7 +809,7 @@
         body.dark-mode input[type="number"]:focus,
         body.dark-mode input[type="text"]:focus,
         body.dark-mode select:focus {
-            border-color: #3b82f6;
+            border-color: #9CA3AF;
             background: #4b5563;
         }
         
@@ -890,6 +964,26 @@
                 font-size: 12px;
             }
         }
+        
+        /* Table styles */
+        body.dark-mode table {
+            border-color: #4b5563;
+        }
+        
+        body.dark-mode table th {
+            background: #374151;
+            color: #f3f4f6;
+            border-color: #4b5563;
+        }
+        
+        body.dark-mode table td {
+            color: #d1d5db;
+            border-color: #4b5563;
+        }
+        
+        body.dark-mode table tr:hover {
+            background: #374151;
+        }
     </style>
 </head>
 <body>
@@ -958,7 +1052,7 @@
                     </div>
                     
                     <div id="stopContribsContainer" style="display: none;">
-                        <div class="flex items-center space-x-2 bg-yellow-50 p-3 rounded-lg border border-yellow-200">
+                        <div class="flex items-center space-x-2 bg-gray-50 p-3 rounded-lg border border-gray-200">
                             <input type="checkbox" id="stopContribsAtWithdrawal" checked onchange="updateCalculations()">
                             <label class="text-sm text-gray-700">
                                 Stop contributions when early retirement/withdrawals begin
@@ -985,7 +1079,7 @@
             </div>
 
             <!-- Carry-Forward Section -->
-            <div class="mb-6 bg-amber-50 border border-amber-200 rounded-lg p-4">
+            <div class="mb-6 bg-gray-50 border border-gray-200 rounded-lg p-4">
                 <h3 class="font-semibold text-lg text-gray-800 mb-2">Carry-Forward Eligibility (Past 10 Years)</h3>
                 <p class="text-sm text-gray-600 mb-4" id="carryForwardSummary"></p>
                 <div class="space-y-2 max-h-96 overflow-y-auto" id="carryForwardYears"></div>
@@ -996,7 +1090,7 @@
                 <h3 class="font-semibold text-lg text-gray-800 border-b pb-2 mb-4">Withdrawal Strategy</h3>
                 
                 <!-- Strategy Comparison Toggle -->
-                <div class="bg-indigo-50 border border-indigo-200 rounded-lg p-4 mb-4">
+                <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-4">
                     <div class="flex items-center justify-between mb-2">
                         <div class="flex items-center space-x-2">
                             <input type="checkbox" id="showComparison" onchange="updateCalculations()">
@@ -1005,7 +1099,7 @@
                     </div>
                     <p class="text-xs text-gray-600">See side-by-side comparison of government LDAP formula vs growth-optimized withdrawals</p>
                     
-                    <div id="comparisonAgeContainer" style="display: none;" class="mt-3 bg-white rounded-lg p-3 border border-indigo-300">
+                    <div id="comparisonAgeContainer" style="display: none;" class="mt-3 bg-white rounded-lg p-3 border border-gray-300">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Retirement Age for Comparison</label>
                         <input type="number" id="retirementAge" value="60" min="60" max="120" oninput="updateCalculations()">
                         <div class="text-xs text-gray-600 mt-1">Both strategies will be compared starting at this age (LDAP requires 60+)</div>
@@ -1013,7 +1107,7 @@
                 </div>
                 
                 <!-- Withdrawal Type Selection -->
-                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Withdrawal Type</label>
                     <div class="space-y-2">
                         <div class="flex items-center">
@@ -1039,21 +1133,21 @@
                 
                 <!-- Manual Withdrawal Section -->
                 <div id="manualWithdrawalSection" style="display: none;">
-                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
-                        <div class="text-xs font-semibold text-yellow-800 mb-1">⚠️ 10-Year Repayment Rule</div>
-                        <div class="text-xs text-yellow-700">Withdrawals before age 60 require repaying $3 in grants/bonds for every $1 withdrawn (from last 10 years)</div>
+                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 mb-3">
+                        <div class="text-xs font-semibold text-gray-800 mb-1">⚠️ 10-Year Repayment Rule</div>
+                        <div class="text-xs text-gray-700">Withdrawals before age 60 require repaying $3 in grants/bonds for every $1 withdrawn (from last 10 years)</div>
                     </div>
                     
                     <div id="withdrawalsList"></div>
                     
-                    <button onclick="addWithdrawal()" class="w-full px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 mt-3">
+                    <button onclick="addWithdrawal()" class="w-full px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-900 mt-3">
                         + Add Manual Withdrawal
                     </button>
                 </div>
             </div>
 
             <!-- Chart Age Range Slider -->
-            <div class="mb-6 bg-indigo-50 border border-indigo-200 rounded-lg p-4">
+            <div class="mb-6 bg-gray-50 border border-gray-200 rounded-lg p-4">
                 <h3 class="font-semibold text-lg text-gray-800 mb-4">Chart Age Range</h3>
                 <div class="space-y-4">
                     <div>
@@ -1063,13 +1157,17 @@
                         <div class="flex items-center gap-4">
                             <div class="flex-1">
                                 <label class="block text-xs text-gray-600 mb-1">Start Age</label>
-                                <input type="range" id="chartAgeMin" min="0" max="120" value="30" step="1" 
-                                    oninput="updateChartAgeRange()">
+                                <div class="slider-wrapper">
+                                    <input type="range" id="chartAgeMin" min="0" max="120" value="30" step="1" 
+                                        oninput="updateChartAgeRange()">
+                                </div>
                             </div>
                             <div class="flex-1">
                                 <label class="block text-xs text-gray-600 mb-1">End Age</label>
-                                <input type="range" id="chartAgeMax" min="0" max="120" value="90" step="1" 
-                                    oninput="updateChartAgeRange()">
+                                <div class="slider-wrapper">
+                                    <input type="range" id="chartAgeMax" min="0" max="120" value="90" step="1" 
+                                        oninput="updateChartAgeRange()">
+                                </div>
                             </div>
                         </div>
                         <div class="flex justify-between text-xs text-gray-500 mt-2">
@@ -1077,13 +1175,13 @@
                             <span id="chartAgeMaxValue">90</span>
                         </div>
                         <div class="mt-3 flex gap-2">
-                            <button onclick="setChartRange('early')" class="px-3 py-1 bg-indigo-600 text-white text-sm rounded-md hover:bg-indigo-700">
+                            <button onclick="setChartRange('early')" class="px-3 py-1 bg-gray-800 text-white text-sm rounded-md hover:bg-gray-900">
                                 Early Years (30-50)
                             </button>
-                            <button onclick="setChartRange('mid')" class="px-3 py-1 bg-indigo-600 text-white text-sm rounded-md hover:bg-indigo-700">
+                            <button onclick="setChartRange('mid')" class="px-3 py-1 bg-gray-800 text-white text-sm rounded-md hover:bg-gray-900">
                                 Mid Years (50-70)
                             </button>
-                            <button onclick="setChartRange('late')" class="px-3 py-1 bg-indigo-600 text-white text-sm rounded-md hover:bg-indigo-700">
+                            <button onclick="setChartRange('late')" class="px-3 py-1 bg-gray-800 text-white text-sm rounded-md hover:bg-gray-900">
                                 Late Years (70-90)
                             </button>
                             <button onclick="setChartRange('all')" class="px-3 py-1 bg-gray-600 text-white text-sm rounded-md hover:bg-gray-700">
@@ -1103,9 +1201,39 @@
             </div>
 
             <div class="mb-6">
-                <h3 class="font-semibold text-lg text-gray-800 mb-4">Annual Breakdown</h3>
-                <div class="chart-container-small">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-semibold text-lg text-gray-800">Annual Breakdown</h3>
+                    <div class="flex gap-2">
+                        <button onclick="toggleBreakdownView('chart')" id="breakdownChartBtn" class="px-3 py-1 bg-gray-800 text-white text-sm rounded-md hover:bg-gray-900">
+                            Chart
+                        </button>
+                        <button onclick="toggleBreakdownView('table')" id="breakdownTableBtn" class="px-3 py-1 bg-gray-200 text-gray-700 text-sm rounded-md hover:bg-gray-300">
+                            Table
+                        </button>
+                    </div>
+                </div>
+                <div id="breakdownChartContainer" class="chart-container-small">
                     <canvas id="breakdownChart"></canvas>
+                </div>
+                <div id="breakdownTableContainer" style="display: none;">
+                    <div class="overflow-x-auto">
+                        <table class="w-full border-collapse border border-gray-300 text-sm" id="breakdownTable">
+                            <thead>
+                                <tr class="bg-gray-100">
+                                    <th class="border border-gray-300 px-3 py-2 text-left font-semibold text-gray-800">Age</th>
+                                    <th class="border border-gray-300 px-3 py-2 text-right font-semibold text-gray-800">Balance</th>
+                                    <th class="border border-gray-300 px-3 py-2 text-right font-semibold text-gray-800">Contributions</th>
+                                    <th class="border border-gray-300 px-3 py-2 text-right font-semibold text-gray-800">Grants</th>
+                                    <th class="border border-gray-300 px-3 py-2 text-right font-semibold text-gray-800">Bonds</th>
+                                    <th class="border border-gray-300 px-3 py-2 text-right font-semibold text-gray-800">Growth</th>
+                                    <th class="border border-gray-300 px-3 py-2 text-right font-semibold text-gray-800">Withdrawals</th>
+                                    <th class="border border-gray-300 px-3 py-2 text-right font-semibold text-gray-800">10Y Penalty</th>
+                                </tr>
+                            </thead>
+                            <tbody id="breakdownTableBody">
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -1180,17 +1308,27 @@
             if (allProjectionData.length > 0) {
                 updateCharts();
             }
+            
+            // Update table if visible
+            if (breakdownViewMode === 'table') {
+                updateBreakdownTable();
+            }
         }
         
-        // Initialize dark mode from localStorage or system preference
+        // Initialize dark mode from localStorage (default to light mode)
         function initDarkMode() {
             const saved = localStorage.getItem('rdspDarkMode');
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
             
-            if (saved === 'true' || (saved === null && prefersDark)) {
+            // Only apply dark mode if explicitly saved as 'true', default to light
+            if (saved === 'true') {
                 document.body.classList.add('dark-mode');
                 document.getElementById('darkModeIcon').textContent = 'light_mode';
                 document.getElementById('darkModeText').textContent = 'Light Mode';
+            } else {
+                // Default to light mode
+                document.body.classList.remove('dark-mode');
+                document.getElementById('darkModeIcon').textContent = 'dark_mode';
+                document.getElementById('darkModeText').textContent = 'Dark Mode';
             }
         }
         
@@ -1608,24 +1746,24 @@
                             <input type="checkbox" ${yearData.grantEligible ? 'checked' : ''} 
                                 onchange="updateCarryForwardYear(${index}, 'grantEligible', this.checked)"
                                 ${yearData.age > 49 || yearData.age < state.dtcStartAge ? 'disabled' : ''}
-                                class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded disabled:opacity-50">
+                                class="h-4 w-4 text-gray-600 focus:ring-gray-500 border-gray-300 rounded disabled:opacity-50">
                             <label class="ml-2 text-sm text-gray-700">Grant</label>
                         </div>
                         <div class="flex items-center">
                             <input type="checkbox" ${yearData.bondEligible ? 'checked' : ''} 
                                 onchange="updateCarryForwardYear(${index}, 'bondEligible', this.checked)"
                                 ${yearData.age > 49 || yearData.age < state.dtcStartAge ? 'disabled' : ''}
-                                class="h-4 w-4 text-pink-600 focus:ring-pink-500 border-gray-300 rounded disabled:opacity-50">
+                                class="h-4 w-4 text-gray-600 focus:ring-gray-500 border-gray-300 rounded disabled:opacity-50">
                             <label class="ml-2 text-sm text-gray-700">Bond</label>
                         </div>
                         <div class="text-xs text-gray-600">
                             ${yearData.grantEligible && yearData.age <= 49 ? `
-                                <div class="text-purple-600">
+                                <div class="text-gray-800">
                                     Grant: ${formatCurrency((yearData.income || 0) <= 114750 ? 3500 : 1000)}
                                 </div>
                             ` : ''}
                             ${yearData.bondEligible && yearData.age <= 49 ? `
-                                <div class="text-pink-600">
+                                <div class="text-gray-800">
                                     Bond: ${formatCurrency(calculateAnnualBond(yearData.income || 0, yearData.age))}
                                 </div>
                             ` : ''}
@@ -1652,19 +1790,19 @@
             }
             
             container.innerHTML = `
-                <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-3">
+                <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 mb-3">
                     <div class="flex items-center justify-between">
                         <div>
-                            <div class="text-sm font-semibold text-blue-800">
+                            <div class="text-sm font-semibold text-gray-800">
                                 ${state.withdrawals.length} withdrawal${state.withdrawals.length !== 1 ? 's' : ''} scheduled
                             </div>
                             ${state.withdrawals.some(w => w.age < 60) ? `
-                                <div class="text-xs text-blue-700 mt-1">
+                                <div class="text-xs text-gray-700 mt-1">
                                     ${state.withdrawals.filter(w => w.age < 60).length} early withdrawal${state.withdrawals.filter(w => w.age < 60).length !== 1 ? 's' : ''} (before 60) - penalties will apply
                                 </div>
                             ` : ''}
                         </div>
-                        <button onclick="clearWithdrawals()" class="px-3 py-1 bg-red-500 text-white text-sm rounded-md hover:bg-red-600">
+                        <button onclick="clearWithdrawals()" class="px-3 py-1 bg-gray-700 text-white text-sm rounded-md hover:bg-gray-800">
                             Clear All
                         </button>
                     </div>
@@ -1675,17 +1813,17 @@
                             <label class="block text-xs text-gray-600 mb-1">Age</label>
                             <input type="number" value="${withdrawal.age}" 
                                 oninput="updateWithdrawal(${index}, 'age', this.value)"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent" 
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-gray-500 focus:border-transparent" 
                                 min="${state.currentAge}">
                         </div>
                         <div class="flex-1">
                             <label class="block text-xs text-gray-600 mb-1">Amount</label>
                             <input type="number" value="${withdrawal.amount}" 
                                 oninput="updateWithdrawal(${index}, 'amount', this.value)"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent" 
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-gray-500 focus:border-transparent" 
                                 min="0">
                         </div>
-                        <button onclick="removeWithdrawal(${index})" class="mt-5 px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">
+                        <button onclick="removeWithdrawal(${index})" class="mt-5 px-3 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-800">
                             Remove
                         </button>
                     </div>
@@ -1941,6 +2079,10 @@
                                     const dataPoint = data.find(d => d.age === age);
                                     if (!dataPoint) return [];
                                     
+                                    // Check if growth dataset is hidden
+                                    const growthDataset = breakdownChart.data.datasets.find(ds => ds.label === 'Growth');
+                                    const isGrowthHidden = growthDataset && !breakdownChart.isDatasetVisible(growthDataset);
+                                    
                                     const lines = [];
                                     lines.push('━━━━━━━━━━━━━━━━');
                                     lines.push('💰 Account Balance: ' + formatCurrency(dataPoint.balance));
@@ -1957,7 +2099,8 @@
                                     if (dataPoint.bond > 0) {
                                         lines.push('  • Bonds: ' + formatCurrency(dataPoint.bond));
                                     }
-                                    if (dataPoint.growth > 0) {
+                                    // Only show growth if it's not hidden in the chart
+                                    if (dataPoint.growth > 0 && !isGrowthHidden) {
                                         lines.push('  • Growth: ' + formatCurrency(dataPoint.growth));
                                     }
                                     if (dataPoint.withdrawal > 0) {
@@ -2076,6 +2219,63 @@
             } else {
                 document.getElementById('withdrawalChartContainer').style.display = 'none';
             }
+            
+            // Update table if it's visible
+            if (document.getElementById('breakdownTableContainer').style.display !== 'none') {
+                updateBreakdownTable();
+            }
+        }
+        
+        let breakdownViewMode = 'chart';
+        
+        function toggleBreakdownView(mode) {
+            breakdownViewMode = mode;
+            const chartContainer = document.getElementById('breakdownChartContainer');
+            const tableContainer = document.getElementById('breakdownTableContainer');
+            const chartBtn = document.getElementById('breakdownChartBtn');
+            const tableBtn = document.getElementById('breakdownTableBtn');
+            
+            if (mode === 'chart') {
+                chartContainer.style.display = 'block';
+                tableContainer.style.display = 'none';
+                chartBtn.className = 'px-3 py-1 bg-gray-800 text-white text-sm rounded-md hover:bg-gray-900';
+                tableBtn.className = 'px-3 py-1 bg-gray-200 text-gray-700 text-sm rounded-md hover:bg-gray-300';
+            } else {
+                chartContainer.style.display = 'none';
+                tableContainer.style.display = 'block';
+                chartBtn.className = 'px-3 py-1 bg-gray-200 text-gray-700 text-sm rounded-md hover:bg-gray-300';
+                tableBtn.className = 'px-3 py-1 bg-gray-800 text-white text-sm rounded-md hover:bg-gray-900';
+                updateBreakdownTable();
+            }
+        }
+        
+        function updateBreakdownTable() {
+            const data = getFilteredChartData();
+            const tbody = document.getElementById('breakdownTableBody');
+            tbody.innerHTML = '';
+            
+            const isDark = document.body.classList.contains('dark-mode');
+            const rowClass = isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-50';
+            const textClass = isDark ? 'text-gray-300' : 'text-gray-800';
+            const textSecondaryClass = isDark ? 'text-gray-400' : 'text-gray-700';
+            const borderClass = isDark ? 'border-gray-600' : 'border-gray-300';
+            
+            data.forEach(d => {
+                const row = document.createElement('tr');
+                row.className = rowClass;
+                
+                row.innerHTML = `
+                    <td class="border ${borderClass} px-3 py-2 ${textClass}">${d.age}</td>
+                    <td class="border ${borderClass} px-3 py-2 text-right ${textClass} font-medium">${formatCurrency(d.balance)}</td>
+                    <td class="border ${borderClass} px-3 py-2 text-right ${textSecondaryClass}">${formatCurrency(d.contribution)}</td>
+                    <td class="border ${borderClass} px-3 py-2 text-right ${textSecondaryClass}">${formatCurrency(d.grant)}</td>
+                    <td class="border ${borderClass} px-3 py-2 text-right ${textSecondaryClass}">${formatCurrency(d.bond)}</td>
+                    <td class="border ${borderClass} px-3 py-2 text-right ${textSecondaryClass}">${formatCurrency(d.growth)}</td>
+                    <td class="border ${borderClass} px-3 py-2 text-right ${textSecondaryClass}">${formatCurrency(d.withdrawal)}</td>
+                    <td class="border ${borderClass} px-3 py-2 text-right ${textSecondaryClass}">${formatCurrency(d.repaymentPenalty)}</td>
+                `;
+                tbody.appendChild(row);
+            });
         }
 
         function resetCalculator() {

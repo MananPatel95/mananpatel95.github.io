@@ -62,6 +62,10 @@
 </head>
 <body class="bg-background-light dark:bg-background-dark font-sans text-text-light dark:text-text-dark transition-colors duration-300">
 <div class="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8 pt-8 sm:pt-12 lg:pt-16">
+<button id="darkModeToggle" class="fixed top-4 right-4 z-50 w-10 h-10 sm:w-auto sm:h-auto sm:px-3 sm:py-2 border border-border-light dark:border-border-dark rounded-lg flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" aria-label="Toggle dark mode">
+    <span class="material-icons text-text-light dark:text-text-dark text-lg sm:text-base" id="darkModeIcon">dark_mode</span>
+    <span class="hidden sm:inline text-sm text-text-light dark:text-text-dark ml-1" id="darkModeText">Dark</span>
+</button>
 <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
 <div class="flex-1">
 <h1 class="text-xl sm:text-2xl font-bold text-text-light dark:text-text-dark">Manan Patel</h1>
@@ -248,6 +252,44 @@
     if (wr) wr.textContent = weeksRemaining.toString();
     if (mr) mr.textContent = monthsRemaining.toString();
   }
+})();
+
+// Dark mode toggle
+(function() {
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const darkModeIcon = document.getElementById('darkModeIcon');
+    const html = document.documentElement;
+    
+    // Check for saved preference or system preference
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    const darkModeText = document.getElementById('darkModeText');
+    
+    if (savedTheme === 'dark' || (savedTheme === null && prefersDark)) {
+        html.classList.add('dark');
+        darkModeIcon.textContent = 'light_mode';
+        if (darkModeText) darkModeText.textContent = 'Light';
+    } else {
+        html.classList.remove('dark');
+        darkModeIcon.textContent = 'dark_mode';
+        if (darkModeText) darkModeText.textContent = 'Dark';
+    }
+    
+    darkModeToggle.addEventListener('click', () => {
+        html.classList.toggle('dark');
+        const isDark = html.classList.contains('dark');
+        
+        if (isDark) {
+            localStorage.setItem('theme', 'dark');
+            darkModeIcon.textContent = 'light_mode';
+            if (darkModeText) darkModeText.textContent = 'Light';
+        } else {
+            localStorage.setItem('theme', 'light');
+            darkModeIcon.textContent = 'dark_mode';
+            if (darkModeText) darkModeText.textContent = 'Dark';
+        }
+    });
 })();
 </script>
 </div>
