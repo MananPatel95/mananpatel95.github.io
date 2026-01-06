@@ -1773,13 +1773,54 @@
             `).join('');
         }
 
+        // Debounce timer for carry-forward calculations
+        let carryForwardDebounceTimer = null;
+        
         function updateCarryForwardYear(index, field, value) {
+            // Preserve focus before update
+            const activeElement = document.activeElement;
+            const wasInputFocused = activeElement && activeElement.tagName === 'INPUT' && activeElement.closest('#carryForwardYears');
+            const focusedIndex = wasInputFocused ? index : null;
+            const cursorPosition = wasInputFocused ? activeElement.selectionStart : null;
+            const inputValue = wasInputFocused ? activeElement.value : null;
+            
             if (field === 'income') {
                 state.carryForwardYears[index][field] = value === '' ? 0 : (parseInt(value) || 0);
             } else {
                 state.carryForwardYears[index][field] = value;
             }
-            updateCalculations();
+            
+            // Update only the carry-forward display immediately (to show updated grant/bond amounts)
+            updateCarryForwardDisplay();
+            
+            // Restore focus if it was on an input
+            if (wasInputFocused && focusedIndex !== null) {
+                setTimeout(() => {
+                    const container = document.getElementById('carryForwardYears');
+                    const inputs = container.querySelectorAll('input[type="number"]');
+                    if (inputs[focusedIndex]) {
+                        inputs[focusedIndex].focus();
+                        // Restore the value and cursor position
+                        if (inputValue !== null) {
+                            inputs[focusedIndex].value = inputValue;
+                        }
+                        if (cursorPosition !== null && inputs[focusedIndex].setSelectionRange) {
+                            inputs[focusedIndex].setSelectionRange(cursorPosition, cursorPosition);
+                        }
+                    }
+                }, 0);
+            }
+            
+            // Debounce full calculations for income changes (wait 500ms after user stops typing)
+            if (field === 'income') {
+                clearTimeout(carryForwardDebounceTimer);
+                carryForwardDebounceTimer = setTimeout(() => {
+                    updateCalculations();
+                }, 500);
+            } else {
+                // For checkbox changes, update immediately
+                updateCalculations();
+            }
         }
 
         function updateWithdrawalsDisplay() {
