@@ -1756,7 +1756,7 @@
                                 class="h-4 w-4 text-gray-600 focus:ring-gray-500 border-gray-300 rounded disabled:opacity-50">
                             <label class="ml-2 text-sm text-gray-700">Bond</label>
                         </div>
-                        <div class="text-xs text-gray-600">
+                        <div class="text-xs text-gray-600 grant-bond-display">
                             ${yearData.grantEligible && yearData.age <= 49 ? `
                                 <div class="text-gray-800">
                                     Grant: ${formatCurrency((yearData.income || 0) <= 114750 ? 3500 : 1000)}
@@ -1777,49 +1777,60 @@
         let carryForwardDebounceTimer = null;
         
         function updateCarryForwardYear(index, field, value) {
-            // Preserve focus before update
-            const activeElement = document.activeElement;
-            const wasInputFocused = activeElement && activeElement.tagName === 'INPUT' && activeElement.closest('#carryForwardYears');
-            const focusedIndex = wasInputFocused ? index : null;
-            const cursorPosition = wasInputFocused ? activeElement.selectionStart : null;
-            const inputValue = wasInputFocused ? activeElement.value : null;
-            
             if (field === 'income') {
-                state.carryForwardYears[index][field] = value === '' ? 0 : (parseInt(value) || 0);
-            } else {
-                state.carryForwardYears[index][field] = value;
-            }
-            
-            // Update only the carry-forward display immediately (to show updated grant/bond amounts)
-            updateCarryForwardDisplay();
-            
-            // Restore focus if it was on an input
-            if (wasInputFocused && focusedIndex !== null) {
-                setTimeout(() => {
-                    const container = document.getElementById('carryForwardYears');
-                    const inputs = container.querySelectorAll('input[type="number"]');
-                    if (inputs[focusedIndex]) {
-                        inputs[focusedIndex].focus();
-                        // Restore the value and cursor position
-                        if (inputValue !== null) {
-                            inputs[focusedIndex].value = inputValue;
-                        }
-                        if (cursorPosition !== null && inputs[focusedIndex].setSelectionRange) {
-                            inputs[focusedIndex].setSelectionRange(cursorPosition, cursorPosition);
-                        }
-                    }
-                }, 0);
-            }
-            
-            // Debounce full calculations for income changes (wait 500ms after user stops typing)
-            if (field === 'income') {
+                // For income, use the value parameter (from this.value in oninput)
+                // This preserves what the user is actually typing
+                const incomeValue = value === '' ? 0 : (parseInt(value) || 0);
+                
+                // Update state for calculations
+                state.carryForwardYears[index][field] = incomeValue;
+                
+                // Update only the grant/bond display for this specific row without recreating inputs
+                updateCarryForwardRowDisplay(index, incomeValue);
+                
+                // Update summary
+                const cf = calculateCarryForward();
+                const totalGrants = cf.grants.reduce((sum, g) => sum + g.amount, 0);
+                const totalBonds = cf.bonds.reduce((sum, b) => sum + b.amount, 0);
+                document.getElementById('carryForwardSummary').textContent = 
+                    `Available: ${formatCurrency(totalGrants)} in grants (${cf.grants.length} years) + ${formatCurrency(totalBonds)} in bonds (${cf.bonds.length} years)`;
+                
+                // Debounce full calculations (wait 500ms after user stops typing)
                 clearTimeout(carryForwardDebounceTimer);
                 carryForwardDebounceTimer = setTimeout(() => {
                     updateCalculations();
                 }, 500);
             } else {
-                // For checkbox changes, update immediately
+                // For checkboxes, update state and do full update
+                state.carryForwardYears[index][field] = value;
+                updateCarryForwardDisplay();
                 updateCalculations();
+            }
+        }
+        
+        // Update only a specific row's grant/bond display without recreating the input
+        function updateCarryForwardRowDisplay(index, incomeValue) {
+            const container = document.getElementById('carryForwardYears');
+            const rows = container.children;
+            if (rows[index]) {
+                const yearData = state.carryForwardYears[index];
+                const grantBondDiv = rows[index].querySelector('.grant-bond-display');
+                if (grantBondDiv) {
+                    // Use the passed incomeValue or fall back to state
+                    const income = incomeValue !== undefined ? incomeValue : (yearData.income || 0);
+                    grantBondDiv.innerHTML = `
+                        ${yearData.grantEligible && yearData.age <= 49 ? `
+                            <div class="text-gray-800">
+                                Grant: ${formatCurrency(income <= 114750 ? 3500 : 1000)}
+                            </div>
+                        ` : ''}
+                        ${yearData.bondEligible && yearData.age <= 49 ? `
+                            <div class="text-gray-800">
+                                Bond: ${formatCurrency(calculateAnnualBond(income, yearData.age))}
+                            </div>
+                        ` : ''}
+                    `;
+                }
             }
         }
 
