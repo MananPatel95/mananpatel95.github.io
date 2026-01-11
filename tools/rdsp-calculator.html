@@ -2861,15 +2861,15 @@
                 if (dataPoint.contribution > 0) rows.push(`<div class="row"><span class="k">Contributions</span><span class="v">${formatCurrency(dataPoint.contribution)}</span></div>`);
                 if (dataPoint.grant > 0) rows.push(`<div class="row"><span class="k">Grants</span><span class="v">${formatCurrency(dataPoint.grant)}</span></div>`);
                 if (dataPoint.bond > 0) rows.push(`<div class="row"><span class="k">Bonds</span><span class="v">${formatCurrency(dataPoint.bond)}</span></div>`);
-                if (dataPoint.growth > 0) rows.push(`<div class="row"><span class="k">Growth</span><span class="v">${formatCurrency(dataPoint.growth)}</span></div>`);
+                // Only show growth if it's not hidden in the chart
+                if (!isGrowthHidden && dataPoint.growth > 0) rows.push(`<div class="row"><span class="k">Growth</span><span class="v">${formatCurrency(dataPoint.growth)}</span></div>`);
                 if (dataPoint.withdrawal > 0) rows.push(`<div class="row"><span class="k">Withdrawals</span><span class="v">${formatCurrency(dataPoint.withdrawal)}</span></div>`);
                 if (dataPoint.repaymentPenalty > 0) rows.push(`<div class="row"><span class="k">10-year penalty</span><span class="v">${formatCurrency(dataPoint.repaymentPenalty)}</span></div>`);
 
-                rows.push(`<div style="margin-top:8px" class="muted">Totals to date</div>`);
                 if (dataPoint.totalContributions > 0) rows.push(`<div class="row"><span class="k">Total contributions</span><span class="v">${formatCurrency(dataPoint.totalContributions)}</span></div>`);
                 if (dataPoint.totalGrants > 0) rows.push(`<div class="row"><span class="k">Total grants</span><span class="v">${formatCurrency(dataPoint.totalGrants)}</span></div>`);
                 if (dataPoint.totalBonds > 0) rows.push(`<div class="row"><span class="k">Total bonds</span><span class="v">${formatCurrency(dataPoint.totalBonds)}</span></div>`);
-                if (dataPoint.govtContributions > 0) rows.push(`<div class="row"><span class="k">Govt total</span><span class="v">${formatCurrency(dataPoint.govtContributions)}</span></div>`);
+                if (dataPoint.govtContributions > 0) rows.push(`<div class="row"><span class="k">Total govt</span><span class="v">${formatCurrency(dataPoint.govtContributions)}</span></div>`);
 
                 panel.innerHTML = rows.join('');
             };
