@@ -920,6 +920,53 @@
             color: #9ca3af;
         }
         
+        /* Chart Age Range improvements */
+        body.dark-mode #chartAgeMinInput,
+        body.dark-mode #chartAgeMaxInput {
+            background: #374151;
+            border-color: #4b5563;
+            color: #f8fafc;
+        }
+        
+        body.dark-mode #chartAgeMinInput:focus,
+        body.dark-mode #chartAgeMaxInput:focus {
+            border-color: #9CA3AF;
+            background: #4b5563;
+        }
+        
+        body.dark-mode button[onclick*="setChartRange"] {
+            background: #1f2937;
+            border-color: #374151;
+            color: #f8fafc;
+        }
+        
+        body.dark-mode button[onclick*="setChartRange"]:hover {
+            background: #374151;
+            border-color: #4b5563;
+        }
+        
+        body.dark-mode button[onclick*="setChartRange('all')"] {
+            background: #4f46e5;
+            border-color: #6366f1;
+        }
+        
+        body.dark-mode button[onclick*="setChartRange('all')"]:hover {
+            background: #6366f1;
+        }
+        
+        body.dark-mode .bg-white.border.border-gray-300 {
+            background: #1f2937;
+            border-color: #374151;
+        }
+        
+        body.dark-mode .bg-white.border.border-gray-300 .text-gray-800 {
+            color: #f3f4f6;
+        }
+        
+        body.dark-mode .bg-white.border.border-gray-300 .text-gray-600 {
+            color: #9ca3af;
+        }
+        
         /* Dark Mode Toggle Button */
         .dark-mode-toggle {
             position: fixed;
@@ -1148,43 +1195,58 @@
 
             <!-- Chart Age Range Slider -->
             <div class="mb-6 bg-gray-50 border border-gray-200 rounded-lg p-4">
-                <h3 class="font-semibold text-lg text-gray-800 mb-4">Chart Age Range</h3>
+                <h3 class="font-semibold text-lg text-gray-800 mb-3">Chart Age Range</h3>
+                <p class="text-xs text-gray-600 mb-4">Adjust the age range to focus on specific periods in your RDSP projections</p>
+                
                 <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            Age Range: <span id="ageRangeDisplay">30 - 90</span>
-                        </label>
-                        <div class="flex items-center gap-4">
-                            <div class="flex-1">
-                                <label class="block text-xs text-gray-600 mb-1">Start Age</label>
-                                <div class="slider-wrapper">
+                    <!-- Age Range Display -->
+                    <div class="bg-white border border-gray-300 rounded-lg p-3 text-center">
+                        <div class="text-xs text-gray-600 mb-1">Current Range</div>
+                        <div class="text-lg font-bold text-gray-800" id="ageRangeDisplay">30 - 90</div>
+                    </div>
+                    
+                    <!-- Sliders with Number Inputs -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Start Age</label>
+                            <div class="flex items-center gap-3">
+                                <input type="number" id="chartAgeMinInput" min="0" max="120" value="30" step="1" 
+                                    oninput="updateChartAgeRangeFromInput('min', this.value)"
+                                    class="w-20 px-3 py-2 border border-gray-300 rounded-md text-center font-semibold">
+                                <div class="flex-1 slider-wrapper">
                                     <input type="range" id="chartAgeMin" min="0" max="120" value="30" step="1" 
                                         oninput="updateChartAgeRange()">
                                 </div>
                             </div>
-                            <div class="flex-1">
-                                <label class="block text-xs text-gray-600 mb-1">End Age</label>
-                                <div class="slider-wrapper">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">End Age</label>
+                            <div class="flex items-center gap-3">
+                                <input type="number" id="chartAgeMaxInput" min="0" max="120" value="90" step="1" 
+                                    oninput="updateChartAgeRangeFromInput('max', this.value)"
+                                    class="w-20 px-3 py-2 border border-gray-300 rounded-md text-center font-semibold">
+                                <div class="flex-1 slider-wrapper">
                                     <input type="range" id="chartAgeMax" min="0" max="120" value="90" step="1" 
                                         oninput="updateChartAgeRange()">
                                 </div>
                             </div>
                         </div>
-                        <div class="flex justify-between text-xs text-gray-500 mt-2">
-                            <span id="chartAgeMinValue">30</span>
-                            <span id="chartAgeMaxValue">90</span>
-                        </div>
-                        <div class="mt-3 flex gap-2">
-                            <button onclick="setChartRange('early')" class="px-3 py-1 bg-gray-800 text-white text-sm rounded-md hover:bg-gray-900">
+                    </div>
+                    
+                    <!-- Quick Preset Buttons -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Quick Presets</label>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="setChartRange('early')" class="px-4 py-2 bg-white border-2 border-gray-300 text-gray-700 text-sm rounded-md hover:bg-gray-50 hover:border-gray-400 transition-colors">
                                 Early Years (30-50)
                             </button>
-                            <button onclick="setChartRange('mid')" class="px-3 py-1 bg-gray-800 text-white text-sm rounded-md hover:bg-gray-900">
+                            <button onclick="setChartRange('mid')" class="px-4 py-2 bg-white border-2 border-gray-300 text-gray-700 text-sm rounded-md hover:bg-gray-50 hover:border-gray-400 transition-colors">
                                 Mid Years (50-70)
                             </button>
-                            <button onclick="setChartRange('late')" class="px-3 py-1 bg-gray-800 text-white text-sm rounded-md hover:bg-gray-900">
+                            <button onclick="setChartRange('late')" class="px-4 py-2 bg-white border-2 border-gray-300 text-gray-700 text-sm rounded-md hover:bg-gray-50 hover:border-gray-400 transition-colors">
                                 Late Years (70-90)
                             </button>
-                            <button onclick="setChartRange('all')" class="px-3 py-1 bg-gray-600 text-white text-sm rounded-md hover:bg-gray-700">
+                            <button onclick="setChartRange('all')" class="px-4 py-2 bg-indigo-600 text-white text-sm rounded-md hover:bg-indigo-700 transition-colors font-medium">
                                 All Years
                             </button>
                         </div>
@@ -1922,18 +1984,57 @@
             if (minAge > maxAge) {
                 if (document.getElementById('chartAgeMin').value == minAge) {
                     document.getElementById('chartAgeMax').value = minAge;
+                    document.getElementById('chartAgeMaxInput').value = minAge;
                 } else {
                     document.getElementById('chartAgeMin').value = maxAge;
+                    document.getElementById('chartAgeMinInput').value = maxAge;
                 }
                 state.chartAgeRange = [Math.min(minAge, maxAge), Math.max(minAge, maxAge)];
             } else {
                 state.chartAgeRange = [minAge, maxAge];
             }
             
+            // Sync number inputs with sliders
+            document.getElementById('chartAgeMinInput').value = state.chartAgeRange[0];
+            document.getElementById('chartAgeMaxInput').value = state.chartAgeRange[1];
+            
             // Update display
             document.getElementById('ageRangeDisplay').textContent = `${state.chartAgeRange[0]} - ${state.chartAgeRange[1]}`;
-            document.getElementById('chartAgeMinValue').textContent = state.chartAgeRange[0];
-            document.getElementById('chartAgeMaxValue').textContent = state.chartAgeRange[1];
+            
+            // Update charts with filtered data
+            updateCharts();
+        }
+        
+        function updateChartAgeRangeFromInput(type, value) {
+            const numValue = parseInt(value) || 0;
+            const maxAge = state.endAge || 90;
+            const minAge = state.currentAge || 30;
+            
+            // Clamp values to valid range
+            const clampedValue = Math.max(minAge, Math.min(maxAge, numValue));
+            
+            if (type === 'min') {
+                state.chartAgeRange[0] = clampedValue;
+                document.getElementById('chartAgeMin').value = clampedValue;
+                // Ensure min doesn't exceed max
+                if (clampedValue > state.chartAgeRange[1]) {
+                    state.chartAgeRange[1] = clampedValue;
+                    document.getElementById('chartAgeMax').value = clampedValue;
+                    document.getElementById('chartAgeMaxInput').value = clampedValue;
+                }
+            } else {
+                state.chartAgeRange[1] = clampedValue;
+                document.getElementById('chartAgeMax').value = clampedValue;
+                // Ensure max isn't less than min
+                if (clampedValue < state.chartAgeRange[0]) {
+                    state.chartAgeRange[0] = clampedValue;
+                    document.getElementById('chartAgeMin').value = clampedValue;
+                    document.getElementById('chartAgeMinInput').value = clampedValue;
+                }
+            }
+            
+            // Update display
+            document.getElementById('ageRangeDisplay').textContent = `${state.chartAgeRange[0]} - ${state.chartAgeRange[1]}`;
             
             // Update charts with filtered data
             updateCharts();
@@ -1946,12 +2047,18 @@
             
             const minSlider = document.getElementById('chartAgeMin');
             const maxSlider = document.getElementById('chartAgeMax');
+            const minInput = document.getElementById('chartAgeMinInput');
+            const maxInput = document.getElementById('chartAgeMaxInput');
             
-            if (minSlider && maxSlider) {
+            if (minSlider && maxSlider && minInput && maxInput) {
                 minSlider.min = minAge;
                 minSlider.max = maxAge;
                 maxSlider.min = minAge;
                 maxSlider.max = maxAge;
+                minInput.min = minAge;
+                minInput.max = maxAge;
+                maxInput.min = minAge;
+                maxInput.max = maxAge;
                 
                 // Ensure current range is within bounds
                 if (state.chartAgeRange[0] > maxAge) state.chartAgeRange[0] = minAge;
@@ -1965,14 +2072,14 @@
                     state.chartAgeRange[1] = maxAge;
                 }
                 
-                // Update slider values
+                // Update slider and input values
                 minSlider.value = state.chartAgeRange[0];
                 maxSlider.value = state.chartAgeRange[1];
+                minInput.value = state.chartAgeRange[0];
+                maxInput.value = state.chartAgeRange[1];
                 
                 // Update display
                 document.getElementById('ageRangeDisplay').textContent = `${state.chartAgeRange[0]} - ${state.chartAgeRange[1]}`;
-                document.getElementById('chartAgeMinValue').textContent = state.chartAgeRange[0];
-                document.getElementById('chartAgeMaxValue').textContent = state.chartAgeRange[1];
             }
         }
 
@@ -1993,7 +2100,12 @@
                     state.chartAgeRange = [minAge, maxAge];
                     break;
             }
-            updateChartAgeRangeSliders();
+            // Update sliders and inputs
+            document.getElementById('chartAgeMin').value = state.chartAgeRange[0];
+            document.getElementById('chartAgeMax').value = state.chartAgeRange[1];
+            document.getElementById('chartAgeMinInput').value = state.chartAgeRange[0];
+            document.getElementById('chartAgeMaxInput').value = state.chartAgeRange[1];
+            document.getElementById('ageRangeDisplay').textContent = `${state.chartAgeRange[0]} - ${state.chartAgeRange[1]}`;
             updateCharts();
         }
 
