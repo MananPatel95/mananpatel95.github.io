@@ -2838,11 +2838,10 @@
                 }
 
                 const idx = activeEls[0].index;
-                const age = data[idx]?.age;
-                if (age === undefined) return;
-
-                const dataPoint = data.find(d => d.age === age);
-                if (!dataPoint) return;
+                const dataPoint = data[idx];
+                if (!dataPoint || dataPoint.age === undefined) return;
+                
+                const age = dataPoint.age;
 
                 const growthDataset = breakdownChart.data.datasets.find(ds => ds.label === 'Growth');
                 const isGrowthHidden = growthDataset ? !breakdownChart.isDatasetVisible(growthDataset) : false;
