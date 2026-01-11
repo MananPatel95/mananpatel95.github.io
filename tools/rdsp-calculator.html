@@ -1650,14 +1650,6 @@
                     <div>
                         <h3 class="font-semibold text-lg text-gray-800">Annual Breakdown</h3>
                     </div>
-                    <div class="flex gap-2">
-                        <button onclick="toggleBreakdownView('chart')" id="breakdownChartBtn" class="px-3 py-1 bg-gray-800 text-white text-sm rounded-md hover:bg-gray-900">
-                            Chart
-                        </button>
-                        <button onclick="toggleBreakdownView('table')" id="breakdownTableBtn" class="px-3 py-1 bg-gray-200 text-gray-700 text-sm rounded-md hover:bg-gray-300">
-                            Table
-                        </button>
-                    </div>
                 </div>
                 <div id="breakdownChartContainer" class="chart-container-small">
                     <div class="breakdown-layout">
@@ -1670,7 +1662,7 @@
                         </div>
                     </div>
                 </div>
-                <div id="breakdownTableContainer" style="display: none;">
+                <div id="breakdownTableContainer">
                     <div class="overflow-x-auto">
                         <table class="w-full border-collapse border border-gray-300 text-sm" id="breakdownTable">
                             <thead>
@@ -2869,7 +2861,7 @@
                 if (dataPoint.contribution > 0) rows.push(`<div class="row"><span class="k">Contributions</span><span class="v">${formatCurrency(dataPoint.contribution)}</span></div>`);
                 if (dataPoint.grant > 0) rows.push(`<div class="row"><span class="k">Grants</span><span class="v">${formatCurrency(dataPoint.grant)}</span></div>`);
                 if (dataPoint.bond > 0) rows.push(`<div class="row"><span class="k">Bonds</span><span class="v">${formatCurrency(dataPoint.bond)}</span></div>`);
-                if (!isGrowthHidden && dataPoint.growth > 0) rows.push(`<div class="row"><span class="k">Growth</span><span class="v">${formatCurrency(dataPoint.growth)}</span></div>`);
+                // We intentionally do not show "Growth" as a yearly line item in the hover panel.
                 if (dataPoint.withdrawal > 0) rows.push(`<div class="row"><span class="k">Withdrawals</span><span class="v">${formatCurrency(dataPoint.withdrawal)}</span></div>`);
                 if (dataPoint.repaymentPenalty > 0) rows.push(`<div class="row"><span class="k">10-year penalty</span><span class="v">${formatCurrency(dataPoint.repaymentPenalty)}</span></div>`);
 
@@ -2878,10 +2870,6 @@
                 if (dataPoint.totalGrants > 0) rows.push(`<div class="row"><span class="k">Total grants</span><span class="v">${formatCurrency(dataPoint.totalGrants)}</span></div>`);
                 if (dataPoint.totalBonds > 0) rows.push(`<div class="row"><span class="k">Total bonds</span><span class="v">${formatCurrency(dataPoint.totalBonds)}</span></div>`);
                 if (dataPoint.govtContributions > 0) rows.push(`<div class="row"><span class="k">Govt total</span><span class="v">${formatCurrency(dataPoint.govtContributions)}</span></div>`);
-
-                if (isGrowthHidden) {
-                    rows.push(`<div style="margin-top:8px" class="muted">Growth is hidden — balance shown assumes 0% return.</div>`);
-                }
 
                 panel.innerHTML = rows.join('');
             };
@@ -2952,33 +2940,8 @@
                 document.getElementById('withdrawalChartContainer').style.display = 'none';
             }
             
-            // Update table if it's visible
-            if (document.getElementById('breakdownTableContainer').style.display !== 'none') {
-                updateBreakdownTable();
-            }
-        }
-        
-        let breakdownViewMode = 'chart';
-        
-        function toggleBreakdownView(mode) {
-            breakdownViewMode = mode;
-            const chartContainer = document.getElementById('breakdownChartContainer');
-            const tableContainer = document.getElementById('breakdownTableContainer');
-            const chartBtn = document.getElementById('breakdownChartBtn');
-            const tableBtn = document.getElementById('breakdownTableBtn');
-            
-            if (mode === 'chart') {
-                chartContainer.style.display = 'block';
-                tableContainer.style.display = 'none';
-                chartBtn.className = 'px-3 py-1 bg-gray-800 text-white text-sm rounded-md hover:bg-gray-900';
-                tableBtn.className = 'px-3 py-1 bg-gray-200 text-gray-700 text-sm rounded-md hover:bg-gray-300';
-            } else {
-                chartContainer.style.display = 'none';
-                tableContainer.style.display = 'block';
-                chartBtn.className = 'px-3 py-1 bg-gray-200 text-gray-700 text-sm rounded-md hover:bg-gray-300';
-                tableBtn.className = 'px-3 py-1 bg-gray-800 text-white text-sm rounded-md hover:bg-gray-900';
-                updateBreakdownTable();
-            }
+            // Always keep the table in sync (we show chart + table together)
+            updateBreakdownTable();
         }
         
         function updateBreakdownTable() {
