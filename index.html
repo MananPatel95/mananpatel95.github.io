@@ -68,8 +68,10 @@
           opacity: 0;
           transition: opacity 1s ease-in-out;
         }
+        .carousel-image:first-child,
         .carousel-image.active {
           opacity: 1;
+          z-index: 1;
         }
       </style>
 </head>
@@ -315,27 +317,36 @@
 
 // Image carousel
 (function() {
-    const images = document.querySelectorAll('.carousel-image');
-    if (images.length === 0) return;
-    
-    let currentIndex = 0;
-    
-    // Set first image as active
-    images[currentIndex].classList.add('active');
-    
-    function showNextImage() {
-        // Remove active class from current image
-        images[currentIndex].classList.remove('active');
+    function initCarousel() {
+        const images = document.querySelectorAll('.carousel-image');
+        if (images.length === 0) return;
         
-        // Move to next image
-        currentIndex = (currentIndex + 1) % images.length;
+        let currentIndex = 0;
         
-        // Add active class to new image
+        // Set first image as active immediately
         images[currentIndex].classList.add('active');
+        
+        function showNextImage() {
+            // Remove active class from current image
+            images[currentIndex].classList.remove('active');
+            
+            // Move to next image
+            currentIndex = (currentIndex + 1) % images.length;
+            
+            // Add active class to new image
+            images[currentIndex].classList.add('active');
+        }
+        
+        // Change image every 3 seconds
+        setInterval(showNextImage, 3000);
     }
     
-    // Change image every 3 seconds
-    setInterval(showNextImage, 3000);
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCarousel);
+    } else {
+        initCarousel();
+    }
 })();
 </script>
 </div>
