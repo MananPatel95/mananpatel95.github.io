@@ -1053,6 +1053,119 @@
         #rangeSliderContainer {
             user-select: none;
         }
+
+        /* Standalone visual range slider (do not rely on Tailwind utility classes) */
+        #rangeSliderContainer {
+            position: relative;
+            background: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        #rangeTrackArea {
+            position: relative;
+            height: 56px;
+            margin-top: 6px;
+        }
+
+        #rangeTrack {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 999px;
+        }
+
+        #rangeHighlight {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 8px;
+            background: #6366f1;
+            border-radius: 999px;
+        }
+
+        .range-handle {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 16px;
+            height: 44px;
+            background: #ffffff;
+            border: 2px solid #9ca3af;
+            border-radius: 10px;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+            cursor: grab;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+            z-index: 5;
+        }
+
+        .range-handle:hover {
+            border-color: #6366f1;
+            box-shadow: 0 10px 18px rgba(0, 0, 0, 0.16);
+        }
+
+        .range-handle:active {
+            cursor: grabbing;
+        }
+
+        .range-handle::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 8px;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 28px;
+            background: #4b5563;
+            border-radius: 999px;
+        }
+
+        #rangeLabels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        #rangePresets {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        #rangePresets button {
+            padding: 6px 10px;
+            background: #ffffff;
+            border: 1px solid #d1d5db;
+            color: #374151;
+            border-radius: 8px;
+            font-size: 12px;
+        }
+
+        #rangePresets button:hover {
+            background: #f9fafb;
+        }
+
+        #rangePresets button.preset-primary {
+            background: #4f46e5;
+            border-color: #4f46e5;
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        #rangePresets button.preset-primary:hover {
+            background: #4338ca;
+            border-color: #4338ca;
+        }
         
         .cursor-grab {
             cursor: grab;
@@ -1313,47 +1426,47 @@
 
             <!-- Withdrawal Planning -->
             <div class="mb-6">
-                <h3 class="font-semibold text-lg text-gray-800 border-b pb-2 mb-4">Withdrawal Strategy</h3>
-                
-                <!-- Strategy Comparison Toggle -->
-                <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-4">
-                    <div class="flex items-center justify-between mb-2">
-                        <div class="flex items-center space-x-2">
-                            <input type="checkbox" id="showComparison" onchange="updateCalculations()">
-                            <label class="text-sm font-semibold text-gray-800">Compare LDAP vs Optimal Withdrawal Strategies</label>
-                        </div>
-                    </div>
-                    <p class="text-xs text-gray-600">See side-by-side comparison of government LDAP formula vs growth-optimized withdrawals</p>
-                    
-                    <div id="comparisonAgeContainer" style="display: none;" class="mt-3 bg-white rounded-lg p-3 border border-gray-300">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Retirement Age for Comparison</label>
-                        <input type="number" id="retirementAge" value="60" min="60" max="120" oninput="updateCalculations()">
-                        <div class="text-xs text-gray-600 mt-1">Both strategies will be compared starting at this age (LDAP requires 60+)</div>
-                    </div>
-                </div>
+                <h3 class="font-semibold text-lg text-gray-800 border-b pb-2 mb-4">Withdrawals</h3>
                 
                 <!-- Withdrawal Type Selection -->
                 <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Withdrawal Type</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Withdrawal Mode</label>
                     <div class="space-y-2">
                         <div class="flex items-center">
                             <input type="radio" name="withdrawalType" id="ldap" value="ldap" checked onchange="updateCalculations()">
                             <label for="ldap" class="ml-2 text-sm text-gray-700">
-                                <strong>LDAP (Lifetime Disability Assistance Payments)</strong> - Automatic pension starting at age 60
+                                <strong>LDAP (Lifetime Disability Assistance Payments)</strong> — Automatic pension-style withdrawals (60+)
                             </label>
                         </div>
                         <div class="flex items-center">
                             <input type="radio" name="withdrawalType" id="manual" value="manual" onchange="updateCalculations()">
                             <label for="manual" class="ml-2 text-sm text-gray-700">
-                                <strong>Manual Withdrawals (DAPs)</strong> - Custom one-time withdrawals (subject to 10-year rule if before 60)
+                                <strong>Manual Withdrawals (DAPs)</strong> — Pick exact ages/amounts (10-year rule applies before 60)
                             </label>
                         </div>
                     </div>
                     
                     <div id="ldapAgeContainer" class="mt-3">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Start LDAP at Age</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Start LDAP at age</label>
                         <input type="number" id="ldapAge" value="60" min="60" max="120" oninput="updateCalculations()">
                         <div class="text-xs text-gray-600 mt-1">LDAPs automatically calculate optimal withdrawals. Before 80: balance ÷ (83 - age). After 80: balance ÷ 3</div>
+                    </div>
+                </div>
+
+                <!-- Strategy Comparison Toggle (LDAP only) -->
+                <div id="comparisonToggleContainer" class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center space-x-2">
+                            <input type="checkbox" id="showComparison" onchange="updateCalculations()">
+                            <label class="text-sm font-semibold text-gray-800">Compare LDAP vs “Optimal” withdrawals</label>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-600">Shows a side-by-side view starting at the age you choose (LDAP requires 60+).</p>
+                    
+                    <div id="comparisonAgeContainer" style="display: none;" class="mt-3 bg-white rounded-lg p-3 border border-gray-300">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Comparison starts at age</label>
+                        <input type="number" id="comparisonStartAge" value="60" min="60" max="120" oninput="updateCalculations()">
+                        <div class="text-xs text-gray-600 mt-1">This does not change your plan — it’s just a comparison view.</div>
                     </div>
                 </div>
                 
@@ -1378,54 +1491,39 @@
                     <h3 class="font-semibold text-lg text-gray-800">Chart Age Range</h3>
                     <div class="text-sm font-semibold text-gray-700" id="ageRangeDisplay">30 - 90</div>
                 </div>
-                <div class="relative bg-white border border-gray-300 rounded-lg p-4" id="rangeSliderContainer">
-                    <div class="relative h-16">
-                        <!-- Background track -->
-                        <div class="absolute inset-0 flex items-center">
-                            <div class="w-full h-2 bg-gray-200 rounded-full" id="rangeTrack"></div>
-                        </div>
-                        <!-- Selected range highlight -->
-                        <div class="absolute h-2 bg-indigo-500 rounded-full" id="rangeHighlight" style="left: 0%; width: 100%; top: 50%; transform: translateY(-50%);"></div>
-                        <!-- Left slider handle -->
-                        <div class="absolute w-6 h-16 bg-white border-2 border-gray-400 rounded cursor-grab active:cursor-grabbing shadow-md hover:border-indigo-500 hover:shadow-lg transition-all" 
-                             id="leftHandle" 
-                             style="left: 0%; transform: translateX(-50%) translateY(-50%); top: 50%; z-index: 10;"
-                             onmousedown="startDrag('left', event)"
-                             ontouchstart="startDrag('left', event)">
-                            <div class="absolute inset-0 flex items-center justify-center">
-                                <div class="w-1 h-10 bg-gray-600 rounded"></div>
-                            </div>
-                        </div>
-                        <!-- Right slider handle -->
-                        <div class="absolute w-6 h-16 bg-white border-2 border-gray-400 rounded cursor-grab active:cursor-grabbing shadow-md hover:border-indigo-500 hover:shadow-lg transition-all" 
-                             id="rightHandle" 
-                             style="left: 100%; transform: translateX(-50%) translateY(-50%); top: 50%; z-index: 10;"
-                             onmousedown="startDrag('right', event)"
-                             ontouchstart="startDrag('right', event)">
-                            <div class="absolute inset-0 flex items-center justify-center">
-                                <div class="w-1 h-10 bg-gray-600 rounded"></div>
-                            </div>
-                        </div>
+
+                <div id="rangeSliderContainer">
+                    <div id="rangeTrackArea">
+                        <div id="rangeTrack"></div>
+                        <div id="rangeHighlight" style="left: 0%; width: 100%;"></div>
+
+                        <div
+                            id="leftHandle"
+                            class="range-handle"
+                            style="left: 0%;"
+                            onmousedown="startDrag('left', event)"
+                            ontouchstart="startDrag('left', event)"
+                        ></div>
+
+                        <div
+                            id="rightHandle"
+                            class="range-handle"
+                            style="left: 100%;"
+                            onmousedown="startDrag('right', event)"
+                            ontouchstart="startDrag('right', event)"
+                        ></div>
                     </div>
-                    <!-- Age labels -->
-                    <div class="flex justify-between mt-2 text-xs text-gray-600">
+
+                    <div id="rangeLabels">
                         <span id="minAgeLabel">30</span>
                         <span id="maxAgeLabel">90</span>
                     </div>
-                    <!-- Quick preset buttons -->
-                    <div class="flex flex-wrap gap-2 mt-3 pt-3 border-t border-gray-200">
-                        <button onclick="setChartRange('early')" class="px-3 py-1 bg-white border border-gray-300 text-gray-700 text-xs rounded hover:bg-gray-50 transition-colors">
-                            Early (30-50)
-                        </button>
-                        <button onclick="setChartRange('mid')" class="px-3 py-1 bg-white border border-gray-300 text-gray-700 text-xs rounded hover:bg-gray-50 transition-colors">
-                            Mid (50-70)
-                        </button>
-                        <button onclick="setChartRange('late')" class="px-3 py-1 bg-white border border-gray-300 text-gray-700 text-xs rounded hover:bg-gray-50 transition-colors">
-                            Late (70-90)
-                        </button>
-                        <button onclick="setChartRange('all')" class="px-3 py-1 bg-indigo-600 text-white text-xs rounded hover:bg-indigo-700 transition-colors font-medium">
-                            All Years
-                        </button>
+
+                    <div id="rangePresets">
+                        <button onclick="setChartRange('early')">Early (30-50)</button>
+                        <button onclick="setChartRange('mid')">Mid (50-70)</button>
+                        <button onclick="setChartRange('late')">Late (70-90)</button>
+                        <button onclick="setChartRange('all')" class="preset-primary">All Years</button>
                     </div>
                 </div>
             </div>
@@ -1440,7 +1538,10 @@
 
             <div class="mb-6">
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="font-semibold text-lg text-gray-800">Annual Breakdown</h3>
+                    <div>
+                        <h3 class="font-semibold text-lg text-gray-800">Annual Breakdown</h3>
+                        <div class="text-xs text-gray-600 mt-1">Tip: the legend only hides lines. To change growth in the math, edit <strong>Annual Return Rate</strong> above.</div>
+                    </div>
                     <div class="flex gap-2">
                         <button onclick="toggleBreakdownView('chart')" id="breakdownChartBtn" class="px-3 py-1 bg-gray-800 text-white text-sm rounded-md hover:bg-gray-900">
                             Chart
@@ -1512,7 +1613,8 @@
             dtcStartAge: 17,
             endAge: 90,
             showOptimalWithdrawal: false,
-            retirementAge: 60,
+            ldapStartAge: 60,
+            comparisonStartAge: 60,
             withdrawalType: 'ldap',
             stopContribsAtWithdrawal: true,
             showComparison: false,
@@ -1709,9 +1811,13 @@
                 const currentDate = new Date().getFullYear() + (age - state.currentAge);
                 grantsInLast10Years = grantsInLast10Years.filter(g => currentDate - g.year < 10);
                 
-                const shouldStopContribs = state.stopContribsAtWithdrawal && 
-                                         state.withdrawalType === 'manual' && 
-                                         state.withdrawals.some(w => w.age <= age && w.age < state.retirementAge);
+                // If user is doing manual withdrawals, optionally stop contributions starting at the earliest withdrawal age.
+                const earliestWithdrawalAge = state.withdrawals.length > 0
+                    ? Math.min(...state.withdrawals.map(w => w.age))
+                    : Infinity;
+                const shouldStopContribs = state.stopContribsAtWithdrawal &&
+                                         state.withdrawalType === 'manual' &&
+                                         age >= earliestWithdrawalAge;
                 
                 if (age <= 59 && totalContributions < 200000 && !shouldStopContribs) {
                     yearlyContribution = Math.min(state.annualContribution, 200000 - totalContributions);
@@ -1796,7 +1902,7 @@
                 const assistanceHoldback = grantsInLast10Years.reduce((sum, g) => sum + g.amount, 0);
                 const govtContributions = totalGrants + totalBonds;
                 
-                if (state.withdrawalType === 'ldap' && age >= state.retirementAge) {
+                if (state.withdrawalType === 'ldap' && age >= state.ldapStartAge) {
                     const ldapAmount = calculateLDAP(accountBalance, age, govtContributions, totalContributions);
                     yearlyWithdrawal = Math.min(ldapAmount, accountBalance);
                     
@@ -1880,7 +1986,7 @@
             state.dividendRate = parseFloat(document.getElementById('dividendRate').value) || 2;
             state.dtcStartAge = parseInt(document.getElementById('dtcStartAge').value) || 17;
             state.endAge = parseInt(document.getElementById('endAge').value) || 90;
-            state.retirementAge = parseInt(document.getElementById('retirementAge').value) || 60;
+            state.comparisonStartAge = parseInt(document.getElementById('comparisonStartAge')?.value) || 60;
             state.withdrawalType = document.querySelector('input[name="withdrawalType"]:checked').value;
             state.stopContribsAtWithdrawal = document.getElementById('stopContribsAtWithdrawal')?.checked ?? true;
             state.showComparison = document.getElementById('showComparison')?.checked ?? false;
@@ -1898,10 +2004,18 @@
             document.getElementById('stopContribsContainer').style.display = state.withdrawalType === 'manual' ? 'block' : 'none';
             document.getElementById('manualWithdrawalSection').style.display = state.withdrawalType === 'manual' ? 'block' : 'none';
             document.getElementById('ldapAgeContainer').style.display = state.withdrawalType === 'ldap' ? 'block' : 'none';
-            document.getElementById('comparisonAgeContainer').style.display = state.showComparison ? 'block' : 'none';
+            // Only show the comparison UI for LDAP mode (it compares LDAP vs "optimal", not manual DAPs)
+            const comparisonToggleContainer = document.getElementById('comparisonToggleContainer');
+            if (comparisonToggleContainer) {
+                comparisonToggleContainer.style.display = state.withdrawalType === 'ldap' ? 'block' : 'none';
+            }
+            document.getElementById('comparisonAgeContainer').style.display = (state.withdrawalType === 'ldap' && state.showComparison) ? 'block' : 'none';
             
             if (state.withdrawalType === 'ldap') {
-                state.retirementAge = parseInt(document.getElementById('ldapAge').value) || 60;
+                state.ldapStartAge = parseInt(document.getElementById('ldapAge').value) || 60;
+            } else {
+                // In manual mode, comparison isn't relevant; keep it off to avoid confusion
+                state.showComparison = false;
             }
             
             // Update income eligibility
@@ -2286,8 +2400,9 @@
         function onDrag(event) {
             if (!isDragging) return;
             
-            const container = document.getElementById('rangeSliderContainer');
-            const rect = container.getBoundingClientRect();
+            const track = document.getElementById('rangeTrack');
+            if (!track) return;
+            const rect = track.getBoundingClientRect();
             const clientX = event.clientX || (event.touches && event.touches[0].clientX);
             const percent = Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100));
             
@@ -2319,6 +2434,7 @@
             const maxAge = state.endAge || 90;
             const minAge = state.currentAge || 30;
             const ageRange = maxAge - minAge;
+            if (ageRange <= 0) return;
             
             const leftPercent = ((state.chartAgeRange[0] - minAge) / ageRange) * 100;
             const rightPercent = ((state.chartAgeRange[1] - minAge) / ageRange) * 100;
@@ -2546,7 +2662,12 @@
                                     
                                     const lines = [];
                                     lines.push('━━━━━━━━━━━━━━━━');
-                                    lines.push('💰 Account Balance: ' + formatCurrency(dataPoint.balance));
+                                    if (isGrowthHidden) {
+                                        lines.push('💰 Account Balance (includes hidden growth): ' + formatCurrency(dataPoint.balance));
+                                        lines.push('   (Hiding Growth is visual only)');
+                                    } else {
+                                        lines.push('💰 Account Balance: ' + formatCurrency(dataPoint.balance));
+                                    }
                                     lines.push('━━━━━━━━━━━━━━━━');
                                     lines.push('Annual Breakdown:');
                                     
@@ -2750,7 +2871,8 @@
             state.dtcStartAge = 17;
             state.endAge = 90;
             state.showOptimalWithdrawal = false;
-            state.retirementAge = 60;
+            state.ldapStartAge = 60;
+            state.comparisonStartAge = 60;
             state.withdrawalType = 'ldap';
             state.stopContribsAtWithdrawal = true;
             state.showComparison = false;
@@ -2765,8 +2887,9 @@
             document.getElementById('dividendRate').value = state.dividendRate;
             document.getElementById('dtcStartAge').value = state.dtcStartAge;
             document.getElementById('endAge').value = state.endAge;
-            document.getElementById('retirementAge').value = state.retirementAge;
-            document.getElementById('ldapAge').value = state.retirementAge;
+            const comparisonStartAgeEl = document.getElementById('comparisonStartAge');
+            if (comparisonStartAgeEl) comparisonStartAgeEl.value = state.comparisonStartAge;
+            document.getElementById('ldapAge').value = state.ldapStartAge;
             document.querySelector('input[name="withdrawalType"][value="ldap"]').checked = true;
             document.getElementById('stopContribsAtWithdrawal').checked = state.stopContribsAtWithdrawal;
             document.getElementById('showComparison').checked = state.showComparison;
