@@ -1650,10 +1650,6 @@
                     <div>
                         <h3 class="font-semibold text-lg text-gray-800">Annual Breakdown</h3>
                     </div>
-                    <div class="flex items-center space-x-2">
-                        <input type="checkbox" id="showGrowthInHover" aria-label="Show growth in hover details" onchange="updateCalculations()">
-                        <label for="showGrowthInHover" class="text-xs font-medium text-gray-700">Show growth in hover</label>
-                    </div>
                 </div>
                 <div id="breakdownChartContainer" class="chart-container-small">
                     <div class="breakdown-layout">
@@ -1733,7 +1729,6 @@
             withdrawalType: 'ldap',
             stopContribsAtWithdrawal: true,
             showComparison: false,
-            showGrowthInHover: false,
             carryForwardYears: [],
             chartAgeRange: [30, 90]
         };
@@ -2107,7 +2102,6 @@
             state.withdrawalType = document.querySelector('input[name="withdrawalType"]:checked').value;
             state.stopContribsAtWithdrawal = document.getElementById('stopContribsAtWithdrawal')?.checked ?? true;
             state.showComparison = document.getElementById('showComparison')?.checked ?? false;
-            state.showGrowthInHover = document.getElementById('showGrowthInHover')?.checked ?? false;
             // Manual quick plan (optional inputs only shown in manual mode)
             state.manualStartAge = parseInt(document.getElementById('manualStartAge')?.value) || state.manualStartAge || 60;
             state.manualEndAge = parseInt(document.getElementById('manualEndAge')?.value) || state.manualEndAge || state.endAge || 90;
@@ -2867,10 +2861,7 @@
                 if (dataPoint.contribution > 0) rows.push(`<div class="row"><span class="k">Contributions</span><span class="v">${formatCurrency(dataPoint.contribution)}</span></div>`);
                 if (dataPoint.grant > 0) rows.push(`<div class="row"><span class="k">Grants</span><span class="v">${formatCurrency(dataPoint.grant)}</span></div>`);
                 if (dataPoint.bond > 0) rows.push(`<div class="row"><span class="k">Bonds</span><span class="v">${formatCurrency(dataPoint.bond)}</span></div>`);
-                // Optional: show growth as a yearly line item in the hover panel (off by default).
-                if (state.showGrowthInHover && dataPoint.growth > 0) {
-                    rows.push(`<div class="row"><span class="k">Growth (model)</span><span class="v">${formatCurrency(dataPoint.growth)}</span></div>`);
-                }
+                if (dataPoint.growth > 0) rows.push(`<div class="row"><span class="k">Growth</span><span class="v">${formatCurrency(dataPoint.growth)}</span></div>`);
                 if (dataPoint.withdrawal > 0) rows.push(`<div class="row"><span class="k">Withdrawals</span><span class="v">${formatCurrency(dataPoint.withdrawal)}</span></div>`);
                 if (dataPoint.repaymentPenalty > 0) rows.push(`<div class="row"><span class="k">10-year penalty</span><span class="v">${formatCurrency(dataPoint.repaymentPenalty)}</span></div>`);
 
