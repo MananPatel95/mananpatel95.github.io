@@ -58,6 +58,19 @@
           font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
           font-size: 0.75rem;
         }
+        .carousel-container {
+          position: relative;
+        }
+        .carousel-image {
+          position: absolute;
+          top: 0;
+          left: 0;
+          opacity: 0;
+          transition: opacity 1s ease-in-out;
+        }
+        .carousel-image.active {
+          opacity: 1;
+        }
       </style>
 </head>
 <body class="bg-background-light dark:bg-background-dark font-sans text-text-light dark:text-text-dark transition-colors duration-300">
@@ -86,7 +99,17 @@
 </div>
 </div>
 <div class="mt-6 sm:mt-0 sm:ml-6 flex-shrink-0">
-<img alt="Portrait of Manan Patel" class="h-32 w-32 rounded-lg object-cover" src="images/Headshot1.jpeg"/>
+<div class="carousel-container h-48 w-48 rounded-lg overflow-hidden relative">
+<img class="carousel-image h-full w-full object-cover" src="images/minatures/coding-at-desk.png" alt="Coding at desk"/>
+<img class="carousel-image h-full w-full object-cover" src="images/minatures/lifting-weights.png" alt="Lifting weights"/>
+<img class="carousel-image h-full w-full object-cover" src="images/minatures/manan-beach.png" alt="At the beach"/>
+<img class="carousel-image h-full w-full object-cover" src="images/minatures/manan-car.png" alt="In car"/>
+<img class="carousel-image h-full w-full object-cover" src="images/minatures/manan-movies.png" alt="At movies"/>
+<img class="carousel-image h-full w-full object-cover" src="images/minatures/manan-pottery.png" alt="Pottery"/>
+<img class="carousel-image h-full w-full object-cover" src="images/minatures/playing-soccer.png" alt="Playing soccer"/>
+<img class="carousel-image h-full w-full object-cover" src="images/minatures/trading-at-desk.png" alt="Trading at desk"/>
+<img class="carousel-image h-full w-full object-cover" src="images/minatures/vending-machine-tokyo.png" alt="Vending machine in Tokyo"/>
+</div>
 </div>
 </header>
 <main>
@@ -290,6 +313,31 @@
             if (darkModeText) darkModeText.textContent = 'Dark';
         }
     });
+})();
+
+// Image carousel
+(function() {
+    const images = document.querySelectorAll('.carousel-image');
+    if (images.length === 0) return;
+    
+    let currentIndex = 0;
+    
+    // Set first image as active
+    images[currentIndex].classList.add('active');
+    
+    function showNextImage() {
+        // Remove active class from current image
+        images[currentIndex].classList.remove('active');
+        
+        // Move to next image
+        currentIndex = (currentIndex + 1) % images.length;
+        
+        // Add active class to new image
+        images[currentIndex].classList.add('active');
+    }
+    
+    // Change image every 3 seconds
+    setInterval(showNextImage, 3000);
 })();
 </script>
 </div>
