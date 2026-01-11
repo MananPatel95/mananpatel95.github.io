@@ -68,7 +68,6 @@
           opacity: 0;
           transition: opacity 1s ease-in-out;
         }
-        .carousel-image:first-child,
         .carousel-image.active {
           opacity: 1;
           z-index: 1;
@@ -317,7 +316,12 @@
 
 // Image carousel
 (function() {
+    let carouselInitialized = false;
+    
     function initCarousel() {
+        if (carouselInitialized) return;
+        carouselInitialized = true;
+        
         const images = document.querySelectorAll('.carousel-image');
         if (images.length === 0) return;
         
