@@ -920,6 +920,88 @@
             color: #9ca3af;
         }
         
+        /* Clickable amounts styling */
+        .clickable-amount {
+            transition: all 0.2s;
+        }
+        
+        .clickable-amount:hover {
+            text-decoration-thickness: 2px;
+        }
+        
+        body.dark-mode .clickable-amount {
+            color: #818cf8 !important;
+        }
+        
+        body.dark-mode .clickable-amount:hover {
+            color: #a5b4fc !important;
+        }
+        
+        /* Preview Modal */
+        #previewModal {
+            display: flex;
+        }
+        
+        #previewModal.hidden {
+            display: none;
+        }
+        
+        body.dark-mode #previewModal .bg-white {
+            background: #1f2937;
+            color: #f8fafc;
+        }
+        
+        body.dark-mode #previewModal h3 {
+            color: #f3f4f6;
+        }
+        
+        body.dark-mode #previewModal .text-gray-700 {
+            color: #d1d5db;
+        }
+        
+        body.dark-mode #previewModal button {
+            color: #f8fafc;
+        }
+        
+        body.dark-mode #previewModal .bg-green-50 {
+            background: #14532d;
+            border-color: #166534;
+        }
+        
+        body.dark-mode #previewModal .text-green-700,
+        body.dark-mode #previewModal .text-green-800 {
+            color: #86efac;
+        }
+        
+        body.dark-mode #previewModal .bg-blue-50 {
+            background: #1e3a8a;
+            border-color: #1e40af;
+        }
+        
+        body.dark-mode #previewModal .text-blue-700,
+        body.dark-mode #previewModal .text-blue-800 {
+            color: #93c5fd;
+        }
+        
+        body.dark-mode #previewModal .bg-yellow-50 {
+            background: #713f12;
+            border-color: #854d0e;
+        }
+        
+        body.dark-mode #previewModal .text-yellow-700,
+        body.dark-mode #previewModal .text-yellow-800 {
+            color: #fde047;
+        }
+        
+        body.dark-mode #previewModal .bg-gray-50 {
+            background: #374151;
+            border-color: #4b5563;
+        }
+        
+        body.dark-mode #previewModal .border-gray-200 {
+            border-color: #4b5563;
+        }
+        
         /* Chart Age Range improvements */
         body.dark-mode #chartAgeMinInput,
         body.dark-mode #chartAgeMaxInput {
@@ -965,6 +1047,87 @@
         
         body.dark-mode .bg-white.border.border-gray-300 .text-gray-600 {
             color: #9ca3af;
+        }
+        
+        /* Visual Range Slider Styles */
+        #rangeSliderContainer {
+            user-select: none;
+        }
+        
+        .cursor-grab {
+            cursor: grab;
+        }
+        
+        .cursor-grab:active,
+        .active.cursor-grabbing {
+            cursor: grabbing;
+        }
+        
+        #rangeTrack {
+            transition: background-color 0.3s;
+        }
+        
+        body.dark-mode #rangeSliderContainer {
+            background: #1f2937;
+            border-color: #374151;
+        }
+        
+        body.dark-mode #rangeTrack {
+            background: #4b5563;
+        }
+        
+        body.dark-mode #rangeHighlight {
+            background: #6366f1;
+        }
+        
+        body.dark-mode #leftHandle,
+        body.dark-mode #rightHandle {
+            background: #1f2937;
+            border-color: #6b7280;
+        }
+        
+        body.dark-mode #leftHandle:hover,
+        body.dark-mode #rightHandle:hover {
+            border-color: #818cf8;
+        }
+        
+        body.dark-mode #leftHandle .bg-gray-600,
+        body.dark-mode #rightHandle .bg-gray-600 {
+            background: #9ca3af;
+        }
+        
+        body.dark-mode #ageRangeDisplay {
+            color: #f3f4f6;
+        }
+        
+        body.dark-mode #minAgeLabel,
+        body.dark-mode #maxAgeLabel {
+            color: #9ca3af;
+        }
+        
+        body.dark-mode #rangeSliderContainer button {
+            background: #1f2937;
+            border-color: #4b5563;
+            color: #d1d5db;
+        }
+        
+        body.dark-mode #rangeSliderContainer button:hover {
+            background: #374151;
+            border-color: #6b7280;
+        }
+        
+        body.dark-mode #rangeSliderContainer button.bg-indigo-600 {
+            background: #6366f1;
+            border-color: #6366f1;
+            color: white;
+        }
+        
+        body.dark-mode #rangeSliderContainer button.bg-indigo-600:hover {
+            background: #818cf8;
+        }
+        
+        body.dark-mode #rangeSliderContainer .border-gray-200 {
+            border-color: #4b5563;
         }
         
         /* Dark Mode Toggle Button */
@@ -1131,6 +1294,22 @@
                 <p class="text-sm text-gray-600 mb-4" id="carryForwardSummary"></p>
                 <div class="space-y-2 max-h-96 overflow-y-auto" id="carryForwardYears"></div>
             </div>
+            
+            <!-- Preview Modal -->
+            <div id="previewModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center" style="display: none;">
+                <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4 max-h-96 overflow-y-auto">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold text-gray-800" id="previewModalTitle"></h3>
+                        <button onclick="closePreviewModal()" class="text-gray-500 hover:text-gray-700">
+                            <span class="material-icons">close</span>
+                        </button>
+                    </div>
+                    <div id="previewModalContent" class="text-sm text-gray-700 space-y-3"></div>
+                    <button onclick="closePreviewModal()" class="mt-4 w-full px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
+                        Close
+                    </button>
+                </div>
+            </div>
 
             <!-- Withdrawal Planning -->
             <div class="mb-6">
@@ -1193,63 +1372,60 @@
                 </div>
             </div>
 
-            <!-- Chart Age Range Slider -->
-            <div class="mb-6 bg-gray-50 border border-gray-200 rounded-lg p-4">
-                <h3 class="font-semibold text-lg text-gray-800 mb-3">Chart Age Range</h3>
-                <p class="text-xs text-gray-600 mb-4">Adjust the age range to focus on specific periods in your RDSP projections</p>
-                
-                <div class="space-y-4">
-                    <!-- Age Range Display -->
-                    <div class="bg-white border border-gray-300 rounded-lg p-3 text-center">
-                        <div class="text-xs text-gray-600 mb-1">Current Range</div>
-                        <div class="text-lg font-bold text-gray-800" id="ageRangeDisplay">30 - 90</div>
-                    </div>
-                    
-                    <!-- Sliders with Number Inputs -->
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Start Age</label>
-                            <div class="flex items-center gap-3">
-                                <input type="number" id="chartAgeMinInput" min="0" max="120" value="30" step="1" 
-                                    oninput="updateChartAgeRangeFromInput('min', this.value)"
-                                    class="w-20 px-3 py-2 border border-gray-300 rounded-md text-center font-semibold">
-                                <div class="flex-1 slider-wrapper">
-                                    <input type="range" id="chartAgeMin" min="0" max="120" value="30" step="1" 
-                                        oninput="updateChartAgeRange()">
-                                </div>
+            <!-- Visual Chart Age Range Slider -->
+            <div class="mb-6">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="font-semibold text-lg text-gray-800">Chart Age Range</h3>
+                    <div class="text-sm font-semibold text-gray-700" id="ageRangeDisplay">30 - 90</div>
+                </div>
+                <div class="relative bg-white border border-gray-300 rounded-lg p-4" id="rangeSliderContainer">
+                    <div class="relative h-16">
+                        <!-- Background track -->
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full h-2 bg-gray-200 rounded-full" id="rangeTrack"></div>
+                        </div>
+                        <!-- Selected range highlight -->
+                        <div class="absolute h-2 bg-indigo-500 rounded-full" id="rangeHighlight" style="left: 0%; width: 100%; top: 50%; transform: translateY(-50%);"></div>
+                        <!-- Left slider handle -->
+                        <div class="absolute w-6 h-16 bg-white border-2 border-gray-400 rounded cursor-grab active:cursor-grabbing shadow-md hover:border-indigo-500 hover:shadow-lg transition-all" 
+                             id="leftHandle" 
+                             style="left: 0%; transform: translateX(-50%) translateY(-50%); top: 50%; z-index: 10;"
+                             onmousedown="startDrag('left', event)"
+                             ontouchstart="startDrag('left', event)">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="w-1 h-10 bg-gray-600 rounded"></div>
                             </div>
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">End Age</label>
-                            <div class="flex items-center gap-3">
-                                <input type="number" id="chartAgeMaxInput" min="0" max="120" value="90" step="1" 
-                                    oninput="updateChartAgeRangeFromInput('max', this.value)"
-                                    class="w-20 px-3 py-2 border border-gray-300 rounded-md text-center font-semibold">
-                                <div class="flex-1 slider-wrapper">
-                                    <input type="range" id="chartAgeMax" min="0" max="120" value="90" step="1" 
-                                        oninput="updateChartAgeRange()">
-                                </div>
+                        <!-- Right slider handle -->
+                        <div class="absolute w-6 h-16 bg-white border-2 border-gray-400 rounded cursor-grab active:cursor-grabbing shadow-md hover:border-indigo-500 hover:shadow-lg transition-all" 
+                             id="rightHandle" 
+                             style="left: 100%; transform: translateX(-50%) translateY(-50%); top: 50%; z-index: 10;"
+                             onmousedown="startDrag('right', event)"
+                             ontouchstart="startDrag('right', event)">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="w-1 h-10 bg-gray-600 rounded"></div>
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Quick Preset Buttons -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Quick Presets</label>
-                        <div class="flex flex-wrap gap-2">
-                            <button onclick="setChartRange('early')" class="px-4 py-2 bg-white border-2 border-gray-300 text-gray-700 text-sm rounded-md hover:bg-gray-50 hover:border-gray-400 transition-colors">
-                                Early Years (30-50)
-                            </button>
-                            <button onclick="setChartRange('mid')" class="px-4 py-2 bg-white border-2 border-gray-300 text-gray-700 text-sm rounded-md hover:bg-gray-50 hover:border-gray-400 transition-colors">
-                                Mid Years (50-70)
-                            </button>
-                            <button onclick="setChartRange('late')" class="px-4 py-2 bg-white border-2 border-gray-300 text-gray-700 text-sm rounded-md hover:bg-gray-50 hover:border-gray-400 transition-colors">
-                                Late Years (70-90)
-                            </button>
-                            <button onclick="setChartRange('all')" class="px-4 py-2 bg-indigo-600 text-white text-sm rounded-md hover:bg-indigo-700 transition-colors font-medium">
-                                All Years
-                            </button>
-                        </div>
+                    <!-- Age labels -->
+                    <div class="flex justify-between mt-2 text-xs text-gray-600">
+                        <span id="minAgeLabel">30</span>
+                        <span id="maxAgeLabel">90</span>
+                    </div>
+                    <!-- Quick preset buttons -->
+                    <div class="flex flex-wrap gap-2 mt-3 pt-3 border-t border-gray-200">
+                        <button onclick="setChartRange('early')" class="px-3 py-1 bg-white border border-gray-300 text-gray-700 text-xs rounded hover:bg-gray-50 transition-colors">
+                            Early (30-50)
+                        </button>
+                        <button onclick="setChartRange('mid')" class="px-3 py-1 bg-white border border-gray-300 text-gray-700 text-xs rounded hover:bg-gray-50 transition-colors">
+                            Mid (50-70)
+                        </button>
+                        <button onclick="setChartRange('late')" class="px-3 py-1 bg-white border border-gray-300 text-gray-700 text-xs rounded hover:bg-gray-50 transition-colors">
+                            Late (70-90)
+                        </button>
+                        <button onclick="setChartRange('all')" class="px-3 py-1 bg-indigo-600 text-white text-xs rounded hover:bg-indigo-700 transition-colors font-medium">
+                            All Years
+                        </button>
                     </div>
                 </div>
             </div>
@@ -1758,6 +1934,9 @@
             // Update chart age range sliders
             updateChartAgeRangeSliders();
             
+            // Update visual slider
+            updateVisualSlider();
+            
             // Update charts with filtered data
             updateCharts();
         }
@@ -1786,8 +1965,9 @@
             const totalGrants = cf.grants.reduce((sum, g) => sum + g.amount, 0);
             const totalBonds = cf.bonds.reduce((sum, b) => sum + b.amount, 0);
             
-            document.getElementById('carryForwardSummary').textContent = 
-                `Available: ${formatCurrency(totalGrants)} in grants (${cf.grants.length} years) + ${formatCurrency(totalBonds)} in bonds (${cf.bonds.length} years)`;
+            const summaryEl = document.getElementById('carryForwardSummary');
+            summaryEl.innerHTML = 
+                `Available: <span class="clickable-amount text-indigo-600 hover:text-indigo-700 cursor-pointer underline font-semibold" onclick="showGrantPreview(${cf.grants.length})">${formatCurrency(totalGrants)} in grants (${cf.grants.length} years)</span> + <span class="clickable-amount text-indigo-600 hover:text-indigo-700 cursor-pointer underline font-semibold" onclick="showBondPreview(${cf.bonds.length})">${formatCurrency(totalBonds)} in bonds (${cf.bonds.length} years)</span>`;
             
             const container = document.getElementById('carryForwardYears');
             container.innerHTML = state.carryForwardYears.map((yearData, index) => `
@@ -1835,6 +2015,119 @@
             `).join('');
         }
 
+        // Show grant preview breakdown
+        function showGrantPreview(yearsCount) {
+            const eligibleYears = state.carryForwardYears.filter(y => y.grantEligible && y.age <= 49 && y.age >= state.dtcStartAge);
+            
+            // Calculate grants at different income levels
+            let lowIncomeTotal = 0;
+            let highIncomeTotal = 0;
+            
+            eligibleYears.forEach(yearData => {
+                // Low income: $3,500 max per year (if contributing $1,500)
+                const lowGrant = Math.min(3500, 1500 * 3 + Math.max(0, 1500 - 500) * 2);
+                lowIncomeTotal += Math.min(lowGrant, 3500);
+                
+                // High income: $1,000 max per year (1:1 matching)
+                highIncomeTotal += Math.min(1000, 1500);
+            });
+            
+            const modal = document.getElementById('previewModal');
+            const title = document.getElementById('previewModalTitle');
+            const content = document.getElementById('previewModalContent');
+            
+            title.textContent = `Grant Preview (${yearsCount} eligible years)`;
+            content.innerHTML = `
+                <div class="space-y-4">
+                    <div class="bg-green-50 border border-green-200 rounded-lg p-3">
+                        <div class="font-semibold text-green-800 mb-2">At Low Income (≤$114,750)</div>
+                        <div class="text-sm text-green-700 space-y-1">
+                            <div>• Max per year: <strong>${formatCurrency(3500)}</strong></div>
+                            <div>• Total potential: <strong>${formatCurrency(Math.min(lowIncomeTotal, 3500 * yearsCount))}</strong></div>
+                            <div class="text-xs mt-2">Based on $1,500 contribution: $500×3 + $1,000×2 = $3,500</div>
+                        </div>
+                    </div>
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                        <div class="font-semibold text-blue-800 mb-2">At High Income (>$114,750)</div>
+                        <div class="text-sm text-blue-700 space-y-1">
+                            <div>• Max per year: <strong>${formatCurrency(1000)}</strong></div>
+                            <div>• Total potential: <strong>${formatCurrency(Math.min(highIncomeTotal, 1000 * yearsCount))}</strong></div>
+                            <div class="text-xs mt-2">Based on 1:1 matching</div>
+                        </div>
+                    </div>
+                    <div class="text-xs text-gray-600 pt-2 border-t border-gray-200">
+                        <strong>Note:</strong> Lifetime grant limit is ${formatCurrency(70000)}. Enter income for each year to see exact amounts.
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.remove('hidden');
+            modal.style.display = 'flex';
+        }
+        
+        // Show bond preview breakdown
+        function showBondPreview(yearsCount) {
+            const eligibleYears = state.carryForwardYears.filter(y => y.bondEligible && y.age <= 49 && y.age >= state.dtcStartAge);
+            
+            // Calculate bonds at different income levels
+            let veryLowTotal = 0;
+            let midTotal = 0;
+            
+            eligibleYears.forEach(yearData => {
+                // Very low income: Full $1,000 bond
+                veryLowTotal += 1000;
+                
+                // Mid income: Partial bond (proportional)
+                const midBond = calculateAnnualBond(50000, yearData.age);
+                midTotal += midBond;
+            });
+            
+            const modal = document.getElementById('previewModal');
+            const title = document.getElementById('previewModalTitle');
+            const content = document.getElementById('previewModalContent');
+            
+            title.textContent = `Bond Preview (${yearsCount} eligible years)`;
+            content.innerHTML = `
+                <div class="space-y-4">
+                    <div class="bg-green-50 border border-green-200 rounded-lg p-3">
+                        <div class="font-semibold text-green-800 mb-2">At Very Low Income (≤$37,487)</div>
+                        <div class="text-sm text-green-700 space-y-1">
+                            <div>• Bond per year: <strong>${formatCurrency(1000)}</strong></div>
+                            <div>• Total potential: <strong>${formatCurrency(veryLowTotal)}</strong></div>
+                        </div>
+                    </div>
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                        <div class="font-semibold text-yellow-800 mb-2">At Mid Income ($37,487-$57,375)</div>
+                        <div class="text-sm text-yellow-700 space-y-1">
+                            <div>• Bond per year: Varies (proportional)</div>
+                            <div>• Example at $50,000: <strong>${formatCurrency(calculateAnnualBond(50000, 30))}/year</strong></div>
+                            <div>• Total potential: <strong>~${formatCurrency(midTotal)}</strong></div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-3">
+                        <div class="font-semibold text-gray-800 mb-2">At High Income (>$57,375)</div>
+                        <div class="text-sm text-gray-700">
+                            <div>• Bond per year: <strong>$0</strong></div>
+                            <div>• Total potential: <strong>$0</strong></div>
+                        </div>
+                    </div>
+                    <div class="text-xs text-gray-600 pt-2 border-t border-gray-200">
+                        <strong>Note:</strong> Lifetime bond limit is ${formatCurrency(20000)}. Enter income for each year to see exact amounts.
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.remove('hidden');
+            modal.style.display = 'flex';
+        }
+        
+        // Close preview modal
+        function closePreviewModal() {
+            const modal = document.getElementById('previewModal');
+            modal.classList.add('hidden');
+            modal.style.display = 'none';
+        }
+        
         // Debounce timer for carry-forward calculations
         let carryForwardDebounceTimer = null;
         
@@ -1976,32 +2269,80 @@
         let breakdownChart = null;
         let withdrawalChart = null;
 
-        function updateChartAgeRange() {
-            const minAge = parseInt(document.getElementById('chartAgeMin').value);
-            const maxAge = parseInt(document.getElementById('chartAgeMax').value);
+        // Visual range slider drag functionality
+        let isDragging = false;
+        let dragHandle = null;
+        
+        function startDrag(handle, event) {
+            event.preventDefault();
+            isDragging = true;
+            dragHandle = handle;
+            document.addEventListener('mousemove', onDrag);
+            document.addEventListener('mouseup', stopDrag);
+            document.addEventListener('touchmove', onDrag);
+            document.addEventListener('touchend', stopDrag);
+        }
+        
+        function onDrag(event) {
+            if (!isDragging) return;
             
-            // Ensure min <= max
-            if (minAge > maxAge) {
-                if (document.getElementById('chartAgeMin').value == minAge) {
-                    document.getElementById('chartAgeMax').value = minAge;
-                    document.getElementById('chartAgeMaxInput').value = minAge;
-                } else {
-                    document.getElementById('chartAgeMin').value = maxAge;
-                    document.getElementById('chartAgeMinInput').value = maxAge;
-                }
-                state.chartAgeRange = [Math.min(minAge, maxAge), Math.max(minAge, maxAge)];
+            const container = document.getElementById('rangeSliderContainer');
+            const rect = container.getBoundingClientRect();
+            const clientX = event.clientX || (event.touches && event.touches[0].clientX);
+            const percent = Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100));
+            
+            const maxAge = state.endAge || 90;
+            const minAge = state.currentAge || 30;
+            const ageRange = maxAge - minAge;
+            const age = Math.round(minAge + (percent / 100) * ageRange);
+            
+            if (dragHandle === 'left') {
+                state.chartAgeRange[0] = Math.min(age, state.chartAgeRange[1] - 1);
             } else {
-                state.chartAgeRange = [minAge, maxAge];
+                state.chartAgeRange[1] = Math.max(age, state.chartAgeRange[0] + 1);
             }
             
-            // Sync number inputs with sliders
-            document.getElementById('chartAgeMinInput').value = state.chartAgeRange[0];
-            document.getElementById('chartAgeMaxInput').value = state.chartAgeRange[1];
+            updateVisualSlider();
+            updateCharts();
+        }
+        
+        function stopDrag() {
+            isDragging = false;
+            dragHandle = null;
+            document.removeEventListener('mousemove', onDrag);
+            document.removeEventListener('mouseup', stopDrag);
+            document.removeEventListener('touchmove', onDrag);
+            document.removeEventListener('touchend', stopDrag);
+        }
+        
+        function updateVisualSlider() {
+            const maxAge = state.endAge || 90;
+            const minAge = state.currentAge || 30;
+            const ageRange = maxAge - minAge;
             
-            // Update display
+            const leftPercent = ((state.chartAgeRange[0] - minAge) / ageRange) * 100;
+            const rightPercent = ((state.chartAgeRange[1] - minAge) / ageRange) * 100;
+            const widthPercent = rightPercent - leftPercent;
+            
+            const leftHandle = document.getElementById('leftHandle');
+            const rightHandle = document.getElementById('rightHandle');
+            const rangeHighlight = document.getElementById('rangeHighlight');
+            
+            if (leftHandle) leftHandle.style.left = leftPercent + '%';
+            if (rightHandle) rightHandle.style.left = rightPercent + '%';
+            if (rangeHighlight) {
+                rangeHighlight.style.left = leftPercent + '%';
+                rangeHighlight.style.width = widthPercent + '%';
+            }
+            
             document.getElementById('ageRangeDisplay').textContent = `${state.chartAgeRange[0]} - ${state.chartAgeRange[1]}`;
-            
-            // Update charts with filtered data
+            document.getElementById('minAgeLabel').textContent = state.chartAgeRange[0];
+            document.getElementById('maxAgeLabel').textContent = state.chartAgeRange[1];
+        }
+        
+        function updateChartAgeRange() {
+            // This function is kept for compatibility but now uses visual slider
+            updateVisualSlider();
             updateCharts();
         }
         
@@ -2014,73 +2355,34 @@
             const clampedValue = Math.max(minAge, Math.min(maxAge, numValue));
             
             if (type === 'min') {
-                state.chartAgeRange[0] = clampedValue;
-                document.getElementById('chartAgeMin').value = clampedValue;
-                // Ensure min doesn't exceed max
-                if (clampedValue > state.chartAgeRange[1]) {
-                    state.chartAgeRange[1] = clampedValue;
-                    document.getElementById('chartAgeMax').value = clampedValue;
-                    document.getElementById('chartAgeMaxInput').value = clampedValue;
-                }
+                state.chartAgeRange[0] = Math.min(clampedValue, state.chartAgeRange[1] - 1);
             } else {
-                state.chartAgeRange[1] = clampedValue;
-                document.getElementById('chartAgeMax').value = clampedValue;
-                // Ensure max isn't less than min
-                if (clampedValue < state.chartAgeRange[0]) {
-                    state.chartAgeRange[0] = clampedValue;
-                    document.getElementById('chartAgeMin').value = clampedValue;
-                    document.getElementById('chartAgeMinInput').value = clampedValue;
-                }
+                state.chartAgeRange[1] = Math.max(clampedValue, state.chartAgeRange[0] + 1);
             }
             
-            // Update display
-            document.getElementById('ageRangeDisplay').textContent = `${state.chartAgeRange[0]} - ${state.chartAgeRange[1]}`;
-            
-            // Update charts with filtered data
+            updateVisualSlider();
             updateCharts();
         }
 
         function updateChartAgeRangeSliders() {
-            // Set slider min/max values based on currentAge and endAge
+            // Set range based on currentAge and endAge
             const maxAge = state.endAge || 90;
             const minAge = state.currentAge || 30;
             
-            const minSlider = document.getElementById('chartAgeMin');
-            const maxSlider = document.getElementById('chartAgeMax');
-            const minInput = document.getElementById('chartAgeMinInput');
-            const maxInput = document.getElementById('chartAgeMaxInput');
+            // Ensure current range is within bounds
+            if (state.chartAgeRange[0] > maxAge) state.chartAgeRange[0] = minAge;
+            if (state.chartAgeRange[1] > maxAge) state.chartAgeRange[1] = maxAge;
+            if (state.chartAgeRange[0] < minAge) state.chartAgeRange[0] = minAge;
+            if (state.chartAgeRange[1] < minAge) state.chartAgeRange[1] = minAge;
             
-            if (minSlider && maxSlider && minInput && maxInput) {
-                minSlider.min = minAge;
-                minSlider.max = maxAge;
-                maxSlider.min = minAge;
-                maxSlider.max = maxAge;
-                minInput.min = minAge;
-                minInput.max = maxAge;
-                maxInput.min = minAge;
-                maxInput.max = maxAge;
-                
-                // Ensure current range is within bounds
-                if (state.chartAgeRange[0] > maxAge) state.chartAgeRange[0] = minAge;
-                if (state.chartAgeRange[1] > maxAge) state.chartAgeRange[1] = maxAge;
-                if (state.chartAgeRange[0] < minAge) state.chartAgeRange[0] = minAge;
-                if (state.chartAgeRange[1] < minAge) state.chartAgeRange[1] = minAge;
-                
-                // Ensure min <= max
-                if (state.chartAgeRange[0] > state.chartAgeRange[1]) {
-                    state.chartAgeRange[0] = minAge;
-                    state.chartAgeRange[1] = maxAge;
-                }
-                
-                // Update slider and input values
-                minSlider.value = state.chartAgeRange[0];
-                maxSlider.value = state.chartAgeRange[1];
-                minInput.value = state.chartAgeRange[0];
-                maxInput.value = state.chartAgeRange[1];
-                
-                // Update display
-                document.getElementById('ageRangeDisplay').textContent = `${state.chartAgeRange[0]} - ${state.chartAgeRange[1]}`;
+            // Ensure min <= max
+            if (state.chartAgeRange[0] > state.chartAgeRange[1]) {
+                state.chartAgeRange[0] = minAge;
+                state.chartAgeRange[1] = maxAge;
             }
+            
+            // Update visual slider
+            updateVisualSlider();
         }
 
         function setChartRange(range) {
@@ -2100,12 +2402,7 @@
                     state.chartAgeRange = [minAge, maxAge];
                     break;
             }
-            // Update sliders and inputs
-            document.getElementById('chartAgeMin').value = state.chartAgeRange[0];
-            document.getElementById('chartAgeMax').value = state.chartAgeRange[1];
-            document.getElementById('chartAgeMinInput').value = state.chartAgeRange[0];
-            document.getElementById('chartAgeMaxInput').value = state.chartAgeRange[1];
-            document.getElementById('ageRangeDisplay').textContent = `${state.chartAgeRange[0]} - ${state.chartAgeRange[1]}`;
+            updateVisualSlider();
             updateCharts();
         }
 
@@ -2477,9 +2774,19 @@
             updateCalculations();
         }
 
-        // Initialize
-        state.carryForwardYears = initializeCarryForwardYears();
-        updateCalculations();
+            // Close modal when clicking outside
+            document.getElementById('previewModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closePreviewModal();
+                }
+            });
+            
+            // Initialize visual slider
+            updateVisualSlider();
+            
+            // Initialize
+            state.carryForwardYears = initializeCarryForwardYears();
+            updateCalculations();
     </script>
 </body>
 </html>
