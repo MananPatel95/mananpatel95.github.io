@@ -657,6 +657,73 @@
             font-weight: 700;
             color: #111827;
         }
+
+        /* Annual Breakdown hover panel (avoids covering the chart) */
+        .breakdown-layout {
+            display: flex;
+            gap: 12px;
+            height: 100%;
+        }
+
+        .breakdown-canvas {
+            flex: 1 1 auto;
+            min-width: 0;
+            height: 100%;
+        }
+
+        .breakdown-hover {
+            width: 280px;
+            flex: 0 0 280px;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 10px;
+            overflow: auto;
+            font-size: 12px;
+            color: #374151;
+        }
+
+        .breakdown-hover .title {
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 6px;
+        }
+
+        .breakdown-hover .muted {
+            color: #6b7280;
+        }
+
+        .breakdown-hover .row {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 4px 0;
+            border-bottom: 1px dashed #e5e7eb;
+        }
+
+        .breakdown-hover .row:last-child {
+            border-bottom: none;
+        }
+
+        .breakdown-hover .k {
+            color: #6b7280;
+        }
+
+        .breakdown-hover .v {
+            font-weight: 600;
+            color: #111827;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 768px) {
+            .breakdown-layout {
+                flex-direction: column;
+            }
+            .breakdown-hover {
+                width: 100%;
+                flex: 0 0 auto;
+            }
+        }
         
         /* Range Slider Styles */
         input[type="range"] {
@@ -915,6 +982,24 @@
         body.dark-mode .summary-card .value {
             color: #E5E7EB;
         }
+
+        body.dark-mode .breakdown-hover {
+            background: #1f2937;
+            border-color: #374151;
+            color: #d1d5db;
+        }
+
+        body.dark-mode .breakdown-hover .title {
+            color: #f3f4f6;
+        }
+
+        body.dark-mode .breakdown-hover .v {
+            color: #f3f4f6;
+        }
+
+        body.dark-mode .breakdown-hover .row {
+            border-bottom-color: #374151;
+        }
         
         body.dark-mode .text-gray-500 {
             color: #9ca3af;
@@ -1051,6 +1136,7 @@
         
         /* Visual Range Slider Styles */
         #rangeSliderContainer {
+            -webkit-user-select: none;
             user-select: none;
         }
 
@@ -1342,24 +1428,24 @@
                     <h3 class="border-b pb-2">Personal Information</h3>
                     
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Current Age</label>
-                        <input type="number" id="currentAge" value="30" min="0" max="100" oninput="updateCalculations()">
+                        <label for="currentAge" class="block text-sm font-medium text-gray-700 mb-1">Current Age</label>
+                        <input type="number" id="currentAge" aria-label="Current Age" value="30" min="0" max="100" oninput="updateCalculations()">
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Age When DTC Approved</label>
-                        <input type="number" id="dtcStartAge" value="17" min="0" max="100" oninput="updateCalculations()">
+                        <label for="dtcStartAge" class="block text-sm font-medium text-gray-700 mb-1">Age When DTC Approved</label>
+                        <input type="number" id="dtcStartAge" aria-label="Age When DTC Approved" value="17" min="0" max="100" oninput="updateCalculations()">
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Current Family Net Income (2025)</label>
-                        <input type="number" id="familyIncome" value="100000" min="0" oninput="updateCalculations()">
+                        <label for="familyIncome" class="block text-sm font-medium text-gray-700 mb-1">Current Family Net Income (2025)</label>
+                        <input type="number" id="familyIncome" aria-label="Current Family Net Income (2025)" value="100000" min="0" oninput="updateCalculations()">
                         <div class="text-xs text-gray-500 mt-1" id="incomeEligibility"></div>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">End Projection at Age</label>
-                        <input type="number" id="endAge" value="90" min="0" max="120" oninput="updateCalculations()">
+                        <label for="endAge" class="block text-sm font-medium text-gray-700 mb-1">End Projection at Age</label>
+                        <input type="number" id="endAge" aria-label="End Projection at Age" value="90" min="0" max="120" oninput="updateCalculations()">
                         <div class="text-xs text-gray-500 mt-1">Set the final age for projections and graph</div>
                     </div>
                 </div>
@@ -1369,8 +1455,8 @@
                     <h3 class="border-b pb-2">Contributions & Investment</h3>
                     
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Annual Contribution (until age 59)</label>
-                        <input type="number" id="annualContribution" value="1500" min="0" oninput="updateCalculations()">
+                        <label for="annualContribution" class="block text-sm font-medium text-gray-700 mb-1">Annual Contribution (until age 59)</label>
+                        <input type="number" id="annualContribution" aria-label="Annual Contribution (until age 59)" value="1500" min="0" oninput="updateCalculations()">
                         <div class="text-xs text-gray-500 mt-1">Lifetime max: $200,000. Optimal: $1,500/yr (low income) or $1,000/yr (high income)</div>
                     </div>
                     
@@ -1385,18 +1471,18 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Annual Return Rate (%)</label>
-                        <input type="number" id="returnRate" value="5" min="0" max="20" step="0.1" oninput="updateCalculations()">
+                        <label for="returnRate" class="block text-sm font-medium text-gray-700 mb-1">Annual Return Rate (%)</label>
+                        <input type="number" id="returnRate" aria-label="Annual Return Rate (%)" value="5" min="0" max="20" step="0.1" oninput="updateCalculations()">
                     </div>
 
                     <div class="flex items-center space-x-2">
-                        <input type="checkbox" id="payDividends" onchange="updateCalculations()">
-                        <label class="text-sm font-medium text-gray-700">Pay Out Dividends</label>
+                        <input type="checkbox" id="payDividends" aria-label="Pay Out Dividends" onchange="updateCalculations()">
+                        <label for="payDividends" class="text-sm font-medium text-gray-700">Pay Out Dividends</label>
                     </div>
 
                     <div id="dividendRateContainer" style="display: none;">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Dividend Rate (%)</label>
-                        <input type="number" id="dividendRate" value="2" min="0" max="20" step="0.1" oninput="updateCalculations()">
+                        <label for="dividendRate" class="block text-sm font-medium text-gray-700 mb-1">Dividend Rate (%)</label>
+                        <input type="number" id="dividendRate" aria-label="Dividend Rate (%)" value="2" min="0" max="20" step="0.1" oninput="updateCalculations()">
                     </div>
                 </div>
             </div>
@@ -1447,8 +1533,8 @@
                     </div>
                     
                     <div id="ldapAgeContainer" class="mt-3">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Start LDAP at age</label>
-                        <input type="number" id="ldapAge" value="60" min="60" max="120" oninput="updateCalculations()">
+                        <label for="ldapAge" class="block text-sm font-medium text-gray-700 mb-1">Start LDAP at age</label>
+                        <input type="number" id="ldapAge" aria-label="Start LDAP at age" value="60" min="60" max="120" oninput="updateCalculations()">
                         <div class="text-xs text-gray-600 mt-1">LDAPs automatically calculate optimal withdrawals. Before 80: balance ÷ (83 - age). After 80: balance ÷ 3</div>
                     </div>
                 </div>
@@ -1457,8 +1543,8 @@
                 <div id="comparisonToggleContainer" class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-4">
                     <div class="flex items-center justify-between mb-2">
                         <div class="flex items-center space-x-2">
-                            <input type="checkbox" id="showComparison" onchange="updateCalculations()">
-                            <label class="text-sm font-semibold text-gray-800">Compare LDAP vs “Optimal” withdrawals</label>
+                            <input type="checkbox" id="showComparison" aria-label="Compare LDAP vs Optimal withdrawals" onchange="updateCalculations()">
+                            <label for="showComparison" class="text-sm font-semibold text-gray-800">Compare LDAP vs “Optimal” withdrawals</label>
                         </div>
                     </div>
                     <p class="text-xs text-gray-600">Shows a side-by-side view starting at the age you choose (LDAP requires 60+).</p>
@@ -1563,7 +1649,6 @@
                 <div class="flex items-center justify-between mb-4">
                     <div>
                         <h3 class="font-semibold text-lg text-gray-800">Annual Breakdown</h3>
-                        <div class="text-xs text-gray-600 mt-1">Tip: the legend only hides lines. To change growth in the math, edit <strong>Annual Return Rate</strong> above.</div>
                     </div>
                     <div class="flex gap-2">
                         <button onclick="toggleBreakdownView('chart')" id="breakdownChartBtn" class="px-3 py-1 bg-gray-800 text-white text-sm rounded-md hover:bg-gray-900">
@@ -1575,7 +1660,15 @@
                     </div>
                 </div>
                 <div id="breakdownChartContainer" class="chart-container-small">
-                    <canvas id="breakdownChart"></canvas>
+                    <div class="breakdown-layout">
+                        <div class="breakdown-canvas">
+                            <canvas id="breakdownChart"></canvas>
+                        </div>
+                        <div id="breakdownHoverPanel" class="breakdown-hover">
+                            <div class="title">Hover details</div>
+                            <div class="muted">Move your mouse over the chart to see the full breakdown for that age.</div>
+                        </div>
+                    </div>
                 </div>
                 <div id="breakdownTableContainer" style="display: none;">
                     <div class="overflow-x-auto">
@@ -1649,6 +1742,7 @@
         };
         
         let allProjectionData = []; // Store all data for filtering
+        let noGrowthProjectionData = []; // Same scenario, but with 0% return (used for hover when Growth is hidden)
 
         // Dark Mode Toggle
         function toggleDarkMode() {
@@ -2065,6 +2159,22 @@
             // Calculate projections
             const projections = calculateProjections();
             allProjectionData = projections.data; // Store all data
+
+            // Precompute a "no growth" version for hover display when Growth is toggled off
+            // (This avoids confusing users with balances that include hidden growth.)
+            const savedReturnRate = state.returnRate;
+            const savedPayDividends = state.payDividends;
+            const savedDividendRate = state.dividendRate;
+            state.returnRate = 0;
+            state.payDividends = false;
+            state.dividendRate = 0;
+            try {
+                noGrowthProjectionData = calculateProjections().data;
+            } finally {
+                state.returnRate = savedReturnRate;
+                state.payDividends = savedPayDividends;
+                state.dividendRate = savedDividendRate;
+            }
             
             // Update summary cards
             updateSummaryCards(projections.summary);
@@ -2693,89 +2803,13 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
                     plugins: {
                         legend: { 
                             display: true,
                             labels: { color: colors.text }
                         },
-                        tooltip: {
-                            mode: 'index',
-                            intersect: false,
-                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                            titleColor: '#f8fafc',
-                            bodyColor: '#f8fafc',
-                            padding: 12,
-                            titleFont: { size: 14, weight: 'bold' },
-                            bodyFont: { size: 13 },
-                            callbacks: {
-                                title: function(tooltipItems) {
-                                    return `Age ${tooltipItems[0].label}`;
-                                },
-                                label: function(context) {
-                                    const value = context.parsed.y;
-                                    if (value === 0 || value === null) return null;
-                                    return context.dataset.label + ': ' + formatCurrency(value);
-                                },
-                                afterBody: function(tooltipItems) {
-                                    const age = parseInt(tooltipItems[0].label);
-                                    const dataPoint = data.find(d => d.age === age);
-                                    if (!dataPoint) return [];
-                                    
-                                    // Check if growth dataset is hidden
-                                    const growthDataset = breakdownChart.data.datasets.find(ds => ds.label === 'Growth');
-                                    const isGrowthHidden = growthDataset && !breakdownChart.isDatasetVisible(growthDataset);
-                                    
-                                    const lines = [];
-                                    lines.push('━━━━━━━━━━━━━━━━');
-                                    if (isGrowthHidden) {
-                                        lines.push('💰 Account Balance (includes hidden growth): ' + formatCurrency(dataPoint.balance));
-                                        lines.push('   (Hiding Growth is visual only)');
-                                    } else {
-                                        lines.push('💰 Account Balance: ' + formatCurrency(dataPoint.balance));
-                                    }
-                                    lines.push('━━━━━━━━━━━━━━━━');
-                                    lines.push('Annual Breakdown:');
-                                    
-                                    // Show all annual values
-                                    if (dataPoint.contribution > 0) {
-                                        lines.push('  • Contributions: ' + formatCurrency(dataPoint.contribution));
-                                    }
-                                    if (dataPoint.grant > 0) {
-                                        lines.push('  • Grants: ' + formatCurrency(dataPoint.grant));
-                                    }
-                                    if (dataPoint.bond > 0) {
-                                        lines.push('  • Bonds: ' + formatCurrency(dataPoint.bond));
-                                    }
-                                    // Only show growth if it's not hidden in the chart
-                                    if (dataPoint.growth > 0 && !isGrowthHidden) {
-                                        lines.push('  • Growth: ' + formatCurrency(dataPoint.growth));
-                                    }
-                                    if (dataPoint.withdrawal > 0) {
-                                        lines.push('  • Withdrawals: ' + formatCurrency(dataPoint.withdrawal));
-                                    }
-                                    if (dataPoint.repaymentPenalty > 0) {
-                                        lines.push('  • 10-Year Penalty: ' + formatCurrency(dataPoint.repaymentPenalty));
-                                    }
-                                    
-                                    lines.push('━━━━━━━━━━━━━━━━');
-                                    lines.push('Cumulative Totals:');
-                                    if (dataPoint.totalContributions > 0) {
-                                        lines.push('  • Total Contributions: ' + formatCurrency(dataPoint.totalContributions));
-                                    }
-                                    if (dataPoint.totalGrants > 0) {
-                                        lines.push('  • Total Grants: ' + formatCurrency(dataPoint.totalGrants));
-                                    }
-                                    if (dataPoint.totalBonds > 0) {
-                                        lines.push('  • Total Bonds: ' + formatCurrency(dataPoint.totalBonds));
-                                    }
-                                    if (dataPoint.govtContributions > 0) {
-                                        lines.push('  • Total Govt. Contributions: ' + formatCurrency(dataPoint.govtContributions));
-                                    }
-                                    
-                                    return lines;
-                                }
-                            }
-                        }
+                        tooltip: { enabled: false }
                     },
                     scales: {
                         y: {
@@ -2800,6 +2834,57 @@
                     }
                 }
             });
+
+            // Update the hover side panel (so hover doesn't cover the chart)
+            breakdownChart.options.onHover = (evt, activeEls) => {
+                const panel = document.getElementById('breakdownHoverPanel');
+                if (!panel) return;
+
+                if (!activeEls || activeEls.length === 0) {
+                    panel.innerHTML = `<div class="title">Hover details</div><div class="muted">Move your mouse over the chart to see the full breakdown for that age.</div>`;
+                    return;
+                }
+
+                const idx = activeEls[0].index;
+                const age = data[idx]?.age;
+                if (age === undefined) return;
+
+                const dataPoint = data.find(d => d.age === age);
+                if (!dataPoint) return;
+
+                const growthDataset = breakdownChart.data.datasets.find(ds => ds.label === 'Growth');
+                const isGrowthHidden = growthDataset ? !breakdownChart.isDatasetVisible(growthDataset) : false;
+
+                // If growth is hidden, show a balance computed with 0% return so the "total" doesn't include growth.
+                let displayBalance = dataPoint.balance;
+                if (isGrowthHidden && Array.isArray(noGrowthProjectionData) && noGrowthProjectionData.length > 0) {
+                    const ng = noGrowthProjectionData.find(d => d.age === age);
+                    if (ng) displayBalance = ng.balance;
+                }
+
+                const rows = [];
+                rows.push(`<div class="title">Age ${age}</div>`);
+                rows.push(`<div class="row"><span class="k">Account balance</span><span class="v">${formatCurrency(displayBalance)}</span></div>`);
+
+                if (dataPoint.contribution > 0) rows.push(`<div class="row"><span class="k">Contributions</span><span class="v">${formatCurrency(dataPoint.contribution)}</span></div>`);
+                if (dataPoint.grant > 0) rows.push(`<div class="row"><span class="k">Grants</span><span class="v">${formatCurrency(dataPoint.grant)}</span></div>`);
+                if (dataPoint.bond > 0) rows.push(`<div class="row"><span class="k">Bonds</span><span class="v">${formatCurrency(dataPoint.bond)}</span></div>`);
+                if (!isGrowthHidden && dataPoint.growth > 0) rows.push(`<div class="row"><span class="k">Growth</span><span class="v">${formatCurrency(dataPoint.growth)}</span></div>`);
+                if (dataPoint.withdrawal > 0) rows.push(`<div class="row"><span class="k">Withdrawals</span><span class="v">${formatCurrency(dataPoint.withdrawal)}</span></div>`);
+                if (dataPoint.repaymentPenalty > 0) rows.push(`<div class="row"><span class="k">10-year penalty</span><span class="v">${formatCurrency(dataPoint.repaymentPenalty)}</span></div>`);
+
+                rows.push(`<div style="margin-top:8px" class="muted">Totals to date</div>`);
+                if (dataPoint.totalContributions > 0) rows.push(`<div class="row"><span class="k">Total contributions</span><span class="v">${formatCurrency(dataPoint.totalContributions)}</span></div>`);
+                if (dataPoint.totalGrants > 0) rows.push(`<div class="row"><span class="k">Total grants</span><span class="v">${formatCurrency(dataPoint.totalGrants)}</span></div>`);
+                if (dataPoint.totalBonds > 0) rows.push(`<div class="row"><span class="k">Total bonds</span><span class="v">${formatCurrency(dataPoint.totalBonds)}</span></div>`);
+                if (dataPoint.govtContributions > 0) rows.push(`<div class="row"><span class="k">Govt total</span><span class="v">${formatCurrency(dataPoint.govtContributions)}</span></div>`);
+
+                if (isGrowthHidden) {
+                    rows.push(`<div style="margin-top:8px" class="muted">Growth is hidden — balance shown assumes 0% return.</div>`);
+                }
+
+                panel.innerHTML = rows.join('');
+            };
 
             // Withdrawal Chart
             const withdrawalData = data.filter(d => d.withdrawal > 0);
