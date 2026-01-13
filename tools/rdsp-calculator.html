@@ -2843,8 +2843,8 @@
                 
                 const age = dataPoint.age;
 
-                const growthDataset = breakdownChart.data.datasets.find(ds => ds.label === 'Growth');
-                const isGrowthHidden = growthDataset ? !breakdownChart.isDatasetVisible(growthDataset) : false;
+                const growthDataset = breakdownChart?.data?.datasets?.find(ds => ds.label === 'Growth');
+                const isGrowthHidden = growthDataset && breakdownChart ? !breakdownChart.isDatasetVisible(growthDataset) : false;
 
                 // If growth is hidden, show a balance computed with 0% return so the "total" doesn't include growth.
                 let displayBalance = dataPoint.balance;
@@ -2860,8 +2860,10 @@
                 if (dataPoint.contribution > 0) rows.push(`<div class="row"><span class="k">Contributions</span><span class="v">${formatCurrency(dataPoint.contribution)}</span></div>`);
                 if (dataPoint.grant > 0) rows.push(`<div class="row"><span class="k">Grants</span><span class="v">${formatCurrency(dataPoint.grant)}</span></div>`);
                 if (dataPoint.bond > 0) rows.push(`<div class="row"><span class="k">Bonds</span><span class="v">${formatCurrency(dataPoint.bond)}</span></div>`);
-                // Only show growth if it's not hidden in the chart
-                if (!isGrowthHidden && dataPoint.growth > 0) rows.push(`<div class="row"><span class="k">Growth</span><span class="v">${formatCurrency(dataPoint.growth)}</span></div>`);
+                // Show growth if it exists and the growth line is not hidden in the chart
+                if (!isGrowthHidden && dataPoint.growth !== undefined && dataPoint.growth !== null) {
+                    rows.push(`<div class="row"><span class="k">Growth</span><span class="v">${formatCurrency(dataPoint.growth)}</span></div>`);
+                }
                 if (dataPoint.withdrawal > 0) rows.push(`<div class="row"><span class="k">Withdrawals</span><span class="v">${formatCurrency(dataPoint.withdrawal)}</span></div>`);
                 if (dataPoint.repaymentPenalty > 0) rows.push(`<div class="row"><span class="k">10-year penalty</span><span class="v">${formatCurrency(dataPoint.repaymentPenalty)}</span></div>`);
 
