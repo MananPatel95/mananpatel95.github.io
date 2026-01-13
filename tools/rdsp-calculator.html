@@ -1475,6 +1475,18 @@
                         <input type="number" id="returnRate" aria-label="Annual Return Rate (%)" value="5" min="0" max="20" step="0.1" oninput="updateCalculations()">
                     </div>
 
+                    <div class="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                        <div class="flex items-center space-x-2 mb-2">
+                            <input type="checkbox" id="calculateRequiredRate" aria-label="Calculate required return rate" onchange="toggleRequiredRateCalculation()">
+                            <label for="calculateRequiredRate" class="text-sm font-medium text-gray-700">Calculate required return rate to maintain balance</label>
+                        </div>
+                        <div id="requiredRateContainer" style="display: none;" class="mt-2">
+                            <label for="requiredRateStartAge" class="block text-xs text-gray-600 mb-1">Start withdrawals at age</label>
+                            <input type="number" id="requiredRateStartAge" aria-label="Start withdrawals at age" value="60" min="18" max="90" step="1" onchange="calculateRequiredReturnRate()" class="w-full px-2 py-1 text-sm border border-gray-300 rounded">
+                            <div id="requiredRateResult" class="mt-2 text-sm text-gray-800"></div>
+                        </div>
+                    </div>
+
                     <div class="flex items-center space-x-2">
                         <input type="checkbox" id="payDividends" aria-label="Pay Out Dividends" onchange="updateCalculations()">
                         <label for="payDividends" class="text-sm font-medium text-gray-700">Pay Out Dividends</label>
@@ -2119,6 +2131,11 @@
             document.getElementById('dividendRateContainer').style.display = state.payDividends ? 'block' : 'none';
             document.getElementById('stopContribsContainer').style.display = state.withdrawalType === 'manual' ? 'block' : 'none';
             document.getElementById('manualWithdrawalSection').style.display = state.withdrawalType === 'manual' ? 'block' : 'none';
+            
+            // Recalculate required rate if enabled
+            if (document.getElementById('calculateRequiredRate')?.checked) {
+                calculateRequiredReturnRate();
+            }
             document.getElementById('ldapAgeContainer').style.display = state.withdrawalType === 'ldap' ? 'block' : 'none';
             // Only show the comparison UI for LDAP mode (it compares LDAP vs "optimal", not manual DAPs)
             const comparisonToggleContainer = document.getElementById('comparisonToggleContainer');
@@ -2227,7 +2244,8 @@
                         <div class="col-span-2">
                             <label class="text-xs text-gray-600">Income that year</label>
                             <input type="number" value="${yearData.income}" 
-                                oninput="updateCarryForwardYear(${index}, 'income', this.value)"
+                                onchange="updateCarryForwardYear(${index}, 'income', this.value)"
+                                onblur="updateCarryForwardYear(${index}, 'income', this.value)"
                                 class="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500 focus:border-transparent" min="0">
                         </div>
                         <div class="flex items-center">
@@ -2379,8 +2397,7 @@
         
         function updateCarryForwardYear(index, field, value) {
             if (field === 'income') {
-                // For income, use the value parameter (from this.value in oninput)
-                // This preserves what the user is actually typing
+                // For income, use the value parameter
                 const incomeValue = value === '' ? 0 : (parseInt(value) || 0);
                 
                 // Update state for calculations
@@ -2396,11 +2413,8 @@
                 document.getElementById('carryForwardSummary').textContent = 
                     `Available: ${formatCurrency(totalGrants)} in grants (${cf.grants.length} years) + ${formatCurrency(totalBonds)} in bonds (${cf.bonds.length} years)`;
                 
-                // Debounce full calculations (wait 500ms after user stops typing)
-                clearTimeout(carryForwardDebounceTimer);
-                carryForwardDebounceTimer = setTimeout(() => {
-                    updateCalculations();
-                }, 500);
+                // Update calculations immediately (no debounce needed since we're using onchange/onblur)
+                updateCalculations();
             } else {
                 // For checkboxes, update state and do full update
                 state.carryForwardYears[index][field] = value;
@@ -2544,6 +2558,92 @@
             state.withdrawals = [];
             updateWithdrawalsDisplay();
             updateCalculations();
+        }
+
+        // Toggle required rate calculation section
+        function toggleRequiredRateCalculation() {
+            const container = document.getElementById('requiredRateContainer');
+            const checkbox = document.getElementById('calculateRequiredRate');
+            if (checkbox.checked) {
+                container.style.display = 'block';
+                calculateRequiredReturnRate();
+            } else {
+                container.style.display = 'none';
+            }
+        }
+
+        // Calculate required return rate to maintain balance
+        function calculateRequiredReturnRate() {
+            const checkbox = document.getElementById('calculateRequiredRate');
+            if (!checkbox.checked) return;
+
+            const startAge = parseInt(document.getElementById('requiredRateStartAge').value) || 60;
+            const resultDiv = document.getElementById('requiredRateResult');
+            
+            if (startAge < state.currentAge) {
+                resultDiv.innerHTML = '<span class="text-red-600">Start age must be after current age</span>';
+                return;
+            }
+
+            // Calculate projections up to the withdrawal start age
+            const projectionData = calculateProjections().data;
+            const startYearData = projectionData.find(d => d.age === startAge);
+            
+            if (!startYearData) {
+                resultDiv.innerHTML = '<span class="text-red-600">Could not calculate projections</span>';
+                return;
+            }
+
+            const balanceAtStart = startYearData.balance;
+            
+            if (balanceAtStart <= 0) {
+                resultDiv.innerHTML = '<span class="text-red-600">Account balance is zero or negative at this age</span>';
+                return;
+            }
+
+            // Calculate expected withdrawal for the first year of withdrawals
+            let annualWithdrawal = 0;
+            
+            if (state.withdrawalType === 'ldap') {
+                // LDAP formula: before 80: balance / (83 - age), after 80: balance / 3
+                if (startAge < 80) {
+                    annualWithdrawal = balanceAtStart / (83 - startAge);
+                } else {
+                    annualWithdrawal = balanceAtStart / 3;
+                }
+            } else {
+                // Manual withdrawals - find the first withdrawal at or after start age
+                const firstWithdrawal = state.withdrawals
+                    .filter(w => w.age >= startAge)
+                    .sort((a, b) => a.age - b.age)[0];
+                
+                if (firstWithdrawal) {
+                    annualWithdrawal = firstWithdrawal.amount;
+                } else {
+                    resultDiv.innerHTML = '<span class="text-gray-600">No withdrawals scheduled at or after this age</span>';
+                    return;
+                }
+            }
+
+            // Calculate required return rate
+            // If dividends are enabled, effective growth = returnRate - dividendRate
+            // So: required return rate = (withdrawal / balance) * 100 + dividendRate
+            const withdrawalRate = (annualWithdrawal / balanceAtStart) * 100;
+            const dividendAdjustment = state.payDividends ? state.dividendRate : 0;
+            const requiredReturnRate = withdrawalRate + dividendAdjustment;
+
+            // Format result
+            resultDiv.innerHTML = `
+                <div class="space-y-1">
+                    <div class="font-semibold text-blue-700">Required Return Rate: ${requiredReturnRate.toFixed(2)}%</div>
+                    <div class="text-xs text-gray-600">
+                        Balance at age ${startAge}: ${formatCurrency(balanceAtStart)}<br>
+                        Annual withdrawal: ${formatCurrency(annualWithdrawal)}<br>
+                        ${state.payDividends ? `Dividend rate: ${state.dividendRate}%<br>` : ''}
+                        <span class="text-gray-500">This rate would maintain your account balance level</span>
+                    </div>
+                </div>
+            `;
         }
 
         let balanceChart = null;
