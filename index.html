@@ -469,12 +469,12 @@
         
         // Reset position when we've scrolled past one set of items (going left)
         if (scrollPosition <= -totalWidth) {
-            scrollPosition = 0;
+            scrollPosition += totalWidth;
         }
         
         // Reset position when we've scrolled past one set of items (going right)
-        if (scrollPosition >= 0) {
-            scrollPosition = -totalWidth;
+        if (scrollPosition > 0) {
+            scrollPosition -= totalWidth;
         }
         
         carouselTrack.style.transform = `translateX(${scrollPosition}px)`;
