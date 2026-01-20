@@ -60,7 +60,7 @@
         }
         .header-carousel-container {
           position: relative;
-          width: 444px;
+          width: 400px;
           height: 192px;
           overflow: hidden;
           border-radius: 0.75rem;
@@ -485,6 +485,10 @@
     if (leftSpeedControl) {
         leftSpeedControl.addEventListener('mouseenter', (e) => {
             e.stopPropagation();
+            // Ensure animation is running
+            if (!animationFrameId) {
+                animate();
+            }
             speedDirection = -1;
         });
         
@@ -497,6 +501,10 @@
     if (rightSpeedControl) {
         rightSpeedControl.addEventListener('mouseenter', (e) => {
             e.stopPropagation();
+            // Ensure animation is running
+            if (!animationFrameId) {
+                animate();
+            }
             speedDirection = 1;
         });
         
@@ -505,23 +513,26 @@
         });
     }
 
-    // Pause on hover over carousel (but not when hovering speed controls)
-    headerCarousel.addEventListener('mouseenter', (e) => {
-        // Don't pause if hovering over speed controls
-        if (e.target.closest('.header-carousel-speed-control')) {
-            return;
-        }
-        if (animationFrameId) {
-            cancelAnimationFrame(animationFrameId);
-            animationFrameId = null;
-        }
-    });
+    // Pause on hover over carousel track (but not when hovering speed controls)
+    const carouselWrapper = headerCarousel.querySelector('.header-carousel-wrapper');
+    if (carouselWrapper) {
+        carouselWrapper.addEventListener('mouseenter', (e) => {
+            // Don't pause if hovering over speed controls
+            if (e.target.closest('.header-carousel-speed-control')) {
+                return;
+            }
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+                animationFrameId = null;
+            }
+        });
 
-    headerCarousel.addEventListener('mouseleave', () => {
-        if (!animationFrameId) {
-            animate();
-        }
-    });
+        carouselWrapper.addEventListener('mouseleave', () => {
+            if (!animationFrameId) {
+                animate();
+            }
+        });
+    }
 
     // Drag functionality
     let isDragging = false;
