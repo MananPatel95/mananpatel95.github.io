@@ -60,11 +60,11 @@
         }
         .header-carousel-container {
           position: relative;
-          width: 100%;
-          max-width: 100%;
+          width: 192px;
           height: 192px;
           overflow: hidden;
           border-radius: 0.75rem;
+          flex-shrink: 0;
         }
         .header-carousel-wrapper {
           position: relative;
@@ -166,7 +166,7 @@
     <span class="hidden sm:inline text-sm text-text-light dark:text-text-dark ml-1" id="darkModeText">Dark</span>
 </button>
 <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
-<div class="flex-1 pr-4 min-w-0">
+<div class="flex-1">
 <h1 class="text-xl sm:text-2xl font-bold text-text-light dark:text-text-dark">Manan Patel</h1>
 <p class="text-xs text-secondary-text-light dark:text-secondary-text-dark mt-1 secondary-text">Tinkering and Sharing</p>
 <div class="flex items-center text-secondary-text-light dark:text-secondary-text-dark mt-2 text-xs secondary-text">
@@ -187,7 +187,7 @@
 </button>
 </div>
 </div>
-<div class="mt-6 sm:mt-0 sm:ml-6 flex-shrink-0 w-full sm:w-auto sm:max-w-[calc(100%-2rem)]">
+<div class="mt-6 sm:mt-0 sm:ml-6 flex-shrink-0">
 <div id="headerCarousel" class="header-carousel-container">
 <div class="header-carousel-speed-control left">
 <div class="arrow">‹</div>
