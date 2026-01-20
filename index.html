@@ -95,7 +95,7 @@
           position: absolute;
           top: 0;
           bottom: 0;
-          width: 80px;
+          width: 30px;
           background: linear-gradient(to right, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7), transparent);
           -webkit-backdrop-filter: blur(8px);
           backdrop-filter: blur(8px);
@@ -165,7 +165,7 @@
     <span class="material-icons text-text-light dark:text-text-dark text-lg sm:text-base" id="darkModeIcon">dark_mode</span>
     <span class="hidden sm:inline text-sm text-text-light dark:text-text-dark ml-1" id="darkModeText">Dark</span>
 </button>
-<header class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+<header class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
 <div class="flex-1">
 <h1 class="text-xl sm:text-2xl font-bold text-text-light dark:text-text-dark">Manan Patel</h1>
 <p class="text-xs text-secondary-text-light dark:text-secondary-text-dark mt-1 secondary-text">Tinkering and Sharing</p>
@@ -187,7 +187,7 @@
 </button>
 </div>
 </div>
-<div class="mt-6 sm:mt-0 sm:ml-6 flex-shrink-0">
+<div class="mt-6 sm:mt-0 flex-shrink-0">
 <div id="headerCarousel" class="header-carousel-container">
 <div class="header-carousel-speed-control left">
 <div class="arrow">‹</div>
@@ -458,32 +458,33 @@
         
         // Adjust speed and direction based on hover
         if (speedDirection === -1) {
-            // Speeding up to the left (scrolling right to left faster)
+            // Hovering left control - speed up leftward scrolling (normal direction, faster)
             speed = baseSpeed * speedMultiplier;
         } else if (speedDirection === 1) {
-            // Speeding up to the right (scrolling left to right faster, so reverse)
-            speed = -baseSpeed * speedMultiplier;
+            // Hovering right control - speed up rightward scrolling (reverse direction, faster)
+            speed = -(baseSpeed * speedMultiplier);
         }
         
         scrollPosition -= speed;
         
-        // Reset position when we've scrolled past one set of items
-        if (Math.abs(scrollPosition) >= totalWidth) {
+        // Reset position when we've scrolled past one set of items (going left)
+        if (scrollPosition <= -totalWidth) {
             scrollPosition = 0;
         }
         
-        // Handle reverse scrolling (when going right)
-        if (scrollPosition > 0) {
-            scrollPosition = -totalWidth + scrollPosition;
+        // Reset position when we've scrolled past one set of items (going right)
+        if (scrollPosition >= 0) {
+            scrollPosition = -totalWidth;
         }
         
         carouselTrack.style.transform = `translateX(${scrollPosition}px)`;
         animationFrameId = requestAnimationFrame(animate);
     }
 
-    // Left speed control hover (speeds up leftward scrolling)
+    // Left speed control hover (speeds up leftward scrolling - normal direction)
     if (leftSpeedControl) {
-        leftSpeedControl.addEventListener('mouseenter', () => {
+        leftSpeedControl.addEventListener('mouseenter', (e) => {
+            e.stopPropagation();
             speedDirection = -1;
         });
         
@@ -492,9 +493,10 @@
         });
     }
 
-    // Right speed control hover (speeds up rightward scrolling)
+    // Right speed control hover (speeds up rightward scrolling - reverse direction)
     if (rightSpeedControl) {
-        rightSpeedControl.addEventListener('mouseenter', () => {
+        rightSpeedControl.addEventListener('mouseenter', (e) => {
+            e.stopPropagation();
             speedDirection = 1;
         });
         
@@ -503,8 +505,12 @@
         });
     }
 
-    // Pause on hover over carousel
-    headerCarousel.addEventListener('mouseenter', () => {
+    // Pause on hover over carousel (but not when hovering speed controls)
+    headerCarousel.addEventListener('mouseenter', (e) => {
+        // Don't pause if hovering over speed controls
+        if (e.target.closest('.header-carousel-speed-control')) {
+            return;
+        }
         if (animationFrameId) {
             cancelAnimationFrame(animationFrameId);
             animationFrameId = null;
