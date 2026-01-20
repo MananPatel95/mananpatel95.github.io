@@ -60,7 +60,7 @@
         }
         .header-carousel-container {
           position: relative;
-          width: 600px;
+          width: 100%;
           max-width: 100%;
           height: 192px;
           overflow: hidden;
@@ -93,11 +93,11 @@
         }
         .header-carousel-speed-control {
           position: absolute;
-          left: 0;
           top: 0;
           bottom: 0;
           width: 80px;
           background: linear-gradient(to right, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7), transparent);
+          -webkit-backdrop-filter: blur(8px);
           backdrop-filter: blur(8px);
           display: flex;
           align-items: center;
@@ -107,27 +107,53 @@
           opacity: 0;
           transition: opacity 0.3s ease-in-out;
         }
+        .header-carousel-speed-control.left {
+          left: 0;
+        }
+        .header-carousel-speed-control.right {
+          right: 0;
+          background: linear-gradient(to left, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7), transparent);
+        }
         .header-carousel-container:hover .header-carousel-speed-control {
           opacity: 1;
         }
         .header-carousel-speed-control:hover {
           background: linear-gradient(to right, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.8), transparent);
         }
+        .header-carousel-speed-control.right:hover {
+          background: linear-gradient(to left, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.8), transparent);
+        }
         .header-carousel-speed-control .arrow {
-          font-size: 1.5rem;
+          font-size: 0.875rem;
           color: #111827;
-          animation: pulse 1.5s ease-in-out infinite;
+          font-weight: 600;
+        }
+        .header-carousel-speed-control.left .arrow {
+          animation: pulseLeft 1.5s ease-in-out infinite;
+        }
+        .header-carousel-speed-control.right .arrow {
+          animation: pulseRight 1.5s ease-in-out infinite;
         }
         .dark .header-carousel-speed-control {
           background: linear-gradient(to right, rgba(18, 18, 18, 0.9), rgba(18, 18, 18, 0.7), transparent);
         }
+        .dark .header-carousel-speed-control.right {
+          background: linear-gradient(to left, rgba(18, 18, 18, 0.9), rgba(18, 18, 18, 0.7), transparent);
+        }
         .dark .header-carousel-speed-control:hover {
           background: linear-gradient(to right, rgba(18, 18, 18, 0.95), rgba(18, 18, 18, 0.8), transparent);
+        }
+        .dark .header-carousel-speed-control.right:hover {
+          background: linear-gradient(to left, rgba(18, 18, 18, 0.95), rgba(18, 18, 18, 0.8), transparent);
         }
         .dark .header-carousel-speed-control .arrow {
           color: #E5E7EB;
         }
-        @keyframes pulse {
+        @keyframes pulseLeft {
+          0%, 100% { transform: translateX(0); opacity: 0.7; }
+          50% { transform: translateX(-5px); opacity: 1; }
+        }
+        @keyframes pulseRight {
           0%, 100% { transform: translateX(0); opacity: 0.7; }
           50% { transform: translateX(5px); opacity: 1; }
         }
@@ -140,7 +166,7 @@
     <span class="hidden sm:inline text-sm text-text-light dark:text-text-dark ml-1" id="darkModeText">Dark</span>
 </button>
 <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
-<div class="flex-1 pr-4">
+<div class="flex-1 pr-4 min-w-0">
 <h1 class="text-xl sm:text-2xl font-bold text-text-light dark:text-text-dark">Manan Patel</h1>
 <p class="text-xs text-secondary-text-light dark:text-secondary-text-dark mt-1 secondary-text">Tinkering and Sharing</p>
 <div class="flex items-center text-secondary-text-light dark:text-secondary-text-dark mt-2 text-xs secondary-text">
@@ -161,10 +187,13 @@
 </button>
 </div>
 </div>
-<div class="mt-6 sm:mt-0 sm:ml-6 flex-shrink-0">
+<div class="mt-6 sm:mt-0 sm:ml-6 flex-shrink-0 w-full sm:w-auto sm:max-w-[calc(100%-2rem)]">
 <div id="headerCarousel" class="header-carousel-container">
-<div class="header-carousel-speed-control">
-<div class="arrow">→</div>
+<div class="header-carousel-speed-control left">
+<div class="arrow">‹</div>
+</div>
+<div class="header-carousel-speed-control right">
+<div class="arrow">›</div>
 </div>
 <div class="header-carousel-wrapper">
 <div class="header-carousel-track" id="headerCarouselTrack">
@@ -406,7 +435,8 @@
 (function() {
     const headerCarousel = document.getElementById('headerCarousel');
     const carouselTrack = document.getElementById('headerCarouselTrack');
-    const speedControl = document.querySelector('.header-carousel-speed-control');
+    const leftSpeedControl = document.querySelector('.header-carousel-speed-control.left');
+    const rightSpeedControl = document.querySelector('.header-carousel-speed-control.right');
     
     if (!headerCarousel || !carouselTrack) return;
 
@@ -414,19 +444,26 @@
     const gap = 16; // 1rem = 16px
     const itemTotalWidth = itemWidth + gap;
     const baseSpeed = 0.5; // pixels per frame
-    const speedMultiplier = 3; // Speed up when hovering over left control
-    let currentSpeed = baseSpeed;
+    const speedMultiplier = 3; // Speed multiplier when hovering over controls
     let scrollPosition = 0;
     let animationFrameId = null;
-    let isHoveringSpeedControl = false;
+    let speedDirection = 0; // -1 for left (faster left), 1 for right (faster right), 0 for normal
     const uniqueItems = 7; // Number of unique images
 
     // Calculate total width needed for seamless loop
     const totalWidth = uniqueItems * itemTotalWidth;
 
     function animate() {
-        // Increase speed if hovering over speed control
-        const speed = isHoveringSpeedControl ? baseSpeed * speedMultiplier : baseSpeed;
+        let speed = baseSpeed;
+        
+        // Adjust speed and direction based on hover
+        if (speedDirection === -1) {
+            // Speeding up to the left (scrolling right to left faster)
+            speed = baseSpeed * speedMultiplier;
+        } else if (speedDirection === 1) {
+            // Speeding up to the right (scrolling left to right faster, so reverse)
+            speed = -baseSpeed * speedMultiplier;
+        }
         
         scrollPosition -= speed;
         
@@ -435,18 +472,34 @@
             scrollPosition = 0;
         }
         
+        // Handle reverse scrolling (when going right)
+        if (scrollPosition > 0) {
+            scrollPosition = -totalWidth + scrollPosition;
+        }
+        
         carouselTrack.style.transform = `translateX(${scrollPosition}px)`;
         animationFrameId = requestAnimationFrame(animate);
     }
 
-    // Speed control hover
-    if (speedControl) {
-        speedControl.addEventListener('mouseenter', () => {
-            isHoveringSpeedControl = true;
+    // Left speed control hover (speeds up leftward scrolling)
+    if (leftSpeedControl) {
+        leftSpeedControl.addEventListener('mouseenter', () => {
+            speedDirection = -1;
         });
         
-        speedControl.addEventListener('mouseleave', () => {
-            isHoveringSpeedControl = false;
+        leftSpeedControl.addEventListener('mouseleave', () => {
+            speedDirection = 0;
+        });
+    }
+
+    // Right speed control hover (speeds up rightward scrolling)
+    if (rightSpeedControl) {
+        rightSpeedControl.addEventListener('mouseenter', () => {
+            speedDirection = 1;
+        });
+        
+        rightSpeedControl.addEventListener('mouseleave', () => {
+            speedDirection = 0;
         });
     }
 
