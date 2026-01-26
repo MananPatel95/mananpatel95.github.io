@@ -60,7 +60,7 @@
         }
         .header-carousel-container {
           position: relative;
-          width: 400px;
+          width: 360px;
           height: 192px;
           overflow: hidden;
           border-radius: 0.75rem;
@@ -104,8 +104,8 @@
           justify-content: center;
           z-index: 10;
           cursor: pointer;
-          opacity: 0;
-          transition: opacity 0.3s ease-in-out;
+          opacity: 1;
+          transition: background 0.3s ease-in-out;
         }
         .header-carousel-speed-control.left {
           left: 0;
@@ -113,9 +113,6 @@
         .header-carousel-speed-control.right {
           right: 0;
           background: linear-gradient(to left, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7), transparent);
-        }
-        .header-carousel-container:hover .header-carousel-speed-control {
-          opacity: 1;
         }
         .header-carousel-speed-control:hover {
           background: linear-gradient(to right, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.8), transparent);
