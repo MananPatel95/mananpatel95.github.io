@@ -126,8 +126,9 @@
           font-weight: 600;
           opacity: 0;
           transition: opacity 0.3s ease-in-out;
+          pointer-events: none;
         }
-        .header-carousel-speed-control:hover .arrow {
+        .header-carousel-container:hover .header-carousel-speed-control .arrow {
           opacity: 1;
         }
         .header-carousel-speed-control.left .arrow {
@@ -150,6 +151,10 @@
         }
         .dark .header-carousel-speed-control .arrow {
           color: #E5E7EB;
+          opacity: 0;
+        }
+        .dark .header-carousel-container:hover .header-carousel-speed-control .arrow {
+          opacity: 1;
         }
         @keyframes pulseLeft {
           0%, 100% { transform: translateX(0); opacity: 0.7; }
