@@ -124,12 +124,12 @@
           font-size: 0.875rem;
           color: #111827;
           font-weight: 600;
-          opacity: 0;
+          opacity: 0 !important;
           transition: opacity 0.3s ease-in-out;
           pointer-events: none;
         }
         .header-carousel-container:hover .header-carousel-speed-control .arrow {
-          opacity: 1;
+          opacity: 1 !important;
         }
         .header-carousel-speed-control.left .arrow {
           animation: pulseLeft 1.5s ease-in-out infinite;
@@ -151,10 +151,10 @@
         }
         .dark .header-carousel-speed-control .arrow {
           color: #E5E7EB;
-          opacity: 0;
+          opacity: 0 !important;
         }
         .dark .header-carousel-container:hover .header-carousel-speed-control .arrow {
-          opacity: 1;
+          opacity: 1 !important;
         }
         @keyframes pulseLeft {
           0%, 100% { transform: translateX(0); opacity: 0.7; }
@@ -177,7 +177,7 @@
 <h1 class="text-xl sm:text-2xl font-bold text-text-light dark:text-text-dark">Manan Patel</h1>
 <p class="text-xs text-secondary-text-light dark:text-secondary-text-dark mt-1 secondary-text">Tinkering and Sharing</p>
 <div class="flex items-center text-secondary-text-light dark:text-secondary-text-dark mt-2 text-xs secondary-text">
-<span>🏔️ Calgary, Canada</span>
+<span>📍 Calgary, Canada</span>
 </div>
 <div class="flex space-x-2 mt-2">
 <a class="w-8 h-8 border border-gray-300 rounded flex items-center justify-center hover:bg-gray-50" href="https://x.com/mananthekid" target="_blank" rel="noopener">
