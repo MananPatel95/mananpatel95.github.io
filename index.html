@@ -156,6 +156,139 @@
         .dark .header-carousel-container:hover .header-carousel-speed-control .arrow {
           opacity: 1 !important;
         }
+        
+        /* Modal overlay for focused image view */
+        .image-modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.9);
+          z-index: 1000;
+          display: none;
+          align-items: center;
+          justify-content: center;
+          opacity: 0;
+          transition: opacity 0.3s ease-in-out;
+        }
+        .image-modal-overlay.active {
+          display: flex;
+          opacity: 1;
+        }
+        .image-modal-content {
+          position: relative;
+          width: 90%;
+          max-width: 800px;
+          max-height: 90vh;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+        .image-modal-container {
+          position: relative;
+          width: 100%;
+          height: 60vh;
+          border-radius: 0.75rem;
+          overflow: hidden;
+          background: #000;
+          margin-bottom: 1.5rem;
+        }
+        .image-modal-container img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+        }
+        .image-modal-info {
+          background: rgba(255, 255, 255, 0.1);
+          backdrop-filter: blur(10px);
+          border-radius: 0.75rem;
+          padding: 1.5rem;
+          color: white;
+          width: 100%;
+          max-width: 600px;
+        }
+        .image-modal-title {
+          font-size: 1.25rem;
+          font-weight: 600;
+          margin-bottom: 0.5rem;
+        }
+        .image-modal-description {
+          font-size: 0.875rem;
+          line-height: 1.5;
+          margin-bottom: 1rem;
+        }
+        .image-modal-actions {
+          display: flex;
+          gap: 1rem;
+          flex-wrap: wrap;
+        }
+        .image-modal-button {
+          padding: 0.5rem 1rem;
+          border: 1px solid rgba(255, 255, 255, 0.3);
+          background: rgba(255, 255, 255, 0.1);
+          color: white;
+          border-radius: 0.5rem;
+          text-decoration: none;
+          font-size: 0.875rem;
+          transition: background 0.2s, border-color 0.2s;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+        .image-modal-button:hover {
+          background: rgba(255, 255, 255, 0.2);
+          border-color: rgba(255, 255, 255, 0.5);
+        }
+        .image-modal-close {
+          position: absolute;
+          top: -2.5rem;
+          right: 0;
+          background: rgba(255, 255, 255, 0.1);
+          border: none;
+          color: white;
+          width: 2.5rem;
+          height: 2.5rem;
+          border-radius: 0.5rem;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.5rem;
+          transition: background 0.2s;
+        }
+        .image-modal-close:hover {
+          background: rgba(255, 255, 255, 0.2);
+        }
+        .vote-buttons {
+          display: flex;
+          gap: 0.5rem;
+          margin-top: 1rem;
+        }
+        .vote-button {
+          padding: 0.5rem 1rem;
+          border: 1px solid rgba(255, 255, 255, 0.3);
+          background: rgba(255, 255, 255, 0.1);
+          color: white;
+          border-radius: 0.5rem;
+          cursor: pointer;
+          transition: background 0.2s, border-color 0.2s;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+        .vote-button:hover {
+          background: rgba(255, 255, 255, 0.2);
+          border-color: rgba(255, 255, 255, 0.5);
+        }
+        .vote-button.active {
+          background: rgba(59, 130, 246, 0.3);
+          border-color: rgba(59, 130, 246, 0.5);
+        }
+        .vote-count {
+          font-size: 0.75rem;
+          opacity: 0.8;
+        }
         @keyframes pulseLeft {
           0%, 100% { transform: translateX(0); opacity: 0.7; }
           50% { transform: translateX(-5px); opacity: 1; }
@@ -177,7 +310,7 @@
 <h1 class="text-xl sm:text-2xl font-bold text-text-light dark:text-text-dark">Manan Patel</h1>
 <p class="text-xs text-secondary-text-light dark:text-secondary-text-dark mt-1 secondary-text">Tinkering and Sharing</p>
 <div class="flex items-center text-secondary-text-light dark:text-secondary-text-dark mt-2 text-xs secondary-text">
-<span>📍 Calgary, Canada</span>
+<span>📍Calgary, Canada</span>
 </div>
 <div class="flex space-x-2 mt-2">
 <a class="w-8 h-8 border border-gray-300 rounded flex items-center justify-center hover:bg-gray-50" href="https://x.com/mananthekid" target="_blank" rel="noopener">
@@ -240,6 +373,31 @@
 </div>
 </div>
 </header>
+
+<!-- Image Modal Overlay -->
+<div id="imageModal" class="image-modal-overlay">
+<div class="image-modal-content">
+<button class="image-modal-close" onclick="closeImageModal()">&times;</button>
+<div class="image-modal-container">
+<img id="modalImage" src="" alt=""/>
+</div>
+<div class="image-modal-info">
+<h3 id="modalTitle" class="image-modal-title"></h3>
+<p id="modalDescription" class="image-modal-description"></p>
+<div id="modalActions" class="image-modal-actions"></div>
+<div id="voteButtons" class="vote-buttons" style="display: none;">
+<button class="vote-button" onclick="vote('up')" id="upvoteBtn">
+<span class="material-icons">thumb_up</span>
+<span id="upvoteCount" class="vote-count">0</span>
+</button>
+<button class="vote-button" onclick="vote('down')" id="downvoteBtn">
+<span class="material-icons">thumb_down</span>
+<span id="downvoteCount" class="vote-count">0</span>
+</button>
+</div>
+</div>
+</div>
+</div>
 <main>
 <section id="aboutSection" class="mb-4 pt-4" style="display: none;">
 <h2 class="text-xl font-bold text-text-light dark:text-text-dark mb-4">About</h2>
@@ -283,26 +441,21 @@
 </section>
 <section class="mb-8 pt-8">
 <h2 class="text-xl font-bold text-text-light dark:text-text-dark mb-6">Blog</h2>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-<a href="blog/swiftui-modern-development.html" class="block p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+<div class="flex flex-row gap-4 overflow-x-auto pb-2">
+<a href="blog/swiftui-modern-development.html" class="flex-shrink-0 w-full sm:w-1/3 p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                 <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">SwiftUI Modern Development</h3>
                 <p class="text-secondary-text-light dark:text-secondary-text-dark blog-description">Exploring the latest SwiftUI features and modern iOS development practices</p>
                 <div class="mt-2 text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">Dec 15, 2024 • iOS</div>
 </a>
-<a href="blog/swift-concurrency-multithreading.html" class="block p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+<a href="blog/swift-concurrency-multithreading.html" class="flex-shrink-0 w-full sm:w-1/3 p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                 <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">Swift Concurrency & Multithreading</h3>
 <p class="text-secondary-text-light dark:text-secondary-text-dark blog-description">Understanding async/await and structured concurrency in Swift</p>
                 <div class="mt-2 text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">Dec 10, 2024 • iOS</div>
 </a>
-<a href="blog/ios-unit-testing-mock-objects.html" class="block p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+<a href="blog/ios-unit-testing-mock-objects.html" class="flex-shrink-0 w-full sm:w-1/3 p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                 <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">iOS Unit Testing & Mock Objects</h3>
 <p class="text-secondary-text-light dark:text-secondary-text-dark blog-description">Best practices for testing iOS applications with mock objects</p>
                 <div class="mt-2 text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">Dec 5, 2024 • iOS</div>
-</a>
-<a href="blog/ios-networking-async-await.html" class="block p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">iOS Networking with Async/Await</h3>
-<p class="text-secondary-text-light dark:text-secondary-text-dark blog-description">Modern networking patterns in iOS using async/await</p>
-                <div class="mt-2 text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">Nov 28, 2024 • iOS</div>
 </a>
 </div>
 <div class="mt-6 text-center">
@@ -311,7 +464,7 @@
         <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
         </svg>
-    </a>
+</a>
 </div>
 </section>
     
@@ -400,26 +553,195 @@
   }
 })();
 
+// Image Modal Functionality
+(function() {
+    const modal = document.getElementById('imageModal');
+    const modalImage = document.getElementById('modalImage');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDescription = document.getElementById('modalDescription');
+    const modalActions = document.getElementById('modalActions');
+    const voteButtons = document.getElementById('voteButtons');
+    
+    // Image data with personality descriptions
+    const imageData = {
+        'coding-at-desk.png': {
+            title: 'The Workstation',
+            description: 'The workstation! Where you\'ll find me for like 10 hours of my day. This is where I build products, solve problems, and bring ideas to life through code.',
+            actions: [],
+            showVote: false
+        },
+        'lifting-weights.png': {
+            title: 'Fitness Journey',
+            description: 'Since 2023, I\'ve been on a lifting and recomp journey, -30lbs down and 20 more to go. Strength training keeps me balanced and energized for both work and life.',
+            actions: [],
+            showVote: false
+        },
+        'manan-hiking.png': {
+            title: 'Mountain Explorer',
+            description: 'Moving to Calgary has officially made me a hiker 😄. There\'s nothing like being in the mountains to clear your mind and gain perspective.',
+            actions: [],
+            showVote: false
+        },
+        'manan-kitchen.png': {
+            title: 'Kitchen Experiments',
+            description: 'Currently working on a Sesame seed based protein bar. Interested in trying? Let me know what you think!',
+            actions: [],
+            showVote: true
+        },
+        'manan-movies.png': {
+            title: 'Film Buff',
+            description: 'I\'m a big film buff. Cinema is a great way to experience different perspectives and escape into other worlds.',
+            actions: [{
+                text: 'View Letterboxd',
+                url: 'https://letterboxd.com/fedsmoker/',
+                icon: '🎬'
+            }],
+            showVote: false
+        },
+        'manan-pickleball.png': {
+            title: 'Pickleball Player',
+            description: 'Officially an unc so I picked up pickleball too. Great way to stay active and competitive while having fun.',
+            actions: [],
+            showVote: false
+        },
+        'manan-vending-machine-tokyo.png': {
+            title: 'Travel Enthusiast',
+            description: 'Love to travel and explore new cultures. Japan has a special place in my heart - the vending machines are just the beginning!',
+            actions: [{
+                text: 'Travel Gallery',
+                url: '#',
+                icon: '✈️'
+            }],
+            showVote: false
+        }
+    };
+    
+    // Vote tracking (stored in localStorage)
+    let votes = JSON.parse(localStorage.getItem('imageVotes') || '{}');
+    
+    // Add click handlers to carousel items
+    document.querySelectorAll('.header-carousel-item').forEach(item => {
+        item.addEventListener('click', function() {
+            const img = this.querySelector('img');
+            if (img) {
+                const src = img.src.split('/').pop();
+                openImageModal(src);
+            }
+        });
+    });
+    
+    function openImageModal(imageSrc) {
+        const data = imageData[imageSrc];
+        if (!data) return;
+        
+        modalImage.src = `images/minis_1080/${imageSrc}`;
+        modalTitle.textContent = data.title;
+        modalDescription.textContent = data.description;
+        
+        // Build action buttons
+        modalActions.innerHTML = '';
+        data.actions.forEach(action => {
+            const button = document.createElement('a');
+            button.className = 'image-modal-button';
+            button.href = action.url;
+            button.textContent = `${action.icon} ${action.text}`;
+            if (action.url.startsWith('http')) {
+                button.target = '_blank';
+                button.rel = 'noopener';
+            }
+            modalActions.appendChild(button);
+        });
+        
+        // Show/hide vote buttons
+        voteButtons.style.display = data.showVote ? 'flex' : 'none';
+        if (data.showVote) {
+            updateVoteDisplay(imageSrc);
+        }
+        
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    
+    function closeImageModal() {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    
+    function updateVoteDisplay(imageSrc) {
+        const upvotes = votes[imageSrc]?.up || 0;
+        const downvotes = votes[imageSrc]?.down || 0;
+        
+        document.getElementById('upvoteCount').textContent = upvotes;
+        document.getElementById('downvoteCount').textContent = downvotes;
+        
+        // Update button states
+        const userVote = votes[imageSrc]?.userVote;
+        document.getElementById('upvoteBtn').classList.toggle('active', userVote === 'up');
+        document.getElementById('downvoteBtn').classList.toggle('active', userVote === 'down');
+    }
+    
+    function vote(type) {
+        const currentImage = modalImage.src.split('/').pop();
+        if (!votes[currentImage]) {
+            votes[currentImage] = { up: 0, down: 0 };
+        }
+        
+        // Remove previous vote if exists
+        if (votes[currentImage].userVote) {
+            votes[currentImage][votes[currentImage].userVote]--;
+        }
+        
+        // Toggle vote or set new vote
+        if (votes[currentImage].userVote === type) {
+            delete votes[currentImage].userVote;
+        } else {
+            votes[currentImage][type]++;
+            votes[currentImage].userVote = type;
+        }
+        
+        localStorage.setItem('imageVotes', JSON.stringify(votes));
+        updateVoteDisplay(currentImage);
+    }
+    
+    // Close modal on overlay click
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            closeImageModal();
+        }
+    });
+    
+    // Close modal on escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeImageModal();
+        }
+    });
+})();
+
 // Dark mode toggle
 (function() {
     const darkModeToggle = document.getElementById('darkModeToggle');
     const darkModeIcon = document.getElementById('darkModeIcon');
     const html = document.documentElement;
     
-    // Check for saved preference or system preference
+    // Check for saved preference only (default to light mode)
     const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     
     const darkModeText = document.getElementById('darkModeText');
     
-    if (savedTheme === 'dark' || (savedTheme === null && prefersDark)) {
+    if (savedTheme === 'dark') {
         html.classList.add('dark');
         darkModeIcon.textContent = 'light_mode';
         if (darkModeText) darkModeText.textContent = 'Light';
     } else {
+        // Default to light mode
         html.classList.remove('dark');
         darkModeIcon.textContent = 'dark_mode';
         if (darkModeText) darkModeText.textContent = 'Dark';
+        // Clear any existing dark mode preference to ensure light mode
+        if (savedTheme === 'dark') {
+            localStorage.setItem('theme', 'light');
+        }
     }
     
     darkModeToggle.addEventListener('click', () => {
@@ -612,6 +934,171 @@
 
     // Start animation
     animate();
+})();
+
+// Image Modal Functionality
+(function() {
+    const modal = document.getElementById('imageModal');
+    const modalImage = document.getElementById('modalImage');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDescription = document.getElementById('modalDescription');
+    const modalActions = document.getElementById('modalActions');
+    const voteButtons = document.getElementById('voteButtons');
+    
+    // Image data with personality descriptions
+    const imageData = {
+        'coding-at-desk.png': {
+            title: 'The Workstation',
+            description: 'The workstation! Where you\'ll find me for like 10 hours of my day. This is where I build products, solve problems, and bring ideas to life through code.',
+            actions: [],
+            showVote: false
+        },
+        'lifting-weights.png': {
+            title: 'Fitness Journey',
+            description: 'Since 2023, I\'ve been on a lifting and recomp journey, -30lbs down and 20 more to go. Strength training keeps me balanced and energized for both work and life.',
+            actions: [],
+            showVote: false
+        },
+        'manan-hiking.png': {
+            title: 'Mountain Explorer',
+            description: 'Moving to Calgary has officially made me a hiker 😄. There\'s nothing like being in the mountains to clear your mind and gain perspective.',
+            actions: [],
+            showVote: false
+        },
+        'manan-kitchen.png': {
+            title: 'Kitchen Experiments',
+            description: 'Currently working on a Sesame seed based protein bar. Interested in trying? Let me know what you think!',
+            actions: [],
+            showVote: true
+        },
+        'manan-movies.png': {
+            title: 'Film Buff',
+            description: 'I\'m a big film buff. Cinema is a great way to experience different perspectives and escape into other worlds.',
+            actions: [{
+                text: 'View Letterboxd',
+                url: 'https://letterboxd.com/fedsmoker/',
+                icon: '🎬'
+            }],
+            showVote: false
+        },
+        'manan-pickleball.png': {
+            title: 'Pickleball Player',
+            description: 'Officially an unc so I picked up pickleball too. Great way to stay active and competitive while having fun.',
+            actions: [],
+            showVote: false
+        },
+        'manan-vending-machine-tokyo.png': {
+            title: 'Travel Enthusiast',
+            description: 'Love to travel and explore new cultures. Japan has a special place in my heart - the vending machines are just the beginning!',
+            actions: [{
+                text: 'Travel Gallery',
+                url: '#',
+                icon: '✈️'
+            }],
+            showVote: false
+        }
+    };
+    
+    // Vote tracking (stored in localStorage)
+    let votes = JSON.parse(localStorage.getItem('imageVotes') || '{}');
+    
+    // Add click handlers to carousel items
+    document.querySelectorAll('.header-carousel-item').forEach(item => {
+        item.addEventListener('click', function() {
+            const img = this.querySelector('img');
+            if (img) {
+                const src = img.src.split('/').pop();
+                openImageModal(src);
+            }
+        });
+    });
+    
+    function openImageModal(imageSrc) {
+        const data = imageData[imageSrc];
+        if (!data) return;
+        
+        modalImage.src = `images/minis_1080/${imageSrc}`;
+        modalTitle.textContent = data.title;
+        modalDescription.textContent = data.description;
+        
+        // Build action buttons
+        modalActions.innerHTML = '';
+        data.actions.forEach(action => {
+            const button = document.createElement('a');
+            button.className = 'image-modal-button';
+            button.href = action.url;
+            button.textContent = `${action.icon} ${action.text}`;
+            if (action.url.startsWith('http')) {
+                button.target = '_blank';
+                button.rel = 'noopener';
+            }
+            modalActions.appendChild(button);
+        });
+        
+        // Show/hide vote buttons
+        voteButtons.style.display = data.showVote ? 'flex' : 'none';
+        if (data.showVote) {
+            updateVoteDisplay(imageSrc);
+        }
+        
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    
+    function closeImageModal() {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    
+    function updateVoteDisplay(imageSrc) {
+        const upvotes = votes[imageSrc]?.up || 0;
+        const downvotes = votes[imageSrc]?.down || 0;
+        
+        document.getElementById('upvoteCount').textContent = upvotes;
+        document.getElementById('downvoteCount').textContent = downvotes;
+        
+        // Update button states
+        const userVote = votes[imageSrc]?.userVote;
+        document.getElementById('upvoteBtn').classList.toggle('active', userVote === 'up');
+        document.getElementById('downvoteBtn').classList.toggle('active', userVote === 'down');
+    }
+    
+    function vote(type) {
+        const currentImage = modalImage.src.split('/').pop();
+        if (!votes[currentImage]) {
+            votes[currentImage] = { up: 0, down: 0 };
+        }
+        
+        // Remove previous vote if exists
+        if (votes[currentImage].userVote) {
+            votes[currentImage][votes[currentImage].userVote]--;
+        }
+        
+        // Toggle vote or set new vote
+        if (votes[currentImage].userVote === type) {
+            delete votes[currentImage].userVote;
+    } else {
+            votes[currentImage][type]++;
+            votes[currentImage].userVote = type;
+        }
+        
+        localStorage.setItem('imageVotes', JSON.stringify(votes));
+        updateVoteDisplay(currentImage);
+    }
+    
+    // Close modal on overlay click
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            closeImageModal();
+        }
+    });
+    
+    // Close modal on escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeImageModal();
+        }
+    });
 })();
 
 // About section toggle
