@@ -58,6 +58,13 @@
           font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
           font-size: 0.75rem;
         }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
         .header-carousel-container {
           position: relative;
           width: 360px;
@@ -194,6 +201,37 @@
           background: #000;
           margin-bottom: 1.5rem;
         }
+        .image-modal-nav {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          background: rgba(255, 255, 255, 0.1);
+          border: none;
+          color: white;
+          width: 3rem;
+          height: 3rem;
+          border-radius: 50%;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.5rem;
+          transition: background 0.2s;
+          z-index: 10;
+        }
+        .image-modal-nav:hover {
+          background: rgba(255, 255, 255, 0.2);
+        }
+        .image-modal-nav.prev {
+          left: 1rem;
+        }
+        .image-modal-nav.next {
+          right: 1rem;
+        }
+        .image-modal-nav:disabled {
+          opacity: 0.3;
+          cursor: not-allowed;
+        }
         .image-modal-container img {
           width: 100%;
           height: 100%;
@@ -259,35 +297,6 @@
         }
         .image-modal-close:hover {
           background: rgba(255, 255, 255, 0.2);
-        }
-        .vote-buttons {
-          display: flex;
-          gap: 0.5rem;
-          margin-top: 1rem;
-        }
-        .vote-button {
-          padding: 0.5rem 1rem;
-          border: 1px solid rgba(255, 255, 255, 0.3);
-          background: rgba(255, 255, 255, 0.1);
-          color: white;
-          border-radius: 0.5rem;
-          cursor: pointer;
-          transition: background 0.2s, border-color 0.2s;
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-        }
-        .vote-button:hover {
-          background: rgba(255, 255, 255, 0.2);
-          border-color: rgba(255, 255, 255, 0.5);
-        }
-        .vote-button.active {
-          background: rgba(59, 130, 246, 0.3);
-          border-color: rgba(59, 130, 246, 0.5);
-        }
-        .vote-count {
-          font-size: 0.75rem;
-          opacity: 0.8;
         }
         @keyframes pulseLeft {
           0%, 100% { transform: translateX(0); opacity: 0.7; }
@@ -379,22 +388,14 @@
 <div class="image-modal-content">
 <button class="image-modal-close" onclick="closeImageModal()">&times;</button>
 <div class="image-modal-container">
+<button class="image-modal-nav prev" id="modalPrevBtn" onclick="navigateModalImage(-1)">‹</button>
+<button class="image-modal-nav next" id="modalNextBtn" onclick="navigateModalImage(1)">›</button>
 <img id="modalImage" src="" alt=""/>
 </div>
 <div class="image-modal-info">
 <h3 id="modalTitle" class="image-modal-title"></h3>
 <p id="modalDescription" class="image-modal-description"></p>
 <div id="modalActions" class="image-modal-actions"></div>
-<div id="voteButtons" class="vote-buttons" style="display: none;">
-<button class="vote-button" onclick="vote('up')" id="upvoteBtn">
-<span class="material-icons">thumb_up</span>
-<span id="upvoteCount" class="vote-count">0</span>
-</button>
-<button class="vote-button" onclick="vote('down')" id="downvoteBtn">
-<span class="material-icons">thumb_down</span>
-<span id="downvoteCount" class="vote-count">0</span>
-</button>
-</div>
 </div>
 </div>
 </div>
@@ -441,18 +442,18 @@
 </section>
 <section class="mb-8 pt-8">
 <h2 class="text-xl font-bold text-text-light dark:text-text-dark mb-6">Blog</h2>
-<div class="flex flex-row gap-4 overflow-x-auto pb-2">
-<a href="blog/swiftui-modern-development.html" class="flex-shrink-0 w-full sm:w-1/3 p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+<div class="flex flex-row gap-4 overflow-x-auto pb-2 scrollbar-hide">
+<a href="blog/swiftui-modern-development.html" class="flex-shrink-0 w-80 p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                 <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">SwiftUI Modern Development</h3>
                 <p class="text-secondary-text-light dark:text-secondary-text-dark blog-description">Exploring the latest SwiftUI features and modern iOS development practices</p>
                 <div class="mt-2 text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">Dec 15, 2024 • iOS</div>
 </a>
-<a href="blog/swift-concurrency-multithreading.html" class="flex-shrink-0 w-full sm:w-1/3 p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+<a href="blog/swift-concurrency-multithreading.html" class="flex-shrink-0 w-80 p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                 <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">Swift Concurrency & Multithreading</h3>
 <p class="text-secondary-text-light dark:text-secondary-text-dark blog-description">Understanding async/await and structured concurrency in Swift</p>
                 <div class="mt-2 text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">Dec 10, 2024 • iOS</div>
 </a>
-<a href="blog/ios-unit-testing-mock-objects.html" class="flex-shrink-0 w-full sm:w-1/3 p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+<a href="blog/ios-unit-testing-mock-objects.html" class="flex-shrink-0 w-80 p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                 <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">iOS Unit Testing & Mock Objects</h3>
 <p class="text-secondary-text-light dark:text-secondary-text-dark blog-description">Best practices for testing iOS applications with mock objects</p>
                 <div class="mt-2 text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">Dec 5, 2024 • iOS</div>
@@ -560,33 +561,28 @@
     const modalTitle = document.getElementById('modalTitle');
     const modalDescription = document.getElementById('modalDescription');
     const modalActions = document.getElementById('modalActions');
-    const voteButtons = document.getElementById('voteButtons');
     
     // Image data with personality descriptions
     const imageData = {
         'coding-at-desk.png': {
             title: 'The Workstation',
             description: 'The workstation! Where you\'ll find me for like 10 hours of my day. This is where I build products, solve problems, and bring ideas to life through code.',
-            actions: [],
-            showVote: false
+            actions: []
         },
         'lifting-weights.png': {
             title: 'Fitness Journey',
             description: 'Since 2023, I\'ve been on a lifting and recomp journey, -30lbs down and 20 more to go. Strength training keeps me balanced and energized for both work and life.',
-            actions: [],
-            showVote: false
+            actions: []
         },
         'manan-hiking.png': {
             title: 'Mountain Explorer',
             description: 'Moving to Calgary has officially made me a hiker 😄. There\'s nothing like being in the mountains to clear your mind and gain perspective.',
-            actions: [],
-            showVote: false
+            actions: []
         },
         'manan-kitchen.png': {
             title: 'Kitchen Experiments',
             description: 'Currently working on a Sesame seed based protein bar. Interested in trying? Let me know what you think!',
-            actions: [],
-            showVote: true
+            actions: []
         },
         'manan-movies.png': {
             title: 'Film Buff',
@@ -595,14 +591,12 @@
                 text: 'View Letterboxd',
                 url: 'https://letterboxd.com/fedsmoker/',
                 icon: '🎬'
-            }],
-            showVote: false
+            }]
         },
         'manan-pickleball.png': {
             title: 'Pickleball Player',
             description: 'Officially an unc so I picked up pickleball too. Great way to stay active and competitive while having fun.',
-            actions: [],
-            showVote: false
+            actions: []
         },
         'manan-vending-machine-tokyo.png': {
             title: 'Travel Enthusiast',
@@ -611,21 +605,49 @@
                 text: 'Travel Gallery',
                 url: '#',
                 icon: '✈️'
-            }],
-            showVote: false
+            }]
         }
     };
     
-    // Vote tracking (stored in localStorage)
-    let votes = JSON.parse(localStorage.getItem('imageVotes') || '{}');
+    // Image order (matching carousel order)
+    const imageOrder = [
+        'coding-at-desk.png',
+        'lifting-weights.png',
+        'manan-hiking.png',
+        'manan-kitchen.png',
+        'manan-movies.png',
+        'manan-pickleball.png',
+        'manan-vending-machine-tokyo.png'
+    ];
+    
+    let currentImageIndex = 0;
+    
+    // Navigation function (exposed globally)
+    window.navigateModalImage = function(direction) {
+        currentImageIndex += direction;
+        
+        // Wrap around
+        if (currentImageIndex < 0) {
+            currentImageIndex = imageOrder.length - 1;
+        } else if (currentImageIndex >= imageOrder.length) {
+            currentImageIndex = 0;
+        }
+        
+        const nextImageSrc = imageOrder[currentImageIndex];
+        openImageModal(nextImageSrc);
+    };
     
     // Add click handlers to carousel items
-    document.querySelectorAll('.header-carousel-item').forEach(item => {
+    document.querySelectorAll('.header-carousel-item').forEach((item, index) => {
         item.addEventListener('click', function() {
             const img = this.querySelector('img');
             if (img) {
                 const src = img.src.split('/').pop();
-                openImageModal(src);
+                const imgIndex = imageOrder.indexOf(src);
+                if (imgIndex !== -1) {
+                    currentImageIndex = imgIndex;
+                    openImageModal(src);
+                }
             }
         });
     });
@@ -633,6 +655,12 @@
     function openImageModal(imageSrc) {
         const data = imageData[imageSrc];
         if (!data) return;
+        
+        // Update current index
+        const imgIndex = imageOrder.indexOf(imageSrc);
+        if (imgIndex !== -1) {
+            currentImageIndex = imgIndex;
+        }
         
         modalImage.src = `images/minis_1080/${imageSrc}`;
         modalTitle.textContent = data.title;
@@ -652,12 +680,6 @@
             modalActions.appendChild(button);
         });
         
-        // Show/hide vote buttons
-        voteButtons.style.display = data.showVote ? 'flex' : 'none';
-        if (data.showVote) {
-            updateVoteDisplay(imageSrc);
-        }
-        
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
     }
@@ -667,41 +689,8 @@
         document.body.style.overflow = '';
     }
     
-    function updateVoteDisplay(imageSrc) {
-        const upvotes = votes[imageSrc]?.up || 0;
-        const downvotes = votes[imageSrc]?.down || 0;
-        
-        document.getElementById('upvoteCount').textContent = upvotes;
-        document.getElementById('downvoteCount').textContent = downvotes;
-        
-        // Update button states
-        const userVote = votes[imageSrc]?.userVote;
-        document.getElementById('upvoteBtn').classList.toggle('active', userVote === 'up');
-        document.getElementById('downvoteBtn').classList.toggle('active', userVote === 'down');
-    }
-    
-    function vote(type) {
-        const currentImage = modalImage.src.split('/').pop();
-        if (!votes[currentImage]) {
-            votes[currentImage] = { up: 0, down: 0 };
-        }
-        
-        // Remove previous vote if exists
-        if (votes[currentImage].userVote) {
-            votes[currentImage][votes[currentImage].userVote]--;
-        }
-        
-        // Toggle vote or set new vote
-        if (votes[currentImage].userVote === type) {
-            delete votes[currentImage].userVote;
-        } else {
-            votes[currentImage][type]++;
-            votes[currentImage].userVote = type;
-        }
-        
-        localStorage.setItem('imageVotes', JSON.stringify(votes));
-        updateVoteDisplay(currentImage);
-    }
+    // Expose closeImageModal globally
+    window.closeImageModal = closeImageModal;
     
     // Close modal on overlay click
     modal.addEventListener('click', function(e) {
@@ -710,10 +699,16 @@
         }
     });
     
-    // Close modal on escape key
+    // Close modal on escape key, navigate with arrow keys
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
+        if (!modal.classList.contains('active')) return;
+        
+        if (e.key === 'Escape') {
             closeImageModal();
+        } else if (e.key === 'ArrowLeft') {
+            navigateModalImage(-1);
+        } else if (e.key === 'ArrowRight') {
+            navigateModalImage(1);
         }
     });
 })();
@@ -943,33 +938,28 @@
     const modalTitle = document.getElementById('modalTitle');
     const modalDescription = document.getElementById('modalDescription');
     const modalActions = document.getElementById('modalActions');
-    const voteButtons = document.getElementById('voteButtons');
     
     // Image data with personality descriptions
     const imageData = {
         'coding-at-desk.png': {
             title: 'The Workstation',
             description: 'The workstation! Where you\'ll find me for like 10 hours of my day. This is where I build products, solve problems, and bring ideas to life through code.',
-            actions: [],
-            showVote: false
+            actions: []
         },
         'lifting-weights.png': {
             title: 'Fitness Journey',
             description: 'Since 2023, I\'ve been on a lifting and recomp journey, -30lbs down and 20 more to go. Strength training keeps me balanced and energized for both work and life.',
-            actions: [],
-            showVote: false
+            actions: []
         },
         'manan-hiking.png': {
             title: 'Mountain Explorer',
             description: 'Moving to Calgary has officially made me a hiker 😄. There\'s nothing like being in the mountains to clear your mind and gain perspective.',
-            actions: [],
-            showVote: false
+            actions: []
         },
         'manan-kitchen.png': {
             title: 'Kitchen Experiments',
             description: 'Currently working on a Sesame seed based protein bar. Interested in trying? Let me know what you think!',
-            actions: [],
-            showVote: true
+            actions: []
         },
         'manan-movies.png': {
             title: 'Film Buff',
@@ -978,14 +968,12 @@
                 text: 'View Letterboxd',
                 url: 'https://letterboxd.com/fedsmoker/',
                 icon: '🎬'
-            }],
-            showVote: false
+            }]
         },
         'manan-pickleball.png': {
             title: 'Pickleball Player',
             description: 'Officially an unc so I picked up pickleball too. Great way to stay active and competitive while having fun.',
-            actions: [],
-            showVote: false
+            actions: []
         },
         'manan-vending-machine-tokyo.png': {
             title: 'Travel Enthusiast',
@@ -994,21 +982,49 @@
                 text: 'Travel Gallery',
                 url: '#',
                 icon: '✈️'
-            }],
-            showVote: false
+            }]
         }
     };
     
-    // Vote tracking (stored in localStorage)
-    let votes = JSON.parse(localStorage.getItem('imageVotes') || '{}');
+    // Image order (matching carousel order)
+    const imageOrder = [
+        'coding-at-desk.png',
+        'lifting-weights.png',
+        'manan-hiking.png',
+        'manan-kitchen.png',
+        'manan-movies.png',
+        'manan-pickleball.png',
+        'manan-vending-machine-tokyo.png'
+    ];
+    
+    let currentImageIndex = 0;
+    
+    // Navigation function (exposed globally)
+    window.navigateModalImage = function(direction) {
+        currentImageIndex += direction;
+        
+        // Wrap around
+        if (currentImageIndex < 0) {
+            currentImageIndex = imageOrder.length - 1;
+        } else if (currentImageIndex >= imageOrder.length) {
+            currentImageIndex = 0;
+        }
+        
+        const nextImageSrc = imageOrder[currentImageIndex];
+        openImageModal(nextImageSrc);
+    };
     
     // Add click handlers to carousel items
-    document.querySelectorAll('.header-carousel-item').forEach(item => {
+    document.querySelectorAll('.header-carousel-item').forEach((item, index) => {
         item.addEventListener('click', function() {
             const img = this.querySelector('img');
             if (img) {
                 const src = img.src.split('/').pop();
-                openImageModal(src);
+                const imgIndex = imageOrder.indexOf(src);
+                if (imgIndex !== -1) {
+                    currentImageIndex = imgIndex;
+                    openImageModal(src);
+                }
             }
         });
     });
@@ -1016,6 +1032,12 @@
     function openImageModal(imageSrc) {
         const data = imageData[imageSrc];
         if (!data) return;
+        
+        // Update current index
+        const imgIndex = imageOrder.indexOf(imageSrc);
+        if (imgIndex !== -1) {
+            currentImageIndex = imgIndex;
+        }
         
         modalImage.src = `images/minis_1080/${imageSrc}`;
         modalTitle.textContent = data.title;
@@ -1035,12 +1057,6 @@
             modalActions.appendChild(button);
         });
         
-        // Show/hide vote buttons
-        voteButtons.style.display = data.showVote ? 'flex' : 'none';
-        if (data.showVote) {
-            updateVoteDisplay(imageSrc);
-        }
-        
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
     }
@@ -1050,41 +1066,8 @@
         document.body.style.overflow = '';
     }
     
-    function updateVoteDisplay(imageSrc) {
-        const upvotes = votes[imageSrc]?.up || 0;
-        const downvotes = votes[imageSrc]?.down || 0;
-        
-        document.getElementById('upvoteCount').textContent = upvotes;
-        document.getElementById('downvoteCount').textContent = downvotes;
-        
-        // Update button states
-        const userVote = votes[imageSrc]?.userVote;
-        document.getElementById('upvoteBtn').classList.toggle('active', userVote === 'up');
-        document.getElementById('downvoteBtn').classList.toggle('active', userVote === 'down');
-    }
-    
-    function vote(type) {
-        const currentImage = modalImage.src.split('/').pop();
-        if (!votes[currentImage]) {
-            votes[currentImage] = { up: 0, down: 0 };
-        }
-        
-        // Remove previous vote if exists
-        if (votes[currentImage].userVote) {
-            votes[currentImage][votes[currentImage].userVote]--;
-        }
-        
-        // Toggle vote or set new vote
-        if (votes[currentImage].userVote === type) {
-            delete votes[currentImage].userVote;
-    } else {
-            votes[currentImage][type]++;
-            votes[currentImage].userVote = type;
-        }
-        
-        localStorage.setItem('imageVotes', JSON.stringify(votes));
-        updateVoteDisplay(currentImage);
-    }
+    // Expose closeImageModal globally
+    window.closeImageModal = closeImageModal;
     
     // Close modal on overlay click
     modal.addEventListener('click', function(e) {
@@ -1093,10 +1076,16 @@
         }
     });
     
-    // Close modal on escape key
+    // Close modal on escape key, navigate with arrow keys
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
+        if (!modal.classList.contains('active')) return;
+        
+        if (e.key === 'Escape') {
             closeImageModal();
+        } else if (e.key === 'ArrowLeft') {
+            navigateModalImage(-1);
+        } else if (e.key === 'ArrowRight') {
+            navigateModalImage(1);
         }
     });
 })();
