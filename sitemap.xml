@@ -2,15 +2,21 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://mananpatel.info/</loc>
-    <lastmod>2024-12-15</lastmod>
+    <lastmod>2025-02-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://mananpatel.info/blog/</loc>
-    <lastmod>2024-12-15</lastmod>
+    <lastmod>2025-09-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mananpatel.info/blog/rentplay-lessons-first-startup.html</loc>
+    <lastmod>2025-09-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://mananpatel.info/blog/swiftui-modern-development.html</loc>
@@ -20,19 +26,43 @@
   </url>
   <url>
     <loc>https://mananpatel.info/blog/swift-concurrency-multithreading.html</loc>
-    <lastmod>2024-12-10</lastmod>
+    <lastmod>2024-02-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://mananpatel.info/blog/ios-unit-testing-mock-objects.html</loc>
-    <lastmod>2024-12-05</lastmod>
+    <lastmod>2023-12-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://mananpatel.info/blog/ios-networking-async-await.html</loc>
-    <lastmod>2024-11-28</lastmod>
+    <lastmod>2023-12-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://mananpatel.info/blog/ios-architecture-patterns.html</loc>
+    <lastmod>2024-01-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://mananpatel.info/blog/ios-data-persistence.html</loc>
+    <lastmod>2024-01-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://mananpatel.info/blog/ios-memory-management.html</loc>
+    <lastmod>2024-02-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://mananpatel.info/blog/uikit-fundamentals.html</loc>
+    <lastmod>2023-12-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
