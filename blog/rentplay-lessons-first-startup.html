@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lessons from my 1st Startup RentPlay (RentPlay.ca) - Manan Patel</title>
+    <meta name="description" content="Reflections on building RentPlay and classic first-time founder mistakes: co-founders, validation, distribution, B2B vs B2C, and why cashflow beats VC money.">
+    <meta name="keywords" content="RentPlay, startup, entrepreneurship, first-time founder, validation, B2B, B2C, cashflow">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://blog.mananpatel.info/rentplay-lessons-first-startup">
+    <meta property="og:title" content="Lessons from my 1st Startup RentPlay (RentPlay.ca) - Manan Patel">
+    <meta property="og:description" content="Reflections on building RentPlay and classic first-time founder mistakes.">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://blog.mananpatel.info/rentplay-lessons-first-startup">
+    <meta property="twitter:title" content="Lessons from my 1st Startup RentPlay (RentPlay.ca) - Manan Patel">
+    <meta property="twitter:description" content="Reflections on building RentPlay and classic first-time founder mistakes.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'text-light': '#1f2937',
+                        'text-dark': '#f9fafb',
+                        'secondary-text-light': '#6b7280',
+                        'secondary-text-dark': '#9ca3af',
+                        'border-light': '#e5e7eb',
+                        'border-dark': '#374151',
+                        'bg-light': '#ffffff',
+                        'bg-dark': '#111827'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .blog-content {
+            line-height: 1.7;
+        }
+        .blog-content h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: inherit;
+        }
+        .blog-content h3 {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: inherit;
+        }
+        .blog-content p {
+            margin-bottom: 1rem;
+        }
+        .blog-content code {
+            background-color: #f3f4f6;
+            padding: 0.125rem 0.25rem;
+            border-radius: 0.25rem;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.875rem;
+        }
+        .dark .blog-content code {
+            background-color: #374151;
+        }
+        .blog-content ul, .blog-content ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .blog-content li {
+            margin-bottom: 0.5rem;
+        }
+        .blog-content a {
+            color: #2563eb;
+            text-decoration: underline;
+        }
+        .dark .blog-content a {
+            color: #60a5fa;
+        }
+    </style>
+</head>
+<body class="bg-bg-light dark:bg-bg-dark text-text-light dark:text-text-dark transition-colors">
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="border-b border-border-light dark:border-border-dark">
+            <div class="max-w-4xl mx-auto px-4 py-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <a href="./" class="text-sm text-secondary-text-light dark:text-secondary-text-dark hover:text-text-light dark:hover:text-text-dark transition-colors">
+                            ← Back to Blog
+                        </a>
+                    </div>
+                    <a href="/" class="text-sm text-secondary-text-light dark:text-secondary-text-dark hover:text-text-light dark:hover:text-text-dark transition-colors">
+                        Home
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Article -->
+        <article class="max-w-4xl mx-auto px-4 py-8">
+            <!-- Article Header -->
+            <header class="mb-8">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="px-2 py-1 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 text-xs font-medium rounded">Entrepreneurship</span>
+                    <span class="text-secondary-text-light dark:text-secondary-text-dark text-sm">Sep 10, 2025</span>
+                    <span class="text-secondary-text-light dark:text-secondary-text-dark text-sm">•</span>
+                    <span class="text-secondary-text-light dark:text-secondary-text-dark text-sm">8 min read</span>
+                </div>
+                <h1 class="text-3xl font-bold text-text-light dark:text-text-dark mb-4">Lessons from my 1st startup RentPlay (RentPlay.ca)</h1>
+                <p class="text-lg text-secondary-text-light dark:text-secondary-text-dark">
+                    I spent a lot of time building RentPlay. Looking back, I realized I made some classic first-time founder mistakes. If you're building your first thing right now, read this so you don't have to learn the hard way. Honestly, here for my future reference too.
+                </p>
+            </header>
+
+            <!-- Article Content -->
+            <div class="blog-content prose prose-lg max-w-none">
+                <h2>1. Find the right co-founders (and make sure they complement you)</h2>
+                <p>You need people who complement your skills and are just as obsessed as you are about the early validation and traction phases. They need to be true believers in the vision. Y'all should know what you're signing up for—the long hours, frustrations, and probably no payoff. This won't be like taking a 9–5 job.</p>
+                <p>As Naval Ravikant said it best: <em>"Learn to sell, learn to build, if you can do both, you will be unstoppable."</em></p>
+                <p>At RentPlay, we had 2 builders and 0 sellers. We could ship code, but we couldn't move the needle on growth because nobody was dedicated to the "sell" side of the equation. Make sure the co-founders have their roles and duties defined. 1 person should ALWAYS be selling at the start—they shouldn't even worry about implementation. They should be getting impressions, feedback, and relaying that to the builders.</p>
+
+                <h2>2. Validate before you build</h2>
+                <p>Talk to your potential customers in person. Start small and local.</p>
+                <p>For us, the path should have been: Calgary → AB → Canada → World.</p>
+                <p>Instead of diving into the IDE, we should have focused on:</p>
+                <ul>
+                    <li>Getting way more impressions.</li>
+                    <li>Pushing content.</li>
+                    <li>Sending cold emails to see if anyone actually cared.</li>
+                </ul>
+                <p>We did too much building and pivoting for a tiny group of 10 people. That is not a strategy that works in the 2025 world. You need to really make an effort at getting your name out there!</p>
+
+                <h2>3. Distribute, distribute, distribute</h2>
+                <p>Traction is the only thing that matters.</p>
+                <ul>
+                    <li>Get customers paying.</li>
+                    <li>Find the funnels that actually convert.</li>
+                    <li>Double down on winning content.</li>
+                </ul>
+                <p>If you find a strategy that works, stop looking for the "next big thing" and just pour gasoline on what's already burning.</p>
+
+                <h2>4. B2B &gt; B2C (usually)</h2>
+                <p>Unless you're aiming for a massive moonshot, B2B is generally better for a "normal" $1M–$10M revenue business.</p>
+                <ul>
+                    <li>Businesses have more appetite to spend money.</li>
+                    <li>ICP (Ideal Customer Profile) modeling is easier.</li>
+                    <li>B2B is more about 1-on-1 sales and less about "marketing magic." Not to say it's easy, but it's easier.</li>
+                </ul>
+                <p>B2C is increasingly becoming a game of "content farming." You need a multi-channel presence, constant UGC, and ads to keep the funnel alive—it can work amazingly well, for example similar to how Lotanna Ezeike operates. If you aren't ready to be a content creator/manager, B2C is going to be a grind.</p>
+
+                <h2>5. Cashflow is better than VC money</h2>
+                <p>Not every company needs to be a VC-backed rocket ship. VC money is rocket fuel—it's great if you're actually a rocket, but it'll probably just blow up a normal car.</p>
+                <p>Plus, taking money (including SAFEs and grants) introduces more "cooks in the kitchen." If you can build a business that generates its own cashflow, you keep the control.</p>
+
+                <h2>What's next?</h2>
+                <p>I'm applying these lessons to my current projects: <a href="https://rocketagency.ca/" target="_blank" rel="noopener">Rocket Agency</a> &amp; <a href="https://www.goalgetterapp.ca/" target="_blank" rel="noopener">GoalGetter</a>.</p>
+                <p>Rocket Agency is my operations partner for high-growth companies—we help teams scale without the chaos. If you're building something and want to move faster without burning out, <a href="https://rocketagency.ca/" target="_blank" rel="noopener">check us out</a>.</p>
+            </div>
+
+            <!-- Article Footer -->
+            <footer class="mt-12 pt-8 border-t border-border-light dark:border-border-dark">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <span class="text-sm text-secondary-text-light dark:text-secondary-text-dark">Tags:</span>
+                        <div class="flex gap-2">
+                            <span class="px-2 py-1 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 text-xs font-medium rounded">Entrepreneurship</span>
+                            <span class="px-2 py-1 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 text-xs font-medium rounded">Startups</span>
+                            <span class="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs font-medium rounded">RentPlay</span>
+                        </div>
+                    </div>
+                    <div class="text-sm text-secondary-text-light dark:text-secondary-text-dark">
+                        Published Sep 10, 2025
+                    </div>
+                </div>
+            </footer>
+        </article>
+
+        <!-- Footer -->
+        <footer class="border-t border-border-light dark:border-border-dark mt-12">
+            <div class="max-w-4xl mx-auto px-4 py-8">
+                <div class="text-center text-secondary-text-light dark:text-secondary-text-dark text-sm">
+                    <p>&copy; 2025 Manan Patel. All rights reserved.</p>
+                    <p class="mt-2">
+                        <a href="/" class="hover:text-text-light dark:hover:text-text-dark transition-colors">Home</a>
+                        <span class="mx-2">•</span>
+                        <a href="./" class="hover:text-text-light dark:hover:text-text-dark transition-colors">Blog</a>
+                    </p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Dark mode toggle -->
+    <script>
+        const toggleDarkMode = () => {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('darkMode', document.documentElement.classList.contains('dark'));
+        };
+
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+</body>
+</html>

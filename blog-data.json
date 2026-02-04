@@ -1,6 +1,17 @@
 {
   "posts": [
     {
+      "id": "rentplay-lessons-first-startup",
+      "title": "Lessons from my 1st Startup RentPlay (RentPlay.ca)",
+      "description": "Reflections on building RentPlay and classic first-time founder mistakes: co-founders, validation, distribution, B2B vs B2C, and why cashflow beats VC money.",
+      "date": "2025-09-10",
+      "category": "Entrepreneurship",
+      "tags": ["Entrepreneurship", "Startups", "RentPlay"],
+      "readTime": "8 min read",
+      "featured": false,
+      "file": "blog/rentplay-lessons-first-startup.html"
+    },
+    {
       "id": "swiftui-modern-development",
       "title": "SwiftUI Modern Development",
       "description": "Exploring the latest SwiftUI features and modern iOS development practices. Learn how to build beautiful, performant iOS apps with SwiftUI's declarative syntax.",
@@ -61,7 +72,7 @@
     {
       "name": "Entrepreneurship",
       "slug": "entrepreneurship",
-      "count": 0,
+      "count": 1,
       "color": "purple"
     },
     {
