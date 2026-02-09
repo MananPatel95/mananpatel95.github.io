@@ -3,24 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2025 Year Progress Calculator | How Much of the Year Has Passed</title>
-    <meta name="description" content="Calculate how much of 2025 has passed. See your year progress with days remaining, percentage completed, and time left in the year.">
-    <meta name="keywords" content="year progress calculator, 2025 year progress, days remaining 2025, year completion percentage, time left in year">
+    <title>Year Progress Calculator | How Much of the Year Has Passed</title>
+    <meta name="description" content="Calculate how much of the year has passed. See your year progress with days remaining, percentage completed, and time left in the year.">
+    <meta name="keywords" content="year progress calculator, year progress, days remaining, year completion percentage, time left in year">
     <meta name="author" content="Manan Patel">
     <meta name="robots" content="index, follow">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://mananpatel95.github.io/tools/year-progress-calculator.html">
-    <meta property="og:title" content="2025 Year Progress Calculator | How Much of the Year Has Passed">
-    <meta property="og:description" content="Calculate how much of 2025 has passed. See your year progress with days remaining and percentage completed.">
+    <meta property="og:title" content="Year Progress Calculator | How Much of the Year Has Passed">
+    <meta property="og:description" content="Calculate how much of the year has passed. See your year progress with days remaining and percentage completed.">
     <meta property="og:image" content="https://mananpatel95.github.io/images/year-progress-preview.jpg">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://mananpatel95.github.io/tools/year-progress-calculator.html">
-    <meta property="twitter:title" content="2025 Year Progress Calculator | How Much of the Year Has Passed">
-    <meta property="twitter:description" content="Calculate how much of 2025 has passed. See your year progress with days remaining and percentage completed.">
+    <meta property="twitter:title" content="Year Progress Calculator | How Much of the Year Has Passed">
+    <meta property="twitter:description" content="Calculate how much of the year has passed. See your year progress with days remaining and percentage completed.">
     <meta property="twitter:image" content="https://mananpatel95.github.io/images/year-progress-preview.jpg">
 
     <!-- Canonical URL -->
@@ -293,14 +293,14 @@
             Back to Portfolio
         </a>
         
-        <h1>📅 2025 Year Progress Calculator</h1>
-        <p class="subtitle">Track how much of 2025 has passed and what's left to achieve your goals</p>
+        <h1 id="yearProgressTitle">📅 Year Progress Calculator</h1>
+        <p class="subtitle" id="yearProgressSubtitle">Track how much of the year has passed and what's left to achieve your goals</p>
         
         <div class="progress-section">
             <div class="progress-bar-container">
                 <div class="progress-bar" id="progressBar"></div>
             </div>
-            <div class="progress-text" id="progressText">0% of 2025 Complete</div>
+            <div class="progress-text" id="progressText">0% Complete</div>
         </div>
         
         <div class="stats-grid">
@@ -325,7 +325,7 @@
         <div class="time-breakdown">
             <h3>⏰ Time Breakdown</h3>
             <div class="time-item">
-                <span>Total Days in 2025:</span>
+                <span id="totalDaysLabel">Total Days:</span>
                 <span id="totalDays">365</span>
             </div>
             <div class="time-item">
@@ -351,53 +351,53 @@
         </div>
         
         <div class="milestones">
-            <h3>🎯 2025 Milestones</h3>
+            <h3 id="milestonesYear">🎯 Milestones</h3>
             <div class="milestone">
                 <div>
                     <div class="milestone-name">New Year's Day</div>
-                    <div class="milestone-date">January 1, 2025</div>
+                    <div class="milestone-date" id="newYearDate">January 1</div>
                 </div>
                 <span class="milestone-status milestone-completed" id="newYearStatus">Completed</span>
             </div>
             <div class="milestone">
                 <div>
                     <div class="milestone-name">Valentine's Day</div>
-                    <div class="milestone-date">February 14, 2025</div>
+                    <div class="milestone-date" id="valentineDate">February 14</div>
                 </div>
                 <span class="milestone-status" id="valentineStatus">Upcoming</span>
             </div>
             <div class="milestone">
                 <div>
                     <div class="milestone-name">Spring Equinox</div>
-                    <div class="milestone-date">March 20, 2025</div>
+                    <div class="milestone-date" id="springDate">March 20</div>
                 </div>
                 <span class="milestone-status" id="springStatus">Upcoming</span>
             </div>
             <div class="milestone">
                 <div>
                     <div class="milestone-name">Summer Solstice</div>
-                    <div class="milestone-date">June 21, 2025</div>
+                    <div class="milestone-date" id="summerDate">June 21</div>
                 </div>
                 <span class="milestone-status" id="summerStatus">Upcoming</span>
             </div>
             <div class="milestone">
                 <div>
                     <div class="milestone-name">Fall Equinox</div>
-                    <div class="milestone-date">September 22, 2025</div>
+                    <div class="milestone-date" id="fallDate">September 22</div>
                 </div>
                 <span class="milestone-status" id="fallStatus">Upcoming</span>
             </div>
             <div class="milestone">
                 <div>
                     <div class="milestone-name">Winter Solstice</div>
-                    <div class="milestone-date">December 21, 2025</div>
+                    <div class="milestone-date" id="winterDate">December 21</div>
                 </div>
                 <span class="milestone-status" id="winterStatus">Upcoming</span>
             </div>
             <div class="milestone">
                 <div>
                     <div class="milestone-name">New Year's Eve</div>
-                    <div class="milestone-date">December 31, 2025</div>
+                    <div class="milestone-date" id="newYearEveDate">December 31</div>
                 </div>
                 <span class="milestone-status" id="newYearEveStatus">Upcoming</span>
             </div>
@@ -410,10 +410,13 @@
     </div>
 
     <script>
+        const currentYear = new Date().getFullYear();
+
         function updateYearProgress() {
             const now = new Date();
-            const startOfYear = new Date(2025, 0, 1); // January 1, 2025
-            const endOfYear = new Date(2025, 11, 31); // December 31, 2025
+            const year = currentYear;
+            const startOfYear = new Date(year, 0, 1);
+            const endOfYear = new Date(year, 11, 31);
             
             // Calculate time differences
             const totalTime = endOfYear - startOfYear;
@@ -422,20 +425,41 @@
             // Ensure we don't go negative or over 100%
             const progress = Math.max(0, Math.min(100, (elapsedTime / totalTime) * 100));
             
-            // Calculate days
-            const totalDays = 365;
+            // Total days in year (handles leap years)
+            const totalDays = Math.round((endOfYear - startOfYear) / (1000 * 60 * 60 * 24)) + 1;
             const daysPassed = Math.floor(elapsedTime / (1000 * 60 * 60 * 24));
             const daysRemaining = Math.max(0, totalDays - daysPassed);
             const weeksPassed = Math.floor(daysPassed / 7);
-            const monthsPassed = Math.floor(daysPassed / 30.44); // Average days per month
+            const monthsPassed = Math.floor(daysPassed / 30.44);
             
             // Calculate remaining time
             const hoursRemaining = daysRemaining * 24;
             const minutesRemaining = hoursRemaining * 60;
             
+            // Update title and labels with current year
+            document.title = year + ' Year Progress Calculator | How Much of the Year Has Passed';
+            var titleEl = document.getElementById('yearProgressTitle');
+            if (titleEl) titleEl.textContent = '📅 ' + year + ' Year Progress Calculator';
+            var subtitleEl = document.getElementById('yearProgressSubtitle');
+            if (subtitleEl) subtitleEl.textContent = 'Track how much of ' + year + ' has passed and what\'s left to achieve your goals';
+            var totalDaysLabel = document.getElementById('totalDaysLabel');
+            if (totalDaysLabel) totalDaysLabel.textContent = 'Total Days in ' + year + ':';
+            var milestonesYear = document.getElementById('milestonesYear');
+            if (milestonesYear) milestonesYear.textContent = '🎯 ' + year + ' Milestones';
+            
+            // Milestone dates (display)
+            var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            setMilestoneDate('newYearDate', 0, 1, year, months);
+            setMilestoneDate('valentineDate', 1, 14, year, months);
+            setMilestoneDate('springDate', 2, 20, year, months);
+            setMilestoneDate('summerDate', 5, 21, year, months);
+            setMilestoneDate('fallDate', 8, 22, year, months);
+            setMilestoneDate('winterDate', 11, 21, year, months);
+            setMilestoneDate('newYearEveDate', 11, 31, year, months);
+            
             // Update progress bar
             document.getElementById('progressBar').style.width = progress + '%';
-            document.getElementById('progressText').textContent = progress.toFixed(1) + '% of 2025 Complete';
+            document.getElementById('progressText').textContent = progress.toFixed(1) + '% of ' + year + ' Complete';
             
             // Update stats
             document.getElementById('daysPassed').textContent = daysPassed;
@@ -452,15 +476,21 @@
             document.getElementById('percentageComplete').innerHTML = '<strong>' + progress.toFixed(1) + '%</strong>';
             
             // Update milestone statuses
-            updateMilestoneStatus('valentineStatus', new Date(2025, 1, 14), now);
-            updateMilestoneStatus('springStatus', new Date(2025, 2, 20), now);
-            updateMilestoneStatus('summerStatus', new Date(2025, 5, 21), now);
-            updateMilestoneStatus('fallStatus', new Date(2025, 8, 22), now);
-            updateMilestoneStatus('winterStatus', new Date(2025, 11, 21), now);
-            updateMilestoneStatus('newYearEveStatus', new Date(2025, 11, 31), now);
+            updateMilestoneStatus('newYearStatus', new Date(year, 0, 1), now);
+            updateMilestoneStatus('valentineStatus', new Date(year, 1, 14), now);
+            updateMilestoneStatus('springStatus', new Date(year, 2, 20), now);
+            updateMilestoneStatus('summerStatus', new Date(year, 5, 21), now);
+            updateMilestoneStatus('fallStatus', new Date(year, 8, 22), now);
+            updateMilestoneStatus('winterStatus', new Date(year, 11, 21), now);
+            updateMilestoneStatus('newYearEveStatus', new Date(year, 11, 31), now);
             
             // Update motivation
             updateMotivation(progress, daysRemaining);
+        }
+        
+        function setMilestoneDate(id, month, day, year, months) {
+            var el = document.getElementById(id);
+            if (el) el.textContent = months[month] + ' ' + day + ', ' + year;
         }
         
         function updateMilestoneStatus(elementId, milestoneDate, currentDate) {
