@@ -2,85 +2,133 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://mananpatel.info/</loc>
-    <lastmod>2025-02-03</lastmod>
+    <lastmod>2026-02-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://mananpatel.info/blog/</loc>
-    <lastmod>2025-09-10</lastmod>
+    <loc>https://mananpatel.info/index.html</loc>
+    <lastmod>2026-02-09</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://mananpatel.info/blog/rentplay-lessons-first-startup.html</loc>
-    <lastmod>2025-09-10</lastmod>
+    <loc>https://mananpatel.info/resume.html</loc>
+    <lastmod>2026-02-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://mananpatel.info/tax-calculator.html</loc>
+    <lastmod>2026-02-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://mananpatel.info/blog/</loc>
+    <lastmod>2026-02-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://mananpatel.info/blog/index.html</loc>
+    <lastmod>2026-02-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
   <url>
     <loc>https://mananpatel.info/blog/swiftui-modern-development.html</loc>
-    <lastmod>2024-12-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://mananpatel.info/blog/swift-concurrency-multithreading.html</loc>
-    <lastmod>2024-02-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://mananpatel.info/blog/ios-unit-testing-mock-objects.html</loc>
-    <lastmod>2023-12-22</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://mananpatel.info/blog/ios-networking-async-await.html</loc>
-    <lastmod>2023-12-30</lastmod>
-    <changefreq>monthly</changefreq>
+    <lastmod>2026-02-09</lastmod>
+    <changefreq>yearly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://mananpatel.info/blog/ios-architecture-patterns.html</loc>
-    <lastmod>2024-01-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://mananpatel.info/blog/ios-data-persistence.html</loc>
-    <lastmod>2024-01-08</lastmod>
-    <changefreq>monthly</changefreq>
+    <lastmod>2026-02-09</lastmod>
+    <changefreq>yearly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://mananpatel.info/blog/ios-memory-management.html</loc>
-    <lastmod>2024-02-14</lastmod>
-    <changefreq>monthly</changefreq>
+    <lastmod>2026-02-09</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://mananpatel.info/blog/ios-data-persistence.html</loc>
+    <lastmod>2026-02-09</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://mananpatel.info/blog/ios-networking-async-await.html</loc>
+    <lastmod>2026-02-09</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://mananpatel.info/blog/ios-unit-testing-mock-objects.html</loc>
+    <lastmod>2026-02-09</lastmod>
+    <changefreq>yearly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://mananpatel.info/blog/uikit-fundamentals.html</loc>
-    <lastmod>2023-12-25</lastmod>
-    <changefreq>monthly</changefreq>
+    <lastmod>2026-02-09</lastmod>
+    <changefreq>yearly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://mananpatel.info/tools/tax-suite.html</loc>
-    <lastmod>2024-12-15</lastmod>
+    <loc>https://mananpatel.info/blog/swift-concurrency-multithreading.html</loc>
+    <lastmod>2026-02-09</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://mananpatel.info/blog/rentplay-lessons-first-startup.html</loc>
+    <lastmod>2026-02-09</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://mananpatel.info/tools/year-progress-calculator.html</loc>
+    <lastmod>2026-02-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://mananpatel.info/tools/rdsp-calculator.html</loc>
+    <lastmod>2026-02-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://mananpatel.info/tools/investment-calculator.html</loc>
+    <lastmod>2026-02-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://mananpatel.info/tools/futures-profit-calculator.html</loc>
+    <lastmod>2026-02-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://mananpatel.info/tools/stripe-fee-calculator.html</loc>
-    <lastmod>2024-12-15</lastmod>
+    <lastmod>2026-02-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://mananpatel.info/tools/year-progress-calculator.html</loc>
-    <lastmod>2024-12-15</lastmod>
+    <loc>https://mananpatel.info/tools/tax-suite.html</loc>
+    <lastmod>2026-02-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://mananpatel.info/tools/alberta-contractor-calculator.html</loc>
+    <lastmod>2026-02-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>

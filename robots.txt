@@ -1,8 +1,11 @@
 User-agent: *
 Allow: /
 
-# Sitemap
+# Sitemap (SEO)
 Sitemap: https://mananpatel.info/sitemap.xml
+
+# LLM / AI discovery (llm.txt)
+# See https://mananpatel.info/llm.txt for site context
 
 # Disallow admin or private areas (if any)
 Disallow: /admin/

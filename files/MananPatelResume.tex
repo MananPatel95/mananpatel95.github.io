@@ -1,0 +1,230 @@
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\usepackage{fontawesome5}
+\usepackage{multicol}
+\setlength{\multicolsep}{-3.0pt}
+\setlength{\columnsep}{-1pt}
+\input{glyphtounicode}
+
+\pagestyle{fancy}
+\fancyhf{} 
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\addtolength{\oddsidemargin}{-0.6in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1.19in}
+\addtolength{\topmargin}{-.5in}
+\addtolength{\textheight}{1.2in}
+
+\urlstyle{same}
+
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+\newcommand{\resumeItem}[1]{
+  \item\small{
+    {#1 \vspace{2pt}}
+  }
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{3pt}\item
+    \begin{tabular*}{1.0\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & \textbf{\small #2} \\
+      \textit{\small#3} & \textit{\small #4} \\
+    \end{tabular*}\vspace{-2pt}
+}
+
+\newcommand{\resumeProjectHeading}[2]{
+    \vspace{3pt}\item
+    \begin{tabular*}{1.0\textwidth}{l@{\extracolsep{\fill}}r}
+      \small#1 & \textbf{\small #2}\\
+    \end{tabular*}\vspace{-2pt}
+}
+
+\renewcommand\labelitemi{$\vcenter{\hbox{\tiny$\bullet$}}$}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.0in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}[leftmargin=0.15in]}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{3pt}}
+
+\begin{document}
+
+\begin{center}
+    {\Huge \scshape Manan Patel} \\ \vspace{4pt}
+    \small Senior Software Engineer \& Entrepreneur \\ \vspace{2pt}
+    Calgary, Alberta, Canada \\ \vspace{2pt}
+    \small \href{mailto:manan.patel@outlook.com}{\underline{manan.patel@outlook.com}} $|$ 
+    \href{https://mananpatel.info}{\underline{mananpatel.info}} \\ \vspace{6pt}
+\end{center}
+
+\section{Summary}
+\small{Senior Software Engineer with 8+ years building production mobile applications serving millions of users across government, fintech, and startup environments. Expert in iOS development (Swift, SwiftUI, UIKit), cross-platform development (React Native), and full-stack engineering. Academic background in Statistical Machine Learning including neural networks, backpropagation, multivariate analysis, and statistical inference. Proven track record in team leadership, product management, and agile development.}
+
+\vspace{2pt}
+
+\section{Professional Experience}
+
+\resumeSubHeadingListStart
+
+\resumeSubheading
+      {Rocket Agency}{Calgary, AB}
+      {Business Consultant}{August 2025 -- Present}
+      \resumeItemListStart
+        \resumeItem{Consult with startups on remote staffing, technical automations, boosting efficiency with AI workflows}
+        \resumeItem{Placed 25+ full-time offshore staff members with clients within 6 months, LATAM/Africa/PH}
+        \resumeItem{Created custom technology integrations and workflows for remote-first talent models and small budgets}
+      \resumeItemListEnd
+
+\resumeSubheading
+      {RentPlay}{Calgary, AB}
+      {Co-Founder \& Chief Technology Officer}{January 2025 -- September 2025}
+      \resumeItemListStart
+        \resumeItem{Built OCR-based shop local rewards system processing receipts monthly with targeted offers to local businesses}
+        \resumeItem{Architected full-stack platform using React Native, Node.js, and TypeScript scaling to 1,000+ users and 100 merchants}
+        \resumeItem{Raised \$100K SAFE note and secured \$50K in grants from Alberta Innovates and Government of Canada SR&ED}
+        \resumeItem{Returned 90\% of investor capital; gained insights into fintech product-market fit validation}
+      \resumeItemListEnd
+
+\resumeSubheading
+      {Environment and Climate Change Canada}{Calgary, AB (Remote)}
+      {Team Lead \& Senior iOS Developer}{March 2023 -- December 2024}
+      \resumeItemListStart
+        \resumeItem{Led team of 5 engineers developing WeatherCan iOS app serving 5+ million monthly users, Canada's \#3 weather app}
+        \resumeItem{Implemented GPS-based convective severe weather alerts, expanded Radar product to support real-time Lightning, Hurricane, and Tornado tracking across Canada}
+        \resumeItem{Managed Agile team of 3 developers and 2 co-op students across sprint planning and daily standups}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {Wattpad Inc.}{Toronto, ON (Remote)}
+      {Senior iOS Engineer}{August 2021 -- March 2023}
+      \resumeItemListStart
+        \resumeItem{Rebuilt Comments experience from Objective-C to SwiftUI for 90+ million users}
+        \resumeItem{Introduced comment liking and in-line replies increasing engagement by 50\%}
+        \resumeItem{Implemented a Wattpad Design System using atomic design methodology across iOS app}
+        \resumeItem{Managed bi-monthly releases with 99.9\% crash-free rate and conducted 100+ code reviews}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {TD Bank Group}{Toronto, ON (Remote)}
+      {iOS Developer}{January 2020 -- August 2021}
+      \resumeItemListStart
+        \resumeItem{Built banking features for TD App serving 3+ million customers with 4.6 App Store rating}
+        \resumeItem{Implemented biometric authentication (Face ID/Touch ID) with PCI-DSS compliance}
+        \resumeItem{Integrated financial APIs with multi-factor authentication and Core Data persistence}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {Environment and Climate Change Canada}{Toronto, ON}
+      {iOS and Software Developer}{May 2017 -- January 2020}
+      \resumeItemListStart
+        \resumeItem{Led development of WeatherCAN iOS app with 2-person team launching to 1M+ users within 1 year}
+        \resumeItem{Built REST APIs supporting 10+ million monthly calls for mobile weather applications}
+        \resumeItem{Developed VueJS components for Weather.gc.ca including radar and lightning visualization}
+        \resumeItem{Created XML parsers processing 50,000+ daily weather updates for forecasts and alerts}
+      \resumeItemListEnd
+
+\resumeSubHeadingListEnd
+
+\vspace{3pt}
+
+\section{Projects}
+
+\resumeSubHeadingListStart
+      \resumeProjectHeading
+          {\textbf{Goal Getter} -- Habit Tracking App -- 1,000+ MAU -- Paying Subscribers}{2025 - 2026}
+          \resumeItemListStart
+            \resumeItem{Built SwiftUI habit tracker with CloudKit sync across iPhone, iPad, and Apple Watch}
+            \resumeItem{Clean interface for daily, weekly, monthly, yearly habit logging with 4.7 App Store rating}
+            \resumeItem{Implemented in-app purchases with 3\% conversion rate generating real revenue}
+            \resumeItem{Working on boosting top of funnel with UGC pipeline to boost top level impressions and revenue}
+          \resumeItemListEnd
+
+      \resumeProjectHeading
+          {\textbf{Countries Quiz} -- Geography Game -- 500+ MAU}{2025}
+          \resumeItemListStart
+            \resumeItem{Developed interactive quiz using SwiftUI with custom MapKit rendering}
+            \resumeItem{Built 4 game modes with progressive difficulty and world wide high scores}
+          \resumeItemListEnd
+
+\resumeSubHeadingListEnd
+
+\vspace{3pt}
+
+\section{Technical Skills}
+ \begin{itemize}[leftmargin=0.15in, label={}]
+    \small{\item{
+     \textbf{Programming Languages}: Swift, Objective-C, Java, TypeScript, JavaScript, Python, SQL, R
+     }}
+     \item{
+     \textbf{Mobile Development}: iOS Development, SwiftUI, UIKit, React Native, Expo, Kotlin, Cross-Platform Development
+     }
+     \item{
+     \textbf{iOS Frameworks}: Xcode, CoreData, CloudKit, Combine, StoreKit, WidgetKit, Core Location, MapKit, TestFlight, App Store Connect
+     }
+     \item{
+     \textbf{Backend Development}: Node.js, REST APIs, GraphQL, Firebase, API Integration, Microservices, Authentication
+     }
+     \item{
+     \textbf{Databases}: SQLite, MongoDB, CloudKit, CoreData, JSON, XML
+     }
+     \item{
+     \textbf{DevOps \& Tools}: Cursor, Claude Code, Git, GitHub Actions, CI/CD, Fastlane, Docker, Jenkins, Postman
+     }
+     \item{
+     \textbf{Methodologies}: Agile, Scrum, Unit Testing, Test-Driven Development, Code Review, A/B Testing
+     }
+     \item{
+     \textbf{Machine Learning}: Statistical Machine Learning, Neural Networks, Deep Learning, Backpropagation, Gradient Descent, Multivariate Analysis, Statistical Inference, TensorFlow, PyTorch, NLP, Computer Vision
+     }
+     \item{
+     \textbf{Product \& Design}: Product Management, User Research, User Experience Design, Figma, Product Strategy
+     }
+ \end{itemize}
+
+\vspace{3pt}
+
+\section{Education}
+\resumeSubHeadingListStart
+    \resumeSubheading
+      {University of Toronto}{Toronto, ON}
+      {Bachelor of Science, Computer Science \& Statistical Machine Learning, Co-op}{2014 -- 2019}
+      \resumeItemListStart
+        \resumeItem{Relevant Coursework: Statistical Machine Learning, Neural Networks, Deep Learning, Natural Language Processing, Computer Vision, Statistical Inference, Multivariate Analysis}
+      \resumeItemListEnd
+\resumeSubHeadingListEnd
+
+\vspace{3pt}
+
+\section{Leadership \& Recognition}
+ \begin{itemize}[leftmargin=0.15in, label={}]
+    \small{\item{
+     \textbf{Team Leadership}: Managed cross-functional teams of 5+ engineers and stakeholders across multiple product initiatives
+     }}
+     \item{
+     \textbf{Mentorship}: Guided 10+ junior developers through technical growth and career advancement
+     }
+     \item{
+     \textbf{Product Success}: Published 4+ apps with 4.5+ App Store ratings and millions of active users
+     }
+     \item{
+     \textbf{Business Acumen}: Raised \$150K in funding and managed investor relations
+     }
+ \end{itemize}
+
+\end{document}
