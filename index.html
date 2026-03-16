@@ -779,7 +779,21 @@
 <section class="mb-8 pt-8">
 <h2 class="text-xl font-bold text-text-light dark:text-text-dark mb-6">Blog</h2>
 <div id="blog-posts-home" class="grid grid-cols-1 gap-4">
-    <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text">Loading posts...</p>
+<a href="blog/rentplay-lessons-first-startup.html" class="p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+    <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">Lessons from my 1st Startup - RentPlay.ca</h3>
+    <p class="text-secondary-text-light dark:text-secondary-text-dark blog-description">Reflections from my startup RentPlay; on co-founders, validation, distribution, B2B vs B2C</p>
+    <div class="mt-2 text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">Sep 10, 2025</div>
+</a>
+<a href="blog/swiftui-modern-development.html" class="p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+    <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">SwiftUI Modern Development</h3>
+    <p class="text-secondary-text-light dark:text-secondary-text-dark blog-description">Exploring the latest SwiftUI features and modern iOS development practices</p>
+    <div class="mt-2 text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">Dec 15, 2024</div>
+</a>
+<a href="blog/swift-concurrency-multithreading.html" class="p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+    <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">Swift Concurrency &amp; Multithreading</h3>
+    <p class="text-secondary-text-light dark:text-secondary-text-dark blog-description">Understanding async/await and structured concurrency in Swift</p>
+    <div class="mt-2 text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">Dec 10, 2024</div>
+</a>
 </div>
 <div class="mt-6 text-center">
     <a href="blog/" class="inline-flex items-center px-4 py-2 border border-border-light dark:border-border-dark rounded-lg text-sm font-medium text-text-light dark:text-text-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
@@ -1722,63 +1736,36 @@
 (function () {
     var FEED = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent('https://manapate.substack.com/feed');
 
-    var oldPosts = [
-        { title: 'Lessons from my 1st Startup - RentPlay.ca', url: 'blog/rentplay-lessons-first-startup.html', date: '2025-09-10T00:00:00', description: 'Reflections from my startup RentPlay; on co-founders, validation, distribution, B2B vs B2C' },
-        { title: 'SwiftUI Modern Development', url: 'blog/swiftui-modern-development.html', date: '2024-12-15T00:00:00', description: 'Exploring the latest SwiftUI features and modern iOS development practices' },
-        { title: 'Swift Concurrency & Multithreading', url: 'blog/swift-concurrency-multithreading.html', date: '2024-12-10T00:00:00', description: 'Understanding async/await and structured concurrency in Swift' },
-    ];
-
-    function escHtml(s) {
-        return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-    }
-    function stripHtml(s) {
-        var d = document.createElement('div'); d.innerHTML = s;
-        return d.textContent || d.innerText || '';
-    }
+    function escHtml(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+    function stripHtml(s) { var d = document.createElement('div'); d.innerHTML = s; return d.textContent || d.innerText || ''; }
     function truncate(s, n) { return s.length > n ? s.slice(0, n).trimEnd() + '…' : s; }
     function formatDate(s) { return new Date(s).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); }
     function safeUrl(s) { return /^https?:\/\//.test(s) ? s : '#'; }
 
-    function renderPosts(posts) {
-        var container = document.getElementById('blog-posts-home');
-        if (!container) return;
-        container.innerHTML = '';
-        posts.slice(0, 3).forEach(function (post) {
-            var a = document.createElement('a');
-            a.href = post.external ? safeUrl(post.url) : post.url;
-            a.className = 'p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors';
-            if (post.external) { a.target = '_blank'; a.rel = 'noopener noreferrer'; }
-            a.innerHTML =
-                '<h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">' + escHtml(post.title) + '</h3>' +
-                '<p class="text-secondary-text-light dark:text-secondary-text-dark blog-description">' + escHtml(post.description) + '</p>' +
-                '<div class="mt-2 text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">' + formatDate(post.date) + (post.external ? ' • Substack' : '') + '</div>';
-            container.appendChild(a);
-        });
-    }
-
-    // Show old posts immediately
-    renderPosts(oldPosts);
-
-    // Fetch Substack posts and merge
     fetch(FEED)
         .then(function (r) { return r.json(); })
         .then(function (data) {
             if (data.status !== 'ok' || !data.items || !data.items.length) return;
-            var substackPosts = data.items.map(function (item) {
-                return {
-                    title: item.title,
-                    url: item.link,
-                    date: item.pubDate,
-                    description: truncate(stripHtml(item.description || item.content || ''), 120),
-                    external: true
-                };
+            var container = document.getElementById('blog-posts-home');
+            if (!container) return;
+            // Prepend each Substack post before the existing static posts
+            data.items.slice(0, 3).reverse().forEach(function (item) {
+                var url = safeUrl(item.link);
+                var a = document.createElement('a');
+                a.href = url;
+                a.target = '_blank';
+                a.rel = 'noopener noreferrer';
+                a.className = 'p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors';
+                a.innerHTML =
+                    '<h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">' + escHtml(item.title) + '</h3>' +
+                    '<p class="text-secondary-text-light dark:text-secondary-text-dark blog-description">' + escHtml(truncate(stripHtml(item.description || item.content || ''), 120)) + '</p>' +
+                    '<div class="mt-2 text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">' + formatDate(item.pubDate) + ' • Substack</div>';
+                container.insertBefore(a, container.firstChild);
             });
-            var merged = substackPosts.concat(oldPosts).sort(function (a, b) {
-                return new Date(b.date) - new Date(a.date);
-            });
-            renderPosts(merged);
+            // Trim to 3 total
+            while (container.children.length > 3) container.removeChild(container.lastChild);
         })
-        .catch(function () { /* old posts already shown */ });
+        .catch(function () { /* static posts already visible */ });
 })();
 </script>
 </div>
