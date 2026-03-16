@@ -775,22 +775,8 @@
 </section>
 <section class="mb-8 pt-8">
 <h2 class="text-xl font-bold text-text-light dark:text-text-dark mb-6">Blog</h2>
-<div class="grid grid-cols-1 gap-4">
-<a href="blog/rentplay-lessons-first-startup.html" class="p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">Lessons from my 1st Startup - RentPlay.ca</h3>
-                <p class="text-secondary-text-light dark:text-secondary-text-dark blog-description">Reflections from my startup RentPlay; on co-founders, validation, distribution, B2B vs B2C</p>
-                <div class="mt-2 text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">Sep 10, 2025 • Entrepreneurship</div>
-</a>
-<a href="blog/swiftui-modern-development.html" class="p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">SwiftUI Modern Development</h3>
-                <p class="text-secondary-text-light dark:text-secondary-text-dark blog-description">Exploring the latest SwiftUI features and modern iOS development practices</p>
-                <div class="mt-2 text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">Dec 15, 2024 • iOS</div>
-</a>
-<a href="blog/swift-concurrency-multithreading.html" class="p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">Swift Concurrency & Multithreading</h3>
-                <p class="text-secondary-text-light dark:text-secondary-text-dark blog-description">Understanding async/await and structured concurrency in Swift</p>
-                <div class="mt-2 text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">Dec 10, 2024 • iOS</div>
-</a>
+<div id="blog-posts-home" class="grid grid-cols-1 gap-4">
+    <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text">Loading posts...</p>
 </div>
 <div class="mt-6 text-center">
     <a href="blog/" class="inline-flex items-center px-4 py-2 border border-border-light dark:border-border-dark rounded-lg text-sm font-medium text-text-light dark:text-text-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
@@ -1725,6 +1711,64 @@
             localStorage.setItem('aboutSectionVisible', 'true');
         }
     });
+})();
+</script>
+
+<!-- Substack RSS feed -->
+<script>
+(function () {
+    var FEED = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent('https://manapate.substack.com/feed') + '&count=3';
+
+    function escHtml(s) {
+        return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function stripHtml(s) {
+        var d = document.createElement('div');
+        d.innerHTML = s;
+        return d.textContent || d.innerText || '';
+    }
+
+    function truncate(s, n) {
+        return s.length > n ? s.slice(0, n).trimEnd() + '…' : s;
+    }
+
+    function formatDate(s) {
+        return new Date(s).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    function safeUrl(s) {
+        return /^https?:\/\//.test(s) ? s : '#';
+    }
+
+    fetch(FEED)
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            var container = document.getElementById('blog-posts-home');
+            if (!container || data.status !== 'ok' || !data.items || !data.items.length) {
+                if (container) container.innerHTML = '<p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text">No posts found. <a href="https://manapate.substack.com" class="text-blue-600 dark:text-blue-400 hover:underline" target="_blank" rel="noopener noreferrer">Visit Substack →</a></p>';
+                return;
+            }
+            container.innerHTML = '';
+            data.items.slice(0, 3).forEach(function (item) {
+                var desc = truncate(stripHtml(item.description || item.content || ''), 120);
+                var url = safeUrl(item.link);
+                var a = document.createElement('a');
+                a.href = url;
+                a.target = '_blank';
+                a.rel = 'noopener noreferrer';
+                a.className = 'p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors';
+                a.innerHTML =
+                    '<h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">' + escHtml(item.title) + '</h3>' +
+                    '<p class="text-secondary-text-light dark:text-secondary-text-dark blog-description">' + escHtml(desc) + '</p>' +
+                    '<div class="mt-2 text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">' + formatDate(item.pubDate) + ' • Substack</div>';
+                container.appendChild(a);
+            });
+        })
+        .catch(function () {
+            var container = document.getElementById('blog-posts-home');
+            if (container) container.innerHTML = '<p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text">Could not load posts. <a href="https://manapate.substack.com" class="text-blue-600 dark:text-blue-400 hover:underline" target="_blank" rel="noopener noreferrer">Visit Substack →</a></p>';
+        });
 })();
 </script>
 </div>
