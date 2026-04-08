@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Futures Profit Calculator - Calculate P&L for Futures Trading</title>
-    <meta name="description" content="Calculate profit and loss for futures contracts including ES, NQ, MNQ, YM, RTY and more. Free futures trading calculator with commission calculations.">
-    <meta name="keywords" content="futures profit calculator, futures p&l calculator, futures trading calculator, es futures calculator, nq futures calculator">
+    <meta name="description" content="Calculate profit and loss for futures contracts including ES, NQ, MNQ, YM, RTY, CL, MCL and more. Free futures trading calculator with commission calculations.">
+    <meta name="keywords" content="futures profit calculator, futures p&l calculator, futures trading calculator, es futures calculator, nq futures calculator, cl crude oil futures, mcl micro crude">
     <meta name="author" content="Manan Patel">
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -484,6 +484,8 @@
                         <option value="MYM">MYM - Micro E-mini Dow</option>
                         <option value="RTY">RTY - E-mini Russell 2000</option>
                         <option value="M2K">M2K - Micro E-mini Russell 2000</option>
+                        <option value="CL">CL - Crude Oil (WTI)</option>
+                        <option value="MCL">MCL - Micro WTI Crude Oil</option>
                     </select>
                 </div>
                 
@@ -609,9 +611,19 @@
             'MYM': { name: 'Micro E-mini Dow', multiplier: 0.5, tickSize: 1, tickValue: 0.50 },
             'RTY': { name: 'E-mini Russell 2000', multiplier: 50, tickSize: 0.10, tickValue: 5.00 },
             'M2K': { name: 'Micro E-mini Russell 2000', multiplier: 5, tickSize: 0.10, tickValue: 0.50 },
+            'CL': { name: 'Crude Oil (WTI)', multiplier: 1000, tickSize: 0.01, tickValue: 10.00 },
+            'MCL': { name: 'Micro WTI Crude Oil', multiplier: 100, tickSize: 0.01, tickValue: 1.00 },
         };
 
         let currentPosition = 'long';
+
+        function syncPriceInputSteps() {
+            const symbol = document.getElementById('symbol').value;
+            const spec = contractSpecs[symbol];
+            if (!spec) return;
+            document.getElementById('entryPrice').step = String(spec.tickSize);
+            document.getElementById('exitPrice').step = String(spec.tickSize);
+        }
 
         function calculateProfit() {
             const symbol = document.getElementById('symbol').value;
@@ -714,12 +726,16 @@
         });
 
         // Input handlers
-        document.getElementById('symbol').addEventListener('change', updateDisplay);
+        document.getElementById('symbol').addEventListener('change', () => {
+            syncPriceInputSteps();
+            updateDisplay();
+        });
         document.getElementById('contracts').addEventListener('input', updateDisplay);
         document.getElementById('entryPrice').addEventListener('input', updateDisplay);
         document.getElementById('exitPrice').addEventListener('input', updateDisplay);
 
         // Initial calculation
+        syncPriceInputSteps();
         updateDisplay();
     </script>
 </body>
