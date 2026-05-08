@@ -1,0 +1,1715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retirement Calculator - Canadian Retirement Planning Tool</title>
+    <meta name="description" content="Plan your retirement with this free Canadian retirement calculator. Models TFSA, RRSP, Taxable accounts, CPP, OAS, DB Pension, and compares withdrawal strategies."/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #FFFFFF;
+            color: #111827;
+            padding: 16px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        body.dark { background: #121212; color: #E5E7EB; }
+
+        .back-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            color: #6B7280; text-decoration: none; font-size: 14px;
+            margin-bottom: 16px; transition: color 0.3s;
+        }
+        body.dark .back-link { color: #9CA3AF; }
+        .back-link:hover { color: #111827; }
+        body.dark .back-link:hover { color: #E5E7EB; }
+
+        .dark-mode-toggle {
+            position: fixed; top: 16px; right: 16px; z-index: 1000;
+            background: #FFFFFF; border: 1px solid #E5E7EB;
+            border-radius: 8px; padding: 8px 12px; cursor: pointer;
+            display: flex; align-items: center; gap: 6px;
+            color: #111827; font-size: 14px; font-weight: 500;
+            transition: all 0.2s;
+        }
+        .dark-mode-toggle:hover { background: #F9FAFB; border-color: #D1D5DB; }
+        body.dark .dark-mode-toggle { background: #1F2937; border-color: #374151; color: #E5E7EB; }
+        body.dark .dark-mode-toggle:hover { background: #374151; border-color: #4B5563; }
+
+        .page {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 22px; font-weight: 700; margin-bottom: 4px;
+        }
+        .subtitle {
+            color: #6B7280; font-size: 13px; margin-bottom: 20px;
+        }
+        body.dark .subtitle { color: #9CA3AF; }
+
+        /* Layout: results left, assumptions right */
+        .layout {
+            display: grid;
+            grid-template-columns: 1fr 360px;
+            gap: 16px;
+            align-items: start;
+        }
+        @media (max-width: 1024px) {
+            .layout { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            background: #FFFFFF;
+            border: 1px solid #E5E7EB;
+            border-radius: 12px;
+            padding: 16px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        body.dark .card { background: #1F2937; border-color: #374151; }
+
+        /* Top stat cards */
+        .stat-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        @media (max-width: 768px) {
+            .stat-row { grid-template-columns: 1fr; }
+        }
+        .stat-card {
+            display: flex; align-items: center; gap: 12px;
+            background: #F9FAFB; border: 1px solid #E5E7EB;
+            border-radius: 10px; padding: 14px 16px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        body.dark .stat-card { background: #111827; border-color: #374151; }
+        .stat-icon {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: #EEF2FF; color: #4F46E5;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        body.dark .stat-icon { background: #1E1B4B; color: #A5B4FC; }
+        .stat-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+        .stat-label-sm {
+            font-size: 11px; color: #6B7280; font-weight: 500;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        body.dark .stat-label-sm { color: #9CA3AF; }
+        .stat-value-sm {
+            font-size: 18px; font-weight: 700; color: #111827;
+            white-space: nowrap;
+        }
+        body.dark .stat-value-sm { color: #F3F4F6; }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #E5E7EB;
+            margin-bottom: 16px;
+            overflow-x: auto;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .tabs::-webkit-scrollbar { display: none; }
+        body.dark .tabs { border-bottom-color: #374151; }
+        .tab-btn {
+            padding: 10px 16px; background: transparent; border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer; font-size: 14px; font-weight: 500;
+            color: #6B7280; display: inline-flex; align-items: center; gap: 6px;
+            white-space: nowrap;
+            transition: color 0.2s, border-color 0.2s;
+        }
+        body.dark .tab-btn { color: #9CA3AF; }
+        .tab-btn:hover { color: #111827; }
+        body.dark .tab-btn:hover { color: #E5E7EB; }
+        .tab-btn.active {
+            color: #4F46E5;
+            border-bottom-color: #4F46E5;
+        }
+        body.dark .tab-btn.active { color: #A5B4FC; border-bottom-color: #A5B4FC; }
+        .tab-btn .material-icons { font-size: 18px; }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Strategy chips row */
+        .strategy-row {
+            display: flex; flex-wrap: wrap; gap: 8px;
+            margin-bottom: 12px; align-items: center;
+        }
+        .strategy-pill {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 10px;
+            border: 1px solid #E5E7EB; border-radius: 999px;
+            background: #F9FAFB; font-size: 12px; color: #374151;
+        }
+        body.dark .strategy-pill { background: #111827; border-color: #374151; color: #D1D5DB; }
+        .strategy-pill .star { color: #F59E0B; }
+
+        .chart-wrap {
+            position: relative;
+            width: 100%;
+            height: 420px;
+        }
+        @media (max-width: 768px) {
+            .chart-wrap { height: 320px; }
+        }
+
+        /* Right panel - assumptions */
+        .assumptions-panel {
+            position: sticky; top: 16px;
+            max-height: calc(100vh - 32px);
+            overflow-y: auto;
+            padding: 0;
+        }
+        .assumptions-panel-inner {
+            padding: 16px;
+        }
+        .assumptions-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 16px 16px 12px;
+            border-bottom: 1px solid #E5E7EB;
+            position: sticky; top: 0; background: #FFFFFF; z-index: 1;
+        }
+        body.dark .assumptions-header { background: #1F2937; border-bottom-color: #374151; }
+        .assumptions-title { font-size: 16px; font-weight: 700; }
+
+        .accordion-section { border-bottom: 1px solid #F3F4F6; }
+        body.dark .accordion-section { border-bottom-color: #374151; }
+        .accordion-section:last-child { border-bottom: none; }
+
+        .accordion-trigger {
+            width: 100%; display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 16px; background: transparent; border: none;
+            cursor: pointer; text-align: left;
+            font-weight: 600; font-size: 14px; color: #111827;
+            transition: background-color 0.2s, color 0.3s;
+        }
+        body.dark .accordion-trigger { color: #E5E7EB; }
+        .accordion-trigger:hover { background: #F9FAFB; }
+        body.dark .accordion-trigger:hover { background: #111827; }
+
+        .accordion-trigger .material-icons {
+            font-size: 18px; color: #6B7280;
+            transition: transform 0.2s;
+        }
+        body.dark .accordion-trigger .material-icons { color: #9CA3AF; }
+        .accordion-trigger.open .material-icons { transform: rotate(90deg); }
+
+        .accordion-content {
+            display: none;
+            padding: 0 16px 16px;
+        }
+        .accordion-content.open { display: block; }
+
+        .field-grid {
+            display: grid;
+            grid-template-columns: 110px 1fr;
+            gap: 8px 10px;
+            align-items: center;
+        }
+        .field-label {
+            font-size: 13px; color: #374151; font-weight: 500;
+            display: inline-flex; align-items: center; gap: 4px;
+        }
+        body.dark .field-label { color: #D1D5DB; }
+        .field-label .help-icon {
+            font-size: 14px; color: #9CA3AF; cursor: help;
+        }
+        .field-input-wrap {
+            display: flex; align-items: center; gap: 4px;
+            min-width: 0;
+        }
+        .field-prefix {
+            font-size: 13px; color: #6B7280; flex-shrink: 0;
+        }
+        body.dark .field-prefix { color: #9CA3AF; }
+        .field-suffix {
+            font-size: 13px; color: #6B7280; flex-shrink: 0;
+        }
+        body.dark .field-suffix { color: #9CA3AF; }
+
+        input[type="number"], input[type="date"], input[type="text"], select {
+            width: 100%;
+            padding: 7px 10px;
+            border: 1px solid #E5E7EB;
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: inherit;
+            background: #FFFFFF;
+            color: #111827;
+            box-sizing: border-box;
+            transition: border-color 0.2s, background-color 0.3s, color 0.3s;
+            min-width: 0;
+        }
+        body.dark input[type="number"],
+        body.dark input[type="date"],
+        body.dark input[type="text"],
+        body.dark select {
+            background: #111827; border-color: #374151; color: #E5E7EB;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #4F46E5;
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.15);
+        }
+        body.dark input:focus, body.dark select:focus {
+            border-color: #A5B4FC;
+            box-shadow: 0 0 0 2px rgba(165, 180, 252, 0.2);
+        }
+
+        /* Cash flow / tax table */
+        .table-wrap {
+            overflow-x: auto;
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+        }
+        body.dark .table-wrap { border-color: #374151; }
+        table.data {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+        table.data th, table.data td {
+            padding: 8px 10px;
+            text-align: right;
+            border-bottom: 1px solid #F3F4F6;
+            white-space: nowrap;
+        }
+        body.dark table.data th, body.dark table.data td {
+            border-bottom-color: #374151;
+        }
+        table.data thead th {
+            background: #F9FAFB;
+            font-weight: 600;
+            color: #374151;
+            position: sticky; top: 0;
+        }
+        body.dark table.data thead th { background: #111827; color: #D1D5DB; }
+        table.data tbody tr:hover { background: rgba(79, 70, 229, 0.04); }
+        body.dark table.data tbody tr:hover { background: rgba(165, 180, 252, 0.06); }
+        table.data td.first, table.data th.first { text-align: left; }
+        table.data td.retired { background: rgba(79, 70, 229, 0.03); }
+        body.dark table.data td.retired { background: rgba(165, 180, 252, 0.04); }
+
+        /* Compare strategies grid */
+        .compare-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 12px;
+        }
+        .compare-card {
+            background: #F9FAFB; border: 1px solid #E5E7EB;
+            border-radius: 10px; padding: 14px;
+        }
+        body.dark .compare-card { background: #111827; border-color: #374151; }
+        .compare-card.best { border-color: #10B981; box-shadow: 0 0 0 1px #10B981; }
+        body.dark .compare-card.best { border-color: #34D399; box-shadow: 0 0 0 1px #34D399; }
+        .compare-strategy {
+            font-size: 13px; font-weight: 600; margin-bottom: 8px;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .compare-row {
+            display: flex; justify-content: space-between; font-size: 12px;
+            padding: 3px 0;
+            color: #4B5563;
+        }
+        body.dark .compare-row { color: #9CA3AF; }
+        .compare-row strong {
+            color: #111827; font-weight: 600;
+        }
+        body.dark .compare-row strong { color: #E5E7EB; }
+        .compare-bar-wrap {
+            margin-top: 10px;
+            height: 6px; background: #E5E7EB; border-radius: 999px; overflow: hidden;
+        }
+        body.dark .compare-bar-wrap { background: #374151; }
+        .compare-bar {
+            height: 100%; background: #4F46E5;
+        }
+
+        /* Help/info text */
+        .help-text {
+            font-size: 11px; color: #9CA3AF;
+            margin-top: 4px; line-height: 1.4;
+        }
+        body.dark .help-text { color: #6B7280; }
+
+        /* Disclaimer */
+        .disclaimer {
+            margin-top: 16px;
+            font-size: 11px; color: #9CA3AF; line-height: 1.6;
+            max-width: 1400px; margin-left: auto; margin-right: auto;
+            padding: 0 8px;
+        }
+        body.dark .disclaimer { color: #6B7280; }
+
+        /* Subtle past income mini-grid */
+        .past-income-grid {
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 6px;
+            margin-bottom: 6px;
+            align-items: center;
+        }
+        .past-income-list {
+            max-height: 240px; overflow-y: auto;
+            padding-right: 4px; margin-top: 8px;
+        }
+        .add-row-btn {
+            width: 100%; padding: 6px; border: 1px dashed #D1D5DB;
+            border-radius: 6px; background: transparent; cursor: pointer;
+            font-size: 12px; color: #6B7280; font-weight: 500;
+            transition: border-color 0.2s, color 0.2s;
+        }
+        body.dark .add-row-btn { border-color: #4B5563; color: #9CA3AF; }
+        .add-row-btn:hover { border-color: #4F46E5; color: #4F46E5; }
+        body.dark .add-row-btn:hover { border-color: #A5B4FC; color: #A5B4FC; }
+        .remove-row-btn {
+            background: transparent; border: none; cursor: pointer;
+            color: #EF4444; padding: 0 4px;
+        }
+        .remove-row-btn:hover { color: #DC2626; }
+
+        /* Value tag (shows realtime) */
+        .computed-tag {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 2px 8px; border-radius: 999px;
+            background: #EEF2FF; color: #4F46E5;
+            font-size: 11px; font-weight: 600;
+        }
+        body.dark .computed-tag { background: #1E1B4B; color: #A5B4FC; }
+    </style>
+</head>
+<body>
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()" id="darkModeToggle">
+        <span class="material-icons" id="darkModeIcon" style="font-size:18px;">dark_mode</span>
+        <span id="darkModeText">Dark</span>
+    </button>
+
+    <div class="page">
+        <a href="../index.html" class="back-link">
+            <span class="material-icons" style="font-size:18px;">arrow_back</span>
+            Back to Portfolio
+        </a>
+
+        <h1>Retirement Planning Calculator</h1>
+        <p class="subtitle">Project net worth across TFSA, RRSP and Taxable accounts. Compare withdrawal strategies. Inspired by the PWL Capital research tool.</p>
+
+        <div class="layout">
+            <!-- Main results -->
+            <div>
+                <!-- Top summary stats -->
+                <div class="stat-row">
+                    <div class="stat-card">
+                        <div class="stat-icon"><span class="material-icons">savings</span></div>
+                        <div class="stat-info">
+                            <div class="stat-label-sm">Max Final Net Worth</div>
+                            <div class="stat-value-sm" id="statMaxFinalNW">$0</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background:#FEF3C7;color:#D97706"><span class="material-icons">trending_up</span></div>
+                        <div class="stat-info">
+                            <div class="stat-label-sm">Optimal Contributions Bonus</div>
+                            <div class="stat-value-sm" id="statContribBonus">$0</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background:#DBEAFE;color:#2563EB"><span class="material-icons">event_note</span></div>
+                        <div class="stat-info">
+                            <div class="stat-label-sm">Optimal Withdrawals Bonus</div>
+                            <div class="stat-value-sm" id="statWithdrawBonus">$0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="tabs">
+                        <button class="tab-btn active" data-tab="growth">
+                            <span class="material-icons">trending_up</span> Growth of Wealth
+                        </button>
+                        <button class="tab-btn" data-tab="cashflows">
+                            <span class="material-icons">paid</span> Cash Flows
+                        </button>
+                        <button class="tab-btn" data-tab="tax">
+                            <span class="material-icons">receipt_long</span> Tax Breakdown
+                        </button>
+                        <button class="tab-btn" data-tab="compare">
+                            <span class="material-icons">compare_arrows</span> Compare Strategies
+                        </button>
+                    </div>
+
+                    <!-- Growth of Wealth tab -->
+                    <div class="tab-content active" id="tab-growth">
+                        <div class="strategy-row">
+                            <span class="strategy-pill"><span class="star">★</span> Best Contributions: <strong id="bestContribStrategy">—</strong></span>
+                            <span class="strategy-pill"><span class="star">★</span> Best Withdrawals: <strong id="bestWithdrawStrategy">—</strong></span>
+                            <span class="strategy-pill" id="returnPill"><span class="material-icons" style="font-size:14px;">show_chart</span> Real return <strong id="realReturnPill">0.00%</strong></span>
+                        </div>
+                        <div class="chart-wrap">
+                            <canvas id="growthChart"></canvas>
+                        </div>
+                        <div class="help-text" style="margin-top:8px;">Stacked area shows account balances in today's dollars (real). TFSA + RRSP + Taxable = total net worth.</div>
+                    </div>
+
+                    <!-- Cash Flows tab -->
+                    <div class="tab-content" id="tab-cashflows">
+                        <div class="chart-wrap">
+                            <canvas id="cashflowChart"></canvas>
+                        </div>
+                        <div class="help-text" style="margin-top:8px;">Income sources during working years and retirement. Bars are in today's dollars.</div>
+                    </div>
+
+                    <!-- Tax Breakdown tab -->
+                    <div class="tab-content" id="tab-tax">
+                        <div class="chart-wrap">
+                            <canvas id="taxChart"></canvas>
+                        </div>
+                        <div class="help-text" style="margin-top:8px;">Estimated combined federal + Ontario tax (simplified) and average marginal rate, in today's dollars.</div>
+                    </div>
+
+                    <!-- Compare strategies tab -->
+                    <div class="tab-content" id="tab-compare">
+                        <p class="help-text" style="margin-bottom:12px;">Comparison of every withdrawal ordering during retirement. Final net worth is in today's dollars at the life-expectancy age.</p>
+                        <div class="compare-grid" id="compareGrid"></div>
+                    </div>
+                </div>
+
+                <!-- Year-by-year table -->
+                <div class="card" style="margin-top:16px;">
+                    <h2 style="font-size:15px;font-weight:600;margin-bottom:10px;">Year-by-Year Projection</h2>
+                    <div class="table-wrap" style="max-height:380px;">
+                        <table class="data" id="yearTable">
+                            <thead>
+                                <tr>
+                                    <th class="first">Year</th>
+                                    <th>Age</th>
+                                    <th>Income</th>
+                                    <th>Spending</th>
+                                    <th>Tax</th>
+                                    <th>TFSA</th>
+                                    <th>RRSP</th>
+                                    <th>Taxable</th>
+                                    <th>Net Worth</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="help-text" style="margin-top:6px;">All values in today's dollars (real). Retired years highlighted.</div>
+                </div>
+            </div>
+
+            <!-- Right side: Assumptions panel -->
+            <div class="card assumptions-panel">
+                <div class="assumptions-header">
+                    <div class="assumptions-title">Assumptions</div>
+                    <button id="resetBtn" class="add-row-btn" style="width:auto;padding:4px 10px;font-size:11px;border-style:solid;">Reset</button>
+                </div>
+
+                <!-- General -->
+                <div class="accordion-section">
+                    <button class="accordion-trigger open" data-acc="general"><span>General</span><span class="material-icons">chevron_right</span></button>
+                    <div class="accordion-content open" data-acc-content="general">
+                        <div class="field-grid">
+                            <label class="field-label" for="province">Province</label>
+                            <div class="field-input-wrap">
+                                <select id="province">
+                                    <option value="ON" selected>Ontario</option>
+                                    <option value="BC">British Columbia</option>
+                                    <option value="AB">Alberta</option>
+                                    <option value="QC">Quebec</option>
+                                    <option value="MB">Manitoba</option>
+                                    <option value="SK">Saskatchewan</option>
+                                    <option value="NS">Nova Scotia</option>
+                                    <option value="NB">New Brunswick</option>
+                                    <option value="NL">Newfoundland</option>
+                                    <option value="PE">PEI</option>
+                                    <option value="YT">Yukon</option>
+                                    <option value="NT">NWT</option>
+                                    <option value="NU">Nunavut</option>
+                                </select>
+                            </div>
+
+                            <label class="field-label" for="birthdate">Birthdate</label>
+                            <div class="field-input-wrap">
+                                <input type="date" id="birthdate" value="2007-07-01">
+                            </div>
+
+                            <label class="field-label" for="age">Age</label>
+                            <div class="field-input-wrap">
+                                <input type="number" id="age" value="18" readonly style="background:#F3F4F6;">
+                            </div>
+
+                            <label class="field-label" for="retirementDate">Retirement Date</label>
+                            <div class="field-input-wrap">
+                                <input type="date" id="retirementDate" value="2072-07-01">
+                            </div>
+
+                            <label class="field-label" for="retirementAge">Retirement Age</label>
+                            <div class="field-input-wrap">
+                                <input type="number" id="retirementAge" value="65" readonly style="background:#F3F4F6;">
+                            </div>
+
+                            <label class="field-label" for="income">Income</label>
+                            <div class="field-input-wrap">
+                                <span class="field-prefix">$</span>
+                                <input type="number" id="income" value="85000" step="1000" min="0">
+                            </div>
+
+                            <label class="field-label" for="spending">Spending</label>
+                            <div class="field-input-wrap">
+                                <span class="field-prefix">$</span>
+                                <input type="number" id="spending" value="53000" step="1000" min="0">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Investment Accounts -->
+                <div class="accordion-section">
+                    <button class="accordion-trigger" data-acc="accounts"><span>Investment Accounts</span><span class="material-icons">chevron_right</span></button>
+                    <div class="accordion-content" data-acc-content="accounts">
+                        <div class="field-grid">
+                            <label class="field-label" for="tfsaValue">TFSA Value</label>
+                            <div class="field-input-wrap"><span class="field-prefix">$</span><input type="number" id="tfsaValue" value="0" step="1000" min="0"></div>
+
+                            <label class="field-label" for="tfsaRoom">TFSA Room</label>
+                            <div class="field-input-wrap"><span class="field-prefix">$</span><input type="number" id="tfsaRoom" value="0" step="1000" min="0"></div>
+
+                            <label class="field-label" for="rrspValue">RRSP Value</label>
+                            <div class="field-input-wrap"><span class="field-prefix">$</span><input type="number" id="rrspValue" value="0" step="1000" min="0"></div>
+
+                            <label class="field-label" for="rrspRoom">RRSP Room</label>
+                            <div class="field-input-wrap"><span class="field-prefix">$</span><input type="number" id="rrspRoom" value="0" step="1000" min="0"></div>
+
+                            <label class="field-label" for="taxableValue">Taxable Value</label>
+                            <div class="field-input-wrap"><span class="field-prefix">$</span><input type="number" id="taxableValue" value="0" step="1000" min="0"></div>
+
+                            <label class="field-label" for="taxableBookValue">Taxable Book</label>
+                            <div class="field-input-wrap"><span class="field-prefix">$</span><input type="number" id="taxableBookValue" value="0" step="1000" min="0"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CPP -->
+                <div class="accordion-section">
+                    <button class="accordion-trigger open" data-acc="cpp"><span>CPP</span><span class="material-icons">chevron_right</span></button>
+                    <div class="accordion-content open" data-acc-content="cpp">
+                        <div class="field-grid">
+                            <label class="field-label" for="cppMode">CPP Age</label>
+                            <div class="field-input-wrap">
+                                <select id="cppMode">
+                                    <option value="optimize" selected>Optimize</option>
+                                    <option value="manual">Manual</option>
+                                </select>
+                            </div>
+
+                            <label class="field-label" for="cppAge">Benefits Age</label>
+                            <div class="field-input-wrap">
+                                <input type="number" id="cppAge" value="70" min="60" max="70" readonly style="background:#F3F4F6;">
+                            </div>
+
+                            <label class="field-label" for="cppPercent">CPP Earnings %</label>
+                            <div class="field-input-wrap">
+                                <input type="number" id="cppPercent" value="100" min="0" max="100" step="5">
+                                <span class="field-suffix">%</span>
+                            </div>
+
+                            <label class="field-label" for="cppChildren">Children</label>
+                            <div class="field-input-wrap">
+                                <input type="number" id="cppChildren" value="0" min="0" max="20" step="1">
+                            </div>
+
+                            <label class="field-label" for="cppDisability">Disability</label>
+                            <div class="field-input-wrap">
+                                <input type="number" id="cppDisability" value="0" min="0" max="20" step="1">
+                                <span class="field-suffix">times</span>
+                            </div>
+                        </div>
+                        <p class="help-text">% of YMPE used to estimate CPP earnings record. "Optimize" picks 60–70 to maximize NW.</p>
+                    </div>
+                </div>
+
+                <!-- OAS -->
+                <div class="accordion-section">
+                    <button class="accordion-trigger" data-acc="oas"><span>OAS</span><span class="material-icons">chevron_right</span></button>
+                    <div class="accordion-content" data-acc-content="oas">
+                        <div class="field-grid">
+                            <label class="field-label" for="oasYears">Years In Canada</label>
+                            <div class="field-input-wrap"><input type="number" id="oasYears" value="40" min="0" max="40" step="1"></div>
+
+                            <label class="field-label" for="oasAge">Benefits Age</label>
+                            <div class="field-input-wrap"><input type="number" id="oasAge" value="65" min="65" max="70" step="1"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DB Pension -->
+                <div class="accordion-section">
+                    <button class="accordion-trigger" data-acc="dbpension"><span>DB Pension</span><span class="material-icons">chevron_right</span></button>
+                    <div class="accordion-content" data-acc-content="dbpension">
+                        <div class="field-grid">
+                            <label class="field-label" for="dbContrib">Contributions</label>
+                            <div class="field-input-wrap"><span class="field-prefix">$</span><input type="number" id="dbContrib" value="0" step="500" min="0"></div>
+
+                            <label class="field-label" for="dbBenefit">Benefit</label>
+                            <div class="field-input-wrap"><span class="field-prefix">$</span><input type="number" id="dbBenefit" value="0" step="500" min="0"></div>
+
+                            <label class="field-label" for="dbStart">Benefit Start</label>
+                            <div class="field-input-wrap"><input type="date" id="dbStart" value="2072-07-01"></div>
+
+                            <label class="field-label" for="dbIndex">Index Rate</label>
+                            <div class="field-input-wrap"><input type="number" id="dbIndex" value="0.00" step="0.1" min="0" max="20"><span class="field-suffix">%</span></div>
+
+                            <label class="field-label" for="dbPA">Pension Adj.</label>
+                            <div class="field-input-wrap"><span class="field-prefix">$</span><input type="number" id="dbPA" value="0" step="100" min="0"></div>
+
+                            <label class="field-label" for="dbIncome">Income (current)</label>
+                            <div class="field-input-wrap"><span class="field-prefix">$</span><input type="number" id="dbIncome" value="0" step="500" min="0"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Life Expectancy -->
+                <div class="accordion-section">
+                    <button class="accordion-trigger" data-acc="life"><span>Life Expectancy</span><span class="material-icons">chevron_right</span></button>
+                    <div class="accordion-content" data-acc-content="life">
+                        <div class="field-grid">
+                            <label class="field-label" for="lifeSource">Source</label>
+                            <div class="field-input-wrap">
+                                <select id="lifeSource">
+                                    <option value="fpcanada" selected>FP Canada Table</option>
+                                    <option value="manual">Manual</option>
+                                </select>
+                            </div>
+
+                            <label class="field-label" for="sex">Sex</label>
+                            <div class="field-input-wrap">
+                                <select id="sex">
+                                    <option value="M" selected>Male</option>
+                                    <option value="F">Female</option>
+                                </select>
+                            </div>
+
+                            <label class="field-label" for="survival">Survival %</label>
+                            <div class="field-input-wrap"><input type="number" id="survival" value="25" min="1" max="99" step="1"><span class="field-suffix">%</span></div>
+
+                            <label class="field-label" for="lifeExp">Life Expectancy</label>
+                            <div class="field-input-wrap"><input type="number" id="lifeExp" value="95" min="60" max="120" step="1"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Expected Returns -->
+                <div class="accordion-section">
+                    <button class="accordion-trigger open" data-acc="returns"><span>Expected Returns</span><span class="material-icons">chevron_right</span></button>
+                    <div class="accordion-content open" data-acc-content="returns">
+                        <div class="field-grid">
+                            <label class="field-label" for="alloc">Allocation</label>
+                            <div class="field-input-wrap">
+                                <select id="alloc">
+                                    <option value="100" selected>100/0 (Equity)</option>
+                                    <option value="80">80/20</option>
+                                    <option value="60">60/40 (Balanced)</option>
+                                    <option value="40">40/60</option>
+                                    <option value="20">20/80</option>
+                                    <option value="0">0/100 (Bonds)</option>
+                                    <option value="custom">Custom (don't auto-fill)</option>
+                                </select>
+                            </div>
+
+                            <label class="field-label" for="outcome">Outcome</label>
+                            <div class="field-input-wrap">
+                                <select id="outcome">
+                                    <option value="expected" selected>Expected</option>
+                                    <option value="optimistic">Optimistic (+1σ)</option>
+                                    <option value="pessimistic">Pessimistic (−1σ)</option>
+                                </select>
+                            </div>
+
+                            <label class="field-label" for="rCanDiv">Cdn Div</label>
+                            <div class="field-input-wrap"><input type="number" id="rCanDiv" value="0.74" step="0.01" min="0"><span class="field-suffix">%</span></div>
+
+                            <label class="field-label" for="rForDiv">Foreign Div</label>
+                            <div class="field-input-wrap"><input type="number" id="rForDiv" value="0.94" step="0.01" min="0"><span class="field-suffix">%</span></div>
+
+                            <label class="field-label" for="rIncome">Income</label>
+                            <div class="field-input-wrap"><input type="number" id="rIncome" value="0.00" step="0.01" min="0"><span class="field-suffix">%</span></div>
+
+                            <label class="field-label" for="rUnreal">Unreal. CG</label>
+                            <div class="field-input-wrap"><input type="number" id="rUnreal" value="4.67" step="0.01" min="0"><span class="field-suffix">%</span></div>
+
+                            <label class="field-label" for="rReal">Real. CG</label>
+                            <div class="field-input-wrap"><input type="number" id="rReal" value="0.52" step="0.01" min="0"><span class="field-suffix">%</span></div>
+
+                            <label class="field-label" for="inflation">Inflation</label>
+                            <div class="field-input-wrap"><input type="number" id="inflation" value="2.50" step="0.01" min="0"><span class="field-suffix">%</span></div>
+
+                            <label class="field-label" for="wageInflation">Wage Infl.</label>
+                            <div class="field-input-wrap"><input type="number" id="wageInflation" value="3.00" step="0.01" min="0"><span class="field-suffix">%</span></div>
+
+                            <label class="field-label">Total nominal</label>
+                            <div class="field-input-wrap"><span class="computed-tag" id="totalNominal">0.00%</span></div>
+
+                            <label class="field-label">Real return</label>
+                            <div class="field-input-wrap"><span class="computed-tag" id="totalReal">0.00%</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-section">
+                    <button class="accordion-trigger" data-acc="strategy"><span>Strategy</span><span class="material-icons">chevron_right</span></button>
+                    <div class="accordion-content" data-acc-content="strategy">
+                        <div class="field-grid">
+                            <label class="field-label" for="contribStrat">Contributions</label>
+                            <div class="field-input-wrap">
+                                <select id="contribStrat">
+                                    <option value="optimize" selected>Optimize</option>
+                                    <option value="TFSA-RRSP-TAXABLE">TFSA → RRSP → Taxable</option>
+                                    <option value="RRSP-TFSA-TAXABLE">RRSP → TFSA → Taxable</option>
+                                    <option value="TAXABLE-TFSA-RRSP">Taxable → TFSA → RRSP</option>
+                                </select>
+                            </div>
+
+                            <label class="field-label" for="withdrawStrat">Withdrawals</label>
+                            <div class="field-input-wrap">
+                                <select id="withdrawStrat">
+                                    <option value="optimize" selected>Optimize</option>
+                                    <option value="TAXABLE-RRSP-TFSA">Taxable → RRSP → TFSA</option>
+                                    <option value="RRSP-TAXABLE-TFSA">RRSP → Taxable → TFSA</option>
+                                    <option value="TFSA-RRSP-TAXABLE">TFSA → RRSP → Taxable</option>
+                                    <option value="TFSA-TAXABLE-RRSP">TFSA → Taxable → RRSP</option>
+                                    <option value="RRSP-TFSA-TAXABLE">RRSP → TFSA → Taxable</option>
+                                    <option value="TAXABLE-TFSA-RRSP">Taxable → TFSA → RRSP</option>
+                                </select>
+                            </div>
+                        </div>
+                        <p class="help-text">"Optimize" runs all orderings and picks the best. The chart on the left shows the optimal scenario.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <p class="disclaimer">
+            <strong>Disclaimer:</strong> This is an educational projection tool and does not constitute financial advice. Tax calculations are simplified (combined federal + provincial marginal brackets, no surtaxes, basic personal amounts approximated).
+            Returns are deterministic; real markets are not. CPP/OAS amounts use 2025 maximums and indexing rules. Always validate large decisions with a qualified advisor.
+            Inspired by the open methodology of <a href="https://research-tools.pwlcapital.com/research/retirement" target="_blank" rel="noopener" style="color:#4F46E5;">PWL Capital's research tool</a>.
+        </p>
+    </div>
+
+    <script>
+    // ----------------------------------------------------------------------
+    // Constants (Canadian retirement planning, 2025 reference values)
+    // ----------------------------------------------------------------------
+    const CPP_MAX_65 = 17196.36;        // 2025 max CPP retirement pension at age 65 ($1,433.03/mo × 12)
+    const OAS_MAX_65 = 8814.96;         // 2025 max OAS at 65 ($734.58/mo × 12, simplified)
+    const OAS_CLAWBACK_THRESHOLD = 93454; // 2025 OAS recovery tax start
+    const OAS_CLAWBACK_RATE = 0.15;
+    const BPA_FED = 15705;              // 2025 federal basic personal amount (approx)
+    const AGE_AMOUNT = 8790;            // 2025 age amount (approx)
+    const PENSION_INCOME_AMOUNT = 2000;
+
+    // 2025 federal brackets [upper, rate]
+    const FED_BRACKETS = [
+        [55867, 0.15],
+        [111733, 0.205],
+        [173205, 0.26],
+        [246752, 0.29],
+        [Infinity, 0.33],
+    ];
+
+    // 2025 provincial brackets (simplified, top-of-bracket, rate)
+    const PROV_BRACKETS = {
+        ON: [[51446,0.0505],[102894,0.0915],[150000,0.1116],[220000,0.1216],[Infinity,0.1316]],
+        BC: [[47937,0.0506],[95875,0.077],[110076,0.105],[133664,0.1229],[181232,0.147],[252752,0.168],[Infinity,0.205]],
+        AB: [[148269,0.10],[177922,0.12],[237230,0.13],[355845,0.14],[Infinity,0.15]],
+        QC: [[51780,0.14],[103545,0.19],[126000,0.24],[Infinity,0.2575]],
+        MB: [[47000,0.108],[100000,0.1275],[Infinity,0.174]],
+        SK: [[52057,0.105],[148734,0.125],[Infinity,0.145]],
+        NS: [[29590,0.0879],[59180,0.1495],[93000,0.1667],[150000,0.175],[Infinity,0.21]],
+        NB: [[49958,0.094],[99916,0.14],[185064,0.16],[Infinity,0.195]],
+        NL: [[43198,0.087],[86395,0.145],[154244,0.158],[215943,0.178],[275870,0.198],[551739,0.208],[1103478,0.213],[Infinity,0.218]],
+        PE: [[32656,0.0965],[64313,0.1363],[105000,0.1665],[140000,0.18],[Infinity,0.1875]],
+        YT: [[55867,0.064],[111733,0.09],[173205,0.109],[500000,0.128],[Infinity,0.15]],
+        NT: [[50597,0.059],[101198,0.086],[164525,0.122],[Infinity,0.1405]],
+        NU: [[53268,0.04],[106537,0.07],[173205,0.09],[Infinity,0.115]],
+    };
+
+    // FP Canada-style life expectancy lookup: simplified table.
+    // Approximation only.
+    function fpCanadaLifeExpectancy(sex, survivalPct) {
+        const tables = {
+            M: { 75: 86, 50: 91, 25: 95, 10: 99, 5: 102 },
+            F: { 75: 89, 50: 93, 25: 97, 10: 100, 5: 103 },
+        };
+        const table = tables[sex] || tables.M;
+        const keys = Object.keys(table).map(Number).sort((a,b)=>b-a);
+        let lo = keys[0], hi = keys[keys.length-1];
+        for (const k of keys) { if (k >= survivalPct) lo = k; }
+        for (const k of keys.slice().reverse()) { if (k <= survivalPct) hi = k; }
+        if (lo === hi) return table[lo];
+        const t = (lo - survivalPct) / (lo - hi);
+        return Math.round(table[lo] + t * (table[hi] - table[lo]));
+    }
+
+    // ----------------------------------------------------------------------
+    // Helpers
+    // ----------------------------------------------------------------------
+    function num(id, def=0) {
+        const el = document.getElementById(id);
+        if (!el) return def;
+        const v = parseFloat(el.value);
+        return isFinite(v) ? v : def;
+    }
+    function val(id) { return document.getElementById(id).value; }
+    function setVal(id, v) { document.getElementById(id).value = v; }
+    function fmt(n) { return '$' + Math.round(n).toLocaleString('en-CA'); }
+    function fmtSigned(n) {
+        const sign = n >= 0 ? '+' : '';
+        return sign + fmt(n);
+    }
+    function fmtPct(n, d=2) { return n.toFixed(d) + '%'; }
+
+    function diffYears(start, end) {
+        return (end - start) / (365.25 * 24 * 3600 * 1000);
+    }
+
+    // Combined federal + provincial tax (simplified, marginal)
+    function computeTax(taxableIncome, prov, age=0) {
+        if (taxableIncome <= 0) return 0;
+        let income = taxableIncome;
+
+        function bracketTax(brackets, taxable) {
+            let tax = 0, prev = 0;
+            for (const [upper, rate] of brackets) {
+                if (taxable > upper) {
+                    tax += (upper - prev) * rate;
+                    prev = upper;
+                } else {
+                    tax += (taxable - prev) * rate;
+                    return tax;
+                }
+            }
+            return tax;
+        }
+
+        const fedTax = bracketTax(FED_BRACKETS, income);
+        const provBrackets = PROV_BRACKETS[prov] || PROV_BRACKETS.ON;
+        const provTax = bracketTax(provBrackets, income);
+        const fedRate0 = FED_BRACKETS[0][1];
+        const provRate0 = provBrackets[0][1];
+        const bpaCredit = BPA_FED * fedRate0 + Math.min(BPA_FED, provBrackets[0][0]) * provRate0;
+        let ageCredit = 0;
+        if (age >= 65) ageCredit = AGE_AMOUNT * (fedRate0 + provRate0);
+        const total = fedTax + provTax - bpaCredit - ageCredit;
+        return Math.max(0, total);
+    }
+
+    function marginalRate(taxableIncome, prov) {
+        const fedRate = FED_BRACKETS.find(([u]) => taxableIncome <= u)[1];
+        const provBrackets = PROV_BRACKETS[prov] || PROV_BRACKETS.ON;
+        const provRate = provBrackets.find(([u]) => taxableIncome <= u)[1];
+        return fedRate + provRate;
+    }
+
+    // Eligible Canadian dividend gross-up + dividend tax credit (simplified)
+    function dividendGrossedUp(div) { return div * 1.38; }
+    function dividendCredit(div, prov) {
+        const fedDtc = div * 1.38 * 0.150198;
+        const provDtcRate = (prov === 'ON' ? 0.10 : 0.10);
+        const provDtc = div * 1.38 * provDtcRate;
+        return fedDtc + provDtc;
+    }
+
+    // ----------------------------------------------------------------------
+    // CPP/OAS
+    // ----------------------------------------------------------------------
+    function cppAt(age, earningsPct) {
+        // Adjust max for age:
+        // Take before 65: -0.6% per month before 65 (max 60 -> -36%)
+        // Take after 65: +0.7% per month after 65 (max 70 -> +42%)
+        let factor;
+        if (age < 65) factor = 1 - (65 - age) * 12 * 0.006;
+        else factor = 1 + (age - 65) * 12 * 0.007;
+        const base = CPP_MAX_65 * (earningsPct / 100);
+        return Math.max(0, base * factor);
+    }
+
+    function oasAt(age, yearsInCanada) {
+        if (age < 65) return 0;
+        // Years in Canada (max 40 = full)
+        const eligPct = Math.min(40, Math.max(0, yearsInCanada)) / 40;
+        let factor = 1;
+        if (age > 65) factor = 1 + Math.min(60, (age - 65) * 12) * 0.006;
+        if (age >= 75) factor *= 1.10; // 10% boost at 75+
+        return OAS_MAX_65 * eligPct * factor;
+    }
+
+    // ----------------------------------------------------------------------
+    // Account growth model
+    // ----------------------------------------------------------------------
+    function returnPct() {
+        return (num('rCanDiv') + num('rForDiv') + num('rIncome') + num('rUnreal') + num('rReal')) / 100;
+    }
+
+    function realReturnPct() {
+        const nominal = returnPct();
+        const inflation = num('inflation') / 100;
+        return (1 + nominal) / (1 + inflation) - 1;
+    }
+
+    // Simulate one ordering of contributions+withdrawals
+    // Returns array of yearly snapshots in REAL (today's) dollars
+    // cppStartAgeOverride: optional, used by optimizer; falls back to params
+    function simulate(contribOrder, withdrawOrder, cppStartAgeOverride) {
+        const params = readParams();
+        const snapshots = [];
+        let tfsa = params.tfsaValue;
+        let rrsp = params.rrspValue;
+        let taxable = params.taxableValue;
+        let taxableBook = params.taxableBookValue || taxable;
+        let tfsaRoom = params.tfsaRoom;
+        let rrspRoom = params.rrspRoom;
+
+        const r = returnPct();
+        const inflation = params.inflation / 100;
+        const wageInfl = params.wageInflation / 100;
+
+        // Tax drag for taxable (annual estimate)
+        // dividends are taxed at marginal rate (ish), realized CG taxed (50%), unrealized accrue tax-deferred
+        const rDiv = (params.rCanDiv + params.rForDiv) / 100;
+        const rInc = params.rIncome / 100;
+        const rRealCG = params.rReal / 100;
+        const rUnreal = params.rUnreal / 100;
+
+        const startYear = new Date().getFullYear();
+        const startAge = params.age;
+        const retireAge = params.retirementAge;
+        const finalAge = params.lifeExp;
+
+        const cppStartAge = cppStartAgeOverride != null ? cppStartAgeOverride : params.cppStartAge;
+
+        let realIncome = params.income;
+        const realSpending = params.spending;
+        const dbContribReal = params.dbContrib;       // ongoing DB contributions while working
+        const dbCurrentIncome = params.dbIncome;      // existing DB pension income (e.g. from prior employer)
+
+        for (let age = startAge; age <= finalAge; age++) {
+            const calYear = startYear + (age - startAge);
+            const isWorking = age < retireAge;
+            const isRetired = !isWorking;
+
+            // Income (real dollars, but wage growth above inflation)
+            // wage real growth = (1+wageInfl)/(1+inflation) - 1
+            if (age > startAge) {
+                if (isWorking) realIncome *= (1 + wageInfl) / (1 + inflation);
+            }
+
+            // Determine "income sources" for this year
+            let employmentIncome = isWorking ? realIncome : 0;
+            let cppIncome = 0;
+            let oasIncome = 0;
+            let dbIncome = 0;
+            if (age >= cppStartAge && isRetired) {
+                cppIncome = cppAt(cppStartAge, params.cppPercent);
+            }
+            if (age >= params.oasAge && isRetired) {
+                oasIncome = oasAt(age, params.oasYears);
+            }
+            // DB pension benefit at retirement
+            const dbStartAge = params.dbStartAge;
+            if (params.dbBenefit > 0 && age >= dbStartAge) {
+                const yearsSinceStart = age - dbStartAge;
+                const dbReal = params.dbBenefit * Math.pow((1 + params.dbIndex/100) / (1 + inflation), yearsSinceStart);
+                dbIncome += dbReal;
+            }
+            // Existing DB pension income (e.g. already-receiving from prior employer); assume CPI-indexed
+            if (dbCurrentIncome > 0) {
+                dbIncome += dbCurrentIncome;
+            }
+
+            // Determine target spending in real $
+            const targetSpending = realSpending;
+
+            // Calculate after-tax disposable from working income
+            let taxableIncomePreRRSP = employmentIncome + dbIncome;
+            // Also include dividends from taxable account (small)
+            const taxableDiv = taxable * rDiv;
+            const taxableInterest = taxable * rInc;
+            taxableIncomePreRRSP += taxableInterest + dividendGrossedUp(taxableDiv);
+
+            let rrspContrib = 0;
+            let tfsaContrib = 0;
+            let taxableContrib = 0;
+
+            // Potential savings = income - spending (rough). We'll iterate to find consistent savings & tax.
+            let estTax = computeTax(taxableIncomePreRRSP, params.province, age);
+            let afterTax = employmentIncome + dbIncome + cppIncome + oasIncome - estTax;
+            // Subtract DB contributions during working years (after-tax cash flow)
+            if (isWorking && dbContribReal > 0) afterTax -= dbContribReal;
+            // OAS clawback (in retirement)
+            if (age >= 65) {
+                const totalIncomeForClawback = taxableIncomePreRRSP + cppIncome + oasIncome;
+                if (totalIncomeForClawback > OAS_CLAWBACK_THRESHOLD) {
+                    const clawback = Math.min(oasIncome, (totalIncomeForClawback - OAS_CLAWBACK_THRESHOLD) * OAS_CLAWBACK_RATE);
+                    afterTax -= clawback;
+                    estTax += clawback;
+                }
+            }
+
+            let savings = afterTax - targetSpending;
+
+            if (isWorking && savings > 0) {
+                // Distribute savings according to contribOrder
+                let remaining = savings;
+                for (const acct of contribOrder) {
+                    if (remaining <= 0) break;
+                    if (acct === 'TFSA') {
+                        const c = Math.min(remaining, Math.max(0, tfsaRoom));
+                        tfsaContrib = c; tfsa += c; tfsaRoom -= c; remaining -= c;
+                    } else if (acct === 'RRSP') {
+                        const c = Math.min(remaining, Math.max(0, rrspRoom));
+                        rrspContrib = c; rrsp += c; rrspRoom -= c; remaining -= c;
+                        // Recompute tax with deduction
+                        const newTaxable = Math.max(0, taxableIncomePreRRSP - c);
+                        const newTax = computeTax(newTaxable, params.province, age);
+                        const refund = estTax - newTax;
+                        // Add refund back to whatever's next, or taxable
+                        remaining += refund;
+                        estTax = newTax;
+                    } else if (acct === 'TAXABLE') {
+                        taxableContrib = remaining;
+                        taxable += remaining;
+                        taxableBook += remaining;
+                        remaining = 0;
+                    }
+                }
+            }
+
+            // Withdrawals during retirement to cover spending shortfall
+            let tfsaWD = 0, rrspWD = 0, taxableWD = 0;
+            if (isRetired) {
+                let shortfall = targetSpending - (afterTax > 0 ? afterTax : 0);
+                if (afterTax >= targetSpending) {
+                    // Income covers spending; surplus goes to taxable
+                    const surplus = afterTax - targetSpending;
+                    taxable += surplus;
+                    taxableBook += surplus;
+                } else if (shortfall > 0) {
+                    // Iterate withdrawals from accounts
+                    for (const acct of withdrawOrder) {
+                        if (shortfall <= 1) break;
+                        if (acct === 'TFSA' && tfsa > 0) {
+                            const w = Math.min(shortfall, tfsa);
+                            tfsa -= w; tfsaWD += w; shortfall -= w;
+                        } else if (acct === 'RRSP' && rrsp > 0) {
+                            // RRSP withdrawals fully taxable; gross up
+                            const mr = marginalRate(taxableIncomePreRRSP + cppIncome + oasIncome, params.province);
+                            const grossNeeded = shortfall / (1 - mr);
+                            const w = Math.min(grossNeeded, rrsp);
+                            rrsp -= w; rrspWD += w;
+                            const tax = w * mr;
+                            shortfall -= (w - tax);
+                            estTax += tax;
+                        } else if (acct === 'TAXABLE' && taxable > 0) {
+                            // CG portion = (taxable - book) / taxable, taxable at 50% inclusion × marginal
+                            const cgRatio = taxable > 0 ? Math.max(0, (taxable - taxableBook) / taxable) : 0;
+                            const mr = marginalRate(taxableIncomePreRRSP, params.province);
+                            const effRate = cgRatio * 0.5 * mr;
+                            const grossNeeded = shortfall / (1 - effRate);
+                            const w = Math.min(grossNeeded, taxable);
+                            taxable -= w; taxableBook -= w * (1 - cgRatio); taxableBook = Math.max(0, taxableBook);
+                            taxableWD += w;
+                            const tax = w * effRate;
+                            shortfall -= (w - tax);
+                            estTax += tax;
+                        }
+                    }
+                }
+            }
+
+            // Apply growth (real return) to all accounts
+            const realRet = (1 + r) / (1 + inflation) - 1;
+            // taxable account has tax drag from dividends & realized gains
+            const taxableTaxDrag = (rDiv * 0.39) + (rInc * 0.43) + (rRealCG * 0.5 * 0.43); // simplified avg ~marginal
+            const realRetTaxable = (1 + r - taxableTaxDrag) / (1 + inflation) - 1;
+
+            tfsa *= (1 + realRet);
+            rrsp *= (1 + realRet);
+            taxable *= (1 + realRetTaxable);
+            taxableBook *= 1; // book only changes with contribs/withdrawals
+
+            // TFSA / RRSP room growth.
+            // TFSA limit ~$7,000 nominal/yr and roughly indexes with inflation, so a flat $7,000 in real $ is a fair approximation.
+            // TFSA room accrues every year from age 18 (not just working years).
+            if (age >= 18) {
+                tfsaRoom += 7000;
+            }
+            // RRSP room: 18% of earned income, capped at 2025 max ($32,490) less Pension Adjustment.
+            if (isWorking) {
+                const rrspGen = Math.max(0, Math.min(realIncome * 0.18, 32490) - params.dbPA);
+                rrspRoom += rrspGen;
+            }
+
+            const networth = tfsa + rrsp + taxable;
+            snapshots.push({
+                year: calYear,
+                age,
+                isRetired,
+                income: employmentIncome,
+                cpp: cppIncome,
+                oas: oasIncome,
+                db: dbIncome,
+                spending: targetSpending,
+                tax: Math.max(0, estTax),
+                tfsa, rrsp, taxable,
+                tfsaContrib, rrspContrib, taxableContrib,
+                tfsaWD, rrspWD, taxableWD,
+                networth,
+            });
+        }
+        return snapshots;
+    }
+
+    // ----------------------------------------------------------------------
+    // Read all parameters
+    // ----------------------------------------------------------------------
+    function readParams() {
+        const today = new Date();
+        const birth = new Date(val('birthdate'));
+        const retire = new Date(val('retirementDate'));
+        const ageRaw = diffYears(birth, today);
+        const retireAgeRaw = diffYears(birth, retire);
+        const age = Math.floor(ageRaw);
+        const retireAge = Math.floor(retireAgeRaw);
+        setVal('age', age);
+        setVal('retirementAge', retireAge);
+
+        // Update life expectancy if FP table source
+        if (val('lifeSource') === 'fpcanada') {
+            const le = fpCanadaLifeExpectancy(val('sex'), num('survival'));
+            setVal('lifeExp', le);
+        }
+
+        const lifeExp = num('lifeExp');
+
+        // CPP age
+        let cppStartAge;
+        if (val('cppMode') === 'optimize') {
+            cppStartAge = 70;
+            setVal('cppAge', 70);
+        } else {
+            cppStartAge = num('cppAge');
+        }
+
+        // DB start age
+        const dbStart = new Date(val('dbStart'));
+        const dbStartAge = Math.floor(diffYears(birth, dbStart));
+
+        return {
+            province: val('province'),
+            age,
+            retirementAge: retireAge,
+            lifeExp,
+            income: num('income'),
+            spending: num('spending'),
+            tfsaValue: num('tfsaValue'),
+            tfsaRoom: num('tfsaRoom'),
+            rrspValue: num('rrspValue'),
+            rrspRoom: num('rrspRoom'),
+            taxableValue: num('taxableValue'),
+            taxableBookValue: num('taxableBookValue'),
+            cppStartAge,
+            cppPercent: num('cppPercent'),
+            cppChildren: num('cppChildren'),
+            cppDisability: num('cppDisability'),
+            oasYears: num('oasYears'),
+            oasAge: num('oasAge'),
+            dbContrib: num('dbContrib'),
+            dbBenefit: num('dbBenefit'),
+            dbStartAge,
+            dbIndex: num('dbIndex'),
+            dbPA: num('dbPA'),
+            dbIncome: num('dbIncome'),
+            rCanDiv: num('rCanDiv'),
+            rForDiv: num('rForDiv'),
+            rIncome: num('rIncome'),
+            rUnreal: num('rUnreal'),
+            rReal: num('rReal'),
+            inflation: num('inflation'),
+            wageInflation: num('wageInflation'),
+        };
+    }
+
+    // ----------------------------------------------------------------------
+    // Strategy enumeration & best selection
+    // ----------------------------------------------------------------------
+    const CONTRIB_ORDERS = [
+        { id: 'TFSA-RRSP-TAXABLE', order: ['TFSA','RRSP','TAXABLE'], label: 'TFSA → RRSP → Taxable' },
+        { id: 'RRSP-TFSA-TAXABLE', order: ['RRSP','TFSA','TAXABLE'], label: 'RRSP → TFSA → Taxable' },
+        { id: 'TAXABLE-TFSA-RRSP', order: ['TAXABLE','TFSA','RRSP'], label: 'Taxable → TFSA → RRSP' },
+    ];
+    const WITHDRAW_ORDERS = [
+        { id: 'TAXABLE-RRSP-TFSA', order: ['TAXABLE','RRSP','TFSA'], label: 'Taxable → RRSP → TFSA' },
+        { id: 'RRSP-TAXABLE-TFSA', order: ['RRSP','TAXABLE','TFSA'], label: 'RRSP → Taxable → TFSA' },
+        { id: 'TFSA-RRSP-TAXABLE', order: ['TFSA','RRSP','TAXABLE'], label: 'TFSA → RRSP → Taxable' },
+        { id: 'TFSA-TAXABLE-RRSP', order: ['TFSA','TAXABLE','RRSP'], label: 'TFSA → Taxable → RRSP' },
+        { id: 'RRSP-TFSA-TAXABLE', order: ['RRSP','TFSA','TAXABLE'], label: 'RRSP → TFSA → Taxable' },
+        { id: 'TAXABLE-TFSA-RRSP', order: ['TAXABLE','TFSA','RRSP'], label: 'Taxable → TFSA → RRSP' },
+    ];
+
+    function findOrderById(arr, id) { return arr.find(x => x.id === id); }
+
+    function runAllStrategies() {
+        const isOptimizeCpp = val('cppMode') === 'optimize';
+        const cppAges = isOptimizeCpp ? [60, 65, 70] : [num('cppAge')];
+        const results = [];
+        for (const c of CONTRIB_ORDERS) {
+            for (const w of WITHDRAW_ORDERS) {
+                let best = null;
+                for (const cpp of cppAges) {
+                    const snaps = simulate(c.order, w.order, cpp);
+                    const final = snaps[snaps.length - 1].networth;
+                    if (!best || final > best.final) best = { snaps, final, cppAge: cpp };
+                }
+                results.push({ contrib: c, withdraw: w, snaps: best.snaps, final: best.final, cppAge: best.cppAge });
+            }
+        }
+        return results;
+    }
+
+    // ----------------------------------------------------------------------
+    // Charts
+    // ----------------------------------------------------------------------
+    let growthChart, cashflowChart, taxChart;
+
+    function destroyCharts() {
+        if (growthChart) { growthChart.destroy(); growthChart = null; }
+        if (cashflowChart) { cashflowChart.destroy(); cashflowChart = null; }
+        if (taxChart) { taxChart.destroy(); taxChart = null; }
+    }
+
+    function chartTextColors() {
+        const isDark = document.body.classList.contains('dark');
+        return {
+            text: isDark ? '#D1D5DB' : '#374151',
+            grid: isDark ? '#374151' : 'rgba(0,0,0,0.06)',
+            tooltipBg: isDark ? 'rgba(31,41,55,0.95)' : 'rgba(17,24,39,0.95)',
+        };
+    }
+
+    function renderGrowthChart(snaps) {
+        const ctx = document.getElementById('growthChart').getContext('2d');
+        const labels = snaps.map(s => s.year);
+        const colors = chartTextColors();
+
+        const data = {
+            labels,
+            datasets: [
+                { label: 'TFSA', data: snaps.map(s=>s.tfsa), backgroundColor: 'rgba(16,185,129,0.6)', borderColor: '#059669', fill: true, tension: 0.25, pointRadius: 0 },
+                { label: 'RRSP', data: snaps.map(s=>s.rrsp), backgroundColor: 'rgba(99,102,241,0.6)', borderColor: '#4F46E5', fill: true, tension: 0.25, pointRadius: 0 },
+                { label: 'Taxable', data: snaps.map(s=>s.taxable), backgroundColor: 'rgba(59,130,246,0.55)', borderColor: '#1D4ED8', fill: true, tension: 0.25, pointRadius: 0 },
+            ],
+        };
+
+        if (growthChart) growthChart.destroy();
+        growthChart = new Chart(ctx, {
+            type: 'line',
+            data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                plugins: {
+                    legend: { position: 'top', labels: { color: colors.text } },
+                    tooltip: {
+                        backgroundColor: colors.tooltipBg,
+                        callbacks: {
+                            label: (ctx) => `${ctx.dataset.label}: ${fmt(ctx.parsed.y)}`,
+                            footer: (items) => {
+                                const total = items.reduce((s,i) => s + i.parsed.y, 0);
+                                return 'Net Worth: ' + fmt(total);
+                            },
+                        },
+                    },
+                },
+                scales: {
+                    x: { stacked: true, ticks: { color: colors.text, maxTicksLimit: 12 }, grid: { display: false } },
+                    y: { stacked: true, ticks: { color: colors.text, callback: (v) => fmt(v) }, grid: { color: colors.grid } },
+                },
+            },
+        });
+    }
+
+    function renderCashflowChart(snaps) {
+        const ctx = document.getElementById('cashflowChart').getContext('2d');
+        const labels = snaps.map(s => s.year);
+        const colors = chartTextColors();
+
+        const data = {
+            labels,
+            datasets: [
+                { label: 'Employment', data: snaps.map(s=>s.income), backgroundColor: '#4F46E5', stack: 'in' },
+                { label: 'CPP', data: snaps.map(s=>s.cpp), backgroundColor: '#10B981', stack: 'in' },
+                { label: 'OAS', data: snaps.map(s=>s.oas), backgroundColor: '#F59E0B', stack: 'in' },
+                { label: 'DB Pension', data: snaps.map(s=>s.db), backgroundColor: '#EF4444', stack: 'in' },
+                { label: 'TFSA WD', data: snaps.map(s=>s.tfsaWD), backgroundColor: '#34D399', stack: 'in' },
+                { label: 'RRSP WD', data: snaps.map(s=>s.rrspWD), backgroundColor: '#A5B4FC', stack: 'in' },
+                { label: 'Taxable WD', data: snaps.map(s=>s.taxableWD), backgroundColor: '#93C5FD', stack: 'in' },
+                { label: 'Spending', data: snaps.map(s=>-s.spending), backgroundColor: 'rgba(239,68,68,0.7)', stack: 'out' },
+                { label: 'Tax', data: snaps.map(s=>-s.tax), backgroundColor: 'rgba(217,119,6,0.7)', stack: 'out' },
+            ],
+        };
+        if (cashflowChart) cashflowChart.destroy();
+        cashflowChart = new Chart(ctx, {
+            type: 'bar',
+            data,
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                plugins: {
+                    legend: { position: 'top', labels: { color: colors.text, boxWidth: 12 } },
+                    tooltip: { backgroundColor: colors.tooltipBg,
+                        callbacks: { label: (ctx) => `${ctx.dataset.label}: ${fmt(Math.abs(ctx.parsed.y))}` } },
+                },
+                scales: {
+                    x: { stacked: true, ticks: { color: colors.text, maxTicksLimit: 12 }, grid: { display: false } },
+                    y: { stacked: true, ticks: { color: colors.text, callback: (v) => fmt(v) }, grid: { color: colors.grid } },
+                },
+            },
+        });
+    }
+
+    function renderTaxChart(snaps) {
+        const ctx = document.getElementById('taxChart').getContext('2d');
+        const labels = snaps.map(s => s.year);
+        const colors = chartTextColors();
+
+        const data = {
+            labels,
+            datasets: [
+                { type:'bar', label: 'Tax Paid', data: snaps.map(s=>s.tax), backgroundColor: 'rgba(217,119,6,0.7)', yAxisID:'y' },
+                { type:'line', label: 'Spending', data: snaps.map(s=>s.spending), borderColor:'#10B981', backgroundColor:'transparent', yAxisID:'y', tension:0.25, pointRadius:0 },
+                { type:'line', label: 'Income', data: snaps.map(s=>s.income+s.cpp+s.oas+s.db), borderColor:'#4F46E5', backgroundColor:'transparent', yAxisID:'y', tension:0.25, pointRadius:0 },
+            ],
+        };
+        if (taxChart) taxChart.destroy();
+        taxChart = new Chart(ctx, {
+            data,
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                plugins: {
+                    legend: { position: 'top', labels: { color: colors.text } },
+                    tooltip: { backgroundColor: colors.tooltipBg, callbacks: { label: (ctx) => `${ctx.dataset.label}: ${fmt(ctx.parsed.y)}` } },
+                },
+                scales: {
+                    x: { ticks: { color: colors.text, maxTicksLimit: 12 }, grid: { display: false } },
+                    y: { ticks: { color: colors.text, callback: (v) => fmt(v) }, grid: { color: colors.grid } },
+                },
+            },
+        });
+    }
+
+    function renderTable(snaps) {
+        const tbody = document.querySelector('#yearTable tbody');
+        const showEvery = snaps.length > 50 ? 5 : (snaps.length > 25 ? 2 : 1);
+        const rows = snaps.filter((s,i) => i % showEvery === 0 || i === snaps.length-1).map(s => {
+            const cls = s.isRetired ? 'retired' : '';
+            return `<tr>
+                <td class="first ${cls}">${s.year}</td>
+                <td class="${cls}">${s.age}</td>
+                <td class="${cls}">${fmt(s.income+s.cpp+s.oas+s.db)}</td>
+                <td class="${cls}">${fmt(s.spending)}</td>
+                <td class="${cls}">${fmt(s.tax)}</td>
+                <td class="${cls}">${fmt(s.tfsa)}</td>
+                <td class="${cls}">${fmt(s.rrsp)}</td>
+                <td class="${cls}">${fmt(s.taxable)}</td>
+                <td class="${cls}"><strong>${fmt(s.networth)}</strong></td>
+            </tr>`;
+        }).join('');
+        tbody.innerHTML = rows;
+    }
+
+    function renderCompare(results, bestId) {
+        const grid = document.getElementById('compareGrid');
+        const max = Math.max(...results.map(r=>r.final));
+        const min = Math.min(...results.map(r=>r.final));
+        const html = results
+            .slice()
+            .sort((a,b) => b.final - a.final)
+            .map(r => {
+                const id = r.contrib.id + '|' + r.withdraw.id;
+                const bestCls = id === bestId ? 'best' : '';
+                const bonus = r.final - min;
+                const pctOfMax = max > 0 ? (r.final / max) * 100 : 0;
+                return `
+                <div class="compare-card ${bestCls}">
+                    <div class="compare-strategy">
+                        ${id === bestId ? '<span class="material-icons" style="color:#10B981;font-size:18px;">star</span>' : ''}
+                        ${r.contrib.label}
+                    </div>
+                    <div class="compare-row">↓ Withdrawals</div>
+                    <div class="compare-row"><span>${r.withdraw.label}</span></div>
+                    <div class="compare-row"><span>Final NW</span><strong>${fmt(r.final)}</strong></div>
+                    <div class="compare-row"><span>vs worst</span><strong style="color:#10B981;">${fmtSigned(bonus)}</strong></div>
+                    <div class="compare-bar-wrap"><div class="compare-bar" style="width:${pctOfMax}%"></div></div>
+                </div>`;
+            }).join('');
+        grid.innerHTML = html;
+    }
+
+    // ----------------------------------------------------------------------
+    // Main run / orchestrator
+    // ----------------------------------------------------------------------
+    function run() {
+        // Update return computed tags
+        const totalNominal = returnPct() * 100;
+        const totalReal = realReturnPct() * 100;
+        document.getElementById('totalNominal').textContent = fmtPct(totalNominal);
+        document.getElementById('totalReal').textContent = fmtPct(totalReal);
+        document.getElementById('realReturnPill').textContent = fmtPct(totalReal);
+
+        const userContrib = val('contribStrat');
+        const userWithdraw = val('withdrawStrat');
+
+        const allResults = runAllStrategies();
+        if (!allResults.length) return;
+
+        // Best contribs (max final NW): pick best contribOrder over best matched withdrawOrder
+        const max = allResults.reduce((a,b) => b.final > a.final ? b : a);
+        const min = allResults.reduce((a,b) => b.final < a.final ? b : a);
+
+        // Best contribution strategy (with optimal withdrawals): max final
+        const bestContrib = max.contrib;
+        // Best withdrawal strategy: holding contribOrder = bestContrib
+        const filteredW = allResults.filter(r => r.contrib.id === bestContrib.id);
+        const bestWithdraw = filteredW.reduce((a,b) => b.final > a.final ? b : a).withdraw;
+
+        // Pick which scenario to display
+        const chosenContrib = userContrib === 'optimize' ? bestContrib : findOrderById(CONTRIB_ORDERS, userContrib) || bestContrib;
+        const chosenWithdraw = userWithdraw === 'optimize' ? bestWithdraw : findOrderById(WITHDRAW_ORDERS, userWithdraw) || bestWithdraw;
+        const chosen = allResults.find(r => r.contrib.id === chosenContrib.id && r.withdraw.id === chosenWithdraw.id);
+
+        // Top stat cards
+        document.getElementById('statMaxFinalNW').textContent = fmt(max.final);
+
+        // Optimal contributions bonus = max - max-with-default-withdraw using a "default" contrib
+        // Approximate: max - (max with same withdraw but worst contrib)
+        const sameWithdrawForBest = allResults.filter(r => r.withdraw.id === bestWithdraw.id);
+        const worstContribSameWithdraw = sameWithdrawForBest.reduce((a,b) => b.final < a.final ? b : a);
+        const contribBonus = max.final - worstContribSameWithdraw.final;
+        document.getElementById('statContribBonus').textContent = fmt(contribBonus);
+
+        // Optimal withdrawals bonus = max - same contrib but worst withdraw
+        const sameContribForBest = allResults.filter(r => r.contrib.id === bestContrib.id);
+        const worstWithdrawSameContrib = sameContribForBest.reduce((a,b) => b.final < a.final ? b : a);
+        const withdrawBonus = max.final - worstWithdrawSameContrib.final;
+        document.getElementById('statWithdrawBonus').textContent = fmt(withdrawBonus);
+
+        // Strategy pills
+        document.getElementById('bestContribStrategy').textContent = bestContrib.label;
+        document.getElementById('bestWithdrawStrategy').textContent = bestWithdraw.label;
+
+        // Reflect the optimal CPP age picked by the optimizer back into the (read-only) field
+        if (val('cppMode') === 'optimize' && max.cppAge != null) {
+            setVal('cppAge', max.cppAge);
+        }
+
+        // Render charts
+        renderGrowthChart(chosen.snaps);
+        renderCashflowChart(chosen.snaps);
+        renderTaxChart(chosen.snaps);
+        renderTable(chosen.snaps);
+
+        // Compare grid
+        renderCompare(allResults, max.contrib.id + '|' + max.withdraw.id);
+    }
+
+    // ----------------------------------------------------------------------
+    // UI: dark mode, accordions, tabs, listeners
+    // ----------------------------------------------------------------------
+    function toggleDarkMode() {
+        const isDark = document.body.classList.toggle('dark');
+        document.getElementById('darkModeIcon').textContent = isDark ? 'light_mode' : 'dark_mode';
+        document.getElementById('darkModeText').textContent = isDark ? 'Light' : 'Dark';
+        localStorage.setItem('retirementDarkMode', isDark);
+        run(); // re-render charts to match theme
+    }
+
+    function initDarkMode() {
+        const saved = localStorage.getItem('retirementDarkMode');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (saved === 'true' || (saved === null && prefersDark)) {
+            document.body.classList.add('dark');
+            document.getElementById('darkModeIcon').textContent = 'light_mode';
+            document.getElementById('darkModeText').textContent = 'Light';
+        }
+    }
+
+    function initTabs() {
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                btn.classList.add('active');
+                const tab = btn.getAttribute('data-tab');
+                document.getElementById('tab-' + tab).classList.add('active');
+                // Force chart resize on tab show
+                if (growthChart) growthChart.resize();
+                if (cashflowChart) cashflowChart.resize();
+                if (taxChart) taxChart.resize();
+            });
+        });
+    }
+
+    function initAccordions() {
+        document.querySelectorAll('.accordion-trigger').forEach(t => {
+            t.addEventListener('click', () => {
+                const key = t.getAttribute('data-acc');
+                const c = document.querySelector(`[data-acc-content="${key}"]`);
+                t.classList.toggle('open');
+                c.classList.toggle('open');
+            });
+        });
+    }
+
+    const PERSIST_IDS = ['province','birthdate','retirementDate','income','spending',
+        'tfsaValue','tfsaRoom','rrspValue','rrspRoom','taxableValue','taxableBookValue',
+        'cppMode','cppAge','cppPercent','cppChildren','cppDisability',
+        'oasYears','oasAge',
+        'dbContrib','dbBenefit','dbStart','dbIndex','dbPA','dbIncome',
+        'lifeSource','sex','survival','lifeExp',
+        'alloc','outcome',
+        'rCanDiv','rForDiv','rIncome','rUnreal','rReal',
+        'inflation','wageInflation',
+        'contribStrat','withdrawStrat'];
+    const PERSIST_KEY = 'retirementInputs.v1';
+
+    function persist() {
+        try {
+            const data = {};
+            PERSIST_IDS.forEach(id => { const el = document.getElementById(id); if (el) data[id] = el.value; });
+            localStorage.setItem(PERSIST_KEY, JSON.stringify(data));
+        } catch (_) { /* ignore */ }
+    }
+
+    function restore() {
+        try {
+            const raw = localStorage.getItem(PERSIST_KEY);
+            if (!raw) return;
+            const data = JSON.parse(raw);
+            PERSIST_IDS.forEach(id => {
+                if (data[id] != null) {
+                    const el = document.getElementById(id);
+                    if (el) el.value = data[id];
+                }
+            });
+        } catch (_) { /* ignore */ }
+    }
+
+    function initListeners() {
+        PERSIST_IDS.forEach(id => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const ev = (el.tagName === 'SELECT' || el.type === 'date') ? 'change' : 'input';
+            el.addEventListener(ev, () => {
+                if (id === 'cppMode') {
+                    const isOpt = val('cppMode') === 'optimize';
+                    document.getElementById('cppAge').readOnly = isOpt;
+                    document.getElementById('cppAge').style.background = isOpt ? '#F3F4F6' : '';
+                }
+                if (id === 'lifeSource') {
+                    const isFP = val('lifeSource') === 'fpcanada';
+                    document.getElementById('lifeExp').readOnly = isFP;
+                    document.getElementById('lifeExp').style.background = isFP ? '#F3F4F6' : '';
+                }
+                if (id === 'alloc') applyAllocation();
+                if (id === 'outcome') applyOutcome();
+                persist();
+                run();
+            });
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            if (!confirm('Reset all inputs to defaults?')) return;
+            localStorage.removeItem(PERSIST_KEY);
+            location.reload();
+        });
+    }
+
+    // Equity and bond return components (PWL-style baseline expected returns).
+    const ALLOC_EQUITY = { canDiv:0.74, forDiv:0.94, income:0.00, unreal:4.67, realCG:0.52 };
+    const ALLOC_BONDS  = { canDiv:0.00, forDiv:0.00, income:3.50, unreal:0.20, realCG:0.10 };
+
+    function expectedReturnsFor(alloc, outcome) {
+        const w = alloc / 100;
+        const blend = {
+            canDiv: ALLOC_EQUITY.canDiv*w + ALLOC_BONDS.canDiv*(1-w),
+            forDiv: ALLOC_EQUITY.forDiv*w + ALLOC_BONDS.forDiv*(1-w),
+            income: ALLOC_EQUITY.income*w + ALLOC_BONDS.income*(1-w),
+            unreal: ALLOC_EQUITY.unreal*w + ALLOC_BONDS.unreal*(1-w),
+            realCG: ALLOC_EQUITY.realCG*w + ALLOC_BONDS.realCG*(1-w),
+        };
+        // ±1σ proxy: shift unrealized CG, the dominant return component.
+        // Stocks ~14% σ, bonds ~5% σ. Blend by allocation weight.
+        const sigma = 14*w + 5*(1-w);
+        if (outcome === 'optimistic') blend.unreal = Math.max(0, blend.unreal + sigma);
+        if (outcome === 'pessimistic') blend.unreal = Math.max(0, blend.unreal - sigma);
+        return blend;
+    }
+
+    function applyAllocation() {
+        if (val('alloc') === 'custom') return;
+        const a = parseInt(val('alloc'));
+        const r = expectedReturnsFor(a, val('outcome'));
+        setVal('rCanDiv', r.canDiv.toFixed(2));
+        setVal('rForDiv', r.forDiv.toFixed(2));
+        setVal('rIncome', r.income.toFixed(2));
+        setVal('rUnreal', r.unreal.toFixed(2));
+        setVal('rReal',   r.realCG.toFixed(2));
+    }
+
+    function applyOutcome() {
+        if (val('alloc') === 'custom') return;
+        applyAllocation();
+    }
+
+    function init() {
+        initDarkMode();
+        initAccordions();
+        initTabs();
+        restore();
+        initListeners();
+
+        // Sync derived fields
+        const today = new Date();
+        const birth = new Date(val('birthdate'));
+        const ageRaw = Math.floor(diffYears(birth, today));
+        setVal('age', ageRaw);
+        const retire = new Date(val('retirementDate'));
+        const retireAge = Math.floor(diffYears(birth, retire));
+        setVal('retirementAge', retireAge);
+
+        // Sync allocation -> returns on first load if not custom
+        applyAllocation();
+
+        run();
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
