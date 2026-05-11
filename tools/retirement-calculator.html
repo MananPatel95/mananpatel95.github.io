@@ -57,11 +57,11 @@
         /* Layout: results left, assumptions right */
         .layout {
             display: grid;
-            grid-template-columns: 1fr 360px;
+            grid-template-columns: 1fr 400px;
             gap: 16px;
             align-items: start;
         }
-        @media (max-width: 1024px) {
+        @media (max-width: 1100px) {
             .layout { grid-template-columns: 1fr; }
         }
 
@@ -215,19 +215,46 @@
         .field-grid {
             display: grid;
             grid-template-columns: 110px 1fr;
-            gap: 8px 10px;
+            gap: 10px 14px;
             align-items: center;
         }
         .field-label {
             font-size: 13px; color: #374151; font-weight: 500;
-            display: inline-flex; align-items: center; gap: 4px;
+            display: inline-flex; align-items: center; gap: 6px;
         }
         body.dark .field-label { color: #D1D5DB; }
-        .field-label .help-icon {
-            font-size: 14px; color: #9CA3AF; cursor: help;
+
+        /* Help icon with hover tooltip */
+        .help-icon {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 15px; height: 15px; flex-shrink: 0;
+            border-radius: 50%;
+            background: #E5E7EB; color: #6B7280;
+            font-size: 10px; font-weight: 700;
+            cursor: help; position: relative;
+            line-height: 1;
         }
+        body.dark .help-icon { background: #374151; color: #9CA3AF; }
+        .help-icon:hover { background: #4F46E5; color: white; }
+        .help-icon::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: calc(100% + 8px); right: 0;
+            background: #111827; color: white;
+            padding: 8px 10px; border-radius: 6px;
+            font-size: 11px; font-weight: 400; line-height: 1.4;
+            white-space: normal; width: 220px; max-width: 220px;
+            text-align: left;
+            z-index: 100;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.15s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .help-icon:hover::after { opacity: 1; }
+        body.dark .help-icon::after { background: #1F2937; border: 1px solid #374151; }
+
         .field-input-wrap {
-            display: flex; align-items: center; gap: 4px;
+            display: flex; align-items: center; gap: 6px;
             min-width: 0;
         }
         .field-prefix {
@@ -241,10 +268,10 @@
 
         input[type="number"], input[type="date"], input[type="text"], select {
             width: 100%;
-            padding: 7px 10px;
+            padding: 9px 11px;
             border: 1px solid #E5E7EB;
             border-radius: 6px;
-            font-size: 13px;
+            font-size: 14px;
             font-family: inherit;
             background: #FFFFFF;
             color: #111827;
@@ -404,7 +431,7 @@
         </a>
 
         <h1>Retirement Planning Calculator</h1>
-        <p class="subtitle">Project net worth across TFSA, RRSP and Taxable accounts. Compare withdrawal strategies. Inspired by the PWL Capital research tool.</p>
+        <p class="subtitle">Project net worth across TFSA, RRSP and Taxable accounts. Compare withdrawal strategies.</p>
 
         <div class="layout">
             <!-- Main results -->
@@ -562,16 +589,49 @@
                                 <input type="number" id="retirementAge" value="65" readonly style="background:#F3F4F6;">
                             </div>
 
-                            <label class="field-label" for="income">Income</label>
+                            <label class="field-label" for="income">
+                                Income
+                                <span class="help-icon" data-tooltip="Gross employment income today. Grows yearly at the Wage Inflation rate (real growth = wage − inflation).">?</span>
+                            </label>
                             <div class="field-input-wrap">
                                 <span class="field-prefix">$</span>
                                 <input type="number" id="income" value="85000" step="1000" min="0">
                             </div>
 
-                            <label class="field-label" for="spending">Spending</label>
+                            <label class="field-label" for="spending">
+                                Spending
+                                <span class="help-icon" data-tooltip="Annual spending in today's dollars while working. Grows at the 'Spending Growth' rate above inflation.">?</span>
+                            </label>
                             <div class="field-input-wrap">
                                 <span class="field-prefix">$</span>
                                 <input type="number" id="spending" value="53000" step="1000" min="0">
+                            </div>
+
+                            <label class="field-label" for="retirementSpending">
+                                Retire Spend
+                                <span class="help-icon" data-tooltip="Annual spending in retirement, in today's dollars. Many people spend ~70-90% of pre-retirement spending. Defaults to the same as working spending.">?</span>
+                            </label>
+                            <div class="field-input-wrap">
+                                <span class="field-prefix">$</span>
+                                <input type="number" id="retirementSpending" value="53000" step="1000" min="0">
+                            </div>
+
+                            <label class="field-label" for="spendingGrowth">
+                                Spend Growth
+                                <span class="help-icon" data-tooltip="Real growth in spending per year, above inflation. 0% = spending stays flat in today's dollars. 1-2% reflects lifestyle creep or rising healthcare costs in later life.">?</span>
+                            </label>
+                            <div class="field-input-wrap">
+                                <input type="number" id="spendingGrowth" value="0.00" step="0.10" min="-5" max="10">
+                                <span class="field-suffix">%</span>
+                            </div>
+
+                            <label class="field-label" for="dtc">
+                                DTC
+                                <span class="help-icon" data-tooltip="Disability Tax Credit. A non-refundable federal + provincial credit (~$2,000-$2,500/yr in tax savings, varies by province). Check this if you (or a supporting family member transferring it) qualify under CRA Form T2201.">?</span>
+                            </label>
+                            <div class="field-input-wrap" style="justify-content:flex-start;">
+                                <input type="checkbox" id="dtc" style="width:auto;height:18px;cursor:pointer;">
+                                <span class="field-suffix" id="dtcSavings" style="margin-left:6px;">—</span>
                             </div>
                         </div>
                     </div>
@@ -618,7 +678,7 @@
 
                             <label class="field-label" for="cppAge">Benefits Age</label>
                             <div class="field-input-wrap">
-                                <input type="number" id="cppAge" value="70" min="60" max="70" readonly style="background:#F3F4F6;">
+                                <input type="number" id="cppAge" value="70" min="60" max="70">
                             </div>
 
                             <label class="field-label" for="cppPercent">CPP Earnings %</label>
@@ -717,7 +777,33 @@
                     <button class="accordion-trigger open" data-acc="returns"><span>Expected Returns</span><span class="material-icons">chevron_right</span></button>
                     <div class="accordion-content open" data-acc-content="returns">
                         <div class="field-grid">
-                            <label class="field-label" for="alloc">Allocation</label>
+                            <label class="field-label" for="returnMode">
+                                Mode
+                                <span class="help-icon" data-tooltip="Flat Rate: one annual return number (e.g. 7%). Detailed: break return into Canadian/foreign dividends, interest, and capital gains so the simulator can model tax drag in your taxable account more realistically.">?</span>
+                            </label>
+                            <div class="field-input-wrap">
+                                <select id="returnMode">
+                                    <option value="flat" selected>Flat Rate (simple)</option>
+                                    <option value="detailed">Detailed (component breakdown)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Flat rate mode -->
+                        <div class="field-grid" id="flatRateGroup" style="margin-top:10px;">
+                            <label class="field-label" for="flatRate">
+                                Annual Return
+                                <span class="help-icon" data-tooltip="Single annual nominal return applied to all accounts. Subtracted by inflation to get the real growth rate. No tax drag is modeled in the taxable account in this mode (treats return as pure capital gains).">?</span>
+                            </label>
+                            <div class="field-input-wrap"><input type="number" id="flatRate" value="7.00" step="0.10" min="-20" max="50"><span class="field-suffix">%</span></div>
+                        </div>
+
+                        <!-- Detailed mode -->
+                        <div class="field-grid" id="detailedRateGroup" style="margin-top:10px;display:none;">
+                            <label class="field-label" for="alloc">
+                                Allocation
+                                <span class="help-icon" data-tooltip="Stock / Bond mix. Picks an expected-return preset. 100/0 = all equity, 60/40 = classic balanced. Choose Custom to set each component yourself.">?</span>
+                            </label>
                             <div class="field-input-wrap">
                                 <select id="alloc">
                                     <option value="100" selected>100/0 (Equity)</option>
@@ -730,7 +816,10 @@
                                 </select>
                             </div>
 
-                            <label class="field-label" for="outcome">Outcome</label>
+                            <label class="field-label" for="outcome">
+                                Outcome
+                                <span class="help-icon" data-tooltip="Expected = the median outcome. Optimistic / Pessimistic shift returns by ±1 standard deviation (~±14% for stocks, ~±5% for bonds), useful for stress testing.">?</span>
+                            </label>
                             <div class="field-input-wrap">
                                 <select id="outcome">
                                     <option value="expected" selected>Expected</option>
@@ -739,25 +828,48 @@
                                 </select>
                             </div>
 
-                            <label class="field-label" for="rCanDiv">Cdn Div</label>
+                            <label class="field-label" for="rCanDiv">
+                                Cdn Div
+                                <span class="help-icon" data-tooltip="Canadian eligible dividends — paid from Canadian companies. Taxed yearly in a taxable account but get the dividend tax credit, so they're often the most tax-efficient form of income.">?</span>
+                            </label>
                             <div class="field-input-wrap"><input type="number" id="rCanDiv" value="0.74" step="0.01" min="0"><span class="field-suffix">%</span></div>
 
-                            <label class="field-label" for="rForDiv">Foreign Div</label>
+                            <label class="field-label" for="rForDiv">
+                                Foreign Div
+                                <span class="help-icon" data-tooltip="Dividends from non-Canadian companies (US, international ETFs). Fully taxed at marginal rate as ordinary income — no dividend tax credit. Less tax-efficient than Canadian dividends.">?</span>
+                            </label>
                             <div class="field-input-wrap"><input type="number" id="rForDiv" value="0.94" step="0.01" min="0"><span class="field-suffix">%</span></div>
 
-                            <label class="field-label" for="rIncome">Income</label>
+                            <label class="field-label" for="rIncome">
+                                Interest
+                                <span class="help-icon" data-tooltip="Interest income from bonds, GICs, HISAs. Fully taxed yearly at your marginal rate — the least tax-efficient form of return in a taxable account.">?</span>
+                            </label>
                             <div class="field-input-wrap"><input type="number" id="rIncome" value="0.00" step="0.01" min="0"><span class="field-suffix">%</span></div>
 
-                            <label class="field-label" for="rUnreal">Unreal. CG</label>
+                            <label class="field-label" for="rUnreal">
+                                Unreal. CG
+                                <span class="help-icon" data-tooltip="Unrealized capital gains — appreciation you haven't sold yet. Tax-deferred until you sell, then 50% inclusion at your marginal rate. The most tax-efficient return type because it compounds without annual drag.">?</span>
+                            </label>
                             <div class="field-input-wrap"><input type="number" id="rUnreal" value="4.67" step="0.01" min="0"><span class="field-suffix">%</span></div>
 
-                            <label class="field-label" for="rReal">Real. CG</label>
+                            <label class="field-label" for="rReal">
+                                Real. CG
+                                <span class="help-icon" data-tooltip="Realized capital gains — gains triggered each year by ETF distributions or rebalancing. Taxed yearly at 50% inclusion × marginal rate.">?</span>
+                            </label>
                             <div class="field-input-wrap"><input type="number" id="rReal" value="0.52" step="0.01" min="0"><span class="field-suffix">%</span></div>
+                        </div>
 
-                            <label class="field-label" for="inflation">Inflation</label>
+                        <div class="field-grid" style="margin-top:10px;">
+                            <label class="field-label" for="inflation">
+                                Inflation
+                                <span class="help-icon" data-tooltip="Expected long-run CPI inflation. Used to convert nominal returns into real (today's dollar) growth and to grow CPP/OAS benefits.">?</span>
+                            </label>
                             <div class="field-input-wrap"><input type="number" id="inflation" value="2.50" step="0.01" min="0"><span class="field-suffix">%</span></div>
 
-                            <label class="field-label" for="wageInflation">Wage Infl.</label>
+                            <label class="field-label" for="wageInflation">
+                                Wage Infl.
+                                <span class="help-icon" data-tooltip="Annual nominal wage growth. Real wage growth = wage inflation − inflation. Default 3% (≈0.5% real growth above CPI), typical for Canadian salaries over a career.">?</span>
+                            </label>
                             <div class="field-input-wrap"><input type="number" id="wageInflation" value="3.00" step="0.01" min="0"><span class="field-suffix">%</span></div>
 
                             <label class="field-label">Total nominal</label>
@@ -805,7 +917,6 @@
         <p class="disclaimer">
             <strong>Disclaimer:</strong> This is an educational projection tool and does not constitute financial advice. Tax calculations are simplified (combined federal + provincial marginal brackets, no surtaxes, basic personal amounts approximated).
             Returns are deterministic; real markets are not. CPP/OAS amounts use 2025 maximums and indexing rules. Always validate large decisions with a qualified advisor.
-            Inspired by the open methodology of <a href="https://research-tools.pwlcapital.com/research/retirement" target="_blank" rel="noopener" style="color:#4F46E5;">PWL Capital's research tool</a>.
         </p>
     </div>
 
@@ -820,6 +931,14 @@
     const BPA_FED = 15705;              // 2025 federal basic personal amount (approx)
     const AGE_AMOUNT = 8790;            // 2025 age amount (approx)
     const PENSION_INCOME_AMOUNT = 2000;
+    // 2025 Disability Tax Credit federal amount (approx). Provincial DTC amounts
+    // by province (also approximate); credit applied at lowest tax rate of each level.
+    const DTC_FED = 10138;
+    const DTC_PROV = {
+        ON: 10160, BC: 9871, AB: 16557, QC: 4039, MB: 6180,
+        SK: 10405, NS: 7341, NB: 9180, NL: 7234, PE: 6890,
+        YT: 10138, NT: 13776, NU: 16700,
+    };
 
     // 2025 federal brackets [upper, rate]
     const FED_BRACKETS = [
@@ -887,7 +1006,7 @@
     }
 
     // Combined federal + provincial tax (simplified, marginal)
-    function computeTax(taxableIncome, prov, age=0) {
+    function computeTax(taxableIncome, prov, age=0, dtc=false) {
         if (taxableIncome <= 0) return 0;
         let income = taxableIncome;
 
@@ -913,8 +1032,22 @@
         const bpaCredit = BPA_FED * fedRate0 + Math.min(BPA_FED, provBrackets[0][0]) * provRate0;
         let ageCredit = 0;
         if (age >= 65) ageCredit = AGE_AMOUNT * (fedRate0 + provRate0);
-        const total = fedTax + provTax - bpaCredit - ageCredit;
+        let dtcCredit = 0;
+        if (dtc) {
+            const provAmount = DTC_PROV[prov] != null ? DTC_PROV[prov] : DTC_PROV.ON;
+            dtcCredit = DTC_FED * fedRate0 + provAmount * provRate0;
+        }
+        const total = fedTax + provTax - bpaCredit - ageCredit - dtcCredit;
         return Math.max(0, total);
+    }
+
+    // Annual DTC savings used to display in the UI
+    function dtcAnnualSavings(prov) {
+        const provBrackets = PROV_BRACKETS[prov] || PROV_BRACKETS.ON;
+        const fedRate0 = FED_BRACKETS[0][1];
+        const provRate0 = provBrackets[0][1];
+        const provAmount = DTC_PROV[prov] != null ? DTC_PROV[prov] : DTC_PROV.ON;
+        return DTC_FED * fedRate0 + provAmount * provRate0;
     }
 
     function marginalRate(taxableIncome, prov) {
@@ -961,6 +1094,9 @@
     // Account growth model
     // ----------------------------------------------------------------------
     function returnPct() {
+        if (val('returnMode') === 'flat') {
+            return num('flatRate') / 100;
+        }
         return (num('rCanDiv') + num('rForDiv') + num('rIncome') + num('rUnreal') + num('rReal')) / 100;
     }
 
@@ -968,6 +1104,21 @@
         const nominal = returnPct();
         const inflation = num('inflation') / 100;
         return (1 + nominal) / (1 + inflation) - 1;
+    }
+
+    // Per-component returns used for taxable account tax-drag.
+    // Flat mode: treat the entire return as unrealized capital gains
+    // (best-case tax efficiency in a taxable account; documented in tooltip).
+    function returnComponents() {
+        if (val('returnMode') === 'flat') {
+            return { rDiv: 0, rInc: 0, rRealCG: 0, rUnreal: num('flatRate') / 100 };
+        }
+        return {
+            rDiv: (num('rCanDiv') + num('rForDiv')) / 100,
+            rInc: num('rIncome') / 100,
+            rRealCG: num('rReal') / 100,
+            rUnreal: num('rUnreal') / 100,
+        };
     }
 
     // Simulate one ordering of contributions+withdrawals
@@ -986,23 +1137,23 @@
         const r = returnPct();
         const inflation = params.inflation / 100;
         const wageInfl = params.wageInflation / 100;
+        const spendGrowth = params.spendingGrowth / 100;
 
-        // Tax drag for taxable (annual estimate)
-        // dividends are taxed at marginal rate (ish), realized CG taxed (50%), unrealized accrue tax-deferred
-        const rDiv = (params.rCanDiv + params.rForDiv) / 100;
-        const rInc = params.rIncome / 100;
-        const rRealCG = params.rReal / 100;
-        const rUnreal = params.rUnreal / 100;
+        // Per-component returns drive the taxable-account tax drag.
+        const { rDiv, rInc, rRealCG } = params.returnComponents;
 
         const startYear = new Date().getFullYear();
         const startAge = params.age;
         const retireAge = params.retirementAge;
-        const finalAge = params.lifeExp;
+        // Clamp life expectancy to be at least one year past current age so the loop
+        // always produces at least one snapshot (defensive against bad inputs).
+        const finalAge = Math.max(startAge + 1, params.lifeExp);
 
         const cppStartAge = cppStartAgeOverride != null ? cppStartAgeOverride : params.cppStartAge;
 
         let realIncome = params.income;
-        const realSpending = params.spending;
+        let realSpending = params.spending;
+        const retirementSpendingBase = params.retirementSpending; // value at retirement, today's $
         const dbContribReal = params.dbContrib;       // ongoing DB contributions while working
         const dbCurrentIncome = params.dbIncome;      // existing DB pension income (e.g. from prior employer)
 
@@ -1015,6 +1166,14 @@
             // wage real growth = (1+wageInfl)/(1+inflation) - 1
             if (age > startAge) {
                 if (isWorking) realIncome *= (1 + wageInfl) / (1 + inflation);
+                // Spending grows by spendGrowth (real) each year
+                realSpending *= (1 + spendGrowth);
+            }
+            // At retirement, snap real spending to the retirement-spending base
+            // (also grown by spendGrowth from start year to retirement)
+            if (age === retireAge) {
+                const yearsToRetirement = retireAge - startAge;
+                realSpending = retirementSpendingBase * Math.pow(1 + spendGrowth, yearsToRetirement);
             }
 
             // Determine "income sources" for this year
@@ -1055,7 +1214,7 @@
             let taxableContrib = 0;
 
             // Potential savings = income - spending (rough). We'll iterate to find consistent savings & tax.
-            let estTax = computeTax(taxableIncomePreRRSP, params.province, age);
+            let estTax = computeTax(taxableIncomePreRRSP, params.province, age, params.dtc);
             let afterTax = employmentIncome + dbIncome + cppIncome + oasIncome - estTax;
             // Subtract DB contributions during working years (after-tax cash flow)
             if (isWorking && dbContribReal > 0) afterTax -= dbContribReal;
@@ -1084,7 +1243,7 @@
                         rrspContrib = c; rrsp += c; rrspRoom -= c; remaining -= c;
                         // Recompute tax with deduction
                         const newTaxable = Math.max(0, taxableIncomePreRRSP - c);
-                        const newTax = computeTax(newTaxable, params.province, age);
+                        const newTax = computeTax(newTaxable, params.province, age, params.dtc);
                         const refund = estTax - newTax;
                         // Add refund back to whatever's next, or taxable
                         remaining += refund;
@@ -1225,6 +1384,8 @@
             lifeExp,
             income: num('income'),
             spending: num('spending'),
+            retirementSpending: num('retirementSpending') > 0 ? num('retirementSpending') : num('spending'),
+            spendingGrowth: num('spendingGrowth'),
             tfsaValue: num('tfsaValue'),
             tfsaRoom: num('tfsaRoom'),
             rrspValue: num('rrspValue'),
@@ -1243,11 +1404,8 @@
             dbIndex: num('dbIndex'),
             dbPA: num('dbPA'),
             dbIncome: num('dbIncome'),
-            rCanDiv: num('rCanDiv'),
-            rForDiv: num('rForDiv'),
-            rIncome: num('rIncome'),
-            rUnreal: num('rUnreal'),
-            rReal: num('rReal'),
+            dtc: document.getElementById('dtc').checked,
+            returnComponents: returnComponents(),
             inflation: num('inflation'),
             wageInflation: num('wageInflation'),
         };
@@ -1506,6 +1664,14 @@
         // Top stat cards
         document.getElementById('statMaxFinalNW').textContent = fmt(max.final);
 
+        // DTC savings indicator (shown next to the DTC checkbox)
+        const dtcSav = document.getElementById('dtcSavings');
+        if (dtcSav) {
+            const isOn = document.getElementById('dtc').checked;
+            const annual = dtcAnnualSavings(val('province'));
+            dtcSav.textContent = isOn ? `~${fmt(annual)}/yr saved` : `~${fmt(annual)}/yr if eligible`;
+        }
+
         // Optimal contributions bonus = max - max-with-default-withdraw using a "default" contrib
         // Approximate: max - (max with same withdraw but worst contrib)
         const sameWithdrawForBest = allResults.filter(r => r.withdraw.id === bestWithdraw.id);
@@ -1587,21 +1753,27 @@
     }
 
     const PERSIST_IDS = ['province','birthdate','retirementDate','income','spending',
+        'retirementSpending','spendingGrowth','dtc',
         'tfsaValue','tfsaRoom','rrspValue','rrspRoom','taxableValue','taxableBookValue',
         'cppMode','cppAge','cppPercent','cppChildren','cppDisability',
         'oasYears','oasAge',
         'dbContrib','dbBenefit','dbStart','dbIndex','dbPA','dbIncome',
         'lifeSource','sex','survival','lifeExp',
+        'returnMode','flatRate',
         'alloc','outcome',
         'rCanDiv','rForDiv','rIncome','rUnreal','rReal',
         'inflation','wageInflation',
         'contribStrat','withdrawStrat'];
-    const PERSIST_KEY = 'retirementInputs.v1';
+    const PERSIST_KEY = 'retirementInputs.v3';
 
     function persist() {
         try {
             const data = {};
-            PERSIST_IDS.forEach(id => { const el = document.getElementById(id); if (el) data[id] = el.value; });
+            PERSIST_IDS.forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                data[id] = el.type === 'checkbox' ? el.checked : el.value;
+            });
             localStorage.setItem(PERSIST_KEY, JSON.stringify(data));
         } catch (_) { /* ignore */ }
     }
@@ -1614,33 +1786,65 @@
             PERSIST_IDS.forEach(id => {
                 if (data[id] != null) {
                     const el = document.getElementById(id);
-                    if (el) el.value = data[id];
+                    if (!el) return;
+                    if (el.type === 'checkbox') el.checked = !!data[id];
+                    else el.value = data[id];
                 }
             });
         } catch (_) { /* ignore */ }
     }
 
     function initListeners() {
+        // Track whether user has manually edited retirement spending; if not, mirror working spending.
+        let retirementSpendingTouched = num('retirementSpending') !== num('spending') && num('retirementSpending') > 0;
+        const retEl = document.getElementById('retirementSpending');
+        if (retEl) {
+            retEl.addEventListener('input', () => { retirementSpendingTouched = true; });
+        }
+
+        // Numeric fields with a tight valid range that we should NOT re-run on
+        // until the user finishes typing a value inside the range. Avoids
+        // mid-typing "8" being treated as an 8-year life expectancy etc.
+        const RANGE_GUARDED = {
+            lifeExp: { min: 50, max: 120, sourceField: 'lifeSource', sourceManual: 'manual' },
+            cppAge:  { min: 60, max: 70,  sourceField: 'cppMode',    sourceManual: 'manual' },
+            oasAge:  { min: 65, max: 70 },
+            survival:{ min: 1,  max: 99 },
+            age:     { min: 0,  max: 120 }, // read-only but be safe
+            retirementAge: { min: 0, max: 120 },
+        };
+
         PERSIST_IDS.forEach(id => {
             const el = document.getElementById(id);
             if (!el) return;
-            const ev = (el.tagName === 'SELECT' || el.type === 'date') ? 'change' : 'input';
+            const ev = (el.tagName === 'SELECT' || el.type === 'date' || el.type === 'checkbox') ? 'change' : 'input';
             el.addEventListener(ev, () => {
-                if (id === 'cppMode') {
-                    const isOpt = val('cppMode') === 'optimize';
-                    document.getElementById('cppAge').readOnly = isOpt;
-                    document.getElementById('cppAge').style.background = isOpt ? '#F3F4F6' : '';
+                // Editing a "smart-default" field (Life Expectancy, CPP Age) immediately
+                // flips its source/mode dropdown to "Manual" so the value is respected.
+                const guard = RANGE_GUARDED[id];
+                if (guard && guard.sourceField && val(guard.sourceField) !== guard.sourceManual) {
+                    setVal(guard.sourceField, guard.sourceManual);
                 }
-                if (id === 'lifeSource') {
-                    const isFP = val('lifeSource') === 'fpcanada';
-                    document.getElementById('lifeExp').readOnly = isFP;
-                    document.getElementById('lifeExp').style.background = isFP ? '#F3F4F6' : '';
+                if (id === 'spending' && !retirementSpendingTouched) {
+                    setVal('retirementSpending', val('spending'));
                 }
+                if (id === 'returnMode') applyReturnMode();
                 if (id === 'alloc') applyAllocation();
                 if (id === 'outcome') applyOutcome();
                 persist();
+                // Skip recompute if the user is mid-typing a value that's still
+                // outside the valid range. The value stays in the field; the
+                // simulation re-runs once they get into a valid range or blur.
+                if (guard) {
+                    const v = num(id);
+                    if (v < guard.min || v > guard.max) return;
+                }
                 run();
             });
+            // Also commit on blur/Enter so partial values get re-rendered once typing finishes.
+            if (RANGE_GUARDED[id]) {
+                el.addEventListener('change', () => { run(); });
+            }
         });
 
         document.getElementById('resetBtn').addEventListener('click', () => {
@@ -1672,6 +1876,7 @@
     }
 
     function applyAllocation() {
+        if (val('returnMode') === 'flat') return;
         if (val('alloc') === 'custom') return;
         const a = parseInt(val('alloc'));
         const r = expectedReturnsFor(a, val('outcome'));
@@ -1683,8 +1888,16 @@
     }
 
     function applyOutcome() {
+        if (val('returnMode') === 'flat') return;
         if (val('alloc') === 'custom') return;
         applyAllocation();
+    }
+
+    function applyReturnMode() {
+        const isFlat = val('returnMode') === 'flat';
+        document.getElementById('flatRateGroup').style.display = isFlat ? '' : 'none';
+        document.getElementById('detailedRateGroup').style.display = isFlat ? 'none' : '';
+        if (!isFlat) applyAllocation();
     }
 
     function init() {
@@ -1703,8 +1916,8 @@
         const retireAge = Math.floor(diffYears(birth, retire));
         setVal('retirementAge', retireAge);
 
-        // Sync allocation -> returns on first load if not custom
-        applyAllocation();
+        // Apply return-mode visibility and sync allocation -> returns on first load
+        applyReturnMode();
 
         run();
     }
