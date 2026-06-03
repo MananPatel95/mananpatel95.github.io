@@ -326,22 +326,37 @@
         }
         body.dark .help-icon { background: #374151; color: #9CA3AF; }
         .help-icon:hover { background: #4F46E5; color: white; }
-        .help-icon::after {
-            content: attr(data-tooltip);
-            position: absolute;
-            bottom: calc(100% + 8px); right: 0;
-            background: #111827; color: white;
-            padding: 8px 10px; border-radius: 6px;
-            font-size: 11px; font-weight: 400; line-height: 1.4;
-            white-space: normal; width: 220px; max-width: 220px;
+        /* Tooltip text is shown in #helpTooltip (fixed to viewport) so it is not
+           clipped by .assumptions-panel overflow-y:auto or covered by the chart. */
+
+        #helpTooltip {
+            position: fixed;
+            z-index: 2147483000;
+            max-width: min(280px, calc(100vw - 20px));
+            padding: 10px 12px;
+            background: #111827;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 400;
+            line-height: 1.45;
             text-align: left;
-            z-index: 100;
-            opacity: 0; pointer-events: none;
-            transition: opacity 0.15s;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border-radius: 8px;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
+            pointer-events: none;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.12s ease;
         }
-        .help-icon:hover::after { opacity: 1; }
-        body.dark .help-icon::after { background: #1F2937; border: 1px solid #374151; }
+        #helpTooltip.is-visible {
+            visibility: visible;
+            opacity: 1;
+        }
+        body.dark #helpTooltip {
+            background: #1F2937;
+            color: #F3F4F6;
+            border: 1px solid #374151;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+        }
 
         .field-input-wrap {
             display: flex; align-items: center; gap: 6px;
@@ -509,7 +524,8 @@
     </style>
 </head>
 <body>
-    <button class="dark-mode-toggle" onclick="toggleDarkMode()" id="darkModeToggle">
+<div id="helpTooltip" role="tooltip" aria-hidden="true"></div>
+<button class="dark-mode-toggle" onclick="toggleDarkMode()" id="darkModeToggle">
         <span class="material-icons" id="darkModeIcon" style="font-size:18px;">dark_mode</span>
         <span id="darkModeText">Dark</span>
     </button>
@@ -2159,6 +2175,82 @@
         if (!isFlat) applyAllocation();
     }
 
+    function initHelpTooltip() {
+        const tip = document.getElementById('helpTooltip');
+        if (!tip) return;
+        let currentIcon = null;
+
+        function hideTip() {
+            currentIcon = null;
+            tip.classList.remove('is-visible');
+            tip.textContent = '';
+            tip.setAttribute('aria-hidden', 'true');
+        }
+
+        function showTip(el) {
+            const text = el.getAttribute('data-tooltip');
+            if (!text) return;
+            currentIcon = el;
+            tip.textContent = text;
+            tip.setAttribute('aria-hidden', 'false');
+            tip.classList.add('is-visible');
+
+            const pad = 10;
+            const vw = window.innerWidth;
+            const vh = window.innerHeight;
+            const maxW = Math.min(280, vw - 2 * pad);
+            tip.style.maxWidth = maxW + 'px';
+            tip.style.width = 'max-content';
+            tip.style.left = '0';
+            tip.style.top = '0';
+            const tw = Math.min(tip.offsetWidth, maxW);
+            tip.style.width = tw + 'px';
+            const th = tip.offsetHeight;
+
+            const r = el.getBoundingClientRect();
+            let top = r.bottom + 6;
+            if (top + th > vh - pad) top = Math.max(pad, r.top - th - 6);
+            let left = r.left + r.width / 2 - tw / 2;
+            left = Math.max(pad, Math.min(left, vw - tw - pad));
+            tip.style.left = left + 'px';
+            tip.style.top = top + 'px';
+        }
+
+        document.body.addEventListener('mouseover', function (e) {
+            const el = e.target.closest('.help-icon');
+            if (el) {
+                if (currentIcon !== el) showTip(el);
+                return;
+            }
+            hideTip();
+        });
+
+        window.addEventListener('scroll', hideTip, true);
+        window.addEventListener('blur', hideTip);
+        window.addEventListener('resize', function () {
+            if (currentIcon) showTip(currentIcon);
+            else hideTip();
+        });
+
+        const assumptions = document.querySelector('.assumptions-panel');
+        if (assumptions) assumptions.addEventListener('scroll', hideTip, { passive: true });
+
+        document.querySelectorAll('.help-icon').forEach(function (el) {
+            if (!el.hasAttribute('tabindex')) el.tabIndex = 0;
+        });
+        document.addEventListener('focusin', function (e) {
+            const el = e.target.closest('.help-icon');
+            if (el) showTip(el);
+            else hideTip();
+        });
+        document.addEventListener('focusout', function (e) {
+            requestAnimationFrame(function () {
+                var a = document.activeElement;
+                if (!a || !a.closest || !a.closest('.help-icon')) hideTip();
+            });
+        });
+    }
+
     function init() {
         initDarkMode();
         initAccordions();
@@ -2166,6 +2258,7 @@
         restore();
         initListeners();
         initYearRange();
+        initHelpTooltip();
 
         // Sync derived fields
         const today = new Date();
