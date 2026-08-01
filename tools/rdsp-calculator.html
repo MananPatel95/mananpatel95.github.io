@@ -898,6 +898,10 @@
         body.dark-mode .text-indigo-900 {
             color: #c7d2fe;
         }
+
+        body.dark-mode .text-indigo-700 {
+            color: #a5b4fc;
+        }
         
         body.dark-mode input[type="number"],
         body.dark-mode input[type="text"],
@@ -1517,7 +1521,7 @@
 
                     <div>
                         <label for="returnRate" class="block text-sm font-medium text-gray-700 mb-1">Annual Return Rate (%)</label>
-                        <input type="number" id="returnRate" aria-label="Annual Return Rate (%)" value="5" min="0" max="20" step="0.1" oninput="updateCalculations()">
+                        <input type="number" id="returnRate" aria-label="Annual Return Rate (%)" value="10" min="0" max="20" step="0.1" oninput="updateCalculations()">
                         <div class="mt-2">
                             <button type="button" onclick="toggleYearlyRates()" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">
                                 <span id="yearlyRatesToggleText">+ Adjust rate per year</span>
@@ -1650,9 +1654,24 @@
                                 <input type="number" id="manualEndAge" value="90" min="0" max="120" oninput="syncManualQuickPlan()">
                             </div>
                             <div class="col-span-2">
-                                <label class="block text-xs text-gray-600 mb-1">Annual withdrawal amount</label>
-                                <input type="number" id="manualAnnualWithdrawal" value="5000" min="0" oninput="syncManualQuickPlan()">
-                                <div class="text-xs text-gray-500 mt-1">This will create one withdrawal entry per year. You can edit/remove any entry afterwards.</div>
+                                <div class="text-xs font-medium text-gray-700 mb-2">Annual amount</div>
+                                <label class="flex items-start gap-2 text-xs text-gray-700 mb-2 cursor-pointer">
+                                    <input type="radio" name="manualAmountMode" value="auto" checked class="mt-0.5" onchange="onManualAmountModeChange()">
+                                    <span>Auto-calculate so balance reaches <strong>$0</strong> by end age</span>
+                                </label>
+                                <label class="flex items-start gap-2 text-xs text-gray-700 mb-2 cursor-pointer">
+                                    <input type="radio" name="manualAmountMode" value="fixed" class="mt-0.5" onchange="onManualAmountModeChange()">
+                                    <span>Fixed annual withdrawal amount</span>
+                                </label>
+                                <div id="manualAutoAmountPreview" class="text-xs text-indigo-700 bg-indigo-50 border border-indigo-200 rounded-md px-2 py-1.5 mb-2">
+                                    Estimated annual withdrawal: <strong id="manualAutoAmountValue">—</strong>
+                                    <span class="text-gray-500 block mt-0.5">Uses your current return rate, contributions, and grants. Recalculates when you change ages or rate.</span>
+                                </div>
+                                <div id="manualFixedAmountRow" style="display: none;">
+                                    <label class="block text-xs text-gray-600 mb-1" for="manualAnnualWithdrawal">Annual withdrawal amount ($)</label>
+                                    <input type="number" id="manualAnnualWithdrawal" value="5000" min="0" step="100" oninput="syncManualQuickPlan()">
+                                </div>
+                                <div class="text-xs text-gray-500 mt-1">Creates one withdrawal entry per year from start → end. You can edit or remove any entry afterwards.</div>
                             </div>
                         </div>
                         <button onclick="generateWithdrawalSchedule()" class="w-full px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 mt-3">
@@ -1720,8 +1739,8 @@
                 </div>
                 <div class="mt-4 flex items-center gap-4 flex-wrap">
                     <label for="returnRateSlider" class="text-sm font-medium text-gray-700 dark:text-gray-300">Interest rate</label>
-                    <input type="range" id="returnRateSlider" min="0" max="20" step="0.1" value="5" class="flex-1 min-w-[120px] max-w-[280px]" aria-label="Interest rate (%)" oninput="syncReturnRateFromSlider()">
-                    <span id="returnRateSliderValue" class="text-sm font-medium text-gray-800 dark:text-gray-200 tabular-nums">5%</span>
+                    <input type="range" id="returnRateSlider" min="0" max="20" step="0.1" value="10" class="flex-1 min-w-[120px] max-w-[280px]" aria-label="Interest rate (%)" oninput="syncReturnRateFromSlider()">
+                    <span id="returnRateSliderValue" class="text-sm font-medium text-gray-800 dark:text-gray-200 tabular-nums">10%</span>
                 </div>
             </div>
 
@@ -1794,7 +1813,7 @@
             currentAge: 30,
             familyIncome: 100000,
             annualContribution: 1500,
-            returnRate: 5,
+            returnRate: 10,
             yearlyReturnRates: {}, // Per-year interest rates: {age: rate}
             payDividends: false,
             dividendRate: 2,
@@ -1807,6 +1826,7 @@
             manualStartAge: 60,
             manualEndAge: 90,
             manualAnnualWithdrawal: 5000,
+            manualAmountMode: 'auto', // 'auto' = deplete to $0 by end age; 'fixed' = use manualAnnualWithdrawal
             withdrawalType: 'ldap',
             stopContribsAtWithdrawal: true,
             showComparison: false,
@@ -2175,10 +2195,11 @@
 
         function syncReturnRateFromSlider() {
             const slider = document.getElementById('returnRateSlider');
-            const value = parseFloat(slider.value) || 5;
-            document.getElementById('returnRate').value = value;
+            const value = parseFloat(slider.value);
+            const rate = Number.isFinite(value) ? value : 10;
+            document.getElementById('returnRate').value = rate;
             const label = document.getElementById('returnRateSliderValue');
-            if (label) label.textContent = value + '%';
+            if (label) label.textContent = rate + '%';
             updateCalculations();
         }
 
@@ -2188,7 +2209,8 @@
             state.currentAge = parseInt(document.getElementById('currentAge').value) || 30;
             state.familyIncome = parseInt(document.getElementById('familyIncome').value) || 100000;
             state.annualContribution = parseInt(document.getElementById('annualContribution').value) || 1500;
-            state.returnRate = parseFloat(document.getElementById('returnRate').value) || 5;
+            const returnRateRaw = parseFloat(document.getElementById('returnRate').value);
+            state.returnRate = Number.isFinite(returnRateRaw) ? returnRateRaw : 10;
             state.payDividends = document.getElementById('payDividends').checked;
             state.dividendRate = parseFloat(document.getElementById('dividendRate').value) || 2;
             state.dtcStartAge = parseInt(document.getElementById('dtcStartAge').value) || 17;
@@ -2201,6 +2223,8 @@
             state.manualStartAge = parseInt(document.getElementById('manualStartAge')?.value) || state.manualStartAge || 60;
             state.manualEndAge = parseInt(document.getElementById('manualEndAge')?.value) || state.manualEndAge || state.endAge || 90;
             state.manualAnnualWithdrawal = parseFloat(document.getElementById('manualAnnualWithdrawal')?.value) || state.manualAnnualWithdrawal || 0;
+            const amountModeEl = document.querySelector('input[name="manualAmountMode"]:checked');
+            if (amountModeEl) state.manualAmountMode = amountModeEl.value;
             
             // Update carry-forward years ages
             const currentYear = new Date().getFullYear();
@@ -2306,6 +2330,11 @@
             
             // Update charts with filtered data
             updateCharts();
+
+            // Keep auto-deplete estimate in sync when rates / ages change
+            if (state.withdrawalType === 'manual' && state.manualAmountMode === 'auto') {
+                refreshManualAutoAmountPreview();
+            }
         }
 
         function updateSummaryCards(summary) {
@@ -2616,28 +2645,130 @@
             const start = parseInt(startEl.value) || state.currentAge || 30;
             const end = parseInt(endEl.value) || state.endAge || 90;
             if (end < start) endEl.value = String(start);
+            state.manualStartAge = parseInt(startEl.value) || 60;
+            state.manualEndAge = parseInt(endEl.value) || 90;
+            refreshManualAutoAmountPreview();
+        }
+
+        function onManualAmountModeChange(runUpdate) {
+            const modeEl = document.querySelector('input[name="manualAmountMode"]:checked');
+            const mode = modeEl ? modeEl.value : 'auto';
+            state.manualAmountMode = mode;
+            const autoPreview = document.getElementById('manualAutoAmountPreview');
+            const fixedRow = document.getElementById('manualFixedAmountRow');
+            if (autoPreview) autoPreview.style.display = mode === 'auto' ? 'block' : 'none';
+            if (fixedRow) fixedRow.style.display = mode === 'fixed' ? 'block' : 'none';
+            if (mode === 'auto') refreshManualAutoAmountPreview();
+            if (runUpdate !== false) {
+                // no full re-sim needed just for toggling UI
+            }
+        }
+
+        /**
+         * Binary-search a constant annual withdrawal so the projected balance
+         * at endAge is ~$0, matching the same rules as calculateProjections().
+         */
+        function findDepletingAnnualWithdrawal(startAge, endAge) {
+            if (findDepletingAnnualWithdrawal._busy) return state.manualAnnualWithdrawal || 0;
+            findDepletingAnnualWithdrawal._busy = true;
+
+            const savedWithdrawals = state.withdrawals.slice();
+            const savedType = state.withdrawalType;
+            const savedEndAge = state.endAge;
+            state.withdrawalType = 'manual';
+            // Ensure the projection horizon covers the requested end age
+            state.endAge = Math.max(state.endAge || 90, endAge);
+
+            const balanceAtEnd = (amount) => {
+                const withdrawals = [];
+                for (let age = startAge; age <= endAge; age++) {
+                    withdrawals.push({ age, amount });
+                }
+                state.withdrawals = withdrawals;
+                const proj = calculateProjections();
+                const endRow = proj.data.find(d => d.age === endAge);
+                return endRow ? endRow.balance : (proj.summary.finalBalance || 0);
+            };
+
+            let result = 0;
+            try {
+                if (balanceAtEnd(0) <= 1) {
+                    result = 0;
+                } else {
+                    let lo = 0;
+                    let hi = 1000;
+                    while (balanceAtEnd(hi) > 1 && hi < 5e7) {
+                        hi *= 2;
+                    }
+                    for (let i = 0; i < 40; i++) {
+                        const mid = (lo + hi) / 2;
+                        if (balanceAtEnd(mid) > 1) lo = mid;
+                        else hi = mid;
+                    }
+                    result = Math.max(0, Math.round(hi));
+                }
+            } finally {
+                state.withdrawals = savedWithdrawals;
+                state.withdrawalType = savedType;
+                state.endAge = savedEndAge;
+                findDepletingAnnualWithdrawal._busy = false;
+            }
+            return result;
+        }
+
+        function refreshManualAutoAmountPreview() {
+            const valueEl = document.getElementById('manualAutoAmountValue');
+            if (!valueEl) return;
+            if (state.manualAmountMode !== 'auto') return;
+
+            const startAge = Math.max(state.currentAge || 0, state.manualStartAge || 60);
+            const endAge = Math.max(startAge, state.manualEndAge || 90);
+            try {
+                const amount = findDepletingAnnualWithdrawal(startAge, endAge);
+                valueEl.textContent = amount > 0
+                    ? ('$' + amount.toLocaleString('en-CA') + '/yr')
+                    : '— (no balance to withdraw)';
+                state.manualAnnualWithdrawal = amount;
+            } catch (e) {
+                valueEl.textContent = '—';
+            }
         }
 
         function generateWithdrawalSchedule() {
             const startEl = document.getElementById('manualStartAge');
             const endEl = document.getElementById('manualEndAge');
-            const amountEl = document.getElementById('manualAnnualWithdrawal');
-            if (!startEl || !endEl || !amountEl) return;
-            
+            if (!startEl || !endEl) return;
+
             const startAge = parseInt(startEl.value) || state.currentAge || 30;
             const endAge = parseInt(endEl.value) || state.endAge || 90;
-            const amount = parseFloat(amountEl.value) || 0;
-            
+
             const minAge = state.currentAge || 30;
-            const maxAge = state.endAge || 90;
+            const maxAge = Math.max(state.endAge || 90, endAge);
             const s = Math.max(minAge, Math.min(maxAge, startAge));
             const e = Math.max(s, Math.min(maxAge, endAge));
-            
+
+            const modeEl = document.querySelector('input[name="manualAmountMode"]:checked');
+            const mode = modeEl ? modeEl.value : 'auto';
+            state.manualAmountMode = mode;
+
+            let amount;
+            if (mode === 'auto') {
+                amount = findDepletingAnnualWithdrawal(s, e);
+                const amountEl = document.getElementById('manualAnnualWithdrawal');
+                if (amountEl) amountEl.value = amount;
+                state.manualAnnualWithdrawal = amount;
+                refreshManualAutoAmountPreview();
+            } else {
+                const amountEl = document.getElementById('manualAnnualWithdrawal');
+                amount = parseFloat(amountEl?.value) || 0;
+                state.manualAnnualWithdrawal = amount;
+            }
+
             const withdrawals = [];
             for (let age = s; age <= e; age++) {
                 withdrawals.push({ age, amount });
             }
-            
+
             state.withdrawals = withdrawals;
             updateWithdrawalsDisplay();
             updateCalculations();
@@ -3291,7 +3422,7 @@
             state.currentAge = 30;
             state.familyIncome = 100000;
             state.annualContribution = 1500;
-            state.returnRate = 5;
+            state.returnRate = 10;
             state.payDividends = false;
             state.dividendRate = 2;
             state.withdrawals = [];
@@ -3306,6 +3437,7 @@
             state.manualStartAge = 60;
             state.manualEndAge = 90;
             state.manualAnnualWithdrawal = 5000;
+            state.manualAmountMode = 'auto';
             state.carryForwardYears = initializeCarryForwardYears();
             state.chartAgeRange = [30, 90];
             
@@ -3326,6 +3458,9 @@
             if (manualStartAgeEl) manualStartAgeEl.value = state.manualStartAge;
             if (manualEndAgeEl) manualEndAgeEl.value = state.manualEndAge;
             if (manualAnnualWithdrawalEl) manualAnnualWithdrawalEl.value = state.manualAnnualWithdrawal;
+            const autoModeRadio = document.querySelector('input[name="manualAmountMode"][value="auto"]');
+            if (autoModeRadio) autoModeRadio.checked = true;
+            onManualAmountModeChange(false);
             document.querySelector('input[name="withdrawalType"][value="ldap"]').checked = true;
             document.getElementById('stopContribsAtWithdrawal').checked = state.stopContribsAtWithdrawal;
             document.getElementById('showComparison').checked = state.showComparison;
