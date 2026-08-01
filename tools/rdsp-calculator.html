@@ -59,17 +59,33 @@
         /* Side-by-side: charts left, controls right (like retirement calculator) */
         .rdsp-layout {
             display: grid;
-            grid-template-columns: 1fr 400px;
+            grid-template-columns: minmax(0, 1fr) 400px;
             gap: 16px;
             align-items: start;
+            transition: grid-template-columns 0.35s cubic-bezier(0.4, 0, 0.2, 1), gap 0.35s ease;
+        }
+        .rdsp-layout.assumptions-collapsed {
+            grid-template-columns: minmax(0, 1fr) 0px;
+            gap: 0;
         }
         @media (max-width: 1100px) {
             .rdsp-layout {
                 grid-template-columns: 1fr;
             }
+            .rdsp-layout.assumptions-collapsed {
+                grid-template-columns: 1fr;
+            }
             .rdsp-assumptions {
                 position: static;
                 max-height: none;
+            }
+            .rdsp-layout.assumptions-collapsed .rdsp-assumptions {
+                display: none;
+            }
+            .rdsp-assumptions-open-btn {
+                top: auto;
+                bottom: 20px;
+                right: 16px;
             }
         }
         .rdsp-results {
@@ -79,12 +95,21 @@
             position: sticky;
             top: 16px;
             max-height: calc(100vh - 32px);
+            overflow-x: hidden;
             overflow-y: auto;
             background: #FFFFFF;
             border: 1px solid #E5E7EB;
             border-radius: 12px;
             padding: 0;
-            transition: background-color 0.3s, border-color 0.3s;
+            min-width: 0;
+            transition: background-color 0.3s, border-color 0.3s, opacity 0.3s ease, transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .rdsp-layout.assumptions-collapsed .rdsp-assumptions {
+            opacity: 0;
+            transform: translateX(24px);
+            pointer-events: none;
+            border-color: transparent;
+            overflow: hidden;
         }
         body.dark-mode .rdsp-assumptions {
             background: #1F2937;
@@ -115,6 +140,78 @@
         body.dark-mode .rdsp-assumptions-header h2 {
             color: #E5E7EB;
         }
+        .rdsp-assumptions-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+        .rdsp-icon-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 34px;
+            height: 34px;
+            padding: 0;
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+            background: #FFFFFF;
+            color: #374151;
+            cursor: pointer;
+            transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+        }
+        .rdsp-icon-btn:hover {
+            background: #F3F4F6;
+            border-color: #D1D5DB;
+        }
+        body.dark-mode .rdsp-icon-btn {
+            background: #111827;
+            border-color: #374151;
+            color: #E5E7EB;
+        }
+        body.dark-mode .rdsp-icon-btn:hover {
+            background: #374151;
+        }
+        .rdsp-assumptions-open-btn {
+            position: fixed;
+            top: 88px;
+            right: 16px;
+            z-index: 45;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 14px;
+            border-radius: 999px;
+            border: 1px solid #E5E7EB;
+            background: #FFFFFF;
+            color: #111827;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.10);
+            cursor: pointer;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateX(16px);
+            transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s, border-color 0.2s;
+        }
+        body.assumptions-collapsed .rdsp-assumptions-open-btn {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(0);
+        }
+        .rdsp-assumptions-open-btn:hover {
+            background: #F9FAFB;
+            border-color: #D1D5DB;
+        }
+        body.dark-mode .rdsp-assumptions-open-btn {
+            background: #1F2937;
+            border-color: #374151;
+            color: #E5E7EB;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+        }
+        body.dark-mode .rdsp-assumptions-open-btn:hover {
+            background: #374151;
+        }
         .rdsp-assumptions-body {
             padding: 12px 16px 20px;
         }
@@ -132,6 +229,215 @@
         body.dark-mode .rdsp-section-title {
             color: #E5E7EB;
             border-bottom-color: #374151;
+        }
+        /* Withdrawals / option cards — clearer spacing */
+        .rdsp-option-card {
+            background: #F9FAFB;
+            border: 1px solid #E5E7EB;
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 12px;
+        }
+        body.dark-mode .rdsp-option-card {
+            background: #111827;
+            border-color: #374151;
+        }
+        .rdsp-option-card-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 10px;
+        }
+        body.dark-mode .rdsp-option-card-label { color: #D1D5DB; }
+        .rdsp-option-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .rdsp-radio-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 12px;
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+            background: #FFFFFF;
+            cursor: pointer;
+            transition: border-color 0.15s, background-color 0.15s;
+        }
+        .rdsp-radio-row:hover {
+            border-color: #D1D5DB;
+        }
+        body.dark-mode .rdsp-radio-row {
+            background: #1F2937;
+            border-color: #374151;
+        }
+        body.dark-mode .rdsp-radio-row:hover {
+            border-color: #4B5563;
+        }
+        .rdsp-radio-row input[type="radio"],
+        .rdsp-check-row input[type="checkbox"] {
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        .rdsp-radio-text {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 0;
+        }
+        .rdsp-radio-text strong {
+            font-size: 13px;
+            font-weight: 600;
+            color: #111827;
+            line-height: 1.35;
+        }
+        body.dark-mode .rdsp-radio-text strong { color: #F3F4F6; }
+        .rdsp-radio-desc {
+            font-size: 12px;
+            color: #6B7280;
+            line-height: 1.45;
+            font-weight: 400;
+        }
+        body.dark-mode .rdsp-radio-desc { color: #9CA3AF; }
+        .rdsp-field-block {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid #E5E7EB;
+        }
+        body.dark-mode .rdsp-field-block { border-top-color: #374151; }
+        .rdsp-field-block label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 6px;
+        }
+        body.dark-mode .rdsp-field-block label { color: #D1D5DB; }
+        .rdsp-field-hint {
+            margin-top: 8px;
+            font-size: 12px;
+            line-height: 1.45;
+            color: #6B7280;
+        }
+        body.dark-mode .rdsp-field-hint { color: #9CA3AF; }
+        .rdsp-check-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            cursor: pointer;
+        }
+        .rdsp-check-row-text {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 0;
+        }
+        .rdsp-check-row-text strong {
+            font-size: 13px;
+            font-weight: 600;
+            color: #111827;
+            line-height: 1.35;
+        }
+        body.dark-mode .rdsp-check-row-text strong { color: #F3F4F6; }
+        /* Compact carry-forward rows for narrow assumptions panel */
+        .cf-year-row {
+            background: #FFFFFF;
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+            padding: 7px 8px;
+        }
+        body.dark-mode .cf-year-row {
+            background: #111827;
+            border-color: #374151;
+        }
+        .cf-year-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 5px;
+        }
+        .cf-year-meta {
+            font-size: 12px;
+            font-weight: 600;
+            color: #111827;
+            white-space: nowrap;
+        }
+        body.dark-mode .cf-year-meta { color: #E5E7EB; }
+        .cf-year-toggles {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .cf-year-toggles label {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            font-size: 11px;
+            color: #374151;
+            margin: 0;
+            cursor: pointer;
+        }
+        body.dark-mode .cf-year-toggles label { color: #D1D5DB; }
+        .cf-year-income {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            min-width: 0;
+        }
+        .cf-year-income label {
+            font-size: 11px;
+            color: #6B7280;
+            flex-shrink: 0;
+            margin: 0;
+        }
+        body.dark-mode .cf-year-income label { color: #9CA3AF; }
+        .cf-year-income input[type="number"] {
+            flex: 1;
+            min-width: 0;
+            width: auto;
+            box-sizing: border-box;
+            padding: 5px 8px;
+            font-size: 13px;
+            border-width: 1px;
+            border-radius: 6px;
+            /* Hide steppers — they ate most of the narrow field */
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+        .cf-year-income input[type="number"]::-webkit-outer-spin-button,
+        .cf-year-income input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .cf-year-amounts {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2px 10px;
+            margin-top: 4px;
+            font-size: 11px;
+            color: #4B5563;
+            line-height: 1.3;
+        }
+        body.dark-mode .cf-year-amounts { color: #9CA3AF; }
+        .cf-year-amounts strong {
+            color: #111827;
+            font-weight: 600;
+        }
+        body.dark-mode .cf-year-amounts strong { color: #E5E7EB; }
+        /* Let users type freely — steppers make narrow fields feel uneditable */
+        .rdsp-assumptions input[type="number"] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+        .rdsp-assumptions input[type="number"]::-webkit-outer-spin-button,
+        .rdsp-assumptions input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
         }
         .rdsp-results-card {
             background: #FFFFFF;
@@ -1583,7 +1889,7 @@
             </div>
 
 
-        <div class="rdsp-layout">
+        <div class="rdsp-layout" id="rdspLayout">
             <!-- LEFT: results / charts -->
             <div class="rdsp-results">
             <div class="rdsp-results-card">
@@ -1637,6 +1943,13 @@
                 <h3 class="font-semibold text-lg text-gray-800 mb-4">Account Value Over Time</h3>
                 <div class="chart-container">
                     <canvas id="balanceChart"></canvas>
+                </div>
+                <div id="comparisonChartNote" class="mt-3 text-xs text-gray-600 bg-indigo-50 border border-indigo-100 rounded-lg px-3 py-2" style="display: none;">
+                    <strong class="text-indigo-800">Comparison overlay:</strong>
+                    dashed line is a level “Optimal” withdrawal of
+                    <strong id="comparisonAmountLabel">—</strong>
+                    from age <span id="comparisonStartLabel">60</span> so the balance reaches ~$0 by end age.
+                    Your plan (solid line) stays on LDAP.
                 </div>
                 <div class="mt-4 flex items-center gap-4 flex-wrap">
                     <label for="returnRateSlider" class="text-sm font-medium text-gray-700 dark:text-gray-300">Interest rate</label>
@@ -1703,13 +2016,18 @@
             </div>
 
             <!-- RIGHT: sticky assumptions / controls -->
-            <aside class="rdsp-assumptions">
+            <aside class="rdsp-assumptions" id="rdspAssumptions" aria-label="Assumptions panel">
                 <div class="rdsp-assumptions-header">
                     <h2>Assumptions</h2>
-                    <button onclick="resetCalculator()" class="px-3 py-1.5 bg-gray-600 text-white text-sm rounded-md hover:bg-gray-700 flex items-center gap-1">
-                        <span class="material-icons" style="font-size:16px;">refresh</span>
-                        Reset
-                    </button>
+                    <div class="rdsp-assumptions-header-actions">
+                        <button type="button" onclick="resetCalculator()" class="px-3 py-1.5 bg-gray-600 text-white text-sm rounded-md hover:bg-gray-700 flex items-center gap-1" title="Reset all inputs">
+                            <span class="material-icons" style="font-size:16px;">refresh</span>
+                            Reset
+                        </button>
+                        <button type="button" class="rdsp-icon-btn" onclick="toggleAssumptionsPanel(false)" title="Hide assumptions panel" aria-label="Hide assumptions panel">
+                            <span class="material-icons" style="font-size:18px;">chevron_right</span>
+                        </button>
+                    </div>
                 </div>
                 <div class="rdsp-assumptions-body">
             <!-- Input Section -->
@@ -1800,10 +2118,10 @@
 
 
             <!-- Carry-Forward Section -->
-            <div class="mb-6 bg-gray-50 border border-gray-200 rounded-lg p-4">
+            <div class="mb-6 bg-gray-50 border border-gray-200 rounded-lg p-3">
                 <h3 class="rdsp-section-title">Carry-Forward Eligibility</h3>
-                <p class="text-sm text-gray-600 mb-4" id="carryForwardSummary"></p>
-                <div class="space-y-2 max-h-64 overflow-y-auto" id="carryForwardYears"></div>
+                <p class="text-xs text-gray-600 mb-3 leading-snug" id="carryForwardSummary"></p>
+                <div class="space-y-2 max-h-72 overflow-y-auto" id="carryForwardYears"></div>
             </div>
             
 
@@ -1812,44 +2130,46 @@
                 <h3 class="rdsp-section-title">Withdrawals</h3>
                 
                 <!-- Withdrawal Type Selection -->
-                <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Withdrawal Mode</label>
-                    <div class="space-y-2">
-                        <div class="flex items-center">
+                <div class="rdsp-option-card">
+                    <span class="rdsp-option-card-label">Withdrawal Mode</span>
+                    <div class="rdsp-option-list">
+                        <label class="rdsp-radio-row" for="ldap">
                             <input type="radio" name="withdrawalType" id="ldap" value="ldap" checked onchange="updateCalculations()">
-                            <label for="ldap" class="ml-2 text-sm text-gray-700">
-                                <strong>LDAP (Lifetime Disability Assistance Payments)</strong> — Automatic pension-style withdrawals (60+)
-                            </label>
-                        </div>
-                        <div class="flex items-center">
+                            <span class="rdsp-radio-text">
+                                <strong>LDAP (Lifetime Disability Assistance Payments)</strong>
+                                <span class="rdsp-radio-desc">Automatic pension-style withdrawals starting at age 60+</span>
+                            </span>
+                        </label>
+                        <label class="rdsp-radio-row" for="manual">
                             <input type="radio" name="withdrawalType" id="manual" value="manual" onchange="updateCalculations()">
-                            <label for="manual" class="ml-2 text-sm text-gray-700">
-                                <strong>Manual Withdrawals (DAPs)</strong> — Pick exact ages/amounts (10-year rule applies before 60)
-                            </label>
-                        </div>
+                            <span class="rdsp-radio-text">
+                                <strong>Manual Withdrawals (DAPs)</strong>
+                                <span class="rdsp-radio-desc">Pick exact ages and amounts (10-year rule applies before 60)</span>
+                            </span>
+                        </label>
                     </div>
                     
-                    <div id="ldapAgeContainer" class="mt-3">
-                        <label for="ldapAge" class="block text-sm font-medium text-gray-700 mb-1">Start LDAP at age</label>
+                    <div id="ldapAgeContainer" class="rdsp-field-block">
+                        <label for="ldapAge">Start LDAP at age</label>
                         <input type="number" id="ldapAge" aria-label="Start LDAP at age" value="60" min="60" max="120" oninput="updateCalculations()">
-                        <div class="text-xs text-gray-600 mt-1">LDAPs automatically calculate optimal withdrawals. Before 80: balance ÷ (83 - age). After 80: balance ÷ 3</div>
+                        <div class="rdsp-field-hint">LDAPs calculate withdrawals automatically. Before 80: balance ÷ (83 − age). After 80: balance ÷ 3.</div>
                     </div>
                 </div>
 
                 <!-- Strategy Comparison Toggle (LDAP only) -->
-                <div id="comparisonToggleContainer" class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-4">
-                    <div class="flex items-center justify-between mb-2">
-                        <div class="flex items-center space-x-2">
-                            <input type="checkbox" id="showComparison" aria-label="Compare LDAP vs Optimal withdrawals" onchange="updateCalculations()">
-                            <label for="showComparison" class="text-sm font-semibold text-gray-800">Compare LDAP vs “Optimal” withdrawals</label>
-                        </div>
-                    </div>
-                    <p class="text-xs text-gray-600">Shows a side-by-side view starting at the age you choose (LDAP requires 60+).</p>
+                <div id="comparisonToggleContainer" class="rdsp-option-card">
+                    <label class="rdsp-check-row" for="showComparison">
+                        <input type="checkbox" id="showComparison" aria-label="Compare LDAP vs Optimal withdrawals" onchange="updateCalculations()">
+                        <span class="rdsp-check-row-text">
+                            <strong>Compare LDAP vs “Optimal” withdrawals</strong>
+                            <span class="rdsp-radio-desc">Overlays a dashed “Optimal” balance line on the chart (level annual withdrawals that deplete to ~$0). Uncheck to hide. Does not change your LDAP plan.</span>
+                        </span>
+                    </label>
                     
-                    <div id="comparisonAgeContainer" style="display: none;" class="mt-3 bg-white rounded-lg p-3 border border-gray-300">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Comparison starts at age</label>
+                    <div id="comparisonAgeContainer" style="display: none;" class="rdsp-field-block">
+                        <label for="comparisonStartAge">Comparison starts at age</label>
                         <input type="number" id="comparisonStartAge" value="60" min="60" max="120" oninput="updateCalculations()">
-                        <div class="text-xs text-gray-600 mt-1">This does not change your plan — it’s just a comparison view.</div>
+                        <div class="rdsp-field-hint">Optimal withdrawals begin at this age (60+). Your LDAP start age is separate.</div>
                     </div>
                 </div>
                 
@@ -1873,11 +2193,11 @@
                         <div class="grid grid-cols-2 gap-3">
                             <div>
                                 <label class="block text-xs text-gray-600 mb-1">Start withdrawals at age</label>
-                                <input type="number" id="manualStartAge" value="60" min="0" max="120" oninput="syncManualQuickPlan()">
+                                <input type="number" id="manualStartAge" value="60" min="0" max="120" oninput="syncManualQuickPlan()" onblur="commitManualQuickPlanAges()">
                             </div>
                             <div>
                                 <label class="block text-xs text-gray-600 mb-1">End at age</label>
-                                <input type="number" id="manualEndAge" value="90" min="0" max="120" oninput="syncManualQuickPlan()">
+                                <input type="number" id="manualEndAge" value="90" min="0" max="120" oninput="syncManualQuickPlan()" onblur="commitManualQuickPlanAges()">
                             </div>
                             <div class="col-span-2">
                                 <div class="text-xs font-medium text-gray-700 mb-2">Annual amount</div>
@@ -1919,6 +2239,11 @@
         </div>
     </div>
 
+    <button type="button" id="assumptionsOpenBtn" class="rdsp-assumptions-open-btn" onclick="toggleAssumptionsPanel(true)" aria-label="Show assumptions panel">
+        <span class="material-icons" style="font-size:18px;">tune</span>
+        Assumptions
+    </button>
+
     <script>
         // State management
         let state = {
@@ -1949,6 +2274,8 @@
         
         let allProjectionData = []; // Store all data for filtering
         let noGrowthProjectionData = []; // Same scenario, but with 0% return (used for hover when Growth is hidden)
+        let comparisonProjectionData = null; // Optimal (level-to-$0) path for overlay
+        let comparisonAnnualAmount = 0;
 
         // Dark Mode Toggle
         function toggleDarkMode() {
@@ -1995,6 +2322,40 @@
                 document.body.classList.remove('dark-mode');
                 document.getElementById('darkModeIcon').textContent = 'dark_mode';
                 document.getElementById('darkModeText').textContent = 'Dark Mode';
+            }
+        }
+
+        function resizeRdspCharts() {
+            try {
+                if (typeof balanceChart !== 'undefined' && balanceChart) balanceChart.resize();
+                if (typeof breakdownChart !== 'undefined' && breakdownChart) breakdownChart.resize();
+                if (typeof withdrawalChart !== 'undefined' && withdrawalChart) withdrawalChart.resize();
+            } catch (e) { /* charts may not exist yet */ }
+        }
+
+        function toggleAssumptionsPanel(forceOpen) {
+            const layout = document.getElementById('rdspLayout');
+            if (!layout) return;
+            const currentlyCollapsed = layout.classList.contains('assumptions-collapsed');
+            const shouldOpen = forceOpen === true ? true : forceOpen === false ? false : currentlyCollapsed;
+            const collapsed = !shouldOpen;
+
+            layout.classList.toggle('assumptions-collapsed', collapsed);
+            document.body.classList.toggle('assumptions-collapsed', collapsed);
+
+            const openBtn = document.getElementById('assumptionsOpenBtn');
+            if (openBtn) openBtn.setAttribute('aria-hidden', collapsed ? 'false' : 'true');
+
+            localStorage.setItem('rdspAssumptionsCollapsed', collapsed ? 'true' : 'false');
+
+            // Let the CSS transition finish, then resize charts to fill space
+            setTimeout(resizeRdspCharts, 360);
+        }
+
+        function initAssumptionsPanel() {
+            const saved = localStorage.getItem('rdspAssumptionsCollapsed');
+            if (saved === 'true') {
+                toggleAssumptionsPanel(false);
             }
         }
         
@@ -2315,26 +2676,40 @@
             updateCalculations();
         }
 
+        // Read number inputs without forcing a value back into the field while typing.
+        // Empty / partial values keep the previous fallback so Delete + retype works.
+        function readNumberInput(id, fallback, asFloat) {
+            const el = document.getElementById(id);
+            if (!el) return fallback;
+            const raw = String(el.value).trim();
+            if (raw === '' || raw === '-' || raw === '.' || raw === '-.') return fallback;
+            const n = asFloat ? parseFloat(raw) : parseInt(raw, 10);
+            return Number.isFinite(n) ? n : fallback;
+        }
+
+        function isEditingInside(container) {
+            return !!(container && document.activeElement && container.contains(document.activeElement));
+        }
+
         // Update UI
         function updateCalculations() {
-            // Update state from inputs
-            state.currentAge = parseInt(document.getElementById('currentAge').value) || 30;
-            state.familyIncome = parseInt(document.getElementById('familyIncome').value) || 100000;
-            state.annualContribution = parseInt(document.getElementById('annualContribution').value) || 1500;
-            const returnRateRaw = parseFloat(document.getElementById('returnRate').value);
-            state.returnRate = Number.isFinite(returnRateRaw) ? returnRateRaw : 10;
+            // Update state from inputs (empty mid-edit keeps prior state)
+            state.currentAge = readNumberInput('currentAge', state.currentAge || 30);
+            state.familyIncome = readNumberInput('familyIncome', state.familyIncome || 100000);
+            state.annualContribution = readNumberInput('annualContribution', state.annualContribution || 1500);
+            state.returnRate = readNumberInput('returnRate', state.returnRate ?? 10, true);
             state.payDividends = document.getElementById('payDividends').checked;
-            state.dividendRate = parseFloat(document.getElementById('dividendRate').value) || 2;
-            state.dtcStartAge = parseInt(document.getElementById('dtcStartAge').value) || 17;
-            state.endAge = parseInt(document.getElementById('endAge').value) || 90;
-            state.comparisonStartAge = parseInt(document.getElementById('comparisonStartAge')?.value) || 60;
+            state.dividendRate = readNumberInput('dividendRate', state.dividendRate || 2, true);
+            state.dtcStartAge = readNumberInput('dtcStartAge', state.dtcStartAge || 17);
+            state.endAge = readNumberInput('endAge', state.endAge || 90);
+            state.comparisonStartAge = readNumberInput('comparisonStartAge', state.comparisonStartAge || 60);
             state.withdrawalType = document.querySelector('input[name="withdrawalType"]:checked').value;
             state.stopContribsAtWithdrawal = document.getElementById('stopContribsAtWithdrawal')?.checked ?? true;
             state.showComparison = document.getElementById('showComparison')?.checked ?? false;
             // Manual quick plan (optional inputs only shown in manual mode)
-            state.manualStartAge = parseInt(document.getElementById('manualStartAge')?.value) || state.manualStartAge || 60;
-            state.manualEndAge = parseInt(document.getElementById('manualEndAge')?.value) || state.manualEndAge || state.endAge || 90;
-            state.manualAnnualWithdrawal = parseFloat(document.getElementById('manualAnnualWithdrawal')?.value) || state.manualAnnualWithdrawal || 0;
+            state.manualStartAge = readNumberInput('manualStartAge', state.manualStartAge || 60);
+            state.manualEndAge = readNumberInput('manualEndAge', state.manualEndAge || state.endAge || 90);
+            state.manualAnnualWithdrawal = readNumberInput('manualAnnualWithdrawal', state.manualAnnualWithdrawal || 0, true);
             const amountModeEl = document.querySelector('input[name="manualAmountMode"]:checked');
             if (amountModeEl) state.manualAmountMode = amountModeEl.value;
             
@@ -2377,10 +2752,12 @@
             document.getElementById('comparisonAgeContainer').style.display = (state.withdrawalType === 'ldap' && state.showComparison) ? 'block' : 'none';
             
             if (state.withdrawalType === 'ldap') {
-                state.ldapStartAge = parseInt(document.getElementById('ldapAge').value) || 60;
+                state.ldapStartAge = readNumberInput('ldapAge', state.ldapStartAge || 60);
             } else {
                 // In manual mode, comparison isn't relevant; keep it off to avoid confusion
                 state.showComparison = false;
+                const cmpEl = document.getElementById('showComparison');
+                if (cmpEl) cmpEl.checked = false;
             }
             
             // Update income eligibility
@@ -2416,14 +2793,17 @@
                 state.payDividends = savedPayDividends;
                 state.dividendRate = savedDividendRate;
             }
+
+            // LDAP vs Optimal overlay (level annual withdrawal that depletes to ~$0)
+            refreshComparisonProjection();
             
             // Update summary cards
             updateSummaryCards(projections.summary);
             
-            // Update carry-forward display
+            // Update carry-forward display (don't rebuild inputs while user is typing in them)
             updateCarryForwardDisplay();
             
-            // Update withdrawals display
+            // Update withdrawals display (same — preserve focused inputs)
             updateWithdrawalsDisplay();
             
             // Sync interest rate slider with number input
@@ -2478,50 +2858,51 @@
                 `Available: <span class="clickable-amount text-indigo-600 hover:text-indigo-700 cursor-pointer underline font-semibold" onclick="showGrantPreview(${cf.grants.length})">${formatCurrency(totalGrants)} in grants (${cf.grants.length} years)</span> + <span class="clickable-amount text-indigo-600 hover:text-indigo-700 cursor-pointer underline font-semibold" onclick="showBondPreview(${cf.bonds.length})">${formatCurrency(totalBonds)} in bonds (${cf.bonds.length} years)</span>`;
             
             const container = document.getElementById('carryForwardYears');
-            container.innerHTML = state.carryForwardYears.map((yearData, index) => `
-                <div class="bg-white p-3 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-6 gap-3 items-center">
-                        <div>
-                            <div class="text-xs text-gray-600">Year</div>
-                            <div class="font-semibold">${yearData.year}</div>
-                            <div class="text-xs text-gray-500">Age ${yearData.age}</div>
-                        </div>
-                        <div class="col-span-2">
-                            <label class="text-xs text-gray-600">Income that year</label>
-                            <input type="number" value="${yearData.income}" 
-                                onchange="updateCarryForwardYear(${index}, 'income', this.value)"
-                                onblur="updateCarryForwardYear(${index}, 'income', this.value)"
-                                class="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500 focus:border-transparent" min="0">
-                        </div>
-                        <div class="flex items-center">
-                            <input type="checkbox" ${yearData.grantEligible ? 'checked' : ''} 
-                                onchange="updateCarryForwardYear(${index}, 'grantEligible', this.checked)"
-                                ${yearData.age > 49 || yearData.age < state.dtcStartAge ? 'disabled' : ''}
-                                class="h-4 w-4 text-gray-600 focus:ring-gray-500 border-gray-300 rounded disabled:opacity-50">
-                            <label class="ml-2 text-sm text-gray-700">Grant</label>
-                        </div>
-                        <div class="flex items-center">
-                            <input type="checkbox" ${yearData.bondEligible ? 'checked' : ''} 
-                                onchange="updateCarryForwardYear(${index}, 'bondEligible', this.checked)"
-                                ${yearData.age > 49 || yearData.age < state.dtcStartAge ? 'disabled' : ''}
-                                class="h-4 w-4 text-gray-600 focus:ring-gray-500 border-gray-300 rounded disabled:opacity-50">
-                            <label class="ml-2 text-sm text-gray-700">Bond</label>
-                        </div>
-                        <div class="text-xs text-gray-600 grant-bond-display">
-                            ${yearData.grantEligible && yearData.age <= 49 ? `
-                                <div class="text-gray-800">
-                                    Grant: ${formatCurrency((yearData.income || 0) <= 117045 ? 3500 : 1000)}
-                                </div>
-                            ` : ''}
-                            ${yearData.bondEligible && yearData.age <= 49 ? `
-                                <div class="text-gray-800">
-                                    Bond: ${formatCurrency(calculateAnnualBond(yearData.income || 0, yearData.age))}
-                                </div>
-                            ` : ''}
+            // While typing an income value, only refresh amount labels — never remount the input
+            if (isEditingInside(container)) {
+                state.carryForwardYears.forEach((_, index) => updateCarryForwardRowDisplay(index));
+                return;
+            }
+            container.innerHTML = state.carryForwardYears.map((yearData, index) => {
+                const disabled = yearData.age > 49 || yearData.age < state.dtcStartAge;
+                const grantAmt = yearData.grantEligible && yearData.age <= 49
+                    ? formatCurrency((yearData.income || 0) <= 117045 ? 3500 : 1000) : '—';
+                const bondAmt = yearData.bondEligible && yearData.age <= 49
+                    ? formatCurrency(calculateAnnualBond(yearData.income || 0, yearData.age)) : '—';
+                return `
+                <div class="cf-year-row">
+                    <div class="cf-year-top">
+                        <div class="cf-year-meta">${yearData.year} · Age ${yearData.age}</div>
+                        <div class="cf-year-toggles">
+                            <label>
+                                <input type="checkbox" ${yearData.grantEligible ? 'checked' : ''}
+                                    onchange="updateCarryForwardYear(${index}, 'grantEligible', this.checked)"
+                                    ${disabled ? 'disabled' : ''}
+                                    class="h-3.5 w-3.5 text-gray-600 border-gray-300 rounded disabled:opacity-50">
+                                Grant
+                            </label>
+                            <label>
+                                <input type="checkbox" ${yearData.bondEligible ? 'checked' : ''}
+                                    onchange="updateCarryForwardYear(${index}, 'bondEligible', this.checked)"
+                                    ${disabled ? 'disabled' : ''}
+                                    class="h-3.5 w-3.5 text-gray-600 border-gray-300 rounded disabled:opacity-50">
+                                Bond
+                            </label>
                         </div>
                     </div>
-                </div>
-            `).join('');
+                    <div class="cf-year-income">
+                        <label for="cfIncome${index}">Income</label>
+                        <input type="number" id="cfIncome${index}" value="${yearData.income}"
+                            oninput="updateCarryForwardYear(${index}, 'income', this.value)"
+                            onblur="updateCarryForwardYear(${index}, 'income', this.value)"
+                            min="0" aria-label="Income for ${yearData.year}">
+                    </div>
+                    <div class="cf-year-amounts grant-bond-display">
+                        <span>Grant <strong>${grantAmt}</strong></span>
+                        <span>Bond <strong>${bondAmt}</strong></span>
+                    </div>
+                </div>`;
+            }).join('');
         }
 
         // Show grant preview breakdown
@@ -2642,26 +3023,26 @@
         
         function updateCarryForwardYear(index, field, value) {
             if (field === 'income') {
-                // For income, use the value parameter
-                const incomeValue = value === '' ? 0 : (parseInt(value) || 0);
+                // Allow empty while typing — don't force 0 into the field
+                const raw = String(value).trim();
+                const incomeValue = raw === '' ? 0 : (parseInt(raw, 10) || 0);
                 
-                // Update state for calculations
                 state.carryForwardYears[index][field] = incomeValue;
-                
-                // Update only the grant/bond display for this specific row without recreating inputs
                 updateCarryForwardRowDisplay(index, incomeValue);
                 
-                // Update summary
                 const cf = calculateCarryForward();
                 const totalGrants = cf.grants.reduce((sum, g) => sum + g.amount, 0);
                 const totalBonds = cf.bonds.reduce((sum, b) => sum + b.amount, 0);
-                document.getElementById('carryForwardSummary').textContent = 
-                    `Available: ${formatCurrency(totalGrants)} in grants (${cf.grants.length} years) + ${formatCurrency(totalBonds)} in bonds (${cf.bonds.length} years)`;
+                const summaryEl = document.getElementById('carryForwardSummary');
+                if (summaryEl) {
+                    summaryEl.innerHTML =
+                        `Available: <span class="clickable-amount text-indigo-600 hover:text-indigo-700 cursor-pointer underline font-semibold" onclick="showGrantPreview(${cf.grants.length})">${formatCurrency(totalGrants)} in grants (${cf.grants.length} years)</span> + <span class="clickable-amount text-indigo-600 hover:text-indigo-700 cursor-pointer underline font-semibold" onclick="showBondPreview(${cf.bonds.length})">${formatCurrency(totalBonds)} in bonds (${cf.bonds.length} years)</span>`;
+                }
                 
-                // Update calculations immediately (no debounce needed since we're using onchange/onblur)
-                updateCalculations();
+                // Debounce full projection so Delete/retype isn't fighting a rebuild
+                clearTimeout(carryForwardDebounceTimer);
+                carryForwardDebounceTimer = setTimeout(() => updateCalculations(), 250);
             } else {
-                // For checkboxes, update state and do full update
                 state.carryForwardYears[index][field] = value;
                 updateCarryForwardDisplay();
                 updateCalculations();
@@ -2678,17 +3059,13 @@
                 if (grantBondDiv) {
                     // Use the passed incomeValue or fall back to state
                     const income = incomeValue !== undefined ? incomeValue : (yearData.income || 0);
+                    const grantAmt = yearData.grantEligible && yearData.age <= 49
+                        ? formatCurrency(income <= 117045 ? 3500 : 1000) : '—';
+                    const bondAmt = yearData.bondEligible && yearData.age <= 49
+                        ? formatCurrency(calculateAnnualBond(income, yearData.age)) : '—';
                     grantBondDiv.innerHTML = `
-                        ${yearData.grantEligible && yearData.age <= 49 ? `
-                            <div class="text-gray-800">
-                                Grant: ${formatCurrency(income <= 117045 ? 3500 : 1000)}
-                            </div>
-                        ` : ''}
-                        ${yearData.bondEligible && yearData.age <= 49 ? `
-                            <div class="text-gray-800">
-                                Bond: ${formatCurrency(calculateAnnualBond(income, yearData.age))}
-                            </div>
-                        ` : ''}
+                        <span>Grant <strong>${grantAmt}</strong></span>
+                        <span>Bond <strong>${bondAmt}</strong></span>
                     `;
                 }
             }
@@ -2700,6 +3077,9 @@
                 container.innerHTML = '';
                 return;
             }
+
+            // Don't remount inputs while the user is editing age/amount
+            if (isEditingInside(container)) return;
             
             container.innerHTML = `
                 <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 mb-3">
@@ -2725,13 +3105,15 @@
                             <label class="block text-xs text-gray-600 mb-1">Age</label>
                             <input type="number" value="${withdrawal.age}" 
                                 oninput="updateWithdrawal(${index}, 'age', this.value)"
+                                onblur="commitWithdrawalField(${index}, 'age', this)"
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-gray-500 focus:border-transparent" 
-                                min="${state.currentAge}">
+                                min="0">
                         </div>
                         <div class="flex-1">
                             <label class="block text-xs text-gray-600 mb-1">Amount</label>
                             <input type="number" value="${withdrawal.amount}" 
                                 oninput="updateWithdrawal(${index}, 'amount', this.value)"
+                                onblur="commitWithdrawalField(${index}, 'amount', this)"
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-gray-500 focus:border-transparent" 
                                 min="0">
                         </div>
@@ -2750,15 +3132,49 @@
         }
 
         function syncManualQuickPlan() {
-            // Light sync helper so typing feels responsive; full recalculation happens via updateCalculations().
+            // Update state from typed values, but NEVER rewrite the inputs mid-edit.
+            // (Rewriting when end < start made Delete/retype impossible when both ages were equal.)
             const startEl = document.getElementById('manualStartAge');
             const endEl = document.getElementById('manualEndAge');
             if (!startEl || !endEl) return;
-            const start = parseInt(startEl.value) || state.currentAge || 30;
-            const end = parseInt(endEl.value) || state.endAge || 90;
-            if (end < start) endEl.value = String(start);
-            state.manualStartAge = parseInt(startEl.value) || 60;
-            state.manualEndAge = parseInt(endEl.value) || 90;
+
+            const startRaw = String(startEl.value).trim();
+            const endRaw = String(endEl.value).trim();
+            const startNum = parseInt(startRaw, 10);
+            const endNum = parseInt(endRaw, 10);
+
+            if (startRaw !== '' && Number.isFinite(startNum)) state.manualStartAge = startNum;
+            if (endRaw !== '' && Number.isFinite(endNum)) state.manualEndAge = endNum;
+
+            const amountEl = document.getElementById('manualAnnualWithdrawal');
+            if (amountEl) {
+                const amountRaw = String(amountEl.value).trim();
+                if (amountRaw !== '') {
+                    const amountNum = parseFloat(amountRaw);
+                    if (Number.isFinite(amountNum)) state.manualAnnualWithdrawal = amountNum;
+                }
+            }
+
+            if (startRaw !== '' && endRaw !== '' && Number.isFinite(startNum) && Number.isFinite(endNum)) {
+                refreshManualAutoAmountPreview();
+            }
+        }
+
+        function commitManualQuickPlanAges() {
+            const startEl = document.getElementById('manualStartAge');
+            const endEl = document.getElementById('manualEndAge');
+            if (!startEl || !endEl) return;
+
+            let start = parseInt(startEl.value, 10);
+            let end = parseInt(endEl.value, 10);
+            if (!Number.isFinite(start)) start = state.manualStartAge || state.currentAge || 60;
+            if (!Number.isFinite(end)) end = state.manualEndAge || state.endAge || 90;
+            if (end < start) end = start;
+
+            startEl.value = String(start);
+            endEl.value = String(end);
+            state.manualStartAge = start;
+            state.manualEndAge = end;
             refreshManualAutoAmountPreview();
         }
 
@@ -2828,6 +3244,48 @@
             return result;
         }
 
+        function refreshComparisonProjection() {
+            comparisonProjectionData = null;
+            comparisonAnnualAmount = 0;
+
+            const note = document.getElementById('comparisonChartNote');
+            if (!(state.withdrawalType === 'ldap' && state.showComparison)) {
+                if (note) note.style.display = 'none';
+                return;
+            }
+
+            const startAge = Math.max(60, state.comparisonStartAge || 60, state.currentAge || 0);
+            const endAge = Math.max(startAge, state.endAge || 90);
+            const amount = findDepletingAnnualWithdrawal(startAge, endAge);
+            comparisonAnnualAmount = amount;
+
+            const savedWithdrawals = state.withdrawals.slice();
+            const savedType = state.withdrawalType;
+            state.withdrawalType = 'manual';
+            state.withdrawals = [];
+            for (let age = startAge; age <= endAge; age++) {
+                state.withdrawals.push({ age, amount });
+            }
+            try {
+                comparisonProjectionData = calculateProjections().data;
+            } finally {
+                state.withdrawals = savedWithdrawals;
+                state.withdrawalType = savedType;
+            }
+
+            if (note) {
+                note.style.display = 'block';
+                const amtEl = document.getElementById('comparisonAmountLabel');
+                const startEl = document.getElementById('comparisonStartLabel');
+                if (amtEl) {
+                    amtEl.textContent = amount > 0
+                        ? ('$' + amount.toLocaleString('en-CA') + '/yr')
+                        : '—';
+                }
+                if (startEl) startEl.textContent = String(startAge);
+            }
+        }
+
         function refreshManualAutoAmountPreview() {
             const valueEl = document.getElementById('manualAutoAmountValue');
             if (!valueEl) return;
@@ -2893,10 +3351,36 @@
         }
 
         function updateWithdrawal(index, field, value) {
+            const raw = String(value).trim();
+            // Allow empty / partial while typing — don't snap the field back
+            if (raw === '' || raw === '-' || raw === '.') return;
+
             if (field === 'age') {
-                state.withdrawals[index][field] = value === '' ? state.currentAge : (parseInt(value) || state.currentAge);
+                const n = parseInt(raw, 10);
+                if (!Number.isFinite(n)) return;
+                state.withdrawals[index][field] = n;
             } else {
-                state.withdrawals[index][field] = value === '' ? 0 : (parseFloat(value) || 0);
+                const n = parseFloat(raw);
+                if (!Number.isFinite(n)) return;
+                state.withdrawals[index][field] = n;
+            }
+            updateCalculations();
+        }
+
+        function commitWithdrawalField(index, field, el) {
+            const raw = String(el.value).trim();
+            if (field === 'age') {
+                let n = parseInt(raw, 10);
+                if (!Number.isFinite(n)) n = state.currentAge || 30;
+                n = Math.max(0, n);
+                el.value = String(n);
+                state.withdrawals[index][field] = n;
+            } else {
+                let n = parseFloat(raw);
+                if (!Number.isFinite(n)) n = 0;
+                n = Math.max(0, n);
+                el.value = String(n);
+                state.withdrawals[index][field] = n;
             }
             updateCalculations();
         }
@@ -2997,11 +3481,12 @@
         // Update yearly rate
         function updateYearlyRate(age, value) {
             if (value === '' || value === null || value === undefined) {
-                delete state.yearlyReturnRates[age];
-            } else {
-                state.yearlyReturnRates[age] = parseFloat(value) || state.returnRate;
+                // Keep entry while clearing — don't remount list mid-edit
+                return;
             }
-            updateYearlyRatesDisplay();
+            const n = parseFloat(value);
+            if (!Number.isFinite(n)) return;
+            state.yearlyReturnRates[age] = n;
             updateCalculations();
         }
 
@@ -3250,26 +3735,57 @@
             const data = getFilteredChartData();
             if (data.length === 0) return;
             const colors = getChartColors();
+            const showOptimalOverlay = state.withdrawalType === 'ldap'
+                && state.showComparison
+                && Array.isArray(comparisonProjectionData)
+                && comparisonProjectionData.length > 0;
+
+            const comparisonByAge = showOptimalOverlay
+                ? new Map(comparisonProjectionData.map(d => [d.age, d.balance]))
+                : null;
+            const optimalSeries = showOptimalOverlay
+                ? data.map(d => (comparisonByAge.has(d.age) ? comparisonByAge.get(d.age) : null))
+                : null;
             
             // Balance Chart
             const balanceCtx = document.getElementById('balanceChart').getContext('2d');
             if (balanceChart) balanceChart.destroy();
+            const balanceDatasets = [{
+                label: showOptimalOverlay ? 'LDAP Balance' : 'Account Balance',
+                data: data.map(d => d.balance),
+                borderColor: '#4f46e5',
+                backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                fill: !showOptimalOverlay,
+                tension: 0.4,
+                borderWidth: 2,
+                pointRadius: 0,
+                pointHoverRadius: 4
+            }];
+            if (showOptimalOverlay) {
+                balanceDatasets.push({
+                    label: 'Optimal (level to $0)',
+                    data: optimalSeries,
+                    borderColor: '#f59e0b',
+                    backgroundColor: 'transparent',
+                    fill: false,
+                    tension: 0.35,
+                    borderWidth: 2,
+                    borderDash: [7, 5],
+                    pointRadius: 0,
+                    pointHoverRadius: 4,
+                    spanGaps: false
+                });
+            }
             balanceChart = new Chart(balanceCtx, {
                 type: 'line',
                 data: {
                     labels: data.map(d => d.age),
-                    datasets: [{
-                        label: 'Account Balance',
-                        data: data.map(d => d.balance),
-                        borderColor: '#4f46e5',
-                        backgroundColor: 'rgba(79, 70, 229, 0.1)',
-                        fill: true,
-                        tension: 0.4
-                    }]
+                    datasets: balanceDatasets
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
                     plugins: {
                         legend: { 
                             display: true,
@@ -3281,7 +3797,8 @@
                             bodyColor: '#f8fafc',
                             callbacks: {
                                 label: function(context) {
-                                    return formatCurrency(context.parsed.y);
+                                    if (context.parsed.y == null) return context.dataset.label + ': —';
+                                    return context.dataset.label + ': ' + formatCurrency(context.parsed.y);
                                 }
                             }
                         }
@@ -3591,6 +4108,7 @@
             updateVisualSlider();
             
             // Initialize
+            initAssumptionsPanel();
             state.carryForwardYears = initializeCarryForwardYears();
             updateCalculations();
     </script>
