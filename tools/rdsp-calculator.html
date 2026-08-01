@@ -1951,6 +1951,9 @@
                     from age <span id="comparisonStartLabel">60</span> so the balance reaches ~$0 by end age.
                     Your plan (solid line) stays on LDAP.
                 </div>
+                <div class="mt-2 text-xs text-gray-500" id="inflationChartNote">
+                    Chart values are in today’s dollars (inflation-adjusted).
+                </div>
                 <div class="mt-4 flex items-center gap-4 flex-wrap">
                     <label for="returnRateSlider" class="text-sm font-medium text-gray-700 dark:text-gray-300">Interest rate</label>
                     <input type="range" id="returnRateSlider" min="0" max="20" step="0.1" value="10" class="flex-1 min-w-[120px] max-w-[280px]" aria-label="Interest rate (%)" oninput="syncReturnRateFromSlider()">
@@ -2081,6 +2084,7 @@
                     <div>
                         <label for="returnRate" class="block text-sm font-medium text-gray-700 mb-1">Annual Return Rate (%)</label>
                         <input type="number" id="returnRate" aria-label="Annual Return Rate (%)" value="10" min="0" max="20" step="0.1" oninput="updateCalculations()">
+                        <div class="text-xs text-gray-500 mt-1">Nominal investment return before inflation</div>
                         <div class="mt-2">
                             <button type="button" onclick="toggleYearlyRates()" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">
                                 <span id="yearlyRatesToggleText">+ Adjust rate per year</span>
@@ -2091,6 +2095,12 @@
                             <div id="yearlyRatesList" class="space-y-2 max-h-60 overflow-y-auto"></div>
                             <button type="button" onclick="addYearlyRate()" class="mt-2 text-sm text-indigo-600 hover:text-indigo-700 font-medium">+ Add year</button>
                         </div>
+                    </div>
+
+                    <div>
+                        <label for="inflationRate" class="block text-sm font-medium text-gray-700 mb-1">Inflation Rate (%)</label>
+                        <input type="number" id="inflationRate" aria-label="Inflation Rate (%)" value="3" min="0" max="20" step="0.1" oninput="updateCalculations()">
+                        <div class="text-xs text-gray-500 mt-1">Used to show balances in today’s dollars. Real return: <span id="realReturnDisplay" class="font-semibold text-gray-700">—</span></div>
                     </div>
 
                     <div class="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
@@ -2251,6 +2261,7 @@
             familyIncome: 100000,
             annualContribution: 1500,
             returnRate: 10,
+            inflationRate: 3,
             yearlyReturnRates: {}, // Per-year interest rates: {age: rate}
             payDividends: false,
             dividendRate: 2,
@@ -2581,7 +2592,8 @@
                 if (accountBalance > 0) {
                     // Use per-year rate if available, otherwise use default
                     const rateForYear = state.yearlyReturnRates[age] !== undefined ? state.yearlyReturnRates[age] : state.returnRate;
-                    const growthRate = state.payDividends ? (rateForYear - state.dividendRate) / 100 : rateForYear / 100;
+                    const nominalGrowthPct = state.payDividends ? (rateForYear - state.dividendRate) : rateForYear;
+                    const growthRate = realGrowthRateFromNominal(nominalGrowthPct);
                     yearlyGrowth = accountBalance * growthRate;
                     accountBalance += yearlyGrowth;
                     
@@ -2676,6 +2688,23 @@
             updateCalculations();
         }
 
+        // Fisher equation: convert nominal % return to real growth rate (decimal)
+        function realGrowthRateFromNominal(nominalPct) {
+            const r = (Number(nominalPct) || 0) / 100;
+            const i = (state.inflationRate || 0) / 100;
+            return (1 + r) / (1 + i) - 1;
+        }
+
+        function updateRealReturnDisplay() {
+            const el = document.getElementById('realReturnDisplay');
+            if (!el) return;
+            const nominal = state.payDividends
+                ? (state.returnRate - state.dividendRate)
+                : state.returnRate;
+            const realPct = realGrowthRateFromNominal(nominal) * 100;
+            el.textContent = (Number.isFinite(realPct) ? realPct.toFixed(2) : '—') + '%';
+        }
+
         // Read number inputs without forcing a value back into the field while typing.
         // Empty / partial values keep the previous fallback so Delete + retype works.
         function readNumberInput(id, fallback, asFloat) {
@@ -2698,6 +2727,7 @@
             state.familyIncome = readNumberInput('familyIncome', state.familyIncome || 100000);
             state.annualContribution = readNumberInput('annualContribution', state.annualContribution || 1500);
             state.returnRate = readNumberInput('returnRate', state.returnRate ?? 10, true);
+            state.inflationRate = readNumberInput('inflationRate', state.inflationRate ?? 3, true);
             state.payDividends = document.getElementById('payDividends').checked;
             state.dividendRate = readNumberInput('dividendRate', state.dividendRate || 2, true);
             state.dtcStartAge = readNumberInput('dtcStartAge', state.dtcStartAge || 17);
@@ -2773,6 +2803,7 @@
                 eligibilityText = '✓ 1:1 grant matching only';
             }
             document.getElementById('incomeEligibility').textContent = eligibilityText;
+            updateRealReturnDisplay();
             
             // Calculate projections
             const projections = calculateProjections();
@@ -2783,15 +2814,18 @@
             const savedReturnRate = state.returnRate;
             const savedPayDividends = state.payDividends;
             const savedDividendRate = state.dividendRate;
+            const savedInflationRate = state.inflationRate;
             state.returnRate = 0;
             state.payDividends = false;
             state.dividendRate = 0;
+            state.inflationRate = 0;
             try {
                 noGrowthProjectionData = calculateProjections().data;
             } finally {
                 state.returnRate = savedReturnRate;
                 state.payDividends = savedPayDividends;
                 state.dividendRate = savedDividendRate;
+                state.inflationRate = savedInflationRate;
             }
 
             // LDAP vs Optimal overlay (level annual withdrawal that depletes to ~$0)
@@ -3550,22 +3584,25 @@
                 }
             }
 
-            // Calculate required return rate
-            // If dividends are enabled, effective growth = returnRate - dividendRate
-            // So: required return rate = (withdrawal / balance) * 100 + dividendRate
-            const withdrawalRate = (annualWithdrawal / balanceAtStart) * 100;
-            const dividendAdjustment = state.payDividends ? state.dividendRate : 0;
-            const requiredReturnRate = withdrawalRate + dividendAdjustment;
+            // Calculate required return rate (nominal) so real growth covers the withdrawal
+            // realGrowth ≈ withdrawal/balance; nominal ≈ (1+real)*(1+inflation) - 1
+            const withdrawalRate = annualWithdrawal / balanceAtStart; // decimal
+            const inflation = (state.inflationRate || 0) / 100;
+            const requiredReal = withdrawalRate;
+            const requiredNominalCapital = (1 + requiredReal) * (1 + inflation) - 1;
+            const dividendAdjustment = state.payDividends ? state.dividendRate / 100 : 0;
+            const requiredReturnRate = (requiredNominalCapital + dividendAdjustment) * 100;
 
             // Format result
             resultDiv.innerHTML = `
                 <div class="space-y-1">
-                    <div class="font-semibold text-blue-700">Required Return Rate: ${requiredReturnRate.toFixed(2)}%</div>
+                    <div class="font-semibold text-blue-700">Required Return Rate: ${requiredReturnRate.toFixed(2)}% <span class="font-normal text-gray-600">(nominal)</span></div>
                     <div class="text-xs text-gray-600">
                         Balance at age ${startAge}: ${formatCurrency(balanceAtStart)}<br>
                         Annual withdrawal: ${formatCurrency(annualWithdrawal)}<br>
+                        Inflation: ${state.inflationRate}% → real return needed: ${(requiredReal * 100).toFixed(2)}%<br>
                         ${state.payDividends ? `Dividend rate: ${state.dividendRate}%<br>` : ''}
-                        <span class="text-gray-500">This rate would maintain your account balance level</span>
+                        <span class="text-gray-500">This nominal rate would maintain your account balance in today’s dollars</span>
                     </div>
                 </div>
             `;
@@ -4052,6 +4089,7 @@
             state.familyIncome = 100000;
             state.annualContribution = 1500;
             state.returnRate = 10;
+            state.inflationRate = 3;
             state.payDividends = false;
             state.dividendRate = 2;
             state.withdrawals = [];
@@ -4074,6 +4112,8 @@
             document.getElementById('familyIncome').value = state.familyIncome;
             document.getElementById('annualContribution').value = state.annualContribution;
             document.getElementById('returnRate').value = state.returnRate;
+            const inflationEl = document.getElementById('inflationRate');
+            if (inflationEl) inflationEl.value = state.inflationRate;
             document.getElementById('payDividends').checked = state.payDividends;
             document.getElementById('dividendRate').value = state.dividendRate;
             document.getElementById('dtcStartAge').value = state.dtcStartAge;
