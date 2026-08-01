@@ -52,8 +52,111 @@
         }
         
         .max-w-7xl {
-            max-width: 1280px;
+            max-width: 1400px;
             margin: 0 auto;
+        }
+
+        /* Side-by-side: charts left, controls right (like retirement calculator) */
+        .rdsp-layout {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 16px;
+            align-items: start;
+        }
+        @media (max-width: 1100px) {
+            .rdsp-layout {
+                grid-template-columns: 1fr;
+            }
+            .rdsp-assumptions {
+                position: static;
+                max-height: none;
+            }
+        }
+        .rdsp-results {
+            min-width: 0;
+        }
+        .rdsp-assumptions {
+            position: sticky;
+            top: 16px;
+            max-height: calc(100vh - 32px);
+            overflow-y: auto;
+            background: #FFFFFF;
+            border: 1px solid #E5E7EB;
+            border-radius: 12px;
+            padding: 0;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        body.dark-mode .rdsp-assumptions {
+            background: #1F2937;
+            border-color: #374151;
+        }
+        .rdsp-assumptions-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 14px 16px 12px;
+            border-bottom: 1px solid #E5E7EB;
+            position: sticky;
+            top: 0;
+            background: #FFFFFF;
+            z-index: 2;
+        }
+        body.dark-mode .rdsp-assumptions-header {
+            background: #1F2937;
+            border-bottom-color: #374151;
+        }
+        .rdsp-assumptions-header h2 {
+            font-size: 16px;
+            font-weight: 700;
+            margin: 0;
+            color: #111827;
+        }
+        body.dark-mode .rdsp-assumptions-header h2 {
+            color: #E5E7EB;
+        }
+        .rdsp-assumptions-body {
+            padding: 12px 16px 20px;
+        }
+        .rdsp-assumptions-body > .mb-6:last-child {
+            margin-bottom: 0;
+        }
+        .rdsp-section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #111827;
+            border-bottom: 1px solid #E5E7EB;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+        }
+        body.dark-mode .rdsp-section-title {
+            color: #E5E7EB;
+            border-bottom-color: #374151;
+        }
+        .rdsp-results-card {
+            background: #FFFFFF;
+            border: 1px solid #E5E7EB;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        body.dark-mode .rdsp-results-card {
+            background: #1F2937;
+            border-color: #374151;
+        }
+        .rdsp-results-card:last-child {
+            margin-bottom: 0;
+        }
+        .rdsp-page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .rdsp-page-header h1 {
+            margin-bottom: 4px;
         }
         
         .bg-white {
@@ -1456,25 +1559,163 @@
             Back to Portfolio
         </a>
         
-        <div class="bg-white rounded-lg shadow-xl p-6 mb-6">
-            <div class="flex justify-between items-center mb-4">
-                <div>
-                    <h1>Enhanced RDSP Calculator</h1>
-                    <p class="text-sm text-gray-600">Based on 2025/2026 CRA Rules with Advanced Withdrawal Planning</p>
+        <div class="rdsp-page-header">
+            <div>
+                <h1>Enhanced RDSP Calculator</h1>
+                <p class="text-sm text-gray-600">Based on 2025/2026 CRA Rules with Advanced Withdrawal Planning</p>
+            </div>
+        </div>
+
+        <!-- Preview Modal -->
+            <div id="previewModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center" style="display: none;">
+                <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4 max-h-96 overflow-y-auto">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold text-gray-800" id="previewModalTitle"></h3>
+                        <button onclick="closePreviewModal()" class="text-gray-500 hover:text-gray-700">
+                            <span class="material-icons">close</span>
+                        </button>
+                    </div>
+                    <div id="previewModalContent" class="text-sm text-gray-700 space-y-3"></div>
+                    <button onclick="closePreviewModal()" class="mt-4 w-full px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
+                        Close
+                    </button>
                 </div>
-                <button onclick="resetCalculator()" class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 flex items-center gap-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                    </svg>
-                    Reset
-                </button>
             </div>
 
+
+        <div class="rdsp-layout">
+            <!-- LEFT: results / charts -->
+            <div class="rdsp-results">
+            <div class="rdsp-results-card">
+            <!-- Summary Cards -->
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-3" id="summaryCards"></div>
+            </div>
+
+            <div class="rdsp-results-card">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="font-semibold text-lg text-gray-800">Chart Age Range</h3>
+                    <div class="text-sm font-semibold text-gray-700" id="ageRangeDisplay">30 - 90</div>
+                </div>
+
+                <div id="rangeSliderContainer">
+                    <div id="rangeTrackArea">
+                        <div id="rangeTrack"></div>
+                        <div id="rangeHighlight" style="left: 0%; width: 100%;"></div>
+
+                        <div
+                            id="leftHandle"
+                            class="range-handle"
+                            style="left: 0%;"
+                            onmousedown="startDrag('left', event)"
+                            ontouchstart="startDrag('left', event)"
+                        ></div>
+
+                        <div
+                            id="rightHandle"
+                            class="range-handle"
+                            style="left: 100%;"
+                            onmousedown="startDrag('right', event)"
+                            ontouchstart="startDrag('right', event)"
+                        ></div>
+                    </div>
+
+                    <div id="rangeLabels">
+                        <span id="minAgeLabel">30</span>
+                        <span id="maxAgeLabel">90</span>
+                    </div>
+
+                    <div id="rangePresets">
+                        <button onclick="setChartRange('early')">Early (30-50)</button>
+                        <button onclick="setChartRange('mid')">Mid (50-70)</button>
+                        <button onclick="setChartRange('late')">Late (70-90)</button>
+                        <button onclick="setChartRange('all')" class="preset-primary">All Years</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rdsp-results-card">
+                <h3 class="font-semibold text-lg text-gray-800 mb-4">Account Value Over Time</h3>
+                <div class="chart-container">
+                    <canvas id="balanceChart"></canvas>
+                </div>
+                <div class="mt-4 flex items-center gap-4 flex-wrap">
+                    <label for="returnRateSlider" class="text-sm font-medium text-gray-700 dark:text-gray-300">Interest rate</label>
+                    <input type="range" id="returnRateSlider" min="0" max="20" step="0.1" value="10" class="flex-1 min-w-[120px] max-w-[280px]" aria-label="Interest rate (%)" oninput="syncReturnRateFromSlider()">
+                    <span id="returnRateSliderValue" class="text-sm font-medium text-gray-800 dark:text-gray-200 tabular-nums">10%</span>
+                </div>
+
+                <div class="mt-6">
+                    <h3 class="font-semibold text-lg text-gray-800 mb-4">Annual Breakdown</h3>
+                    <div id="breakdownChartContainer" class="chart-container-small">
+                        <div class="breakdown-layout">
+                            <div class="breakdown-canvas">
+                                <canvas id="breakdownChart"></canvas>
+                            </div>
+                            <div id="breakdownHoverPanel" class="breakdown-hover">
+                                <div class="title">Hover details</div>
+                                <div class="muted">Move your mouse over the chart to see the full breakdown for that age.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="breakdownTableContainer">
+                        <div class="overflow-x-auto">
+                            <table class="w-full border-collapse border border-gray-300 text-sm" id="breakdownTable">
+                                <thead>
+                                    <tr class="bg-gray-100">
+                                        <th class="border border-gray-300 px-3 py-2 text-left font-semibold text-gray-800">Age</th>
+                                        <th class="border border-gray-300 px-3 py-2 text-right font-semibold text-gray-800">Balance</th>
+                                        <th class="border border-gray-300 px-3 py-2 text-right font-semibold text-gray-800">Contributions</th>
+                                        <th class="border border-gray-300 px-3 py-2 text-right font-semibold text-gray-800">Grants</th>
+                                        <th class="border border-gray-300 px-3 py-2 text-right font-semibold text-gray-800">Bonds</th>
+                                        <th class="border border-gray-300 px-3 py-2 text-right font-semibold text-gray-800">Growth</th>
+                                        <th class="border border-gray-300 px-3 py-2 text-right font-semibold text-gray-800">Withdrawals</th>
+                                        <th class="border border-gray-300 px-3 py-2 text-right font-semibold text-gray-800">10Y Penalty</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="breakdownTableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6" id="withdrawalChartContainer" style="display: none;">
+                    <h3 class="font-semibold text-lg text-gray-800 mb-4">Withdrawal Breakdown</h3>
+                    <div class="chart-container-small">
+                        <canvas id="withdrawalChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rdsp-results-card">
+                <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 text-sm text-gray-700">
+                    <h4 class="font-semibold mb-2 text-gray-800">Enhanced Features Based on CRA Rules:</h4>
+                    <ul class="space-y-1 text-xs text-gray-600">
+                        <li>• <strong>LDAP (Lifetime Disability Assistance Payments):</strong> Automatic pension-style withdrawals starting at 60</li>
+                        <li>• <strong>10-Year Repayment Rule:</strong> Early withdrawals (before 60) lose $3 of grants/bonds for every $1 withdrawn</li>
+                        <li>• <strong>Taxable Withdrawals:</strong> Everything except personal contributions is taxed upon withdrawal</li>
+                        <li>• <strong>LDAP Formula:</strong> Before 80: balance ÷ (83 - age), After 80: balance ÷ 3</li>
+                        <li>• <strong>Carry-forward:</strong> Catch up on past 10 DTC-approved years (max $10,500 grants + $11,000 bonds per year)</li>
+                    </ul>
+                </div>
+            </div>
+
+            </div>
+
+            <!-- RIGHT: sticky assumptions / controls -->
+            <aside class="rdsp-assumptions">
+                <div class="rdsp-assumptions-header">
+                    <h2>Assumptions</h2>
+                    <button onclick="resetCalculator()" class="px-3 py-1.5 bg-gray-600 text-white text-sm rounded-md hover:bg-gray-700 flex items-center gap-1">
+                        <span class="material-icons" style="font-size:16px;">refresh</span>
+                        Reset
+                    </button>
+                </div>
+                <div class="rdsp-assumptions-body">
             <!-- Input Section -->
-            <div class="grid md:grid-cols-2 gap-6 mb-6">
                 <!-- Personal Information -->
-                <div class="space-y-4">
-                    <h3 class="border-b pb-2">Personal Information</h3>
+                <div class="space-y-4 mb-6">
+                    <h3 class="rdsp-section-title">Personal Information</h3>
                     
                     <div>
                         <label for="currentAge" class="block text-sm font-medium text-gray-700 mb-1">Current Age</label>
@@ -1500,8 +1741,8 @@
                 </div>
 
                 <!-- Contribution & Investment Details -->
-                <div class="space-y-4">
-                    <h3 class="border-b pb-2">Contributions & Investment</h3>
+                <div class="space-y-4 mb-6">
+                    <h3 class="rdsp-section-title">Contributions & Investment</h3>
                     
                     <div>
                         <label for="annualContribution" class="block text-sm font-medium text-gray-700 mb-1">Annual Contribution (until age 59)</label>
@@ -1556,34 +1797,19 @@
                         <input type="number" id="dividendRate" aria-label="Dividend Rate (%)" value="2" min="0" max="20" step="0.1" oninput="updateCalculations()">
                     </div>
                 </div>
-            </div>
+
 
             <!-- Carry-Forward Section -->
             <div class="mb-6 bg-gray-50 border border-gray-200 rounded-lg p-4">
-                <h3 class="font-semibold text-lg text-gray-800 mb-2">Carry-Forward Eligibility (Past 10 Years)</h3>
+                <h3 class="rdsp-section-title">Carry-Forward Eligibility</h3>
                 <p class="text-sm text-gray-600 mb-4" id="carryForwardSummary"></p>
-                <div class="space-y-2 max-h-96 overflow-y-auto" id="carryForwardYears"></div>
+                <div class="space-y-2 max-h-64 overflow-y-auto" id="carryForwardYears"></div>
             </div>
             
-            <!-- Preview Modal -->
-            <div id="previewModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center" style="display: none;">
-                <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4 max-h-96 overflow-y-auto">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-semibold text-gray-800" id="previewModalTitle"></h3>
-                        <button onclick="closePreviewModal()" class="text-gray-500 hover:text-gray-700">
-                            <span class="material-icons">close</span>
-                        </button>
-                    </div>
-                    <div id="previewModalContent" class="text-sm text-gray-700 space-y-3"></div>
-                    <button onclick="closePreviewModal()" class="mt-4 w-full px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
-                        Close
-                    </button>
-                </div>
-            </div>
 
             <!-- Withdrawal Planning -->
             <div class="mb-6">
-                <h3 class="font-semibold text-lg text-gray-800 border-b pb-2 mb-4">Withdrawals</h3>
+                <h3 class="rdsp-section-title">Withdrawals</h3>
                 
                 <!-- Withdrawal Type Selection -->
                 <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-4">
@@ -1688,122 +1914,8 @@
                 </div>
             </div>
 
-            <!-- Visual Chart Age Range Slider -->
-            <div class="mb-6">
-                <div class="flex items-center justify-between mb-2">
-                    <h3 class="font-semibold text-lg text-gray-800">Chart Age Range</h3>
-                    <div class="text-sm font-semibold text-gray-700" id="ageRangeDisplay">30 - 90</div>
                 </div>
-
-                <div id="rangeSliderContainer">
-                    <div id="rangeTrackArea">
-                        <div id="rangeTrack"></div>
-                        <div id="rangeHighlight" style="left: 0%; width: 100%;"></div>
-
-                        <div
-                            id="leftHandle"
-                            class="range-handle"
-                            style="left: 0%;"
-                            onmousedown="startDrag('left', event)"
-                            ontouchstart="startDrag('left', event)"
-                        ></div>
-
-                        <div
-                            id="rightHandle"
-                            class="range-handle"
-                            style="left: 100%;"
-                            onmousedown="startDrag('right', event)"
-                            ontouchstart="startDrag('right', event)"
-                        ></div>
-                    </div>
-
-                    <div id="rangeLabels">
-                        <span id="minAgeLabel">30</span>
-                        <span id="maxAgeLabel">90</span>
-                    </div>
-
-                    <div id="rangePresets">
-                        <button onclick="setChartRange('early')">Early (30-50)</button>
-                        <button onclick="setChartRange('mid')">Mid (50-70)</button>
-                        <button onclick="setChartRange('late')">Late (70-90)</button>
-                        <button onclick="setChartRange('all')" class="preset-primary">All Years</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Charts -->
-            <div class="mb-6">
-                <h3 class="font-semibold text-lg text-gray-800 mb-4">Account Value Over Time</h3>
-                <div class="chart-container">
-                    <canvas id="balanceChart"></canvas>
-                </div>
-                <div class="mt-4 flex items-center gap-4 flex-wrap">
-                    <label for="returnRateSlider" class="text-sm font-medium text-gray-700 dark:text-gray-300">Interest rate</label>
-                    <input type="range" id="returnRateSlider" min="0" max="20" step="0.1" value="10" class="flex-1 min-w-[120px] max-w-[280px]" aria-label="Interest rate (%)" oninput="syncReturnRateFromSlider()">
-                    <span id="returnRateSliderValue" class="text-sm font-medium text-gray-800 dark:text-gray-200 tabular-nums">10%</span>
-                </div>
-            </div>
-
-            <div class="mb-6">
-                <div class="flex items-center justify-between mb-4">
-                    <div>
-                        <h3 class="font-semibold text-lg text-gray-800">Annual Breakdown</h3>
-                    </div>
-                </div>
-                <div id="breakdownChartContainer" class="chart-container-small">
-                    <div class="breakdown-layout">
-                        <div class="breakdown-canvas">
-                            <canvas id="breakdownChart"></canvas>
-                        </div>
-                        <div id="breakdownHoverPanel" class="breakdown-hover">
-                            <div class="title">Hover details</div>
-                            <div class="muted">Move your mouse over the chart to see the full breakdown for that age.</div>
-                        </div>
-                    </div>
-                </div>
-                <div id="breakdownTableContainer">
-                    <div class="overflow-x-auto">
-                        <table class="w-full border-collapse border border-gray-300 text-sm" id="breakdownTable">
-                            <thead>
-                                <tr class="bg-gray-100">
-                                    <th class="border border-gray-300 px-3 py-2 text-left font-semibold text-gray-800">Age</th>
-                                    <th class="border border-gray-300 px-3 py-2 text-right font-semibold text-gray-800">Balance</th>
-                                    <th class="border border-gray-300 px-3 py-2 text-right font-semibold text-gray-800">Contributions</th>
-                                    <th class="border border-gray-300 px-3 py-2 text-right font-semibold text-gray-800">Grants</th>
-                                    <th class="border border-gray-300 px-3 py-2 text-right font-semibold text-gray-800">Bonds</th>
-                                    <th class="border border-gray-300 px-3 py-2 text-right font-semibold text-gray-800">Growth</th>
-                                    <th class="border border-gray-300 px-3 py-2 text-right font-semibold text-gray-800">Withdrawals</th>
-                                    <th class="border border-gray-300 px-3 py-2 text-right font-semibold text-gray-800">10Y Penalty</th>
-                                </tr>
-                            </thead>
-                            <tbody id="breakdownTableBody">
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <div class="mb-6" id="withdrawalChartContainer" style="display: none;">
-                <h3 class="font-semibold text-lg text-gray-800 mb-4">Withdrawal Breakdown</h3>
-                <div class="chart-container-small">
-                    <canvas id="withdrawalChart"></canvas>
-                </div>
-            </div>
-
-            <!-- Info Box -->
-            <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 text-sm text-gray-700">
-                <h4 class="font-semibold mb-2 text-gray-800">Enhanced Features Based on CRA Rules:</h4>
-                <ul class="space-y-1 text-xs text-gray-600">
-                    <li>• <strong>LDAP (Lifetime Disability Assistance Payments):</strong> Automatic pension-style withdrawals starting at 60</li>
-                    <li>• <strong>10-Year Repayment Rule:</strong> Early withdrawals (before 60) lose $3 of grants/bonds for every $1 withdrawn</li>
-                    <li>• <strong>Taxable Withdrawals:</strong> Everything except personal contributions is taxed upon withdrawal</li>
-                    <li>• <strong>LDAP Formula:</strong> Before 80: balance ÷ (83 - age), After 80: balance ÷ 3</li>
-                    <li>• <strong>Carry-forward:</strong> Catch up on past 10 DTC-approved years (max $10,500 grants + $11,000 bonds per year)</li>
-                </ul>
-            </div>
-
-            <!-- Summary Cards -->
-            <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mt-6" id="summaryCards"></div>
+            </aside>
         </div>
     </div>
 
