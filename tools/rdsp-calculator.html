@@ -2147,22 +2147,15 @@
                         <label class="rdsp-radio-row" for="ldap">
                             <input type="radio" name="withdrawalType" id="ldap" value="ldap" checked onchange="updateCalculations()">
                             <span class="rdsp-radio-text">
-                                <strong>LDAP (Lifetime Disability Assistance Payments)</strong>
-                                <span class="rdsp-radio-desc">Automatic pension-style withdrawals starting at age 60+</span>
+                                <strong>LDAP</strong>
+                                <span class="rdsp-radio-desc">CRA formula withdrawals from a start age (60+)</span>
                             </span>
                         </label>
                         <label class="rdsp-radio-row" for="manual">
                             <input type="radio" name="withdrawalType" id="manual" value="manual" onchange="updateCalculations()">
                             <span class="rdsp-radio-text">
-                                <strong>Manual Withdrawals (DAPs)</strong>
-                                <span class="rdsp-radio-desc">Pick exact ages and amounts (10-year rule applies before 60)</span>
-                            </span>
-                        </label>
-                        <label class="rdsp-radio-row" for="rangeMode">
-                            <input type="radio" name="withdrawalType" id="rangeMode" value="range" onchange="updateCalculations()">
-                            <span class="rdsp-radio-text">
-                                <strong>Age range schedule</strong>
-                                <span class="rdsp-radio-desc">Withdraw every year from a start→end age (e.g. 55–90), with optional tax-optimal sizing</span>
+                                <strong>Scheduled / Manual (DAPs)</strong>
+                                <span class="rdsp-radio-desc">Age range (e.g. 55–90), fixed/auto/tax-optimal amounts, or edit individual years</span>
                             </span>
                         </label>
                     </div>
@@ -2170,50 +2163,47 @@
                     <div id="ldapAgeContainer" class="rdsp-field-block">
                         <label for="ldapAge">Start LDAP at age</label>
                         <input type="number" id="ldapAge" aria-label="Start LDAP at age" value="60" min="60" max="120" oninput="updateCalculations()">
-                        <div class="rdsp-field-hint">LDAPs calculate withdrawals automatically. Before 80: balance ÷ (83 − age). After 80: balance ÷ 3.</div>
-                    </div>
-
-                    <div id="rangeScheduleContainer" class="rdsp-field-block" style="display: none;">
-                        <div class="grid grid-cols-2 gap-3 mb-3">
-                            <div>
-                                <label for="rangeStartAge">Start age</label>
-                                <input type="number" id="rangeStartAge" value="55" min="0" max="120" oninput="updateCalculations()" onblur="commitRangeAges()">
-                            </div>
-                            <div>
-                                <label for="rangeEndAge">End age</label>
-                                <input type="number" id="rangeEndAge" value="90" min="0" max="120" oninput="updateCalculations()" onblur="commitRangeAges()">
-                            </div>
-                        </div>
-                        <div class="text-xs font-medium text-gray-700 mb-2">Annual amount</div>
-                        <label class="flex items-start gap-2 text-xs text-gray-700 mb-2 cursor-pointer">
-                            <input type="radio" name="rangeAmountMode" value="auto" checked class="mt-0.5" onchange="updateCalculations()">
-                            <span>Auto-calculate so balance reaches <strong>$0</strong> by end age</span>
-                        </label>
-                        <label class="flex items-start gap-2 text-xs text-gray-700 mb-2 cursor-pointer">
-                            <input type="radio" name="rangeAmountMode" value="fixed" class="mt-0.5" onchange="updateCalculations()">
-                            <span>Fixed annual withdrawal amount</span>
-                        </label>
-                        <label class="flex items-start gap-2 text-xs text-gray-700 mb-2 cursor-pointer">
-                            <input type="radio" name="rangeAmountMode" value="taxOptimal" class="mt-0.5" onchange="updateCalculations()">
-                            <span><strong>Tax-optimal</strong> — fill lower tax brackets using withdrawal-year income below, while still depleting by end age</span>
-                        </label>
-                        <div id="rangeFixedAmountRow" style="display: none;" class="mt-2">
-                            <label for="rangeFixedAmount">Annual withdrawal amount ($)</label>
-                            <input type="number" id="rangeFixedAmount" value="20000" min="0" step="100" oninput="updateCalculations()">
-                        </div>
-                        <div id="rangeAmountPreview" class="text-xs text-indigo-700 bg-indigo-50 border border-indigo-200 rounded-md px-2 py-1.5 mt-2">
-                            Schedule preview: <strong id="rangeAmountPreviewValue">—</strong>
-                        </div>
+                        <div class="rdsp-field-hint">Before 80: balance ÷ (83 − age). After 80: balance ÷ 3.</div>
                     </div>
                 </div>
 
-                <!-- Other income for tax / net (all modes) -->
+                <!-- Tax context: other income + optional RRSP/TFSA (does NOT change RDSP growth unless tax-optimal sizing is on) -->
                 <div class="rdsp-option-card">
                     <label for="withdrawalOtherIncome" class="rdsp-option-card-label">Other taxable income in withdrawal years</label>
                     <input type="number" id="withdrawalOtherIncome" aria-label="Other taxable income during withdrawals" value="20000" min="0" step="1000" oninput="updateCalculations()">
                     <div class="rdsp-field-hint">
-                        Separate from family income used for grants/bonds above. Used to estimate tax on the taxable portion of RDSP withdrawals and the <strong>Net</strong> bar on the withdrawal chart. Default assumes modest other income in retirement.
+                        Pension / employment / etc. — separate from family income used for grants above.
+                        Only affects <strong>Est. Tax</strong> and <strong>Net</strong> on the withdrawal chart (and tax-optimal sizing if that option is selected). It does <strong>not</strong> change RDSP investment growth.
                     </div>
+
+                    <div class="rdsp-field-block">
+                        <label class="rdsp-check-row" for="useRrspWithdrawals">
+                            <input type="checkbox" id="useRrspWithdrawals" onchange="updateCalculations()">
+                            <span class="rdsp-check-row-text">
+                                <strong>Also withdrawing from RRSP / RRIF</strong>
+                                <span class="rdsp-radio-desc">Fully taxable — added to other income for tax estimates</span>
+                            </span>
+                        </label>
+                        <div id="rrspWithdrawalRow" style="display: none;" class="mt-2">
+                            <label for="rrspWithdrawalAmount">RRSP / RRIF withdrawal ($/yr)</label>
+                            <input type="number" id="rrspWithdrawalAmount" value="15000" min="0" step="500" oninput="updateCalculations()">
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <label class="rdsp-check-row" for="useTfsaWithdrawals">
+                            <input type="checkbox" id="useTfsaWithdrawals" onchange="updateCalculations()">
+                            <span class="rdsp-check-row-text">
+                                <strong>Also withdrawing from TFSA</strong>
+                                <span class="rdsp-radio-desc">Tax-free — does not increase taxable income; shown as extra cash beside Net</span>
+                            </span>
+                        </label>
+                        <div id="tfsaWithdrawalRow" style="display: none;" class="mt-2">
+                            <label for="tfsaWithdrawalAmount">TFSA withdrawal ($/yr)</label>
+                            <input type="number" id="tfsaWithdrawalAmount" value="10000" min="0" step="500" oninput="updateCalculations()">
+                        </div>
+                    </div>
+                    <div id="otherIncomeSummary" class="text-xs text-gray-600 mt-3 bg-white border border-gray-200 rounded-md px-2 py-1.5"></div>
                 </div>
 
                 <!-- Strategy Comparison Toggle (LDAP only) -->
@@ -2222,14 +2212,14 @@
                         <input type="checkbox" id="showComparison" aria-label="Compare LDAP vs Optimal withdrawals" onchange="updateCalculations()">
                         <span class="rdsp-check-row-text">
                             <strong>Compare LDAP vs “Optimal” withdrawals</strong>
-                            <span class="rdsp-radio-desc">Overlays a dashed “Optimal” balance line on the chart (level annual withdrawals that deplete to ~$0). Uncheck to hide. Does not change your LDAP plan.</span>
+                            <span class="rdsp-radio-desc">Overlays a dashed balance line (level withdrawals to ~$0). Does not change your LDAP plan.</span>
                         </span>
                     </label>
                     
                     <div id="comparisonAgeContainer" style="display: none;" class="rdsp-field-block">
                         <label for="comparisonStartAge">Comparison starts at age</label>
                         <input type="number" id="comparisonStartAge" value="60" min="60" max="120" oninput="updateCalculations()">
-                        <div class="rdsp-field-hint">Optimal withdrawals begin at this age (60+). Your LDAP start age is separate.</div>
+                        <div class="rdsp-field-hint">Optimal withdrawals begin at this age (60+).</div>
                     </div>
                 </div>
                 
@@ -2237,7 +2227,7 @@
                 <div id="manualWithdrawalSection" style="display: none;">
                     <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 mb-3 cursor-pointer" onclick="toggleManualWithdrawals()">
                         <div class="flex items-center justify-between">
-                            <div class="text-sm font-semibold text-gray-800">Manual Withdrawals</div>
+                            <div class="text-sm font-semibold text-gray-800">Scheduled withdrawals</div>
                             <span class="material-icons text-gray-600 text-lg" id="manualWithdrawalsIcon">expand_more</span>
                         </div>
                     </div>
@@ -2249,14 +2239,14 @@
 
                     <!-- Quick plan: auto-generate withdrawals -->
                     <div class="bg-white rounded-lg p-3 border border-gray-300 mb-3">
-                        <div class="text-sm font-semibold text-gray-800 mb-2">Quick plan</div>
+                        <div class="text-sm font-semibold text-gray-800 mb-2">Age range &amp; amount</div>
                         <div class="grid grid-cols-2 gap-3">
                             <div>
-                                <label class="block text-xs text-gray-600 mb-1">Start withdrawals at age</label>
-                                <input type="number" id="manualStartAge" value="60" min="0" max="120" oninput="syncManualQuickPlan()" onblur="commitManualQuickPlanAges()">
+                                <label class="block text-xs text-gray-600 mb-1">Start age</label>
+                                <input type="number" id="manualStartAge" value="55" min="0" max="120" oninput="syncManualQuickPlan()" onblur="commitManualQuickPlanAges()">
                             </div>
                             <div>
-                                <label class="block text-xs text-gray-600 mb-1">End at age</label>
+                                <label class="block text-xs text-gray-600 mb-1">End age</label>
                                 <input type="number" id="manualEndAge" value="90" min="0" max="120" oninput="syncManualQuickPlan()" onblur="commitManualQuickPlanAges()">
                             </div>
                             <div class="col-span-2">
@@ -2269,19 +2259,26 @@
                                     <input type="radio" name="manualAmountMode" value="fixed" class="mt-0.5" onchange="onManualAmountModeChange()">
                                     <span>Fixed annual withdrawal amount</span>
                                 </label>
+                                <label class="flex items-start gap-2 text-xs text-gray-700 mb-2 cursor-pointer">
+                                    <input type="radio" name="manualAmountMode" value="taxOptimal" class="mt-0.5" onchange="onManualAmountModeChange()">
+                                    <span><strong>Tax-optimal</strong> — fill lower brackets using other income / RRSP above, while still depleting by end age</span>
+                                </label>
                                 <div id="manualAutoAmountPreview" class="text-xs text-indigo-700 bg-indigo-50 border border-indigo-200 rounded-md px-2 py-1.5 mb-2">
                                     Estimated annual withdrawal: <strong id="manualAutoAmountValue">—</strong>
-                                    <span class="text-gray-500 block mt-0.5">Uses your current return rate, contributions, and grants. Recalculates when you change ages or rate.</span>
+                                    <span class="text-gray-500 block mt-0.5">Uses return rate, contributions, and grants. Recalculates when ages or rate change.</span>
                                 </div>
                                 <div id="manualFixedAmountRow" style="display: none;">
                                     <label class="block text-xs text-gray-600 mb-1" for="manualAnnualWithdrawal">Annual withdrawal amount ($)</label>
                                     <input type="number" id="manualAnnualWithdrawal" value="5000" min="0" step="100" oninput="syncManualQuickPlan()">
                                 </div>
-                                <div class="text-xs text-gray-500 mt-1">Creates one withdrawal entry per year from start → end. You can edit or remove any entry afterwards.</div>
+                                <div id="manualTaxOptimalNote" style="display: none;" class="text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-md px-2 py-1.5 mb-2">
+                                    Tax-optimal sizes each year’s RDSP withdrawal from your other taxable income (and RRSP if enabled). That <em>does</em> change the RDSP balance path — unlike LDAP / fixed / auto, where other income only changes Est. Tax and Net.
+                                </div>
+                                <div class="text-xs text-gray-500 mt-1">Generate a yearly schedule you can edit afterwards, or rely on live tax-optimal sizing without generating.</div>
                             </div>
                         </div>
                         <button onclick="generateWithdrawalSchedule()" class="w-full px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 mt-3">
-                            Auto-generate yearly withdrawals
+                            Apply / generate yearly withdrawals
                         </button>
                     </div>
                     
@@ -2321,16 +2318,16 @@
             showOptimalWithdrawal: false,
             ldapStartAge: 60,
             comparisonStartAge: 60,
-            manualStartAge: 60,
+            manualStartAge: 55,
             manualEndAge: 90,
             manualAnnualWithdrawal: 5000,
-            manualAmountMode: 'auto', // 'auto' = deplete to $0 by end age; 'fixed' = use manualAnnualWithdrawal
+            manualAmountMode: 'auto', // auto | fixed | taxOptimal
             withdrawalType: 'ldap',
-            rangeStartAge: 55,
-            rangeEndAge: 90,
-            rangeAmountMode: 'auto', // auto | fixed | taxOptimal
-            rangeFixedAmount: 20000,
-            withdrawalOtherIncome: 20000, // taxable income excluding RDSP (for tax / net / tax-optimal)
+            withdrawalOtherIncome: 20000, // base taxable income excluding RDSP
+            useRrspWithdrawals: false,
+            rrspWithdrawalAmount: 15000,
+            useTfsaWithdrawals: false,
+            tfsaWithdrawalAmount: 10000,
             stopContribsAtWithdrawal: true,
             showComparison: false,
             carryForwardYears: [],
@@ -2552,6 +2549,30 @@
             return 40000;
         }
 
+        // Taxable income used for Est. Tax / Net / tax-optimal (RRSP adds; TFSA does not)
+        function effectiveOtherTaxableIncome() {
+            let total = Math.max(0, state.withdrawalOtherIncome || 0);
+            if (state.useRrspWithdrawals) {
+                total += Math.max(0, state.rrspWithdrawalAmount || 0);
+            }
+            return total;
+        }
+
+        function updateOtherIncomeSummary() {
+            const el = document.getElementById('otherIncomeSummary');
+            if (!el) return;
+            const base = Math.max(0, state.withdrawalOtherIncome || 0);
+            const rrsp = state.useRrspWithdrawals ? Math.max(0, state.rrspWithdrawalAmount || 0) : 0;
+            const tfsa = state.useTfsaWithdrawals ? Math.max(0, state.tfsaWithdrawalAmount || 0) : 0;
+            const taxable = base + rrsp;
+            const parts = [
+                `Taxable other income for RDSP tax calc: <strong>$${taxable.toLocaleString('en-CA')}</strong>`
+            ];
+            if (rrsp > 0) parts.push(`(includes RRSP/RRIF $${rrsp.toLocaleString('en-CA')}/yr)`);
+            if (tfsa > 0) parts.push(`+ TFSA $${tfsa.toLocaleString('en-CA')}/yr tax-free cash`);
+            el.innerHTML = parts.join(' ');
+        }
+
         // Calculate LDAP
         function calculateLDAP(balance, age, govtContribs, personalContribs) {
             if (age < 60) return 0;
@@ -2606,9 +2627,11 @@
                 // If user is doing manual withdrawals, optionally stop contributions starting at the earliest withdrawal age.
                 const earliestWithdrawalAge = state.withdrawals.length > 0
                     ? Math.min(...state.withdrawals.map(w => w.age))
-                    : (state.withdrawalType === 'range' ? (state.rangeStartAge || Infinity) : Infinity);
+                    : (state.withdrawalType === 'manual' && state.manualAmountMode === 'taxOptimal'
+                        ? (state.manualStartAge || Infinity)
+                        : Infinity);
                 const shouldStopContribs = state.stopContribsAtWithdrawal &&
-                                         (state.withdrawalType === 'manual' || state.withdrawalType === 'range') &&
+                                         state.withdrawalType === 'manual' &&
                                          age >= earliestWithdrawalAge;
                 
                 if (age <= 59 && totalContributions < 200000 && !shouldStopContribs) {
@@ -2704,19 +2727,19 @@
                     const personalContribPortion = Math.min(yearlyWithdrawal, totalContributions / Math.max(1, totalContributions + govtContributions + yearlyGrowth) * yearlyWithdrawal);
                     taxableWithdrawal = yearlyWithdrawal - personalContribPortion;
                     
-                } else if (state.withdrawalType === 'manual' || state.withdrawalType === 'range') {
+                } else if (state.withdrawalType === 'manual') {
                     let scheduledAmount = null;
-                    if (state.withdrawalType === 'range' && state.rangeAmountMode === 'taxOptimal') {
-                        const startA = state.rangeStartAge || 55;
-                        const endA = state.rangeEndAge || 90;
+                    // Live tax-optimal sizing between start/end (does not use other income for growth — only for withdrawal size)
+                    if (state.manualAmountMode === 'taxOptimal') {
+                        const startA = state.manualStartAge || 55;
+                        const endA = state.manualEndAge || 90;
                         if (age >= startA && age <= endA && accountBalance > 0) {
                             const yearsLeft = Math.max(1, endA - age + 1);
                             const basisFrac = Math.min(1, totalContributions / Math.max(accountBalance, 1));
                             const taxableFrac = Math.max(0.05, 1 - basisFrac);
-                            const room = taxBracketRoom(state.withdrawalOtherIncome || 0);
+                            const room = taxBracketRoom(effectiveOtherTaxableIncome());
                             const fromTaxRoom = room / taxableFrac;
                             const level = accountBalance / yearsLeft;
-                            // Fill lower brackets when there's room; never fall behind a level depletion path
                             scheduledAmount = Math.max(fromTaxRoom, level);
                         }
                     } else {
@@ -2750,8 +2773,13 @@
                     }
                 }
 
-                const estimatedTax = estimateRdspTax(state.withdrawalOtherIncome || 0, taxableWithdrawal);
+                const estimatedTax = estimateRdspTax(effectiveOtherTaxableIncome(), taxableWithdrawal);
                 const netWithdrawal = Math.max(0, yearlyWithdrawal - estimatedTax);
+                const tfsaCash = state.useTfsaWithdrawals ? Math.max(0, state.tfsaWithdrawalAmount || 0) : 0;
+                const rrspCash = state.useRrspWithdrawals ? Math.max(0, state.rrspWithdrawalAmount || 0) : 0;
+                // RRSP cash is taxable; net of RRSP ≈ gross − tax already reflected via higher other income on RDSP slice only.
+                // Show combined household cash as RDSP net + TFSA + RRSP gross (simple household cash view).
+                const householdCash = netWithdrawal + tfsaCash + rrspCash;
                 
                 accountBalance -= yearlyWithdrawal;
                 totalWithdrawals += yearlyWithdrawal;
@@ -2767,6 +2795,9 @@
                     taxableWithdrawal: Math.round(taxableWithdrawal),
                     estimatedTax: Math.round(estimatedTax),
                     netWithdrawal: Math.round(netWithdrawal),
+                    householdCash: Math.round(householdCash),
+                    tfsaCash: Math.round(tfsaCash),
+                    rrspCash: Math.round(rrspCash),
                     repaymentPenalty: Math.round(repaymentPenalty),
                     growth: Math.round(yearlyGrowth),
                     dividend: Math.round(yearlyDividend),
@@ -2852,18 +2883,16 @@
             state.stopContribsAtWithdrawal = document.getElementById('stopContribsAtWithdrawal')?.checked ?? true;
             state.showComparison = document.getElementById('showComparison')?.checked ?? false;
             state.withdrawalOtherIncome = readNumberInput('withdrawalOtherIncome', state.withdrawalOtherIncome ?? 20000);
-            // Manual quick plan (optional inputs only shown in manual mode)
-            state.manualStartAge = readNumberInput('manualStartAge', state.manualStartAge || 60);
+            state.useRrspWithdrawals = document.getElementById('useRrspWithdrawals')?.checked ?? false;
+            state.rrspWithdrawalAmount = readNumberInput('rrspWithdrawalAmount', state.rrspWithdrawalAmount || 15000);
+            state.useTfsaWithdrawals = document.getElementById('useTfsaWithdrawals')?.checked ?? false;
+            state.tfsaWithdrawalAmount = readNumberInput('tfsaWithdrawalAmount', state.tfsaWithdrawalAmount || 10000);
+            // Manual quick plan
+            state.manualStartAge = readNumberInput('manualStartAge', state.manualStartAge || 55);
             state.manualEndAge = readNumberInput('manualEndAge', state.manualEndAge || state.endAge || 90);
             state.manualAnnualWithdrawal = readNumberInput('manualAnnualWithdrawal', state.manualAnnualWithdrawal || 0, true);
             const amountModeEl = document.querySelector('input[name="manualAmountMode"]:checked');
             if (amountModeEl) state.manualAmountMode = amountModeEl.value;
-            // Age-range schedule
-            state.rangeStartAge = readNumberInput('rangeStartAge', state.rangeStartAge || 55);
-            state.rangeEndAge = readNumberInput('rangeEndAge', state.rangeEndAge || state.endAge || 90);
-            state.rangeFixedAmount = readNumberInput('rangeFixedAmount', state.rangeFixedAmount || 20000, true);
-            const rangeModeEl = document.querySelector('input[name="rangeAmountMode"]:checked');
-            if (rangeModeEl) state.rangeAmountMode = rangeModeEl.value;
             
             // Update carry-forward years ages
             const currentYear = new Date().getFullYear();
@@ -2876,11 +2905,16 @@
             // Update UI visibility
             document.getElementById('dividendRateContainer').style.display = state.payDividends ? 'block' : 'none';
             document.getElementById('stopContribsContainer').style.display =
-                (state.withdrawalType === 'manual' || state.withdrawalType === 'range') ? 'block' : 'none';
+                state.withdrawalType === 'manual' ? 'block' : 'none';
+            const rrspRow = document.getElementById('rrspWithdrawalRow');
+            if (rrspRow) rrspRow.style.display = state.useRrspWithdrawals ? 'block' : 'none';
+            const tfsaRow = document.getElementById('tfsaWithdrawalRow');
+            if (tfsaRow) tfsaRow.style.display = state.useTfsaWithdrawals ? 'block' : 'none';
+            updateOtherIncomeSummary();
+
             const manualSection = document.getElementById('manualWithdrawalSection');
             if (manualSection) {
                 manualSection.style.display = state.withdrawalType === 'manual' ? 'block' : 'none';
-                // Reset collapse state when switching to manual mode
                 if (state.withdrawalType === 'manual') {
                     const content = document.getElementById('manualWithdrawalsContent');
                     const icon = document.getElementById('manualWithdrawalsIcon');
@@ -2891,21 +2925,12 @@
                     if (icon) icon.textContent = state.manualWithdrawalsCollapsed ? 'expand_more' : 'expand_less';
                 }
             }
-            const rangeContainer = document.getElementById('rangeScheduleContainer');
-            if (rangeContainer) {
-                rangeContainer.style.display = state.withdrawalType === 'range' ? 'block' : 'none';
-            }
-            const rangeFixedRow = document.getElementById('rangeFixedAmountRow');
-            if (rangeFixedRow) {
-                rangeFixedRow.style.display = (state.withdrawalType === 'range' && state.rangeAmountMode === 'fixed') ? 'block' : 'none';
-            }
             
             // Recalculate required rate if enabled
             if (document.getElementById('calculateRequiredRate')?.checked) {
                 calculateRequiredReturnRate();
             }
             document.getElementById('ldapAgeContainer').style.display = state.withdrawalType === 'ldap' ? 'block' : 'none';
-            // Only show the comparison UI for LDAP mode (it compares LDAP vs "optimal", not manual DAPs)
             const comparisonToggleContainer = document.getElementById('comparisonToggleContainer');
             if (comparisonToggleContainer) {
                 comparisonToggleContainer.style.display = state.withdrawalType === 'ldap' ? 'block' : 'none';
@@ -2915,14 +2940,12 @@
             if (state.withdrawalType === 'ldap') {
                 state.ldapStartAge = readNumberInput('ldapAge', state.ldapStartAge || 60);
             } else {
-                // Comparison overlay is LDAP-only
                 state.showComparison = false;
                 const cmpEl = document.getElementById('showComparison');
                 if (cmpEl) cmpEl.checked = false;
             }
 
-            // Build scheduled withdrawals for range mode (auto/fixed); tax-optimal is computed live in the sim
-            syncRangeSchedule();
+            onManualAmountModeChange(false);
             
             // Update income eligibility
             const income = state.familyIncome;
@@ -3324,7 +3347,11 @@
             }
 
             if (startRaw !== '' && endRaw !== '' && Number.isFinite(startNum) && Number.isFinite(endNum)) {
-                refreshManualAutoAmountPreview();
+                if (state.manualAmountMode === 'taxOptimal') {
+                    updateCalculations();
+                } else {
+                    refreshManualAutoAmountPreview();
+                }
             }
         }
 
@@ -3343,68 +3370,10 @@
             endEl.value = String(end);
             state.manualStartAge = start;
             state.manualEndAge = end;
-            refreshManualAutoAmountPreview();
-        }
-
-        function commitRangeAges() {
-            const startEl = document.getElementById('rangeStartAge');
-            const endEl = document.getElementById('rangeEndAge');
-            if (!startEl || !endEl) return;
-            let start = parseInt(startEl.value, 10);
-            let end = parseInt(endEl.value, 10);
-            if (!Number.isFinite(start)) start = state.rangeStartAge || 55;
-            if (!Number.isFinite(end)) end = state.rangeEndAge || 90;
-            if (end < start) end = start;
-            startEl.value = String(start);
-            endEl.value = String(end);
-            state.rangeStartAge = start;
-            state.rangeEndAge = end;
-            updateCalculations();
-        }
-
-        function syncRangeSchedule() {
-            const preview = document.getElementById('rangeAmountPreviewValue');
-            if (state.withdrawalType !== 'range') {
-                if (preview) preview.textContent = '—';
-                return;
-            }
-
-            let start = Math.max(state.currentAge || 0, state.rangeStartAge || 55);
-            let end = Math.max(start, state.rangeEndAge || 90);
-            // Ensure projection horizon covers the range end
-            if ((state.endAge || 90) < end) {
-                // don't mutate endAge input mid-calc; just schedule through end
-            }
-
-            if (state.rangeAmountMode === 'taxOptimal') {
-                state.withdrawals = [];
-                if (preview) {
-                    const room = taxBracketRoom(state.withdrawalOtherIncome || 0);
-                    preview.textContent = `tax-optimal from ${start}→${end} (≈$${Math.round(room).toLocaleString('en-CA')} taxable room/yr at your other income)`;
-                }
-                return;
-            }
-
-            let amount;
-            if (state.rangeAmountMode === 'fixed') {
-                amount = Math.max(0, state.rangeFixedAmount || 0);
+            if (state.manualAmountMode === 'taxOptimal') {
+                updateCalculations();
             } else {
-                // Temporarily treat as manual depleting search
-                const savedType = state.withdrawalType;
-                state.withdrawalType = 'manual';
-                amount = findDepletingAnnualWithdrawal(start, end);
-                state.withdrawalType = savedType;
-            }
-
-            const withdrawals = [];
-            for (let age = start; age <= end; age++) {
-                withdrawals.push({ age, amount });
-            }
-            state.withdrawals = withdrawals;
-            if (preview) {
-                preview.textContent = amount > 0
-                    ? (`$${amount.toLocaleString('en-CA')}/yr from ${start}→${end}`)
-                    : `— from ${start}→${end}`;
+                refreshManualAutoAmountPreview();
             }
         }
 
@@ -3414,11 +3383,14 @@
             state.manualAmountMode = mode;
             const autoPreview = document.getElementById('manualAutoAmountPreview');
             const fixedRow = document.getElementById('manualFixedAmountRow');
+            const taxNote = document.getElementById('manualTaxOptimalNote');
             if (autoPreview) autoPreview.style.display = mode === 'auto' ? 'block' : 'none';
             if (fixedRow) fixedRow.style.display = mode === 'fixed' ? 'block' : 'none';
+            if (taxNote) taxNote.style.display = mode === 'taxOptimal' ? 'block' : 'none';
             if (mode === 'auto') refreshManualAutoAmountPreview();
-            if (runUpdate !== false) {
-                // no full re-sim needed just for toggling UI
+            // Tax-optimal sizes withdrawals from other income — need a full re-sim when selected.
+            if (runUpdate !== false && mode === 'taxOptimal') {
+                updateCalculations();
             }
         }
 
@@ -3546,10 +3518,20 @@
             const maxAge = Math.max(state.endAge || 90, endAge);
             const s = Math.max(minAge, Math.min(maxAge, startAge));
             const e = Math.max(s, Math.min(maxAge, endAge));
+            state.manualStartAge = s;
+            state.manualEndAge = e;
 
             const modeEl = document.querySelector('input[name="manualAmountMode"]:checked');
             const mode = modeEl ? modeEl.value : 'auto';
             state.manualAmountMode = mode;
+
+            // Tax-optimal: clear fixed schedule; live sizing in calculateProjections uses start/end + other income.
+            if (mode === 'taxOptimal') {
+                state.withdrawals = [];
+                updateWithdrawalsDisplay();
+                updateCalculations();
+                return;
+            }
 
             let amount;
             if (mode === 'auto') {
@@ -4170,10 +4152,15 @@
                 if (growthValue !== undefined && growthValue !== null && !isGrowthHidden) {
                     rows.push(`<div class="row"><span class="k">Growth</span><span class="v">${formatCurrency(growthValue)}</span></div>`);
                 }
-                if (dataPoint.withdrawal > 0) rows.push(`<div class="row"><span class="k">Withdrawals</span><span class="v">${formatCurrency(dataPoint.withdrawal)}</span></div>`);
+                if (dataPoint.withdrawal > 0) rows.push(`<div class="row"><span class="k">RDSP withdrawal</span><span class="v">${formatCurrency(dataPoint.withdrawal)}</span></div>`);
                 if (dataPoint.taxableWithdrawal > 0) rows.push(`<div class="row"><span class="k">Taxable portion</span><span class="v">${formatCurrency(dataPoint.taxableWithdrawal)}</span></div>`);
-                if (dataPoint.estimatedTax > 0) rows.push(`<div class="row"><span class="k">Est. tax</span><span class="v">${formatCurrency(dataPoint.estimatedTax)}</span></div>`);
-                if (dataPoint.netWithdrawal > 0) rows.push(`<div class="row"><span class="k">Net (after tax)</span><span class="v">${formatCurrency(dataPoint.netWithdrawal)}</span></div>`);
+                if (dataPoint.estimatedTax > 0) rows.push(`<div class="row"><span class="k">Est. tax (on RDSP)</span><span class="v">${formatCurrency(dataPoint.estimatedTax)}</span></div>`);
+                if (dataPoint.netWithdrawal > 0) rows.push(`<div class="row"><span class="k">RDSP net (after tax)</span><span class="v">${formatCurrency(dataPoint.netWithdrawal)}</span></div>`);
+                if (dataPoint.rrspCash > 0) rows.push(`<div class="row"><span class="k">RRSP / RRIF cash</span><span class="v">${formatCurrency(dataPoint.rrspCash)}</span></div>`);
+                if (dataPoint.tfsaCash > 0) rows.push(`<div class="row"><span class="k">TFSA cash</span><span class="v">${formatCurrency(dataPoint.tfsaCash)}</span></div>`);
+                if (dataPoint.householdCash > 0 && (dataPoint.rrspCash > 0 || dataPoint.tfsaCash > 0)) {
+                    rows.push(`<div class="row"><span class="k">Household cash (RDSP net + TFSA + RRSP)</span><span class="v">${formatCurrency(dataPoint.householdCash)}</span></div>`);
+                }
                 if (dataPoint.repaymentPenalty > 0) rows.push(`<div class="row"><span class="k">10-year penalty</span><span class="v">${formatCurrency(dataPoint.repaymentPenalty)}</span></div>`);
 
                 if (dataPoint.totalContributions > 0) rows.push(`<div class="row"><span class="k">Total contributions</span><span class="v">${formatCurrency(dataPoint.totalContributions)}</span></div>`);
@@ -4199,7 +4186,7 @@
                             { label: 'Taxable Portion', data: withdrawalData.map(d => d.taxableWithdrawal), backgroundColor: '#ef4444' },
                             { label: 'Est. Tax', data: withdrawalData.map(d => d.estimatedTax || 0), backgroundColor: '#a855f7' },
                             { label: 'Net', data: withdrawalData.map(d => d.netWithdrawal != null ? d.netWithdrawal : Math.max(0, d.withdrawal - (d.estimatedTax || 0))), backgroundColor: '#10b981' },
-                            ...((state.withdrawalType === 'manual' || state.withdrawalType === 'range') ? [{
+                            ...(state.withdrawalType === 'manual' ? [{
                                 label: '10-Year Penalty',
                                 data: withdrawalData.map(d => d.repaymentPenalty),
                                 backgroundColor: '#f97316'
@@ -4302,15 +4289,15 @@
             state.withdrawalType = 'ldap';
             state.stopContribsAtWithdrawal = true;
             state.showComparison = false;
-            state.manualStartAge = 60;
+            state.manualStartAge = 55;
             state.manualEndAge = 90;
             state.manualAnnualWithdrawal = 5000;
             state.manualAmountMode = 'auto';
-            state.rangeStartAge = 55;
-            state.rangeEndAge = 90;
-            state.rangeAmountMode = 'auto';
-            state.rangeFixedAmount = 20000;
             state.withdrawalOtherIncome = 20000;
+            state.useRrspWithdrawals = false;
+            state.rrspWithdrawalAmount = 15000;
+            state.useTfsaWithdrawals = false;
+            state.tfsaWithdrawalAmount = 10000;
             state.carryForwardYears = initializeCarryForwardYears();
             state.chartAgeRange = [30, 90];
             
@@ -4333,18 +4320,18 @@
             if (manualStartAgeEl) manualStartAgeEl.value = state.manualStartAge;
             if (manualEndAgeEl) manualEndAgeEl.value = state.manualEndAge;
             if (manualAnnualWithdrawalEl) manualAnnualWithdrawalEl.value = state.manualAnnualWithdrawal;
-            const rangeStartEl = document.getElementById('rangeStartAge');
-            const rangeEndEl = document.getElementById('rangeEndAge');
-            const rangeFixedEl = document.getElementById('rangeFixedAmount');
             const otherIncomeEl = document.getElementById('withdrawalOtherIncome');
-            if (rangeStartEl) rangeStartEl.value = state.rangeStartAge;
-            if (rangeEndEl) rangeEndEl.value = state.rangeEndAge;
-            if (rangeFixedEl) rangeFixedEl.value = state.rangeFixedAmount;
             if (otherIncomeEl) otherIncomeEl.value = state.withdrawalOtherIncome;
+            const rrspCb = document.getElementById('useRrspWithdrawals');
+            const tfsaCb = document.getElementById('useTfsaWithdrawals');
+            const rrspAmt = document.getElementById('rrspWithdrawalAmount');
+            const tfsaAmt = document.getElementById('tfsaWithdrawalAmount');
+            if (rrspCb) rrspCb.checked = false;
+            if (tfsaCb) tfsaCb.checked = false;
+            if (rrspAmt) rrspAmt.value = state.rrspWithdrawalAmount;
+            if (tfsaAmt) tfsaAmt.value = state.tfsaWithdrawalAmount;
             const autoModeRadio = document.querySelector('input[name="manualAmountMode"][value="auto"]');
             if (autoModeRadio) autoModeRadio.checked = true;
-            const rangeAutoRadio = document.querySelector('input[name="rangeAmountMode"][value="auto"]');
-            if (rangeAutoRadio) rangeAutoRadio.checked = true;
             onManualAmountModeChange(false);
             document.querySelector('input[name="withdrawalType"][value="ldap"]').checked = true;
             document.getElementById('stopContribsAtWithdrawal').checked = state.stopContribsAtWithdrawal;
