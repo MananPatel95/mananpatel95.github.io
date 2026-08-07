@@ -1997,7 +1997,7 @@
 
                 <div class="mt-6" id="withdrawalChartContainer" style="display: none;">
                     <h3 class="font-semibold text-lg text-gray-800 mb-1">Withdrawal Breakdown</h3>
-                    <p class="text-xs text-gray-500 mb-4">Est. Tax and Net use “Other taxable income in withdrawal years.” Net = Total − Est. Tax.</p>
+                    <p class="text-xs text-gray-500 mb-4">Only grants, bonds, and growth are taxable (return of your contributions is not). Est. Tax is the <em>marginal</em> tax on that taxable slice given your other income (approx. AB + federal). Net ≈ Total − Est. Tax.</p>
                     <div class="chart-container-small">
                         <canvas id="withdrawalChart"></canvas>
                     </div>
@@ -2010,7 +2010,7 @@
                     <ul class="space-y-1 text-xs text-gray-600">
                         <li>• <strong>LDAP (Lifetime Disability Assistance Payments):</strong> Automatic pension-style withdrawals starting at 60</li>
                         <li>• <strong>10-Year Repayment Rule:</strong> Early withdrawals (before 60) lose $3 of grants/bonds for every $1 withdrawn</li>
-                        <li>• <strong>Taxable Withdrawals:</strong> Everything except personal contributions is taxed upon withdrawal</li>
+                        <li>• <strong>Taxable Withdrawals:</strong> Grants, bonds, and growth are taxed; personal contributions come out tax-free (CRA FMV proportion)</li>
                         <li>• <strong>LDAP Formula:</strong> Before 80: balance ÷ (83 - age), After 80: balance ÷ 3</li>
                         <li>• <strong>Carry-forward:</strong> Catch up on past 10 DTC-approved years (max $10,500 grants + $11,000 bonds per year)</li>
                     </ul>
@@ -2172,8 +2172,9 @@
                     <label for="withdrawalOtherIncome" class="rdsp-option-card-label">Other taxable income in withdrawal years</label>
                     <input type="number" id="withdrawalOtherIncome" aria-label="Other taxable income during withdrawals" value="20000" min="0" step="1000" oninput="updateCalculations()">
                     <div class="rdsp-field-hint">
-                        Pension / employment / etc. — separate from family income used for grants above.
-                        Only affects <strong>Est. Tax</strong> and <strong>Net</strong> on the withdrawal chart (and tax-optimal sizing if that option is selected). It does <strong>not</strong> change RDSP investment growth.
+                        Pension / employment / etc. (beneficiary’s taxable income, not family income for grants).
+                        Used for <strong>Est. Tax</strong> / <strong>Net</strong> (and tax-optimal sizing). Does <strong>not</strong> change RDSP growth under LDAP / fixed / auto.
+                        Tax estimate ≈ Alberta + federal combined brackets with basic personal amount; disability amount credit is not subtracted (so Est. Tax may be slightly high for DTC claimants).
                     </div>
 
                     <div class="rdsp-field-block">
@@ -2512,14 +2513,23 @@
             return { grants: availableGrants, bonds: availableBonds };
         }
 
-        // Approximate combined federal + provincial brackets (today's $)
+        // Approx. Alberta + federal combined ordinary-income rates (2025), with federal BPA in the 0% band.
+        // Source shape: Sun Life / EY Alberta combined tables. Planning estimate only — not a tax filing.
         const TAX_BRACKETS = [
-            { upTo: 57375, rate: 0.25 },
-            { upTo: 114750, rate: 0.32 },
+            { upTo: 16129, rate: 0 },
+            { upTo: 22323, rate: 0.145 },
+            { upTo: 57375, rate: 0.225 },
+            { upTo: 60000, rate: 0.285 },
+            { upTo: 114750, rate: 0.305 },
+            { upTo: 151234, rate: 0.36 },
             { upTo: 177882, rate: 0.38 },
-            { upTo: 253414, rate: 0.42 },
+            { upTo: 241974, rate: 0.423 },
+            { upTo: 253414, rate: 0.433 },
+            { upTo: 362961, rate: 0.47 },
             { upTo: Infinity, rate: 0.48 }
         ];
+        // Soft cap for “tax-optimal” sizing: top of the ~22.5% combined band
+        const TAX_OPTIMAL_INCOME_CAP = 57375;
 
         function estimateIncomeTax(taxableIncome) {
             const income = Math.max(0, Number(taxableIncome) || 0);
@@ -2540,13 +2550,27 @@
             return Math.max(0, estimateIncomeTax(other + portion) - estimateIncomeTax(other));
         }
 
-        // Taxable income room remaining in the current combined bracket
+        // CRA-style split: non-taxable = (remaining personal contributions / FMV) × withdrawal
+        function splitRdspWithdrawal(withdrawal, fmv, remainingContributions) {
+            const w = Math.max(0, Number(withdrawal) || 0);
+            const bal = Math.max(0, Number(fmv) || 0);
+            const basis = Math.max(0, Math.min(Number(remainingContributions) || 0, bal));
+            if (w <= 0 || bal <= 0) {
+                return { nonTaxable: 0, taxable: 0, remainingContributions: basis };
+            }
+            const nonTaxable = Math.min(w, w * (basis / bal));
+            const taxable = Math.max(0, w - nonTaxable);
+            return {
+                nonTaxable,
+                taxable,
+                remainingContributions: Math.max(0, basis - nonTaxable)
+            };
+        }
+
+        // Room used by tax-optimal mode: fill up toward the ~22.5% band (not tiny micro-brackets)
         function taxBracketRoom(otherIncome) {
             const other = Math.max(0, Number(otherIncome) || 0);
-            for (const b of TAX_BRACKETS) {
-                if (other < b.upTo) return b.upTo - other;
-            }
-            return 40000;
+            return Math.max(0, TAX_OPTIMAL_INCOME_CAP - other);
         }
 
         // Taxable income used for Est. Tax / Net / tax-optimal (RRSP adds; TFSA does not)
@@ -2596,6 +2620,7 @@
             const data = [];
             let accountBalance = 0;
             let totalContributions = 0;
+            let remainingPersonalContributions = 0; // contribution basis still in the plan (CRA non-taxable pool)
             let totalGrants = 0;
             let totalBonds = 0;
             let totalWithdrawals = 0;
@@ -2637,6 +2662,7 @@
                 if (age <= 59 && totalContributions < 200000 && !shouldStopContribs) {
                     yearlyContribution = Math.min(state.annualContribution, 200000 - totalContributions);
                     totalContributions += yearlyContribution;
+                    remainingPersonalContributions += yearlyContribution;
                     accountBalance += yearlyContribution;
                 }
                 
@@ -2723,9 +2749,9 @@
                 if (state.withdrawalType === 'ldap' && age >= state.ldapStartAge) {
                     const ldapAmount = calculateLDAP(accountBalance, age, govtContributions, totalContributions);
                     yearlyWithdrawal = Math.min(ldapAmount, accountBalance);
-                    
-                    const personalContribPortion = Math.min(yearlyWithdrawal, totalContributions / Math.max(1, totalContributions + govtContributions + yearlyGrowth) * yearlyWithdrawal);
-                    taxableWithdrawal = yearlyWithdrawal - personalContribPortion;
+                    const split = splitRdspWithdrawal(yearlyWithdrawal, accountBalance, remainingPersonalContributions);
+                    taxableWithdrawal = split.taxable;
+                    remainingPersonalContributions = split.remainingContributions;
                     
                 } else if (state.withdrawalType === 'manual') {
                     let scheduledAmount = null;
@@ -2735,7 +2761,7 @@
                         const endA = state.manualEndAge || 90;
                         if (age >= startA && age <= endA && accountBalance > 0) {
                             const yearsLeft = Math.max(1, endA - age + 1);
-                            const basisFrac = Math.min(1, totalContributions / Math.max(accountBalance, 1));
+                            const basisFrac = Math.min(1, remainingPersonalContributions / Math.max(accountBalance, 1));
                             const taxableFrac = Math.max(0.05, 1 - basisFrac);
                             const room = taxBracketRoom(effectiveOtherTaxableIncome());
                             const fromTaxRoom = room / taxableFrac;
@@ -2768,8 +2794,11 @@
                             });
                         }
                         
-                        const personalContribPortion = Math.min(yearlyWithdrawal, totalContributions / Math.max(1, totalContributions + govtContributions) * yearlyWithdrawal);
-                        taxableWithdrawal = yearlyWithdrawal - personalContribPortion;
+                        // Cap withdrawal to post-penalty balance; CRA taxable split uses FMV immediately before the DAP
+                        yearlyWithdrawal = Math.min(yearlyWithdrawal, Math.max(0, accountBalance));
+                        const split = splitRdspWithdrawal(yearlyWithdrawal, accountBalance, remainingPersonalContributions);
+                        taxableWithdrawal = split.taxable;
+                        remainingPersonalContributions = split.remainingContributions;
                     }
                 }
 
@@ -4153,8 +4182,16 @@
                     rows.push(`<div class="row"><span class="k">Growth</span><span class="v">${formatCurrency(growthValue)}</span></div>`);
                 }
                 if (dataPoint.withdrawal > 0) rows.push(`<div class="row"><span class="k">RDSP withdrawal</span><span class="v">${formatCurrency(dataPoint.withdrawal)}</span></div>`);
-                if (dataPoint.taxableWithdrawal > 0) rows.push(`<div class="row"><span class="k">Taxable portion</span><span class="v">${formatCurrency(dataPoint.taxableWithdrawal)}</span></div>`);
-                if (dataPoint.estimatedTax > 0) rows.push(`<div class="row"><span class="k">Est. tax (on RDSP)</span><span class="v">${formatCurrency(dataPoint.estimatedTax)}</span></div>`);
+                if (dataPoint.taxableWithdrawal > 0) {
+                    const pct = dataPoint.withdrawal > 0 ? Math.round(100 * dataPoint.taxableWithdrawal / dataPoint.withdrawal) : 0;
+                    rows.push(`<div class="row"><span class="k">Taxable portion (${pct}%)</span><span class="v">${formatCurrency(dataPoint.taxableWithdrawal)}</span></div>`);
+                }
+                if (dataPoint.estimatedTax > 0) {
+                    const effOnTaxable = dataPoint.taxableWithdrawal > 0 ? Math.round(100 * dataPoint.estimatedTax / dataPoint.taxableWithdrawal) : 0;
+                    const effOnTotal = dataPoint.withdrawal > 0 ? Math.round(100 * dataPoint.estimatedTax / dataPoint.withdrawal) : 0;
+                    rows.push(`<div class="row"><span class="k">Est. tax (on RDSP)</span><span class="v">${formatCurrency(dataPoint.estimatedTax)}</span></div>`);
+                    rows.push(`<div class="row"><span class="k">Effective rate</span><span class="v">${effOnTaxable}% of taxable · ${effOnTotal}% of total</span></div>`);
+                }
                 if (dataPoint.netWithdrawal > 0) rows.push(`<div class="row"><span class="k">RDSP net (after tax)</span><span class="v">${formatCurrency(dataPoint.netWithdrawal)}</span></div>`);
                 if (dataPoint.rrspCash > 0) rows.push(`<div class="row"><span class="k">RRSP / RRIF cash</span><span class="v">${formatCurrency(dataPoint.rrspCash)}</span></div>`);
                 if (dataPoint.tfsaCash > 0) rows.push(`<div class="row"><span class="k">TFSA cash</span><span class="v">${formatCurrency(dataPoint.tfsaCash)}</span></div>`);

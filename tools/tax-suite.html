@@ -3,270 +3,986 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tax Suite 2025 — Contractor & T4 Calculators (AB • BC • ON)</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>Tax Suite 2025 — Return Estimator (AB • BC • ON)</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
-    body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; max-width: 1100px; margin: 0 auto; padding: 20px; background:#f8fafc; color:#111827; }
-    .container { background:#fff; border:1px solid #e5e7eb; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.06); }
-    .header { padding:24px 24px 16px 24px; }
-    .tabs { display:flex; gap:8px; padding:0 24px; border-bottom:1px solid #e5e7eb; }
-    .tab { padding:10px 14px; font-weight:600; font-size:14px; color:#374151; border:1px solid transparent; border-top-left-radius:8px; border-top-right-radius:8px; cursor:pointer; }
-    .tab.active { color:#111827; background:#fff; border-color:#e5e7eb; border-bottom-color:#fff; }
-    .section { padding:24px; display:none; }
-    .section.active { display:block; }
-    .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:16px; }
-    .grid .field-narrow { max-width: 200px; }
-    label { font-size:13px; font-weight:600; color:#374151; display:block; margin-bottom:6px; }
-    input, select { width:100%; padding:10px 12px; border:2px solid #e5e7eb; border-radius:8px; font-size:15px; }
-    input:focus, select:focus { outline:none; border-color:#3b82f6; box-shadow:0 0 0 3px rgba(59,130,246,0.1); }
-    .cards { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:16px; margin-top:16px; }
-    .card { background:#111827; color:white; padding:20px; border-radius:12px; border:1px solid #374151; text-align:center; }
-    .card h3 { margin:0 0 8px 0; font-size:16px; font-weight:600; }
-    .card .amount { font-size:24px; font-weight:700; }
-    .panel { background:#f8f9fa; border-radius:12px; padding:20px; margin-top:16px; border:1px solid #e5e7eb; }
-    .row { display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #e5e7eb; font-size:14px; }
-    .row:last-child { border-bottom:none; font-weight:700; }
-    .links { padding:0 24px 24px 24px; }
-    .links h4 { margin:0 0 10px 0; font-size:14px; color:#111827; }
-    .links a { display:block; color:#2563eb; font-size:13px; text-decoration:none; margin:4px 0; }
-    .links a:hover { text-decoration:underline; }
-    .back { display:inline-flex; align-items:center; gap:6px; color:#6b7280; text-decoration:none; font-size:14px; margin-bottom:12px; }
-    .back:hover { color:#111827; }
-    @media (max-width: 640px) { .header h1{font-size:22px;} }
+    :root {
+      --bg: #f3f5f8;
+      --ink: #12151c;
+      --muted: #5b6472;
+      --card: #ffffff;
+      --line: #e4e8ee;
+      --accent: #1d4f91;
+      --accent-soft: #e8f0fa;
+      --good: #0f7a4b;
+      --good-bg: #e8f7ef;
+      --bad: #b42318;
+      --bad-bg: #fef3f2;
+      --warn: #9a6700;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background:
+        radial-gradient(1200px 500px at 10% -10%, #dbe7f6 0%, transparent 55%),
+        radial-gradient(900px 400px at 100% 0%, #e7f2ea 0%, transparent 50%),
+        var(--bg);
+      color: var(--ink);
+    }
+    .wrap { max-width: 1180px; margin: 0 auto; }
+    .back {
+      display: inline-flex; align-items: center; gap: 6px;
+      color: var(--muted); text-decoration: none; font-size: 14px; margin-bottom: 14px;
+    }
+    .back:hover { color: var(--ink); }
+    .shell {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(18, 21, 28, 0.06);
+      overflow: hidden;
+    }
+    .header { padding: 28px 28px 18px; border-bottom: 1px solid var(--line); }
+    .header h1 {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: clamp(1.6rem, 2.5vw, 2.1rem);
+      margin: 0 0 6px;
+      letter-spacing: -0.02em;
+    }
+    .header p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.45; max-width: 62ch; }
+    .tabs {
+      display: flex; flex-wrap: wrap; gap: 6px;
+      padding: 12px 28px 0; border-bottom: 1px solid var(--line);
+      background: #fafbfc;
+    }
+    .tab {
+      appearance: none; border: 1px solid transparent; background: transparent;
+      padding: 10px 14px; border-radius: 10px 10px 0 0; cursor: pointer;
+      font: inherit; font-weight: 600; font-size: 13px; color: var(--muted);
+    }
+    .tab:hover { color: var(--ink); background: #fff; }
+    .tab.active {
+      color: var(--ink); background: #fff;
+      border-color: var(--line); border-bottom-color: #fff;
+      margin-bottom: -1px;
+    }
+    .section { display: none; padding: 24px 28px 28px; }
+    .section.active { display: block; }
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.85fr);
+      gap: 20px;
+      align-items: start;
+    }
+    @media (max-width: 920px) {
+      .layout { grid-template-columns: 1fr; }
+      .results { position: static !important; }
+    }
+    .stack { display: flex; flex-direction: column; gap: 12px; }
+    details.box {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      overflow: hidden;
+    }
+    details.box > summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-weight: 650;
+      font-size: 14px;
+      background: linear-gradient(180deg, #fcfdff, #f7f9fc);
+      border-bottom: 1px solid transparent;
+    }
+    details.box[open] > summary { border-bottom-color: var(--line); }
+    details.box > summary::-webkit-details-marker { display: none; }
+    details.box > summary .hint { font-weight: 500; color: var(--muted); font-size: 12px; }
+    details.box > summary .chev { color: var(--muted); transition: transform .15s ease; }
+    details.box[open] > summary .chev { transform: rotate(180deg); }
+    .box-body { padding: 16px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+    .field label {
+      display: block; font-size: 12px; font-weight: 600; color: #3d4654;
+      margin-bottom: 5px;
+    }
+    .field .sub { display: block; font-weight: 500; color: var(--muted); font-size: 11px; margin-top: 2px; }
+    input, select {
+      width: 100%; padding: 10px 11px; border: 1.5px solid #d7dde6;
+      border-radius: 8px; font: inherit; font-size: 14px; background: #fff; color: var(--ink);
+    }
+    input:focus, select:focus {
+      outline: none; border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(29, 79, 145, 0.12);
+    }
+    .check {
+      display: flex; align-items: flex-start; gap: 8px;
+      font-size: 13px; color: #3d4654; margin-top: 10px;
+    }
+    .check input { width: auto; margin-top: 2px; }
+    .note {
+      font-size: 12px; color: var(--muted); line-height: 1.4;
+      margin: 10px 0 0; padding: 10px 12px; background: var(--accent-soft);
+      border-radius: 8px;
+    }
+    .results {
+      position: sticky; top: 16px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #0f1724;
+      color: #eef3fa;
+      padding: 18px;
+      box-shadow: 0 12px 30px rgba(15, 23, 36, 0.25);
+    }
+    .results h2 {
+      font-family: 'Source Serif 4', Georgia, serif;
+      margin: 0 0 4px; font-size: 1.25rem;
+    }
+    .results .subhead { color: #9aa8bd; font-size: 12px; margin-bottom: 14px; }
+    .balance {
+      border-radius: 12px; padding: 14px 16px; margin-bottom: 14px;
+      background: #1a2436; border: 1px solid #2a3850;
+    }
+    .balance.owe { background: #3a1715; border-color: #7a2e28; }
+    .balance.refund { background: #123226; border-color: #1f6b48; }
+    .balance .label { font-size: 12px; color: #b7c3d6; margin-bottom: 4px; }
+    .balance .amt { font-size: 1.85rem; font-weight: 700; letter-spacing: -0.03em; }
+    .kpi { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+    .kpi div {
+      background: #1a2436; border: 1px solid #2a3850; border-radius: 10px; padding: 10px;
+    }
+    .kpi span { display: block; font-size: 11px; color: #9aa8bd; margin-bottom: 3px; }
+    .kpi strong { font-size: 15px; }
+    .lines { font-size: 13px; }
+    .line {
+      display: flex; justify-content: space-between; gap: 10px;
+      padding: 7px 0; border-bottom: 1px solid #243147;
+    }
+    .line:last-child { border-bottom: none; font-weight: 700; }
+    .line .k { color: #b7c3d6; }
+    .line .v { color: #eef3fa; text-align: right; white-space: nowrap; }
+    .disclaimer {
+      margin-top: 12px; font-size: 11px; color: #8b9bb0; line-height: 1.4;
+    }
+    .simple-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 16px; }
+    .card {
+      background: #111827; color: #fff; padding: 16px; border-radius: 12px; text-align: center;
+    }
+    .card h3 { margin: 0 0 6px; font-size: 13px; font-weight: 600; color: #cbd5e1; }
+    .card .amount { font-size: 1.35rem; font-weight: 700; }
+    .panel {
+      background: #f8fafc; border: 1px solid var(--line); border-radius: 12px;
+      padding: 14px 16px; margin-top: 14px;
+    }
+    .row {
+      display: flex; justify-content: space-between; gap: 12px;
+      padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 14px;
+    }
+    .row:last-child { border-bottom: none; font-weight: 700; }
+    .links { padding: 0 28px 28px; }
+    .links h4 { margin: 0 0 8px; font-size: 13px; }
+    .links a { display: block; color: var(--accent); font-size: 13px; text-decoration: none; margin: 4px 0; }
+    .links a:hover { text-decoration: underline; }
+    .toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+    .btn {
+      appearance: none; border: 1px solid var(--line); background: #fff;
+      border-radius: 8px; padding: 8px 12px; font: inherit; font-size: 12px;
+      font-weight: 600; cursor: pointer; color: #334155;
+    }
+    .btn:hover { background: #f8fafc; }
   </style>
 </head>
 <body>
-  <a href="../index.html" class="back"><span class="material-icons" style="font-size:18px;">arrow_back</span>Back to Portfolio</a>
-  <div class="container">
-    <div class="header">
-      <h1 style="margin:0 0 6px 0;">Tax Suite 2025</h1>
-      <div style="color:#6b7280; font-size:14px;">Contractor (Self‑Employed) • T4 Employee — AB • BC • ON</div>
-    </div>
-    <div class="tabs">
-      <button class="tab active" data-tab="contractor">Contractor</button>
-      <button class="tab" data-tab="t4">T4 Employee</button>
-    </div>
+  <div class="wrap">
+    <a href="../index.html" class="back"><span class="material-icons" style="font-size:18px;">arrow_back</span>Back to Portfolio</a>
+    <div class="shell">
+      <div class="header">
+        <h1>Tax Suite 2025</h1>
+        <p>
+          Approximate Canadian personal return estimator. Enter the slip boxes you have
+          (T4, pension/T4A, RDSP, T5008 / trading, RRSP, work-from-home) and see estimated tax owed or refund.
+          Planning tool only — not tax advice or e-file software.
+        </p>
+      </div>
 
-    <!-- Contractor Section -->
-    <section id="contractor" class="section active">
-      <div class="grid">
-        <div>
-          <label for="c_province">Province</label>
-          <select id="c_province">
-            <option value="AB">Alberta</option>
-            <option value="BC">British Columbia</option>
-            <option value="ON">Ontario</option>
-          </select>
-        </div>
-        <div class="field-narrow">
-          <label for="c_rate">Hourly Rate ($)</label>
-          <input id="c_rate" type="number" value="150" min="1" step="0.01">
-        </div>
-        <div>
-          <label for="c_hours">Hours / Week</label>
-          <input id="c_hours" type="number" value="40" min="1" max="80" step="0.5">
-        </div>
-        <div class="field-narrow">
-          <label for="c_weeks">Working Weeks / Year</label>
-          <input id="c_weeks" type="number" value="50" min="1" max="52" step="1">
-        </div>
+      <div class="tabs" role="tablist">
+        <button class="tab active" data-tab="return" type="button">Return Estimator</button>
+        <button class="tab" data-tab="contractor" type="button">Contractor Quick</button>
+        <button class="tab" data-tab="t4quick" type="button">T4 Quick</button>
       </div>
-      <div class="cards">
-        <div class="card"><h3>Gross Annual</h3><div id="c_gross" class="amount">$300,000</div></div>
-        <div class="card"><h3>Net Monthly</h3><div id="c_net_month" class="amount">$18,500</div></div>
-      </div>
-      <div class="panel">
-        <div class="row"><span>Gross Income</span><span id="c_gross_b">$300,000</span></div>
-        <div class="row"><span>Federal Tax</span><span id="c_fed">-$0</span></div>
-        <div class="row"><span id="c_prov_label">Alberta Provincial Tax</span><span id="c_prov">-$0</span></div>
-        <div class="row"><span>CPP (Self‑Employed)</span><span id="c_cpp">-$0</span></div>
-        <div class="row"><span>EI (Optional)</span><span id="c_ei">-$0</span></div>
-        <div class="row"><span>Net Annual</span><span id="c_net">$0</span></div>
-      </div>
-    </section>
 
-    <!-- T4 Section -->
-    <section id="t4" class="section">
-      <div class="grid">
-        <div>
-          <label for="t_province">Province</label>
-          <select id="t_province">
-            <option value="AB">Alberta</option>
-            <option value="BC">British Columbia</option>
-            <option value="ON">Ontario</option>
-          </select>
+      <!-- ===================== RETURN ESTIMATOR ===================== -->
+      <section id="return" class="section active">
+        <div class="toolbar">
+          <button class="btn" type="button" onclick="expandAllBoxes(true)">Expand all</button>
+          <button class="btn" type="button" onclick="expandAllBoxes(false)">Collapse all</button>
+          <button class="btn" type="button" onclick="resetReturn()">Reset return inputs</button>
         </div>
-        <div>
-          <label for="t_income">Annual Gross Salary ($)</label>
-          <input id="t_income" type="number" value="75000" min="0" step="1000">
-        </div>
-        <div>
-          <label for="t_pay">Pay Frequency</label>
-          <select id="t_pay">
-            <option value="12">Monthly</option>
-            <option value="26" selected>Bi‑weekly</option>
-            <option value="24">Semi‑monthly</option>
-            <option value="52">Weekly</option>
-          </select>
-        </div>
-        <div class="field-narrow">
-          <label for="t_rrsp">RRSP Contributions ($)</label>
-          <input id="t_rrsp" type="number" value="5000" min="0" step="500">
-        </div>
-        <div>
-          <label for="t_union">Union Dues ($)</label>
-          <input id="t_union" type="number" value="0" min="0" step="100">
-        </div>
-      </div>
-      <div class="cards">
-        <div class="card"><h3>Gross Annual</h3><div id="t_gross" class="amount">$75,000</div></div>
-        <div class="card"><h3>Net Annual</h3><div id="t_net" class="amount">$58,500</div></div>
-        <div class="card"><h3>Per Pay</h3><div id="t_perpay" class="amount">$2,250</div></div>
-        <div class="card"><h3>Effective Rate</h3><div id="t_effective" class="amount">22.0%</div></div>
-      </div>
-      <div class="panel">
-        <div class="row"><span>Taxable Income</span><span id="t_taxable">$70,000</span></div>
-        <div class="row"><span>Federal Tax</span><span id="t_fed">-$7,200</span></div>
-        <div class="row"><span>Provincial Tax</span><span id="t_prov">-$4,770</span></div>
-        <div class="row"><span>CPP</span><span id="t_cpp">-$3,867</span></div>
-        <div class="row"><span>EI</span><span id="t_ei">-$1,275</span></div>
-      </div>
-    </section>
+        <div class="layout">
+          <div class="stack" id="returnInputs">
 
-    <div class="links">
-      <h4>Official Links</h4>
-      <a href="https://www.canada.ca/en/revenue-agency/services/tax/individuals/frequently-asked-questions-individuals/tax-credits-deductions-returns/basic-personal-amount.html" target="_blank" rel="noopener">Canada.ca — Personal Amounts and Tax Brackets</a>
-      <a href="https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/payroll/payroll-deductions-contributions/canada-pension-plan-cpp.html" target="_blank" rel="noopener">Canada.ca — Canada Pension Plan (CPP)</a>
-      <a href="https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/payroll/payroll-deductions-contributions/employment-insurance-ei.html" target="_blank" rel="noopener">Canada.ca — Employment Insurance (EI)</a>
-      <a href="https://www.alberta.ca/personal-income-tax.aspx" target="_blank" rel="noopener">Alberta.ca — Personal Income Tax</a>
-      <a href="https://www2.gov.bc.ca/gov/content/taxes/income-taxes/personal" target="_blank" rel="noopener">BC.gov.ca — Personal Income Tax</a>
-      <a href="https://www.ontario.ca/page/personal-income-tax" target="_blank" rel="noopener">Ontario.ca — Personal Income Tax</a>
-      <a href="https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/sole-proprietorships-partnerships.html" target="_blank" rel="noopener">Canada.ca — Sole Proprietorships and Partnerships</a>
-      <a href="https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/sole-proprietorships-partnerships/report-business-income-expenses/complete-fill-out-t2125-statement-business-activities.html" target="_blank" rel="noopener">Canada.ca — Self‑Employed Income Tax Return (T2125)</a>
+            <details class="box" open>
+              <summary>
+                <span>Profile <span class="hint">province · credits</span></span>
+                <span class="material-icons chev">expand_more</span>
+              </summary>
+              <div class="box-body">
+                <div class="grid">
+                  <div class="field">
+                    <label for="r_province">Province of residence</label>
+                    <select id="r_province">
+                      <option value="AB" selected>Alberta</option>
+                      <option value="BC">British Columbia</option>
+                      <option value="ON">Ontario</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="r_taxYear">Tax year</label>
+                    <select id="r_taxYear"><option value="2025" selected>2025</option></select>
+                  </div>
+                </div>
+                <label class="check"><input type="checkbox" id="r_claimDisability"> Claim disability amount (DTC)</label>
+                <label class="check"><input type="checkbox" id="r_canadaEmployment" checked> Claim Canada employment amount (employee)</label>
+              </div>
+            </details>
+
+            <details class="box" open>
+              <summary>
+                <span>T4 — Employment <span class="hint">salary · withholdings</span></span>
+                <span class="material-icons chev">expand_more</span>
+              </summary>
+              <div class="box-body">
+                <div class="grid">
+                  <div class="field">
+                    <label for="r_t4_14">Box 14 Employment income<span class="sub">Gross pay before deductions</span></label>
+                    <input id="r_t4_14" type="number" min="0" step="100" value="0">
+                  </div>
+                  <div class="field">
+                    <label for="r_t4_22">Box 22 Income tax deducted</label>
+                    <input id="r_t4_22" type="number" min="0" step="50" value="0">
+                  </div>
+                  <div class="field">
+                    <label for="r_t4_16">Box 16 / 17 CPP contributions</label>
+                    <input id="r_t4_16" type="number" min="0" step="10" value="0">
+                  </div>
+                  <div class="field">
+                    <label for="r_t4_18">Box 18 EI premiums</label>
+                    <input id="r_t4_18" type="number" min="0" step="10" value="0">
+                  </div>
+                  <div class="field">
+                    <label for="r_t4_20">Box 20 RPP contributions<span class="sub">Deductible pension plan</span></label>
+                    <input id="r_t4_20" type="number" min="0" step="50" value="0">
+                  </div>
+                  <div class="field">
+                    <label for="r_t4_44">Box 44 Union dues</label>
+                    <input id="r_t4_44" type="number" min="0" step="10" value="0">
+                  </div>
+                  <div class="field">
+                    <label for="r_t4_other">Other employment income<span class="sub">Tips, emergency services, etc.</span></label>
+                    <input id="r_t4_other" type="number" min="0" step="50" value="0">
+                  </div>
+                </div>
+              </div>
+            </details>
+
+            <details class="box">
+              <summary>
+                <span>Pension / T4A / CPP / OAS <span class="hint">retirement income</span></span>
+                <span class="material-icons chev">expand_more</span>
+              </summary>
+              <div class="box-body">
+                <div class="grid">
+                  <div class="field">
+                    <label for="r_pension">Pension / superannuation<span class="sub">T4A box 16 / RRIF / annuity</span></label>
+                    <input id="r_pension" type="number" min="0" step="100" value="0">
+                  </div>
+                  <div class="field">
+                    <label for="r_cpp_benefits">CPP / QPP benefits</label>
+                    <input id="r_cpp_benefits" type="number" min="0" step="50" value="0">
+                  </div>
+                  <div class="field">
+                    <label for="r_oas">OAS pension</label>
+                    <input id="r_oas" type="number" min="0" step="50" value="0">
+                  </div>
+                  <div class="field">
+                    <label for="r_t4a_other">Other T4A income<span class="sub">Scholarships, fees, etc.</span></label>
+                    <input id="r_t4a_other" type="number" min="0" step="50" value="0">
+                  </div>
+                  <div class="field">
+                    <label for="r_t4a_tax">Tax deducted on T4A / pension</label>
+                    <input id="r_t4a_tax" type="number" min="0" step="50" value="0">
+                  </div>
+                </div>
+              </div>
+            </details>
+
+            <details class="box">
+              <summary>
+                <span>RDSP <span class="hint">taxable disability assistance payments</span></span>
+                <span class="material-icons chev">expand_more</span>
+              </summary>
+              <div class="box-body">
+                <div class="grid">
+                  <div class="field">
+                    <label for="r_rdsp">Taxable RDSP income<span class="sub">T4A box 131 / line 12500 — grants, bonds &amp; growth only</span></label>
+                    <input id="r_rdsp" type="number" min="0" step="100" value="0">
+                  </div>
+                  <div class="field">
+                    <label for="r_rdsp_tax">Tax withheld on RDSP (if any)</label>
+                    <input id="r_rdsp_tax" type="number" min="0" step="50" value="0">
+                  </div>
+                </div>
+                <p class="note">Your original RDSP contributions are not taxable. Enter only the taxable portion from the slip.</p>
+              </div>
+            </details>
+
+            <details class="box" open>
+              <summary>
+                <span>Investments &amp; trading <span class="hint">T5 · T5008 · margin</span></span>
+                <span class="material-icons chev">expand_more</span>
+              </summary>
+              <div class="box-body">
+                <div class="grid">
+                  <div class="field">
+                    <label for="r_interest">Interest income<span class="sub">T5 box 13 / bank / bond interest</span></label>
+                    <input id="r_interest" type="number" min="0" step="50" value="0">
+                  </div>
+                  <div class="field">
+                    <label for="r_div_elig">Eligible dividends (actual $)<span class="sub">T5 — Canadian public cos. We apply 38% gross-up</span></label>
+                    <input id="r_div_elig" type="number" min="0" step="50" value="0">
+                  </div>
+                  <div class="field">
+                    <label for="r_div_non">Non-eligible dividends (actual $)<span class="sub">15% gross-up</span></label>
+                    <input id="r_div_non" type="number" min="0" step="50" value="0">
+                  </div>
+                  <div class="field">
+                    <label for="r_other_inv">Other investment income</label>
+                    <input id="r_other_inv" type="number" min="0" step="50" value="0">
+                  </div>
+                </div>
+                <p class="note" style="margin-top:14px;"><strong>T5008 / brokerage trading</strong> — cash or margin. Enter totals for the year (or paste your realized P&amp;L into “Net capital gain override”).</p>
+                <div class="grid" style="margin-top:10px;">
+                  <div class="field">
+                    <label for="r_t5008_proceeds">Proceeds of disposition<span class="sub">T5008 box 21 / sell proceeds</span></label>
+                    <input id="r_t5008_proceeds" type="number" min="0" step="100" value="0">
+                  </div>
+                  <div class="field">
+                    <label for="r_t5008_acb">Adjusted cost base (ACB)<span class="sub">What you paid + commissions on buy</span></label>
+                    <input id="r_t5008_acb" type="number" min="0" step="100" value="0">
+                  </div>
+                  <div class="field">
+                    <label for="r_t5008_exp">Outlays &amp; expenses<span class="sub">Sell commissions, fees</span></label>
+                    <input id="r_t5008_exp" type="number" min="0" step="10" value="0">
+                  </div>
+                  <div class="field">
+                    <label for="r_cap_override">Net capital gain override<span class="sub">Optional — if set, ignores proceeds/ACB math</span></label>
+                    <input id="r_cap_override" type="number" step="100" value="" placeholder="blank = use T5008 math">
+                  </div>
+                  <div class="field">
+                    <label for="r_margin_interest">Margin interest / carrying charges<span class="sub">Deductible investment interest</span></label>
+                    <input id="r_margin_interest" type="number" min="0" step="50" value="0">
+                  </div>
+                  <div class="field">
+                    <label for="r_inv_tax">Tax withheld on investments<span class="sub">Rare for Canadian brokerage</span></label>
+                    <input id="r_inv_tax" type="number" min="0" step="10" value="0">
+                  </div>
+                </div>
+                <p class="note">Taxable capital gains use the <strong>50%</strong> inclusion rate. Superficial losses, wash sales, and FX adjustments are not modeled.</p>
+              </div>
+            </details>
+
+            <details class="box" open>
+              <summary>
+                <span>RRSP &amp; other deductions <span class="hint">line 20800+</span></span>
+                <span class="material-icons chev">expand_more</span>
+              </summary>
+              <div class="box-body">
+                <div class="grid">
+                  <div class="field">
+                    <label for="r_rrsp">RRSP deduction<span class="sub">Amount you are claiming this year</span></label>
+                    <input id="r_rrsp" type="number" min="0" step="100" value="0">
+                  </div>
+                  <div class="field">
+                    <label for="r_other_ded">Other deductions<span class="sub">Child care, moving, support, etc. (lump)</span></label>
+                    <input id="r_other_ded" type="number" min="0" step="100" value="0">
+                  </div>
+                </div>
+              </div>
+            </details>
+
+            <details class="box">
+              <summary>
+                <span>Work from home <span class="hint">employee home office</span></span>
+                <span class="material-icons chev">expand_more</span>
+              </summary>
+              <div class="box-body">
+                <div class="grid">
+                  <div class="field">
+                    <label for="r_wfh_pct">Workspace % of home<span class="sub">e.g. 10 for 10%</span></label>
+                    <input id="r_wfh_pct" type="number" min="0" max="100" step="0.5" value="0">
+                  </div>
+                  <div class="field">
+                    <label for="r_wfh_rent">Rent (annual)<span class="sub">Employees: rent only (not mortgage)</span></label>
+                    <input id="r_wfh_rent" type="number" min="0" step="100" value="0">
+                  </div>
+                  <div class="field">
+                    <label for="r_wfh_utils">Utilities + heat/electricity</label>
+                    <input id="r_wfh_utils" type="number" min="0" step="50" value="0">
+                  </div>
+                  <div class="field">
+                    <label for="r_wfh_internet">Internet</label>
+                    <input id="r_wfh_internet" type="number" min="0" step="50" value="0">
+                  </div>
+                  <div class="field">
+                    <label for="r_wfh_maint">Maintenance / supplies</label>
+                    <input id="r_wfh_maint" type="number" min="0" step="50" value="0">
+                  </div>
+                  <div class="field">
+                    <label for="r_wfh_insurance">Home insurance</label>
+                    <input id="r_wfh_insurance" type="number" min="0" step="50" value="0">
+                  </div>
+                </div>
+                <p class="note">Simplified employee detailed method: (% workspace × eligible home costs). Requires employer conditions / T2200 in real life. Cannot create an employment loss here.</p>
+              </div>
+            </details>
+
+            <details class="box">
+              <summary>
+                <span>Self-employment (optional) <span class="hint">net business income</span></span>
+                <span class="material-icons chev">expand_more</span>
+              </summary>
+              <div class="box-body">
+                <div class="grid">
+                  <div class="field">
+                    <label for="r_se_net">Net self-employment income<span class="sub">After business expenses</span></label>
+                    <input id="r_se_net" type="number" step="100" value="0">
+                  </div>
+                  <div class="field">
+                    <label for="r_se_installments">Tax installments paid</label>
+                    <input id="r_se_installments" type="number" min="0" step="100" value="0">
+                  </div>
+                </div>
+                <p class="note">Self-employed CPP (employee + employer portions) is added to amounts payable.</p>
+              </div>
+            </details>
+
+            <details class="box">
+              <summary>
+                <span>Other tax already paid <span class="hint">installments · foreign</span></span>
+                <span class="material-icons chev">expand_more</span>
+              </summary>
+              <div class="box-body">
+                <div class="grid">
+                  <div class="field">
+                    <label for="r_installments">Voluntary / other installments</label>
+                    <input id="r_installments" type="number" min="0" step="100" value="0">
+                  </div>
+                  <div class="field">
+                    <label for="r_other_tax_paid">Other tax credits / paid<span class="sub">e.g. foreign tax credit (rough)</span></label>
+                    <input id="r_other_tax_paid" type="number" min="0" step="50" value="0">
+                  </div>
+                </div>
+              </div>
+            </details>
+          </div>
+
+          <aside class="results" aria-live="polite">
+            <h2>Estimated result</h2>
+            <div class="subhead">2025 return · updates as you type</div>
+            <div class="balance" id="r_balanceBox">
+              <div class="label" id="r_balanceLabel">Balance</div>
+              <div class="amt" id="r_balance">$0</div>
+            </div>
+            <div class="kpi">
+              <div><span>Total income</span><strong id="r_totalIncome">$0</strong></div>
+              <div><span>Taxable income</span><strong id="r_taxable">$0</strong></div>
+              <div><span>Tax payable</span><strong id="r_taxPayable">$0</strong></div>
+              <div><span>Tax already paid</span><strong id="r_taxPaid">$0</strong></div>
+            </div>
+            <div class="lines" id="r_breakdown"></div>
+            <p class="disclaimer">
+              Approximate only. Uses 2025 federal (14.5% first-bracket blend) + AB/BC/ON brackets,
+              BPA, Canada employment amount, optional disability amount, dividend gross-up/DTC,
+              50% capital-gains inclusion, and basic CPP/EI. Does not model OAS clawback, AMT,
+              tuition, medical, charitable, spouse amounts, or provincial surtaxes in full.
+            </p>
+          </aside>
+        </div>
+      </section>
+
+      <!-- ===================== CONTRACTOR QUICK ===================== -->
+      <section id="contractor" class="section">
+        <div class="simple-grid">
+          <div class="field">
+            <label for="c_province">Province</label>
+            <select id="c_province">
+              <option value="AB">Alberta</option>
+              <option value="BC">British Columbia</option>
+              <option value="ON">Ontario</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="c_rate">Hourly rate ($)</label>
+            <input id="c_rate" type="number" value="150" min="1" step="0.01">
+          </div>
+          <div class="field">
+            <label for="c_hours">Hours / week</label>
+            <input id="c_hours" type="number" value="40" min="1" max="80" step="0.5">
+          </div>
+          <div class="field">
+            <label for="c_weeks">Working weeks / year</label>
+            <input id="c_weeks" type="number" value="50" min="1" max="52" step="1">
+          </div>
+        </div>
+        <div class="cards">
+          <div class="card"><h3>Gross annual</h3><div id="c_gross" class="amount">$0</div></div>
+          <div class="card"><h3>Net monthly</h3><div id="c_net_month" class="amount">$0</div></div>
+        </div>
+        <div class="panel">
+          <div class="row"><span>Gross income</span><span id="c_gross_b">$0</span></div>
+          <div class="row"><span>Federal tax</span><span id="c_fed">$0</span></div>
+          <div class="row"><span id="c_prov_label">Provincial tax</span><span id="c_prov">$0</span></div>
+          <div class="row"><span>CPP (self-employed)</span><span id="c_cpp">$0</span></div>
+          <div class="row"><span>EI (optional max)</span><span id="c_ei">$0</span></div>
+          <div class="row"><span>Net annual</span><span id="c_net">$0</span></div>
+        </div>
+      </section>
+
+      <!-- ===================== T4 QUICK ===================== -->
+      <section id="t4quick" class="section">
+        <div class="simple-grid">
+          <div class="field">
+            <label for="t_province">Province</label>
+            <select id="t_province">
+              <option value="AB">Alberta</option>
+              <option value="BC">British Columbia</option>
+              <option value="ON">Ontario</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="t_income">Annual gross salary ($)</label>
+            <input id="t_income" type="number" value="75000" min="0" step="1000">
+          </div>
+          <div class="field">
+            <label for="t_pay">Pay frequency</label>
+            <select id="t_pay">
+              <option value="12">Monthly</option>
+              <option value="26" selected>Bi-weekly</option>
+              <option value="24">Semi-monthly</option>
+              <option value="52">Weekly</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="t_rrsp">RRSP contributions ($)</label>
+            <input id="t_rrsp" type="number" value="5000" min="0" step="500">
+          </div>
+          <div class="field">
+            <label for="t_union">Union dues ($)</label>
+            <input id="t_union" type="number" value="0" min="0" step="100">
+          </div>
+        </div>
+        <div class="cards">
+          <div class="card"><h3>Gross annual</h3><div id="t_gross" class="amount">$0</div></div>
+          <div class="card"><h3>Net annual</h3><div id="t_net" class="amount">$0</div></div>
+          <div class="card"><h3>Per pay</h3><div id="t_perpay" class="amount">$0</div></div>
+          <div class="card"><h3>Effective rate</h3><div id="t_effective" class="amount">0%</div></div>
+        </div>
+        <div class="panel">
+          <div class="row"><span>Taxable income (approx)</span><span id="t_taxable">$0</span></div>
+          <div class="row"><span>Federal tax</span><span id="t_fed">$0</span></div>
+          <div class="row"><span>Provincial tax</span><span id="t_prov">$0</span></div>
+          <div class="row"><span>CPP</span><span id="t_cpp">$0</span></div>
+          <div class="row"><span>EI</span><span id="t_ei">$0</span></div>
+        </div>
+      </section>
+
+      <div class="links">
+        <h4>Official references</h4>
+        <a href="https://www.canada.ca/en/revenue-agency/services/tax/individuals/frequently-asked-questions-individuals/canadian-income-tax-rates-individuals-current-previous-years.html" target="_blank" rel="noopener">CRA — Federal tax rates</a>
+        <a href="https://www.canada.ca/en/revenue-agency/services/tax/individuals/topics/about-your-tax-return/tax-return/completing-a-tax-return/deductions-credits-expenses/line-22900-other-employment-expenses.html" target="_blank" rel="noopener">CRA — Employment / work-from-home expenses</a>
+        <a href="https://www.canada.ca/en/revenue-agency/services/tax/individuals/topics/about-your-tax-return/tax-return/completing-a-tax-return/personal-income/line-12700-capital-gains.html" target="_blank" rel="noopener">CRA — Capital gains</a>
+        <a href="https://www.canada.ca/en/revenue-agency/services/tax/individuals/topics/registered-disability-savings-plan-rdsp/tax-payable.html" target="_blank" rel="noopener">CRA — RDSP tax payable</a>
+        <a href="https://www.alberta.ca/personal-income-tax" target="_blank" rel="noopener">Alberta — Personal income tax</a>
+      </div>
     </div>
   </div>
 
   <script>
-    // Shared data
-    const FED = [
-      {min:0,max:55867,rate:0.15},
-      {min:55867,max:111733,rate:0.205},
-      {min:111733,max:173205,rate:0.26},
-      {min:173205,max:246752,rate:0.29},
-      {min:246752,max:Infinity,rate:0.33}
-    ];
-    const PROV = {
-      AB:[{min:0,max:148269,rate:0.10},{min:148269,max:177922,rate:0.12},{min:177922,max:237675,rate:0.13},{min:237675,max:355513,rate:0.14},{min:355513,max:Infinity,rate:0.15}],
-      BC:[{min:0,max:50000,rate:0.0506},{min:50000,max:100000,rate:0.077},{min:100000,max:120000,rate:0.105},{min:120000,max:160000,rate:0.1229},{min:160000,max:220000,rate:0.147},{min:220000,max:Infinity,rate:0.168}],
-      ON:[{min:0,max:51446,rate:0.0505},{min:51446,max:102894,rate:0.0915},{min:102894,max:150000,rate:0.1116},{min:150000,max:220000,rate:0.1216},{min:220000,max:Infinity,rate:0.1316}]
+    const RATES = {
+      federal: [
+        { max: 57375, rate: 0.145 },
+        { max: 114750, rate: 0.205 },
+        { max: 177882, rate: 0.26 },
+        { max: 253414, rate: 0.29 },
+        { max: Infinity, rate: 0.33 }
+      ],
+      federalBpa: 16129,
+      canadaEmployment: 1471,
+      disabilityAmount: 10138,
+      // Dividend tax credit rates applied to grossed-up dividends
+      fedDtcEligible: 0.150198,
+      fedDtcNonEligible: 0.090301,
+      prov: {
+        AB: {
+          brackets: [
+            { max: 60000, rate: 0.08 },
+            { max: 151234, rate: 0.10 },
+            { max: 181481, rate: 0.12 },
+            { max: 241974, rate: 0.13 },
+            { max: 362961, rate: 0.14 },
+            { max: Infinity, rate: 0.15 }
+          ],
+          bpa: 22323,
+          disability: 16135,
+          dtcEligible: 0.0812,
+          dtcNonEligible: 0.0218,
+          name: 'Alberta'
+        },
+        BC: {
+          brackets: [
+            { max: 49279, rate: 0.0506 },
+            { max: 98556, rate: 0.077 },
+            { max: 113158, rate: 0.105 },
+            { max: 137407, rate: 0.1229 },
+            { max: 186306, rate: 0.147 },
+            { max: 259829, rate: 0.168 },
+            { max: Infinity, rate: 0.205 }
+          ],
+          bpa: 12932,
+          disability: 9612,
+          dtcEligible: 0.12,
+          dtcNonEligible: 0.0196,
+          name: 'British Columbia'
+        },
+        ON: {
+          brackets: [
+            { max: 52886, rate: 0.0505 },
+            { max: 105775, rate: 0.0915 },
+            { max: 150000, rate: 0.1116 },
+            { max: 220000, rate: 0.1216 },
+            { max: Infinity, rate: 0.1316 }
+          ],
+          bpa: 12747,
+          disability: 10558,
+          dtcEligible: 0.10,
+          dtcNonEligible: 0.029863,
+          name: 'Ontario'
+        }
+      },
+      cpp: {
+        exemption: 3500,
+        ympe: 71300,
+        yampe: 81200,
+        empRate: 0.0595,
+        empMax: 4034.10,
+        cpp2Rate: 0.04,
+        cpp2Max: 396.00,
+        selfRate: 0.119,
+        selfMax: 8068.20,
+        selfCpp2Rate: 0.08,
+        selfCpp2Max: 792.00
+      },
+      ei: { maxEarn: 65700, rate: 0.0164, max: 1077.48 },
+      capGainsInclusion: 0.5,
+      eligGrossUp: 1.38,
+      nonEligGrossUp: 1.15
     };
 
-    // Contractor constants
-    const C_BPA = 22323; // basic personal amount (used in simple model)
-    const CPP_BASIC_EXEMPT = 3500, CPP_MAX_EARN = 71300, CPP_RATE_SELF = 0.119, CPP_MAX_CONTRIB = 4034.10*2;
-    const CPP2_MAX_EARN = 81200, CPP2_RATE_SELF = 0.08, CPP2_MAX_CONTRIB = 396*2;
-    const EI_MAX_EARN=63200, EI_RATE=0.017, EI_MAX=1074.40;
+    const n = (id) => {
+      const el = document.getElementById(id);
+      if (!el) return 0;
+      const raw = String(el.value).trim();
+      if (raw === '' || raw === '-' || raw === '.') return 0;
+      const v = parseFloat(raw);
+      return Number.isFinite(v) ? v : 0;
+    };
+    const checked = (id) => !!document.getElementById(id)?.checked;
+    const money = (v) => '$' + Math.round(Math.max(0, v) || 0).toLocaleString('en-CA');
+    const moneySigned = (v) => {
+      const r = Math.round(v || 0);
+      if (r < 0) return '-$' + Math.abs(r).toLocaleString('en-CA');
+      return '$' + r.toLocaleString('en-CA');
+    };
 
-    function calcProgressive(income, brackets, subtractBpa=false, bpa=0){
-      let taxable = subtractBpa ? Math.max(0, income - bpa) : income;
-      let tax = 0; let remaining = taxable;
-      for(const b of brackets){ if(remaining<=0) break; const width = b.max - b.min; const taxed = Math.min(remaining, width); tax += taxed*b.rate; remaining -= taxed; }
+    function progressiveTax(income, brackets) {
+      let remaining = Math.max(0, income);
+      let prev = 0;
+      let tax = 0;
+      for (const b of brackets) {
+        const width = b.max - prev;
+        const slice = Math.min(remaining, width);
+        tax += slice * b.rate;
+        remaining -= slice;
+        prev = b.max;
+        if (remaining <= 0) break;
+      }
       return tax;
     }
 
-    function calcCPPself(income){
-      if(income<=CPP_BASIC_EXEMPT) return 0;
-      let base = Math.min(income, CPP_MAX_EARN) - CPP_BASIC_EXEMPT; base = Math.max(0, base);
-      let t1 = base*CPP_RATE_SELF; let t2=0;
-      if(income>CPP_MAX_EARN){ const add = Math.min(income, CPP2_MAX_EARN) - CPP_MAX_EARN; t2 = Math.max(0, add)*CPP2_RATE_SELF; }
-      return Math.min(t1, CPP_MAX_CONTRIB) + Math.min(t2, CPP2_MAX_CONTRIB);
+    function creditValue(amount, rate) {
+      return Math.max(0, amount) * rate;
     }
 
-    function calcEI(income){
-      const ins = Math.min(Math.max(0,income), EI_MAX_EARN); return Math.min(ins*EI_RATE, EI_MAX);
+    function calcCppEmployee(income) {
+      const { exemption, ympe, yampe, empRate, empMax, cpp2Rate, cpp2Max } = RATES.cpp;
+      if (income <= exemption) return { base: 0, cpp2: 0, total: 0 };
+      const baseEarn = Math.max(0, Math.min(income, ympe) - exemption);
+      const base = Math.min(baseEarn * empRate, empMax);
+      const cpp2Earn = Math.max(0, Math.min(income, yampe) - ympe);
+      const cpp2 = Math.min(cpp2Earn * cpp2Rate, cpp2Max);
+      return { base, cpp2, total: base + cpp2 };
     }
 
-    // Contractor update
-    function updateContractor(){
-      const prov = document.getElementById('c_province').value;
-      const rate = parseFloat(document.getElementById('c_rate').value)||0;
-      const hrs = parseFloat(document.getElementById('c_hours').value)||0;
-      const wks = parseFloat(document.getElementById('c_weeks').value)||0;
-      const gross = rate*hrs*wks;
-      const fed = calcProgressive(Math.max(0,gross - C_BPA), FED);
-      const prv = calcProgressive(Math.max(0,gross - C_BPA), PROV[prov]);
-      const cpp = calcCPPself(gross);
-      const ei = calcEI(gross);
-      const net = gross - (fed+prv+cpp+ei);
-      const netMonth = net/12;
-      const provName = {AB:'Alberta',BC:'British Columbia',ON:'Ontario'}[prov];
-
-      document.getElementById('c_gross').textContent = currency(gross);
-      document.getElementById('c_net_month').textContent = currency(netMonth);
-      document.getElementById('c_gross_b').textContent = currency(gross);
-      document.getElementById('c_fed').textContent = '-' + currency(fed);
-      document.getElementById('c_prov').textContent = '-' + currency(prv);
-      document.getElementById('c_prov_label').textContent = provName + ' Provincial Tax';
-      document.getElementById('c_cpp').textContent = '-' + currency(cpp);
-      document.getElementById('c_ei').textContent = '-' + currency(ei);
-      document.getElementById('c_net').textContent = currency(net);
+    function calcCppSelf(income) {
+      const { exemption, ympe, yampe, selfRate, selfMax, selfCpp2Rate, selfCpp2Max } = RATES.cpp;
+      if (income <= exemption) return 0;
+      const baseEarn = Math.max(0, Math.min(income, ympe) - exemption);
+      const base = Math.min(baseEarn * selfRate, selfMax);
+      const cpp2Earn = Math.max(0, Math.min(income, yampe) - ympe);
+      const cpp2 = Math.min(cpp2Earn * selfCpp2Rate, selfCpp2Max);
+      return base + cpp2;
     }
 
-    // T4 constants
-    const T_BPA = 22323; // simplified
-    const CPP_RATE_EMP = 0.0595, CPP_MAX_EMP = 4034.10;
-
-    function calcCPPemp(income){
-      if(income<=CPP_BASIC_EXEMPT) return 0; const pens = Math.min(income, CPP_MAX_EARN) - CPP_BASIC_EXEMPT; return Math.min(pens*CPP_RATE_EMP, CPP_MAX_EMP);
+    function calcEi(income) {
+      const ins = Math.min(Math.max(0, income), RATES.ei.maxEarn);
+      return Math.min(ins * RATES.ei.rate, RATES.ei.max);
     }
 
-    function currency(v){ return '$' + (isFinite(v)? Math.round(v).toLocaleString('en-CA') : '0'); }
+    function capitalGainFromInputs() {
+      const overrideRaw = String(document.getElementById('r_cap_override').value || '').trim();
+      if (overrideRaw !== '') {
+        const o = parseFloat(overrideRaw);
+        return Number.isFinite(o) ? o : 0;
+      }
+      const proceeds = n('r_t5008_proceeds');
+      const acb = n('r_t5008_acb');
+      const exp = n('r_t5008_exp');
+      return proceeds - acb - exp;
+    }
 
-    function updateT4(){
-      const prov = document.getElementById('t_province').value;
-      const income = parseFloat(document.getElementById('t_income').value)||0;
-      const pay = parseInt(document.getElementById('t_pay').value)||26;
-      const rrsp = parseFloat(document.getElementById('t_rrsp').value)||0;
-      const union = parseFloat(document.getElementById('t_union').value)||0;
+    function wfhDeduction(employmentIncome) {
+      const pct = Math.min(100, Math.max(0, n('r_wfh_pct'))) / 100;
+      if (pct <= 0 || employmentIncome <= 0) return 0;
+      const costs = n('r_wfh_rent') + n('r_wfh_utils') + n('r_wfh_internet') + n('r_wfh_maint') + n('r_wfh_insurance');
+      return Math.min(employmentIncome, costs * pct);
+    }
 
-      const taxable = Math.max(0, income - rrsp - union - T_BPA);
-      const fed = calcProgressive(taxable, FED);
-      const prv = calcProgressive(taxable, PROV[prov]);
-      const cpp = calcCPPemp(income);
-      const ei = calcEI(income);
-      const net = income - (fed+prv+cpp+ei+rrsp+union);
-      const perPay = net / pay;
-      const effective = income>0 ? ((fed+prv+cpp+ei)/income)*100 : 0;
+    function updateReturn() {
+      const provKey = document.getElementById('r_province').value;
+      const prov = RATES.prov[provKey];
 
-      document.getElementById('t_gross').textContent = currency(income);
-      document.getElementById('t_net').textContent = currency(net);
-      document.getElementById('t_perpay').textContent = currency(perPay);
+      const empIncome = n('r_t4_14') + n('r_t4_other');
+      const pension = n('r_pension') + n('r_cpp_benefits') + n('r_oas') + n('r_t4a_other');
+      const rdsp = n('r_rdsp');
+      const interest = n('r_interest') + n('r_other_inv');
+      const divEligActual = n('r_div_elig');
+      const divNonActual = n('r_div_non');
+      const divEligTaxable = divEligActual * RATES.eligGrossUp;
+      const divNonTaxable = divNonActual * RATES.nonEligGrossUp;
+      const capGain = capitalGainFromInputs();
+      const taxableCapGains = Math.max(0, capGain) * RATES.capGainsInclusion;
+      // Allowable capital losses against gains only in this simple model
+      const seNet = n('r_se_net');
+
+      const totalIncome =
+        empIncome + pension + rdsp + interest + divEligTaxable + divNonTaxable +
+        taxableCapGains + Math.max(0, seNet);
+
+      const rpp = n('r_t4_20');
+      const union = n('r_t4_44');
+      const rrsp = n('r_rrsp');
+      const margin = n('r_margin_interest');
+      const otherDed = n('r_other_ded');
+      const wfh = wfhDeduction(empIncome);
+      const annualDeductions = rpp + union + rrsp + margin + otherDed + wfh;
+
+      // Employee CPP/EI are not income deductions for tax brackets (except over-contribution refunds).
+      // 1/2 of self-employed CPP is deductible.
+      const cppSelf = seNet > 0 ? calcCppSelf(seNet) : 0;
+      const cppSelfDeduction = cppSelf / 2;
+
+      const netIncome = Math.max(0, totalIncome - annualDeductions - cppSelfDeduction);
+      const taxableIncome = netIncome; // simplified (no additional NI deductions)
+
+      const fedGross = progressiveTax(taxableIncome, RATES.federal);
+      let fedCredits = creditValue(RATES.federalBpa, 0.145);
+      if (checked('r_canadaEmployment') && empIncome > 0) {
+        fedCredits += creditValue(Math.min(RATES.canadaEmployment, empIncome), 0.145);
+      }
+      if (checked('r_claimDisability')) {
+        fedCredits += creditValue(RATES.disabilityAmount, 0.145);
+      }
+      fedCredits += divEligTaxable * RATES.fedDtcEligible;
+      fedCredits += divNonTaxable * RATES.fedDtcNonEligible;
+      const fedTax = Math.max(0, fedGross - fedCredits);
+
+      const lowestProvRate = prov.brackets[0].rate;
+      const provGross = progressiveTax(taxableIncome, prov.brackets);
+      let provCredits = creditValue(prov.bpa, lowestProvRate);
+      if (checked('r_claimDisability')) {
+        provCredits += creditValue(prov.disability, lowestProvRate);
+      }
+      provCredits += divEligTaxable * prov.dtcEligible;
+      provCredits += divNonTaxable * prov.dtcNonEligible;
+      const provTax = Math.max(0, provGross - provCredits);
+
+      // CPP/EI excess refund (employee)
+      const cppExpected = calcCppEmployee(empIncome).total;
+      const eiExpected = empIncome > 0 ? calcEi(empIncome) : 0;
+      const cppPaid = n('r_t4_16');
+      const eiPaid = n('r_t4_18');
+      const cppRefund = Math.max(0, cppPaid - cppExpected);
+      const eiRefund = Math.max(0, eiPaid - eiExpected);
+
+      const taxPayable = fedTax + provTax + cppSelf;
+      const taxPaid =
+        n('r_t4_22') + n('r_t4a_tax') + n('r_rdsp_tax') + n('r_inv_tax') +
+        n('r_se_installments') + n('r_installments') + n('r_other_tax_paid') +
+        cppRefund + eiRefund;
+
+      const balance = taxPayable - taxPaid; // >0 owe, <0 refund
+
+      const balBox = document.getElementById('r_balanceBox');
+      const balLabel = document.getElementById('r_balanceLabel');
+      const balAmt = document.getElementById('r_balance');
+      balBox.classList.remove('owe', 'refund');
+      if (balance > 25) {
+        balBox.classList.add('owe');
+        balLabel.textContent = 'Estimated amount owing';
+        balAmt.textContent = money(balance);
+      } else if (balance < -25) {
+        balBox.classList.add('refund');
+        balLabel.textContent = 'Estimated refund';
+        balAmt.textContent = money(-balance);
+      } else {
+        balLabel.textContent = 'Roughly even';
+        balAmt.textContent = '$0';
+      }
+
+      document.getElementById('r_totalIncome').textContent = money(totalIncome);
+      document.getElementById('r_taxable').textContent = money(taxableIncome);
+      document.getElementById('r_taxPayable').textContent = money(taxPayable);
+      document.getElementById('r_taxPaid').textContent = money(taxPaid);
+
+      const lines = [
+        ['Employment income', empIncome],
+        ['Pension / CPP / OAS / T4A', pension],
+        ['RDSP taxable', rdsp],
+        ['Interest & other investment', interest],
+        ['Taxable dividends (grossed-up)', divEligTaxable + divNonTaxable],
+        ['Taxable capital gains (50%)', taxableCapGains],
+        ['Self-employment net', Math.max(0, seNet)],
+        ['Deductions (RRSP, RPP, union, margin, WFH…)', -annualDeductions - cppSelfDeduction],
+        ['Federal tax (after credits)', fedTax],
+        [prov.name + ' tax (after credits)', provTax],
+        ['Self-employed CPP', cppSelf],
+        ['CPP/EI over-contribution refund', -(cppRefund + eiRefund)],
+        ['Tax deducted / installments', -(taxPaid - cppRefund - eiRefund)]
+      ];
+
+      document.getElementById('r_breakdown').innerHTML = lines
+        .filter(([, v]) => Math.abs(v) >= 0.5)
+        .map(([k, v]) => `<div class="line"><span class="k">${k}</span><span class="v">${moneySigned(v)}</span></div>`)
+        .join('') +
+        `<div class="line"><span class="k">${balance >= 0 ? 'Balance owing' : 'Refund'}</span><span class="v">${moneySigned(balance)}</span></div>`;
+    }
+
+    function expandAllBoxes(open) {
+      document.querySelectorAll('#returnInputs details.box').forEach((d) => { d.open = open; });
+    }
+
+    function resetReturn() {
+      document.querySelectorAll('#returnInputs input[type="number"]').forEach((el) => {
+        el.value = el.id === 'r_cap_override' ? '' : '0';
+      });
+      document.getElementById('r_province').value = 'AB';
+      document.getElementById('r_claimDisability').checked = false;
+      document.getElementById('r_canadaEmployment').checked = true;
+      updateReturn();
+    }
+
+    // ---- Quick tabs (reuse updated rates) ----
+    function updateContractor() {
+      const provKey = document.getElementById('c_province').value;
+      const gross = n('c_rate') * n('c_hours') * n('c_weeks');
+      const taxable = Math.max(0, gross - RATES.federalBpa);
+      // crude: apply brackets on income after BPA-like reduction using credit method is better
+      const fedGross = progressiveTax(gross, RATES.federal);
+      const fed = Math.max(0, fedGross - creditValue(RATES.federalBpa, 0.145));
+      const prov = RATES.prov[provKey];
+      const prvGross = progressiveTax(gross, prov.brackets);
+      const prv = Math.max(0, prvGross - creditValue(prov.bpa, prov.brackets[0].rate));
+      const cpp = calcCppSelf(gross);
+      const ei = calcEi(gross);
+      const net = gross - fed - prv - cpp - ei;
+      document.getElementById('c_gross').textContent = money(gross);
+      document.getElementById('c_net_month').textContent = money(net / 12);
+      document.getElementById('c_gross_b').textContent = money(gross);
+      document.getElementById('c_fed').textContent = '-' + money(fed);
+      document.getElementById('c_prov').textContent = '-' + money(prv);
+      document.getElementById('c_prov_label').textContent = prov.name + ' provincial tax';
+      document.getElementById('c_cpp').textContent = '-' + money(cpp);
+      document.getElementById('c_ei').textContent = '-' + money(ei);
+      document.getElementById('c_net').textContent = money(net);
+    }
+
+    function updateT4Quick() {
+      const provKey = document.getElementById('t_province').value;
+      const income = n('t_income');
+      const pay = parseInt(document.getElementById('t_pay').value, 10) || 26;
+      const rrsp = n('t_rrsp');
+      const union = n('t_union');
+      const taxable = Math.max(0, income - rrsp - union);
+      const fedGross = progressiveTax(taxable, RATES.federal);
+      let fed = Math.max(0, fedGross - creditValue(RATES.federalBpa, 0.145) - creditValue(RATES.canadaEmployment, 0.145));
+      const prov = RATES.prov[provKey];
+      const prvGross = progressiveTax(taxable, prov.brackets);
+      const prv = Math.max(0, prvGross - creditValue(prov.bpa, prov.brackets[0].rate));
+      const cpp = calcCppEmployee(income).total;
+      const ei = calcEi(income);
+      const net = income - fed - prv - cpp - ei - rrsp - union;
+      const effective = income > 0 ? ((fed + prv + cpp + ei) / income) * 100 : 0;
+      document.getElementById('t_gross').textContent = money(income);
+      document.getElementById('t_net').textContent = money(net);
+      document.getElementById('t_perpay').textContent = money(net / pay);
       document.getElementById('t_effective').textContent = effective.toFixed(1) + '%';
-      document.getElementById('t_taxable').textContent = currency(income - rrsp - union);
-      document.getElementById('t_fed').textContent = '-' + currency(fed);
-      document.getElementById('t_prov').textContent = '-' + currency(prv);
-      document.getElementById('t_cpp').textContent = '-' + currency(cpp);
-      document.getElementById('t_ei').textContent = '-' + currency(ei);
+      document.getElementById('t_taxable').textContent = money(taxable);
+      document.getElementById('t_fed').textContent = '-' + money(fed);
+      document.getElementById('t_prov').textContent = '-' + money(prv);
+      document.getElementById('t_cpp').textContent = '-' + money(cpp);
+      document.getElementById('t_ei').textContent = '-' + money(ei);
     }
 
     // Tabs
-    document.querySelectorAll('.tab').forEach(btn=>{
-      btn.addEventListener('click',()=>{
-        document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
-        document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach((b) => b.classList.remove('active'));
+        document.querySelectorAll('.section').forEach((s) => s.classList.remove('active'));
         btn.classList.add('active');
         document.getElementById(btn.dataset.tab).classList.add('active');
       });
     });
 
-    // Wire inputs
-    ['c_province','c_rate','c_hours','c_weeks'].forEach(id=> document.getElementById(id).addEventListener('input', updateContractor));
-    ['t_province','t_income','t_pay','t_rrsp','t_union'].forEach(id=> document.getElementById(id).addEventListener('input', updateT4));
+    // Live updates
+    document.getElementById('return').addEventListener('input', updateReturn);
+    document.getElementById('return').addEventListener('change', updateReturn);
+    ['c_province', 'c_rate', 'c_hours', 'c_weeks'].forEach((id) =>
+      document.getElementById(id).addEventListener('input', updateContractor)
+    );
+    ['t_province', 't_income', 't_pay', 't_rrsp', 't_union'].forEach((id) =>
+      document.getElementById(id).addEventListener('input', updateT4Quick)
+    );
 
-    // Initial
+    updateReturn();
     updateContractor();
-    updateT4();
+    updateT4Quick();
   </script>
 </body>
 </html>
