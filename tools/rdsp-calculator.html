@@ -617,8 +617,107 @@
         body.dark .cf-year-amounts { color: #9CA3AF; }
 
         /* Dual-handle age range (keep existing DOM) */
-        #rangeSliderContainer { margin-top: 8px; }
-        #rangeTrackArea { position: relative; height: 28px; margin: 8px 0 4px; }
+        /* Unified chart controls (interest rate + age range) */
+        .chart-controls {
+            margin-top: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 12px;
+            background: #F9FAFB;
+            border: 1px solid #E5E7EB;
+            border-radius: 10px;
+        }
+        body.dark .chart-controls { background: #111827; border-color: #374151; }
+        .control-block + .control-block {
+            padding-top: 12px;
+            border-top: 1px solid #E5E7EB;
+        }
+        body.dark .control-block + .control-block { border-top-color: #374151; }
+        .control-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 8px; font-size: 12px; color: #6B7280; font-weight: 500;
+        }
+        body.dark .control-header { color: #9CA3AF; }
+        .control-header strong {
+            color: #111827; font-weight: 700; font-variant-numeric: tabular-nums;
+        }
+        body.dark .control-header strong { color: #E5E7EB; }
+
+        .control-track {
+            position: relative;
+            height: 28px;
+        }
+        .control-track-bg {
+            position: absolute; top: 12px; left: 0; right: 0; height: 4px;
+            background: #E5E7EB; border-radius: 999px;
+        }
+        body.dark .control-track-bg { background: #374151; }
+        .control-track-fill {
+            position: absolute; top: 12px; left: 0; height: 4px;
+            background: #4F46E5; border-radius: 999px; pointer-events: none;
+        }
+        body.dark .control-track-fill { background: #A5B4FC; }
+        .control-track input[type=range] {
+            position: absolute; top: 0; left: 0; width: 100%; height: 28px;
+            margin: 0; padding: 0; border: 0; background: transparent;
+            -webkit-appearance: none; appearance: none; cursor: pointer;
+        }
+        .control-track input[type=range]::-webkit-slider-runnable-track {
+            background: transparent; border: 0; height: 4px;
+        }
+        .control-track input[type=range]::-moz-range-track {
+            background: transparent; border: 0; height: 4px;
+        }
+        .control-track input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none;
+            width: 18px; height: 18px; margin-top: -7px;
+            background: #FFFFFF; border: 2px solid #4F46E5;
+            border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+            cursor: pointer;
+        }
+        body.dark .control-track input[type=range]::-webkit-slider-thumb {
+            background: #1F2937; border-color: #A5B4FC;
+        }
+        .control-track input[type=range]::-moz-range-thumb {
+            width: 18px; height: 18px;
+            background: #FFFFFF; border: 2px solid #4F46E5;
+            border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+            cursor: pointer;
+        }
+        body.dark .control-track input[type=range]::-moz-range-thumb {
+            background: #1F2937; border-color: #A5B4FC;
+        }
+
+        .control-ends {
+            display: flex; justify-content: space-between;
+            font-size: 11px; color: #6B7280; margin-top: 2px;
+        }
+        body.dark .control-ends { color: #9CA3AF; }
+        .control-presets {
+            display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;
+        }
+        .control-presets button {
+            font-size: 11px; padding: 3px 9px;
+            border: 1px solid #E5E7EB; background: #FFFFFF;
+            color: #4B5563; border-radius: 999px;
+            cursor: pointer; font-weight: 500;
+            transition: all 0.15s;
+        }
+        body.dark .control-presets button {
+            background: #1F2937; border-color: #374151; color: #D1D5DB;
+        }
+        .control-presets button:hover,
+        .control-presets button.preset-primary {
+            border-color: #4F46E5; color: #4F46E5;
+        }
+        body.dark .control-presets button:hover,
+        body.dark .control-presets button.preset-primary {
+            border-color: #A5B4FC; color: #A5B4FC;
+        }
+
+        /* Dual-handle age range uses same track chrome */
+        #rangeTrackArea { position: relative; height: 28px; }
         #rangeTrack {
             position: absolute; top: 12px; left: 0; right: 0; height: 4px;
             background: #E5E7EB; border-radius: 999px;
@@ -634,20 +733,7 @@
             cursor: grab; z-index: 2; box-shadow: 0 1px 3px rgba(0,0,0,.15);
         }
         body.dark .range-handle { background: #1F2937; border-color: #A5B4FC; }
-        #rangeLabels { display: flex; justify-content: space-between; font-size: 11px; color: #6B7280; }
-        body.dark #rangeLabels { color: #9CA3AF; }
-        #rangePresets { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-        #rangePresets button {
-            font-size: 11px; padding: 3px 9px; border: 1px solid #E5E7EB; background: #fff;
-            color: #4B5563; border-radius: 999px; cursor: pointer; font-weight: 500;
-        }
-        body.dark #rangePresets button { background: #1F2937; border-color: #374151; color: #D1D5DB; }
-        #rangePresets button.preset-primary, #rangePresets button:hover {
-            border-color: #4F46E5; color: #4F46E5;
-        }
 
-        .chart-wrap { position: relative; width: 100%; height: 340px; }
-        @media (max-width: 768px) { .chart-wrap { height: 280px; } }
         .chart-wrap-sm { position: relative; width: 100%; height: 260px; }
         .section-title {
             font-size: 14px; font-weight: 700; margin: 0 0 10px;
@@ -655,32 +741,40 @@
         }
         .section-title .material-icons { font-size: 18px; color: #4F46E5; }
         body.dark .section-title .material-icons { color: #A5B4FC; }
-        .rate-slider-row {
-            display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
-            margin-top: 12px; padding: 10px 12px;
-            background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 8px;
-        }
-        body.dark .rate-slider-row { background: #111827; border-color: #374151; }
-        .rate-slider-row label { font-size: 12px; font-weight: 600; color: #4B5563; white-space: nowrap; }
-        body.dark .rate-slider-row label { color: #D1D5DB; }
-        .rate-slider-row input[type=range] { flex: 1; min-width: 120px; accent-color: #4F46E5; }
-        .rate-slider-row .rate-value { font-size: 13px; font-weight: 700; min-width: 3.2rem; text-align: right; }
 
         .breakdown-layout { display: grid; grid-template-columns: 1fr 240px; gap: 12px; }
         @media (max-width: 800px) { .breakdown-layout { grid-template-columns: 1fr; } }
+        .chart-hud,
         .breakdown-hover {
             border: 1px solid #E5E7EB; border-radius: 8px; padding: 12px;
             background: #F9FAFB; font-size: 12px; min-height: 160px;
         }
+        body.dark .chart-hud,
         body.dark .breakdown-hover { background: #111827; border-color: #374151; }
-        .breakdown-hover .title { font-weight: 700; margin-bottom: 8px; }
-        .breakdown-hover .muted { color: #6B7280; }
+        .chart-hud .title,
+        .breakdown-hover .title { font-weight: 700; margin-bottom: 8px; font-size: 13px; }
+        .chart-hud .muted,
+        .breakdown-hover .muted { color: #6B7280; line-height: 1.4; }
+        body.dark .chart-hud .muted,
         body.dark .breakdown-hover .muted { color: #9CA3AF; }
-        .breakdown-hover .row { display: flex; justify-content: space-between; gap: 8px; padding: 4px 0; border-bottom: 1px solid #E5E7EB; }
+        .chart-hud .row,
+        .breakdown-hover .row {
+            display: flex; justify-content: space-between; gap: 8px;
+            padding: 5px 0; border-bottom: 1px solid #E5E7EB;
+        }
+        body.dark .chart-hud .row,
         body.dark .breakdown-hover .row { border-bottom-color: #374151; }
-        .breakdown-hover .k { color: #6B7280; }
+        .chart-hud .row:last-child,
+        .breakdown-hover .row:last-child { border-bottom: none; }
+        .chart-hud .k,
+        .breakdown-hover .k { color: #6B7280; display: inline-flex; align-items: center; gap: 6px; }
+        body.dark .chart-hud .k,
         body.dark .breakdown-hover .k { color: #9CA3AF; }
-        .breakdown-hover .v { font-weight: 600; }
+        .chart-hud .v,
+        .breakdown-hover .v { font-weight: 600; font-variant-numeric: tabular-nums; }
+        .chart-hud .swatch {
+            width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0;
+        }
 
         .modal.hidden { display: none; }
         .modal {
@@ -759,29 +853,38 @@
                 </div>
                 <div class="help-text" id="inflationChartNote" style="margin-top:8px;">Values in today’s dollars (inflation-adjusted).</div>
 
-                <div class="rate-slider-row">
-                    <label for="returnRateSlider">Interest rate</label>
-                    <input type="range" id="returnRateSlider" min="0" max="20" step="0.1" value="10" aria-label="Interest rate (%)" oninput="syncReturnRateFromSlider()">
-                    <span class="rate-value" id="returnRateSliderValue">10%</span>
-                </div>
+                <div class="chart-controls">
+                    <div class="control-block">
+                        <div class="control-header">
+                            <span>Interest rate</span>
+                            <strong id="returnRateSliderValue">10%</strong>
+                        </div>
+                        <div class="control-track">
+                            <div class="control-track-bg"></div>
+                            <div class="control-track-fill" id="returnRateFill" style="width:50%;"></div>
+                            <input type="range" id="returnRateSlider" min="0" max="20" step="0.1" value="10" aria-label="Interest rate (%)" oninput="syncReturnRateFromSlider()">
+                        </div>
+                        <div class="control-ends"><span>0%</span><span>20%</span></div>
+                    </div>
 
-                <div class="range-slider" id="rangeSliderContainer" style="margin-top:12px;">
-                    <div class="range-slider-header">
-                        <span>Chart age range</span>
-                        <strong id="ageRangeDisplay">30 – 90</strong>
-                    </div>
-                    <div id="rangeTrackArea">
-                        <div id="rangeTrack"></div>
-                        <div id="rangeHighlight" style="left:0%;width:100%;"></div>
-                        <div id="leftHandle" class="range-handle" style="left:0%;" onmousedown="startDrag('left', event)" ontouchstart="startDrag('left', event)"></div>
-                        <div id="rightHandle" class="range-handle" style="left:100%;" onmousedown="startDrag('right', event)" ontouchstart="startDrag('right', event)"></div>
-                    </div>
-                    <div id="rangeLabels"><span id="minAgeLabel">30</span><span id="maxAgeLabel">90</span></div>
-                    <div id="rangePresets">
-                        <button type="button" onclick="setChartRange('early')">Early</button>
-                        <button type="button" onclick="setChartRange('mid')">Mid</button>
-                        <button type="button" onclick="setChartRange('late')">Late</button>
-                        <button type="button" onclick="setChartRange('all')" class="preset-primary">All years</button>
+                    <div class="control-block" id="rangeSliderContainer">
+                        <div class="control-header">
+                            <span>Chart age range</span>
+                            <strong id="ageRangeDisplay">30 – 90</strong>
+                        </div>
+                        <div id="rangeTrackArea">
+                            <div id="rangeTrack"></div>
+                            <div id="rangeHighlight" style="left:0%;width:100%;"></div>
+                            <div id="leftHandle" class="range-handle" style="left:0%;" onmousedown="startDrag('left', event)" ontouchstart="startDrag('left', event)"></div>
+                            <div id="rightHandle" class="range-handle" style="left:100%;" onmousedown="startDrag('right', event)" ontouchstart="startDrag('right', event)"></div>
+                        </div>
+                        <div class="control-ends"><span id="minAgeLabel">30</span><span id="maxAgeLabel">90</span></div>
+                        <div class="control-presets" id="rangePresets">
+                            <button type="button" onclick="setChartRange('early')">Early</button>
+                            <button type="button" onclick="setChartRange('mid')">Mid</button>
+                            <button type="button" onclick="setChartRange('late')">Late</button>
+                            <button type="button" onclick="setChartRange('all')" class="preset-primary">All years</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -790,7 +893,7 @@
                 <div class="section-title"><span class="material-icons">bar_chart</span> Annual breakdown</div>
                 <div class="breakdown-layout">
                     <div class="chart-wrap-sm" id="breakdownChartContainer"><canvas id="breakdownChart"></canvas></div>
-                    <div id="breakdownHoverPanel" class="breakdown-hover">
+                    <div id="breakdownHoverPanel" class="chart-hud">
                         <div class="title">Year details</div>
                         <div class="muted">Hover or tap a bar to see contributions, grants, growth, and withdrawals.</div>
                     </div>
@@ -800,8 +903,14 @@
             <div class="card" style="margin-top:16px;">
                 <div class="section-title"><span class="material-icons">account_balance</span> Withdrawals &amp; tax</div>
                 <div id="withdrawalChartContainer" style="display:none;">
-                    <div class="chart-wrap-sm"><canvas id="withdrawalChart"></canvas></div>
-                    <p class="help-text" style="margin-top:8px;">Only grants, bonds, and growth are taxable. Est. Tax is the extra liability on that slice given other income, province, and DTC. Enable LDAP vs Optimal under Assumptions → Compare for the dashed growth overlay.</p>
+                    <div class="breakdown-layout">
+                        <div class="chart-wrap-sm"><canvas id="withdrawalChart"></canvas></div>
+                        <div id="withdrawalHoverPanel" class="chart-hud">
+                            <div class="title">Year details</div>
+                            <div class="muted">Hover a year to see total withdrawal, taxable portion, est. tax, and net.</div>
+                        </div>
+                    </div>
+                    <p class="help-text" style="margin-top:8px;">Only grants, bonds, and growth are taxable. Est. Tax is the extra liability on that slice given other income, province, and DTC.</p>
                 </div>
                 <div id="withdrawalEmpty" class="help-text">No withdrawals in the selected range yet — choose LDAP or Scheduled / Manual in Assumptions.</div>
             </div>
@@ -899,11 +1008,23 @@
                             <div id="requiredRateResult" class="computed-tag" style="margin-top:8px;">—</div>
                         </div>
                     </div>
-                    <div style="margin-top:10px;">
-                        <button type="button" class="add-row-btn" onclick="toggleYearlyRates()"><span id="yearlyRatesToggleText">Show yearly rates</span></button>
-                        <div id="yearlyRatesContainer" style="display:none;margin-top:8px;">
-                            <div id="yearlyRatesList"></div>
+                    <div class="nested-block">
+                        <div class="field-label" style="margin-bottom:6px;">Per-year returns</div>
+                        <p class="help-text" style="margin-bottom:8px;">Default rate applies to every year. Override a range (e.g. higher returns in early risk-on years).</p>
+                        <div class="field-grid">
+                            <label class="field-label" for="yearlyRateStartAge">From age</label>
+                            <input type="number" id="yearlyRateStartAge" value="30" min="0" max="120">
+                            <label class="field-label" for="yearlyRateEndAge">To age</label>
+                            <input type="number" id="yearlyRateEndAge" value="45" min="0" max="120">
+                            <label class="field-label" for="yearlyRateValue">Rate</label>
+                            <div class="field-input-wrap">
+                                <input type="number" id="yearlyRateValue" value="12" min="0" max="30" step="0.1">
+                                <span class="field-suffix">%</span>
+                            </div>
                         </div>
+                        <button type="button" class="btn-primary" style="margin-top:8px;" onclick="applyYearlyRateRange()">Apply to age range</button>
+                        <div id="yearlyRatesList" style="margin-top:10px;"></div>
+                        <button type="button" class="add-row-btn" id="clearYearlyRatesBtn" style="margin-top:8px;display:none;" onclick="clearYearlyRates()">Clear all custom rates</button>
                     </div>
                 </div>
             </div>
@@ -1676,13 +1797,23 @@
             };
         }
 
+        function syncReturnRateFill(rate) {
+            const slider = document.getElementById('returnRateSlider');
+            const fill = document.getElementById('returnRateFill');
+            const label = document.getElementById('returnRateSliderValue');
+            const min = slider ? parseFloat(slider.min) || 0 : 0;
+            const max = slider ? parseFloat(slider.max) || 20 : 20;
+            const pct = max > min ? ((Number(rate) - min) / (max - min)) * 100 : 0;
+            if (fill) fill.style.width = Math.max(0, Math.min(100, pct)) + '%';
+            if (label) label.textContent = (Number.isFinite(Number(rate)) ? Number(rate) : 0) + '%';
+        }
+
         function syncReturnRateFromSlider() {
             const slider = document.getElementById('returnRateSlider');
             const value = parseFloat(slider.value);
             const rate = Number.isFinite(value) ? value : 10;
             document.getElementById('returnRate').value = rate;
-            const label = document.getElementById('returnRateSliderValue');
-            if (label) label.textContent = rate + '%';
+            syncReturnRateFill(rate);
             updateCalculations();
         }
 
@@ -1827,10 +1958,12 @@
             const savedPayDividends = state.payDividends;
             const savedDividendRate = state.dividendRate;
             const savedInflationRate = state.inflationRate;
+            const savedYearlyRates = state.yearlyReturnRates;
             state.returnRate = 0;
             state.payDividends = false;
             state.dividendRate = 0;
             state.inflationRate = 0;
+            state.yearlyReturnRates = {};
             try {
                 noGrowthProjectionData = calculateProjections().data;
             } finally {
@@ -1838,6 +1971,7 @@
                 state.payDividends = savedPayDividends;
                 state.dividendRate = savedDividendRate;
                 state.inflationRate = savedInflationRate;
+                state.yearlyReturnRates = savedYearlyRates;
             }
 
             // LDAP vs Optimal overlay (level annual withdrawal that depletes to ~$0)
@@ -1851,13 +1985,16 @@
             
             // Update withdrawals display (same — preserve focused inputs)
             updateWithdrawalsDisplay();
+            syncYearlyRateFormDefaults();
+            if (!isEditingInside(document.getElementById('yearlyRatesList'))) {
+                updateYearlyRatesDisplay();
+            }
             
             // Sync interest rate slider with number input
             const returnRateSlider = document.getElementById('returnRateSlider');
-            const returnRateSliderValue = document.getElementById('returnRateSliderValue');
             if (returnRateSlider) {
                 returnRateSlider.value = state.returnRate;
-                if (returnRateSliderValue) returnRateSliderValue.textContent = state.returnRate + '%';
+                syncReturnRateFill(state.returnRate);
             }
             
             // Update chart age range sliders
@@ -2477,80 +2614,146 @@
             syncManualWithdrawalsOpenState();
         }
 
-        // Toggle yearly rates section
-        function toggleYearlyRates() {
-            const container = document.getElementById('yearlyRatesContainer');
-            const toggleText = document.getElementById('yearlyRatesToggleText');
-            if (!container || !toggleText) return;
-            
-            if (container.style.display === 'none') {
-                container.style.display = 'block';
-                toggleText.textContent = '− Hide per-year rates';
-                updateYearlyRatesDisplay();
-            } else {
-                container.style.display = 'none';
-                toggleText.textContent = '+ Adjust rate per year';
+        function syncYearlyRateFormDefaults() {
+            const startEl = document.getElementById('yearlyRateStartAge');
+            const endEl = document.getElementById('yearlyRateEndAge');
+            const rateEl = document.getElementById('yearlyRateValue');
+            if (!startEl || !endEl || !rateEl) return;
+            // Seed sensible defaults once from current age / default return
+            if (!startEl.dataset.seeded) {
+                startEl.value = String(state.currentAge || 30);
+                endEl.value = String(Math.min((state.currentAge || 30) + 15, state.endAge || 90));
+                rateEl.value = String(Math.min(20, Math.max(0, (state.returnRate || 10) + 2)));
+                startEl.dataset.seeded = '1';
             }
         }
 
-        // Update yearly rates display
+        function applyYearlyRateRange() {
+            const startEl = document.getElementById('yearlyRateStartAge');
+            const endEl = document.getElementById('yearlyRateEndAge');
+            const rateEl = document.getElementById('yearlyRateValue');
+            let start = parseInt(startEl?.value, 10);
+            let end = parseInt(endEl?.value, 10);
+            let rate = parseFloat(rateEl?.value);
+
+            if (!Number.isFinite(start)) start = state.currentAge || 30;
+            if (!Number.isFinite(end)) end = start;
+            if (end < start) {
+                const tmp = start; start = end; end = tmp;
+            }
+            const minAge = state.currentAge || 0;
+            const maxAge = state.endAge || 90;
+            start = Math.max(minAge, Math.min(maxAge, start));
+            end = Math.max(start, Math.min(maxAge, end));
+            if (!Number.isFinite(rate)) rate = state.returnRate || 10;
+            rate = Math.max(0, Math.min(30, rate));
+
+            if (startEl) startEl.value = String(start);
+            if (endEl) endEl.value = String(end);
+            if (rateEl) rateEl.value = String(rate);
+
+            for (let age = start; age <= end; age++) {
+                state.yearlyReturnRates[age] = rate;
+            }
+            updateYearlyRatesDisplay();
+            updateCalculations();
+        }
+
         function updateYearlyRatesDisplay() {
             const list = document.getElementById('yearlyRatesList');
+            const clearBtn = document.getElementById('clearYearlyRatesBtn');
             if (!list) return;
-            
-            list.innerHTML = '';
+
             const years = Object.keys(state.yearlyReturnRates).map(Number).sort((a, b) => a - b);
-            
-            years.forEach(age => {
-                const div = document.createElement('div');
-                div.className = 'flex items-center gap-2';
-                div.innerHTML = `
-                    <label class="text-xs text-gray-600 w-20">Age ${age}:</label>
-                    <input type="number" value="${state.yearlyReturnRates[age]}" min="0" max="20" step="0.1" 
-                           class="flex-1 px-2 py-1 text-sm border border-gray-300 rounded" 
-                           oninput="updateYearlyRate(${age}, this.value)"
-                           placeholder="Default">
-                    <button type="button" onclick="removeYearlyRate(${age})" class="text-red-600 hover:text-red-700 text-sm">×</button>
-                `;
-                list.appendChild(div);
-            });
-            
+            if (clearBtn) clearBtn.style.display = years.length ? 'block' : 'none';
+
             if (years.length === 0) {
-                list.innerHTML = '<div class="text-xs text-gray-500 italic">No custom rates set. Using default rate for all years.</div>';
-            }
-        }
-
-        // Add yearly rate
-        function addYearlyRate() {
-            const age = parseInt(prompt('Enter age for this rate:')) || state.currentAge;
-            if (age < state.currentAge || age > state.endAge) {
-                alert(`Age must be between ${state.currentAge} and ${state.endAge}`);
+                list.innerHTML = `<div class="help-text">No overrides yet — default <strong>${state.returnRate || 0}%</strong> applies to all years.</div>`;
                 return;
             }
-            const rate = parseFloat(prompt('Enter return rate (%) for age ' + age + ':')) || state.returnRate;
-            state.yearlyReturnRates[age] = rate;
-            updateYearlyRatesDisplay();
-            updateCalculations();
+
+            // Collapse contiguous same-rate ages into ranges for a cleaner list
+            const ranges = [];
+            let i = 0;
+            while (i < years.length) {
+                const start = years[i];
+                const rate = state.yearlyReturnRates[start];
+                let end = start;
+                while (i + 1 < years.length &&
+                    years[i + 1] === end + 1 &&
+                    state.yearlyReturnRates[years[i + 1]] === rate) {
+                    i += 1;
+                    end = years[i];
+                }
+                ranges.push({ start, end, rate });
+                i += 1;
+            }
+
+            list.innerHTML = ranges.map(({ start, end, rate }) => {
+                const label = start === end ? `Age ${start}` : `Ages ${start}–${end}`;
+                const agesAttr = `${start}-${end}`;
+                return `
+                    <div class="cf-year-row">
+                        <div class="cf-year-top">
+                            <div class="cf-year-meta">${label}</div>
+                            <button type="button" class="btn-quiet" onclick="removeYearlyRateRange(${start}, ${end})">Remove</button>
+                        </div>
+                        <div class="field-grid">
+                            <label class="field-label">Rate</label>
+                            <div class="field-input-wrap">
+                                <input type="number" value="${rate}" min="0" max="30" step="0.1"
+                                    oninput="updateYearlyRateRange(${start}, ${end}, this.value)"
+                                    onblur="commitYearlyRateRange(${start}, ${end}, this)">
+                                <span class="field-suffix">%</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
         }
 
-        // Update yearly rate
-        function updateYearlyRate(age, value) {
-            if (value === '' || value === null || value === undefined) {
-                // Keep entry while clearing — don't remount list mid-edit
-                return;
-            }
-            const n = parseFloat(value);
+        function updateYearlyRateRange(start, end, value) {
+            const raw = String(value).trim();
+            if (raw === '' || raw === '-' || raw === '.') return;
+            const n = parseFloat(raw);
             if (!Number.isFinite(n)) return;
-            state.yearlyReturnRates[age] = n;
+            for (let age = start; age <= end; age++) {
+                state.yearlyReturnRates[age] = n;
+            }
             updateCalculations();
         }
 
-        // Remove yearly rate
-        function removeYearlyRate(age) {
-            delete state.yearlyReturnRates[age];
+        function commitYearlyRateRange(start, end, el) {
+            let n = parseFloat(String(el.value).trim());
+            if (!Number.isFinite(n)) n = state.returnRate || 0;
+            n = Math.max(0, Math.min(30, n));
+            el.value = String(n);
+            for (let age = start; age <= end; age++) {
+                state.yearlyReturnRates[age] = n;
+            }
             updateYearlyRatesDisplay();
             updateCalculations();
         }
+
+        function removeYearlyRateRange(start, end) {
+            for (let age = start; age <= end; age++) {
+                delete state.yearlyReturnRates[age];
+            }
+            updateYearlyRatesDisplay();
+            updateCalculations();
+        }
+
+        function clearYearlyRates() {
+            state.yearlyReturnRates = {};
+            updateYearlyRatesDisplay();
+            updateCalculations();
+        }
+
+        // Keep old single-age helpers for compatibility
+        function toggleYearlyRates() { /* section always visible now */ }
+        function addYearlyRate() { applyYearlyRateRange(); }
+        function updateYearlyRate(age, value) { updateYearlyRateRange(age, age, value); }
+        function removeYearlyRate(age) { removeYearlyRateRange(age, age); }
 
         // Calculate required return rate to maintain balance
         function calculateRequiredReturnRate() {
@@ -3052,21 +3255,13 @@
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
+                        interaction: { mode: 'index', intersect: false },
                         plugins: {
-                            legend: { 
+                            legend: {
                                 display: true,
                                 labels: { color: colors.text }
                             },
-                            tooltip: {
-                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                                titleColor: '#f8fafc',
-                                bodyColor: '#f8fafc',
-                                callbacks: {
-                                    label: function(context) {
-                                        return context.dataset.label + ': ' + formatCurrency(context.parsed.y);
-                                    }
-                                }
-                            }
+                            tooltip: { enabled: false }
                         },
                         scales: {
                             y: {
@@ -3076,21 +3271,57 @@
                                         return '$' + (value / 1000).toFixed(0) + 'k';
                                     }
                                 },
-                                grid: {
-                                    color: colors.grid
-                                }
+                                grid: { color: colors.grid }
                             },
                             x: {
-                                ticks: {
-                                    color: colors.text
-                                },
-                                grid: {
-                                    color: colors.grid
-                                }
+                                ticks: { color: colors.text },
+                                grid: { color: colors.grid }
                             }
                         }
                     }
                 });
+
+                const renderWithdrawalHud = (dataPoint) => {
+                    const panel = document.getElementById('withdrawalHoverPanel');
+                    if (!panel || !dataPoint) return;
+                    const net = dataPoint.netWithdrawal != null
+                        ? dataPoint.netWithdrawal
+                        : Math.max(0, (dataPoint.withdrawal || 0) - (dataPoint.estimatedTax || 0));
+                    const rows = [
+                        `<div class="title">Age ${dataPoint.age}</div>`,
+                        `<div class="row"><span class="k"><span class="swatch" style="background:#3b82f6"></span>Total withdrawal</span><span class="v">${formatCurrency(dataPoint.withdrawal || 0)}</span></div>`,
+                        `<div class="row"><span class="k"><span class="swatch" style="background:#ef4444"></span>Taxable</span><span class="v">${formatCurrency(dataPoint.taxableWithdrawal || 0)}</span></div>`,
+                        `<div class="row"><span class="k"><span class="swatch" style="background:#a855f7"></span>Est. tax</span><span class="v">${formatCurrency(dataPoint.estimatedTax || 0)}</span></div>`,
+                        `<div class="row"><span class="k"><span class="swatch" style="background:#10b981"></span>Net</span><span class="v">${formatCurrency(net)}</span></div>`
+                    ];
+                    if ((dataPoint.nonTaxableWithdrawal || 0) > 0) {
+                        rows.push(`<div class="row"><span class="k">Tax-free (contributions)</span><span class="v">${formatCurrency(dataPoint.nonTaxableWithdrawal)}</span></div>`);
+                    }
+                    if ((dataPoint.repaymentPenalty || 0) > 0) {
+                        rows.push(`<div class="row"><span class="k"><span class="swatch" style="background:#f97316"></span>10-year penalty</span><span class="v">${formatCurrency(dataPoint.repaymentPenalty)}</span></div>`);
+                    }
+                    if ((dataPoint.rrspCash || 0) > 0) {
+                        rows.push(`<div class="row"><span class="k">RRSP / RRIF cash</span><span class="v">${formatCurrency(dataPoint.rrspCash)}</span></div>`);
+                    }
+                    if ((dataPoint.tfsaCash || 0) > 0) {
+                        rows.push(`<div class="row"><span class="k">TFSA cash</span><span class="v">${formatCurrency(dataPoint.tfsaCash)}</span></div>`);
+                    }
+                    if ((dataPoint.householdCash || 0) > 0 && ((dataPoint.rrspCash || 0) > 0 || (dataPoint.tfsaCash || 0) > 0)) {
+                        rows.push(`<div class="row"><span class="k">Household cash</span><span class="v">${formatCurrency(dataPoint.householdCash)}</span></div>`);
+                    }
+                    panel.innerHTML = rows.join('');
+                };
+
+                withdrawalChart.options.onHover = (evt, activeEls) => {
+                    const panel = document.getElementById('withdrawalHoverPanel');
+                    if (!panel) return;
+                    if (!activeEls || activeEls.length === 0) {
+                        panel.innerHTML = `<div class="title">Year details</div><div class="muted">Hover a year to see total withdrawal, taxable portion, est. tax, and net.</div>`;
+                        return;
+                    }
+                    const idx = activeEls[0].index;
+                    renderWithdrawalHud(withdrawalData[idx]);
+                };
             } else {
                 document.getElementById('withdrawalChartContainer').style.display = 'none';
                 const emptyEl = document.getElementById('withdrawalEmpty');
@@ -3150,6 +3381,7 @@
             state.rrspWithdrawalAmount = 15000;
             state.useTfsaWithdrawals = false;
             state.tfsaWithdrawalAmount = 10000;
+            state.yearlyReturnRates = {};
             state.carryForwardYears = initializeCarryForwardYears();
             state.chartAgeRange = [30, 90];
             
@@ -3192,6 +3424,14 @@
             document.querySelector('input[name="withdrawalType"][value="ldap"]').checked = true;
             document.getElementById('stopContribsAtWithdrawal').checked = state.stopContribsAtWithdrawal;
             document.getElementById('showComparison').checked = state.showComparison;
+            const yearlyStart = document.getElementById('yearlyRateStartAge');
+            const yearlyEnd = document.getElementById('yearlyRateEndAge');
+            const yearlyRate = document.getElementById('yearlyRateValue');
+            if (yearlyStart) { yearlyStart.value = '30'; delete yearlyStart.dataset.seeded; }
+            if (yearlyEnd) yearlyEnd.value = '45';
+            if (yearlyRate) yearlyRate.value = '12';
+            syncYearlyRateFormDefaults();
+            updateYearlyRatesDisplay();
             
             updateCalculations();
         }
