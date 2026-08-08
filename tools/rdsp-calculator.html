@@ -3,2322 +3,1044 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RDSP Calculator - Enhanced with Advanced Withdrawal Planning</title>
+    <title>RDSP Calculator — Canadian Disability Savings Plan</title>
+    <meta name="description" content="Free Canadian RDSP calculator: CDSG/CDSB, carry-forward, LDAP/DAP withdrawals, and tax estimates for Alberta, BC, and Ontario."/>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background: #FFFFFF;
-            min-height: 100vh;
-            padding: 20px;
             color: #111827;
+            padding: 16px;
             transition: background-color 0.3s, color 0.3s;
         }
-        
-        body.dark-mode {
-            background: #121212;
-            color: #E5E7EB;
-        }
-        
+        body.dark { background: #121212; color: #E5E7EB; }
+
         .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            color: #6B7280;
-            text-decoration: none;
-            font-size: 14px;
-            margin-bottom: 12px;
-            transition: color 0.3s;
+            display: inline-flex; align-items: center; gap: 6px;
+            color: #6B7280; text-decoration: none; font-size: 14px;
+            margin-bottom: 16px; transition: color 0.3s;
         }
-        
-        body.dark-mode .back-link {
-            color: #9CA3AF;
+        body.dark .back-link { color: #9CA3AF; }
+        .back-link:hover { color: #111827; }
+        body.dark .back-link:hover { color: #E5E7EB; }
+
+        .dark-mode-toggle {
+            position: fixed; top: 16px; right: 16px; z-index: 1000;
+            background: #FFFFFF; border: 1px solid #E5E7EB;
+            border-radius: 8px; padding: 8px 12px; cursor: pointer;
+            display: flex; align-items: center; gap: 6px;
+            color: #111827; font-size: 14px; font-weight: 500;
+            transition: all 0.2s;
         }
-        
-        .back-link:hover {
-            color: #111827;
-        }
-        
-        body.dark-mode .back-link:hover {
-            color: #E5E7EB;
-        }
-        
-        .max-w-7xl {
+        .dark-mode-toggle:hover { background: #F9FAFB; border-color: #D1D5DB; }
+        body.dark .dark-mode-toggle { background: #1F2937; border-color: #374151; color: #E5E7EB; }
+        body.dark .dark-mode-toggle:hover { background: #374151; border-color: #4B5563; }
+
+        .page {
             max-width: 1400px;
             margin: 0 auto;
         }
 
-        /* Side-by-side: charts left, controls right (like retirement calculator) */
-        .rdsp-layout {
+        h1 {
+            font-size: 22px; font-weight: 700; margin-bottom: 4px;
+        }
+        .subtitle {
+            color: #6B7280; font-size: 13px; margin-bottom: 20px;
+        }
+        body.dark .subtitle { color: #9CA3AF; }
+
+        /* Layout: results left, assumptions right */
+        .layout {
             display: grid;
-            grid-template-columns: minmax(0, 1fr) 400px;
+            grid-template-columns: 1fr 400px;
             gap: 16px;
             align-items: start;
-            transition: grid-template-columns 0.35s cubic-bezier(0.4, 0, 0.2, 1), gap 0.35s ease;
-        }
-        .rdsp-layout.assumptions-collapsed {
-            grid-template-columns: minmax(0, 1fr) 0px;
-            gap: 0;
         }
         @media (max-width: 1100px) {
-            .rdsp-layout {
-                grid-template-columns: 1fr;
-            }
-            .rdsp-layout.assumptions-collapsed {
-                grid-template-columns: 1fr;
-            }
-            .rdsp-assumptions {
-                position: static;
-                max-height: none;
-            }
-            .rdsp-layout.assumptions-collapsed .rdsp-assumptions {
-                display: none;
-            }
-            .rdsp-assumptions-open-btn {
-                top: auto;
-                bottom: 20px;
-                right: 16px;
-            }
+            .layout { grid-template-columns: 1fr; }
         }
-        .rdsp-results {
-            min-width: 0;
-        }
-        .rdsp-assumptions {
-            position: sticky;
-            top: 16px;
-            max-height: calc(100vh - 32px);
-            overflow-x: hidden;
-            overflow-y: auto;
-            background: #FFFFFF;
-            border: 1px solid #E5E7EB;
-            border-radius: 12px;
-            padding: 0;
-            min-width: 0;
-            transition: background-color 0.3s, border-color 0.3s, opacity 0.3s ease, transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .rdsp-layout.assumptions-collapsed .rdsp-assumptions {
-            opacity: 0;
-            transform: translateX(24px);
-            pointer-events: none;
-            border-color: transparent;
-            overflow: hidden;
-        }
-        body.dark-mode .rdsp-assumptions {
-            background: #1F2937;
-            border-color: #374151;
-        }
-        .rdsp-assumptions-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-            padding: 14px 16px 12px;
-            border-bottom: 1px solid #E5E7EB;
-            position: sticky;
-            top: 0;
-            background: #FFFFFF;
-            z-index: 2;
-        }
-        body.dark-mode .rdsp-assumptions-header {
-            background: #1F2937;
-            border-bottom-color: #374151;
-        }
-        .rdsp-assumptions-header h2 {
-            font-size: 16px;
-            font-weight: 700;
-            margin: 0;
-            color: #111827;
-        }
-        body.dark-mode .rdsp-assumptions-header h2 {
-            color: #E5E7EB;
-        }
-        .rdsp-assumptions-header-actions {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            flex-shrink: 0;
-        }
-        .rdsp-icon-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 34px;
-            height: 34px;
-            padding: 0;
-            border: 1px solid #E5E7EB;
-            border-radius: 8px;
-            background: #FFFFFF;
-            color: #374151;
-            cursor: pointer;
-            transition: background-color 0.15s, border-color 0.15s, color 0.15s;
-        }
-        .rdsp-icon-btn:hover {
-            background: #F3F4F6;
-            border-color: #D1D5DB;
-        }
-        body.dark-mode .rdsp-icon-btn {
-            background: #111827;
-            border-color: #374151;
-            color: #E5E7EB;
-        }
-        body.dark-mode .rdsp-icon-btn:hover {
-            background: #374151;
-        }
-        .rdsp-assumptions-open-btn {
-            position: fixed;
-            top: 88px;
-            right: 16px;
-            z-index: 45;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 10px 14px;
-            border-radius: 999px;
-            border: 1px solid #E5E7EB;
-            background: #FFFFFF;
-            color: #111827;
-            font-size: 13px;
-            font-weight: 600;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.10);
-            cursor: pointer;
-            opacity: 0;
-            pointer-events: none;
-            transform: translateX(16px);
-            transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s, border-color 0.2s;
-        }
-        body.assumptions-collapsed .rdsp-assumptions-open-btn {
-            opacity: 1;
-            pointer-events: auto;
-            transform: translateX(0);
-        }
-        .rdsp-assumptions-open-btn:hover {
-            background: #F9FAFB;
-            border-color: #D1D5DB;
-        }
-        body.dark-mode .rdsp-assumptions-open-btn {
-            background: #1F2937;
-            border-color: #374151;
-            color: #E5E7EB;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.35);
-        }
-        body.dark-mode .rdsp-assumptions-open-btn:hover {
-            background: #374151;
-        }
-        .rdsp-assumptions-body {
-            padding: 12px 16px 20px;
-        }
-        .rdsp-assumptions-body > .mb-6:last-child {
-            margin-bottom: 0;
-        }
-        .rdsp-section-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: #111827;
-            border-bottom: 1px solid #E5E7EB;
-            padding-bottom: 8px;
-            margin-bottom: 12px;
-        }
-        body.dark-mode .rdsp-section-title {
-            color: #E5E7EB;
-            border-bottom-color: #374151;
-        }
-        /* Withdrawals / option cards — clearer spacing */
-        .rdsp-option-card {
-            background: #F9FAFB;
-            border: 1px solid #E5E7EB;
-            border-radius: 10px;
-            padding: 14px 16px;
-            margin-bottom: 12px;
-        }
-        body.dark-mode .rdsp-option-card {
-            background: #111827;
-            border-color: #374151;
-        }
-        .rdsp-option-card-label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            color: #374151;
-            margin-bottom: 10px;
-        }
-        body.dark-mode .rdsp-option-card-label { color: #D1D5DB; }
-        .rdsp-option-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .rdsp-radio-row {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            padding: 10px 12px;
-            border: 1px solid #E5E7EB;
-            border-radius: 8px;
-            background: #FFFFFF;
-            cursor: pointer;
-            transition: border-color 0.15s, background-color 0.15s;
-        }
-        .rdsp-radio-row:hover {
-            border-color: #D1D5DB;
-        }
-        body.dark-mode .rdsp-radio-row {
-            background: #1F2937;
-            border-color: #374151;
-        }
-        body.dark-mode .rdsp-radio-row:hover {
-            border-color: #4B5563;
-        }
-        .rdsp-radio-row input[type="radio"],
-        .rdsp-check-row input[type="checkbox"] {
-            margin-top: 2px;
-            flex-shrink: 0;
-        }
-        .rdsp-radio-text {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            min-width: 0;
-        }
-        .rdsp-radio-text strong {
-            font-size: 13px;
-            font-weight: 600;
-            color: #111827;
-            line-height: 1.35;
-        }
-        body.dark-mode .rdsp-radio-text strong { color: #F3F4F6; }
-        .rdsp-radio-desc {
-            font-size: 12px;
-            color: #6B7280;
-            line-height: 1.45;
-            font-weight: 400;
-        }
-        body.dark-mode .rdsp-radio-desc { color: #9CA3AF; }
-        .rdsp-field-block {
-            margin-top: 14px;
-            padding-top: 14px;
-            border-top: 1px solid #E5E7EB;
-        }
-        body.dark-mode .rdsp-field-block { border-top-color: #374151; }
-        .rdsp-field-block label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            color: #374151;
-            margin-bottom: 6px;
-        }
-        body.dark-mode .rdsp-field-block label { color: #D1D5DB; }
-        .rdsp-field-hint {
-            margin-top: 8px;
-            font-size: 12px;
-            line-height: 1.45;
-            color: #6B7280;
-        }
-        body.dark-mode .rdsp-field-hint { color: #9CA3AF; }
-        .rdsp-check-row {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            cursor: pointer;
-        }
-        .rdsp-check-row-text {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            min-width: 0;
-        }
-        .rdsp-check-row-text strong {
-            font-size: 13px;
-            font-weight: 600;
-            color: #111827;
-            line-height: 1.35;
-        }
-        body.dark-mode .rdsp-check-row-text strong { color: #F3F4F6; }
-        /* Compact carry-forward rows for narrow assumptions panel */
-        .cf-year-row {
-            background: #FFFFFF;
-            border: 1px solid #E5E7EB;
-            border-radius: 8px;
-            padding: 7px 8px;
-        }
-        body.dark-mode .cf-year-row {
-            background: #111827;
-            border-color: #374151;
-        }
-        .cf-year-top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-            margin-bottom: 5px;
-        }
-        .cf-year-meta {
-            font-size: 12px;
-            font-weight: 600;
-            color: #111827;
-            white-space: nowrap;
-        }
-        body.dark-mode .cf-year-meta { color: #E5E7EB; }
-        .cf-year-toggles {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-        .cf-year-toggles label {
-            display: inline-flex;
-            align-items: center;
-            gap: 3px;
-            font-size: 11px;
-            color: #374151;
-            margin: 0;
-            cursor: pointer;
-        }
-        body.dark-mode .cf-year-toggles label { color: #D1D5DB; }
-        .cf-year-income {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            min-width: 0;
-        }
-        .cf-year-income label {
-            font-size: 11px;
-            color: #6B7280;
-            flex-shrink: 0;
-            margin: 0;
-        }
-        body.dark-mode .cf-year-income label { color: #9CA3AF; }
-        .cf-year-income input[type="number"] {
-            flex: 1;
-            min-width: 0;
-            width: auto;
-            box-sizing: border-box;
-            padding: 5px 8px;
-            font-size: 13px;
-            border-width: 1px;
-            border-radius: 6px;
-            /* Hide steppers — they ate most of the narrow field */
-            -moz-appearance: textfield;
-            appearance: textfield;
-        }
-        .cf-year-income input[type="number"]::-webkit-outer-spin-button,
-        .cf-year-income input[type="number"]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        .cf-year-amounts {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 2px 10px;
-            margin-top: 4px;
-            font-size: 11px;
-            color: #4B5563;
-            line-height: 1.3;
-        }
-        body.dark-mode .cf-year-amounts { color: #9CA3AF; }
-        .cf-year-amounts strong {
-            color: #111827;
-            font-weight: 600;
-        }
-        body.dark-mode .cf-year-amounts strong { color: #E5E7EB; }
-        /* Let users type freely — steppers make narrow fields feel uneditable */
-        .rdsp-assumptions input[type="number"] {
-            -moz-appearance: textfield;
-            appearance: textfield;
-        }
-        .rdsp-assumptions input[type="number"]::-webkit-outer-spin-button,
-        .rdsp-assumptions input[type="number"]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        .rdsp-results-card {
+
+        .card {
             background: #FFFFFF;
             border: 1px solid #E5E7EB;
             border-radius: 12px;
             padding: 16px;
-            margin-bottom: 16px;
             transition: background-color 0.3s, border-color 0.3s;
         }
-        body.dark-mode .rdsp-results-card {
-            background: #1F2937;
-            border-color: #374151;
-        }
-        .rdsp-results-card:last-child {
-            margin-bottom: 0;
-        }
-        .rdsp-page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-        .rdsp-page-header h1 {
-            margin-bottom: 4px;
-        }
-        
-        .bg-white {
-            background: #FFFFFF;
-            border: 1px solid #E5E7EB;
-            transition: background-color 0.3s, border-color 0.3s;
-        }
-        
-        body.dark-mode .bg-white {
-            background: #1F2937;
-            border-color: #374151;
-        }
-        
-        .rounded-lg {
-            border-radius: 12px;
-        }
-        
-        .shadow-xl {
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        }
-        
-        .p-6 {
-            padding: 24px;
-        }
-        
-        .mb-6 {
-            margin-bottom: 24px;
-        }
-        
-        .mb-4 {
-            margin-bottom: 16px;
-        }
-        
-        .mb-3 {
-            margin-bottom: 12px;
-        }
-        
-        .mb-2 {
-            margin-bottom: 8px;
-        }
-        
-        .mb-1 {
-            margin-bottom: 4px;
-        }
-        
-        .collapsible-content {
-            overflow: hidden;
-            transition: max-height 0.3s ease-out;
-        }
-        
-        .collapsible-content.collapsed {
-            max-height: 0;
-            display: none;
-        }
-        
-        .collapsible-content.expanded {
-            max-height: 5000px;
-            display: block;
-        }
-        
-        .mt-1 {
-            margin-top: 4px;
-        }
-        
-        .mt-2 {
-            margin-top: 8px;
-        }
-        
-        .mt-3 {
-            margin-top: 12px;
-        }
-        
-        .mt-4 {
-            margin-top: 16px;
-        }
-        
-        .flex {
-            display: flex;
-        }
-        
-        .justify-between {
-            justify-content: space-between;
-        }
-        
-        .items-center {
-            align-items: center;
-        }
-        
-        .items-start {
-            align-items: flex-start;
-        }
-        
-        .gap-2 {
-            gap: 8px;
-        }
-        
-        .gap-3 {
-            gap: 12px;
-        }
-        
-        .gap-4 {
-            gap: 16px;
-        }
-        
-        .grid {
+        body.dark .card { background: #1F2937; border-color: #374151; }
+
+        /* Top stat cards */
+        .stat-row {
             display: grid;
-        }
-        
-        .grid-cols-2 {
-            grid-template-columns: repeat(2, 1fr);
-        }
-        
-        .grid-cols-6 {
-            grid-template-columns: repeat(6, 1fr);
-        }
-        
-        .md\\:grid-cols-2 {
-            grid-template-columns: repeat(2, 1fr);
-        }
-        
-        .md\\:grid-cols-6 {
-            grid-template-columns: repeat(6, 1fr);
-        }
-        
-        @media (min-width: 768px) {
-            .md\\:grid-cols-2 {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .md\\:grid-cols-6 {
-                grid-template-columns: repeat(6, 1fr);
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .grid-cols-2 {
-                grid-template-columns: 1fr;
-            }
-            .grid-cols-6 {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-        
-        h1 {
-            font-size: 28px;
-            font-weight: 700;
-            color: #111827;
-            margin-bottom: 8px;
-        }
-        
-        h3 {
-            font-size: 18px;
-            font-weight: 600;
-            color: #111827;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
             margin-bottom: 16px;
         }
-        
-        .text-sm {
-            font-size: 14px;
-        }
-        
-        .text-xs {
-            font-size: 12px;
-        }
-        
-        .text-lg {
-            font-size: 18px;
-        }
-        
-        .text-3xl {
-            font-size: 30px;
-        }
-        
-        .font-bold {
-            font-weight: 700;
-        }
-        
-        .font-semibold {
-            font-weight: 600;
-        }
-        
-        .font-medium {
-            font-weight: 500;
-        }
-        
-        .text-gray-600 {
-            color: #6B7280;
-        }
-        
-        .text-gray-700 {
-            color: #374151;
-        }
-        
-        .text-gray-800 {
-            color: #111827;
-        }
-        
-        .text-indigo-900 {
-            color: #111827;
-        }
-        
-        .text-white {
-            color: white;
-        }
-        
-        .text-green-600 {
-            color: #16a34a;
-        }
-        
-        .text-green-700 {
-            color: #15803d;
-        }
-        
-        .text-red-500 {
-            color: #ef4444;
-        }
-        
-        .text-red-600 {
-            color: #dc2626;
-        }
-        
-        .text-orange-600 {
-            color: #ea580c;
-        }
-        
-        .text-orange-700 {
-            color: #c2410c;
-        }
-        
-        .text-orange-800 {
-            color: #9a3412;
-        }
-        
-        .text-blue-600 {
-            color: #2563eb;
-        }
-        
-        .text-blue-700 {
-            color: #1d4ed8;
-        }
-        
-        .text-blue-800 {
-            color: #1e40af;
-        }
-        
-        .text-blue-900 {
-            color: #1e3a8a;
-        }
-        
-        .text-yellow-600 {
-            color: #ca8a04;
-        }
-        
-        .text-yellow-700 {
-            color: #a16207;
-        }
-        
-        .text-yellow-800 {
-            color: #854d0e;
-        }
-        
-        .text-purple-600 {
-            color: #9333ea;
-        }
-        
-        .text-pink-600 {
-            color: #db2777;
-        }
-        
-        .bg-gradient-to-br {
-            background: linear-gradient(to bottom right, var(--tw-gradient-stops));
-        }
-        
-        .from-green-500 {
-            --tw-gradient-from: #22c55e;
-        }
-        
-        .to-green-600 {
-            --tw-gradient-to: #16a34a;
-        }
-        
-        .from-blue-500 {
-            --tw-gradient-from: #3b82f6;
-        }
-        
-        .to-blue-600 {
-            --tw-gradient-to: #2563eb;
-        }
-        
-        .from-purple-500 {
-            --tw-gradient-from: #a855f7;
-        }
-        
-        .to-purple-600 {
-            --tw-gradient-to: #9333ea;
-        }
-        
-        .from-pink-500 {
-            --tw-gradient-from: #ec4899;
-        }
-        
-        .to-pink-600 {
-            --tw-gradient-to: #db2777;
-        }
-        
-        .from-indigo-500 {
-            --tw-gradient-from: #6366f1;
-        }
-        
-        .to-indigo-600 {
-            --tw-gradient-to: #4f46e5;
-        }
-        
-        .from-red-500 {
-            --tw-gradient-from: #ef4444;
-        }
-        
-        .to-red-600 {
-            --tw-gradient-to: #dc2626;
-        }
-        
-        .bg-amber-50 {
-            background: #F9FAFB;
-        }
-        
-        .bg-blue-50 {
-            background: #F9FAFB;
-        }
-        
-        .bg-green-50 {
-            background: #F9FAFB;
-        }
-        
-        .bg-yellow-50 {
-            background: #F9FAFB;
-        }
-        
-        .bg-indigo-50 {
-            background: #F9FAFB;
-        }
-        
-        .bg-orange-50 {
-            background: #F9FAFB;
-        }
-        
-        .bg-gray-50 {
-            background: #F9FAFB;
-        }
-        
-        .bg-gray-600 {
-            background: #4b5563;
-        }
-        
-        .bg-gray-700 {
-            background: #374151;
-        }
-        
-        .bg-indigo-600 {
-            background: #4f46e5;
-        }
-        
-        .bg-indigo-700 {
-            background: #4338ca;
-        }
-        
-        .bg-green-600 {
-            background: #16a34a;
-        }
-        
-        .bg-green-700 {
-            background: #15803d;
-        }
-        
-        .bg-red-500 {
-            background: #ef4444;
-        }
-        
-        .bg-red-600 {
-            background: #dc2626;
-        }
-        
-        .border {
-            border-width: 1px;
-        }
-        
-        .border-gray-200 {
-            border-color: #e5e7eb;
-        }
-        
-        .border-gray-300 {
-            border-color: #d1d5db;
-        }
-        
-        .border-amber-200 {
-            border-color: #E5E7EB;
-        }
-        
-        .border-blue-200 {
-            border-color: #E5E7EB;
-        }
-        
-        .border-green-200 {
-            border-color: #E5E7EB;
-        }
-        
-        .border-yellow-200 {
-            border-color: #E5E7EB;
-        }
-        
-        .border-indigo-200 {
-            border-color: #E5E7EB;
-        }
-        
-        .border-indigo-300 {
-            border-color: #D1D5DB;
-        }
-        
-        .border-orange-200 {
-            border-color: #E5E7EB;
-        }
-        
-        .rounded-md {
-            border-radius: 6px;
-        }
-        
-        .rounded-lg {
-            border-radius: 12px;
-        }
-        
-        .p-3 {
-            padding: 12px;
-        }
-        
-        .p-4 {
-            padding: 16px;
-        }
-        
-        .px-2 {
-            padding-left: 8px;
-            padding-right: 8px;
-        }
-        
-        .px-3 {
-            padding-left: 12px;
-            padding-right: 12px;
-        }
-        
-        .px-4 {
-            padding-left: 16px;
-            padding-right: 16px;
-        }
-        
-        .py-1 {
-            padding-top: 4px;
-            padding-bottom: 4px;
-        }
-        
-        .py-2 {
-            padding-top: 8px;
-            padding-bottom: 8px;
-        }
-        
-        .w-full {
-            width: 100%;
-        }
-        
-        .w-5 {
-            width: 20px;
-        }
-        
-        .h-4 {
-            height: 16px;
-        }
-        
-        .h-5 {
-            height: 20px;
-        }
-        
-        input[type="number"],
-        input[type="text"] {
-            width: 100%;
-            padding: 10px 12px;
-            border: 2px solid #E5E7EB;
-            border-radius: 8px;
-            font-size: 15px;
-            background: #FFFFFF;
-            color: #111827;
-            transition: border-color 0.2s, background-color 0.3s, color 0.3s;
-        }
-        
-        body.dark-mode input[type="number"],
-        body.dark-mode input[type="text"] {
-            background: #1F2937;
-            border-color: #374151;
-            color: #E5E7EB;
-        }
-        
-        input[type="number"]:focus,
-        input[type="text"]:focus {
-            outline: none;
-            border-color: #6B7280;
-            box-shadow: 0 0 0 3px rgba(107, 114, 128, 0.1);
-        }
-        
-        body.dark-mode input[type="number"]:focus,
-        body.dark-mode input[type="text"]:focus {
-            border-color: #9CA3AF;
-            box-shadow: 0 0 0 3px rgba(156, 163, 175, 0.2);
-        }
-        
-        input[type="checkbox"],
-        input[type="radio"] {
-            width: 16px;
-            height: 16px;
-            cursor: pointer;
-        }
-        
-        button {
-            padding: 10px 16px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        
-        button:hover {
-            opacity: 0.9;
-        }
-        
-        .space-y-1 > * + * {
-            margin-top: 4px;
-        }
-        
-        .space-y-2 > * + * {
-            margin-top: 8px;
-        }
-        
-        .space-y-3 > * + * {
-            margin-top: 12px;
-        }
-        
-        .space-y-4 > * + * {
-            margin-top: 16px;
-        }
-        
-        .space-x-2 > * + * {
-            margin-left: 8px;
-        }
-        
-        .opacity-90 {
-            opacity: 0.9;
-        }
-        
-        .disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .max-h-64 {
-            max-height: 256px;
-        }
-        
-        .max-h-96 {
-            max-height: 384px;
-        }
-        
-        .overflow-y-auto {
-            overflow-y: auto;
-        }
-        
-        .border-b {
-            border-bottom-width: 1px;
-        }
-        
-        .pb-2 {
-            padding-bottom: 8px;
-        }
-        
-        .chart-container {
-            position: relative;
-            height: 400px;
-            margin-bottom: 24px;
-        }
-        
-        .chart-container-small {
-            position: relative;
-            height: 300px;
-            margin-bottom: 24px;
-        }
-        
-        .summary-card {
-            background: #FFFFFF;
-            border: 1px solid #E5E7EB;
-            border-radius: 8px;
-            padding: 16px;
-            text-align: center;
-            transition: all 0.2s;
-        }
-        
-        .summary-card:hover {
-            border-color: #D1D5DB;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        }
-        
-        .summary-card .label {
-            font-size: 12px;
-            color: #6B7280;
-            margin-bottom: 8px;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .summary-card .value {
-            font-size: 20px;
-            font-weight: 700;
-            color: #111827;
-        }
-
-        /* Annual Breakdown hover panel (avoids covering the chart) */
-        .breakdown-layout {
-            display: flex;
-            gap: 12px;
-            height: 100%;
-        }
-
-        .breakdown-canvas {
-            flex: 1 1 auto;
-            min-width: 0;
-            height: 100%;
-        }
-
-        .breakdown-hover {
-            width: 280px;
-            flex: 0 0 280px;
-            background: #ffffff;
-            border: 1px solid #e5e7eb;
-            border-radius: 10px;
-            padding: 10px;
-            overflow: auto;
-            font-size: 12px;
-            color: #374151;
-        }
-
-        .breakdown-hover .title {
-            font-weight: 700;
-            color: #111827;
-            margin-bottom: 6px;
-        }
-
-        .breakdown-hover .muted {
-            color: #6b7280;
-        }
-
-        .breakdown-hover .row {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-            padding: 4px 0;
-            border-bottom: 1px dashed #e5e7eb;
-        }
-
-        .breakdown-hover .row:last-child {
-            border-bottom: none;
-        }
-
-        .breakdown-hover .k {
-            color: #6b7280;
-        }
-
-        .breakdown-hover .v {
-            font-weight: 600;
-            color: #111827;
-            white-space: nowrap;
-        }
-
         @media (max-width: 768px) {
-            .breakdown-layout {
-                flex-direction: column;
-            }
-            .breakdown-hover {
-                width: 100%;
-                flex: 0 0 auto;
-            }
+            .stat-row { grid-template-columns: 1fr; }
         }
-        
-        /* Range Slider Styles */
-        input[type="range"] {
-            -webkit-appearance: none;
-            appearance: none;
-            /* Fallback track so a bar is always visible even if vendor
-               track pseudos fail (common with Tailwind / dark backgrounds). */
-            background: #D1D5DB;
-            background-image: linear-gradient(#9CA3AF, #9CA3AF);
-            background-size: 100% 6px;
-            background-position: center;
-            background-repeat: no-repeat;
-            cursor: pointer;
-            width: 100%;
-            height: 20px;
-            margin: 10px 0;
-            border-radius: 999px;
-        }
-        
-        input[type="range"]::-webkit-slider-runnable-track {
-            background: #9CA3AF;
-            height: 6px;
-            border-radius: 3px;
-            border: none;
-        }
-        
-        input[type="range"]::-webkit-slider-track {
-            background: #9CA3AF;
-            height: 6px;
-            border-radius: 3px;
-            border: none;
-        }
-        
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            background: #111827;
-            height: 20px;
-            width: 20px;
-            border-radius: 50%;
-            cursor: pointer;
-            margin-top: -7px;
-            border: 2px solid white;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        
-        input[type="range"]::-moz-range-track {
-            background: #9CA3AF;
-            height: 6px;
-            border-radius: 3px;
-            border: none;
-        }
-        
-        input[type="range"]::-moz-range-thumb {
-            background: #111827;
-            height: 20px;
-            width: 20px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid white;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        
-        input[type="range"]:focus {
-            outline: none;
-        }
-        
-        input[type="range"]:focus::-webkit-slider-thumb {
-            box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.2), 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        
-        input[type="range"]:focus::-moz-range-thumb {
-            box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.2), 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        
-        input[type="range"]:hover::-webkit-slider-thumb {
-            background: #374151;
-        }
-        
-        input[type="range"]:hover::-moz-range-thumb {
-            background: #374151;
-        }
-        
-        body.dark-mode input[type="range"] {
-            background: #374151;
-            background-image: linear-gradient(#9CA3AF, #9CA3AF);
-            background-size: 100% 6px;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-        
-        body.dark-mode input[type="range"]::-webkit-slider-runnable-track,
-        body.dark-mode input[type="range"]::-webkit-slider-track {
-            background: #9CA3AF;
-        }
-        
-        body.dark-mode input[type="range"]::-moz-range-track {
-            background: #9CA3AF;
-        }
-        
-        body.dark-mode input[type="range"]::-webkit-slider-thumb {
-            background: #E5E7EB;
-            border-color: #1F2937;
-        }
-        
-        body.dark-mode input[type="range"]::-moz-range-thumb {
-            background: #E5E7EB;
-            border-color: #1F2937;
-        }
-        
-        /* Slider container background for visibility */
-        .slider-wrapper {
-            background: #FFFFFF;
-            padding: 8px;
-            border-radius: 6px;
-            border: 1px solid #E5E7EB;
+        .stat-card {
+            display: flex; align-items: center; gap: 12px;
+            background: #F9FAFB; border: 1px solid #E5E7EB;
+            border-radius: 10px; padding: 14px 16px;
             transition: background-color 0.3s, border-color 0.3s;
         }
-        
-        body.dark-mode .slider-wrapper {
-            background: #1F2937;
-            border-color: #374151;
+        body.dark .stat-card { background: #111827; border-color: #374151; }
+        .stat-icon {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: #EEF2FF; color: #4F46E5;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
         }
-        
-        /* Dark Mode Styles - Matching Tax Suite Color Scheme */
-        body.dark-mode {
-            background: #111827;
-            color: #f8fafc;
+        body.dark .stat-icon { background: #1E1B4B; color: #A5B4FC; }
+        .stat-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+        .stat-label-sm {
+            font-size: 11px; color: #6B7280; font-weight: 500;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
-        
-        body.dark-mode .max-w-7xl {
-            background: transparent;
+        body.dark .stat-label-sm { color: #9CA3AF; }
+        .stat-value-sm {
+            font-size: 18px; font-weight: 700; color: #111827;
+            white-space: nowrap;
         }
-        
-        body.dark-mode .bg-white {
-            background: #1f2937;
-            border-color: #374151;
-        }
-        
-        body.dark-mode .back-link {
-            color: #9ca3af;
-        }
-        
-        body.dark-mode .back-link:hover {
-            color: #f8fafc;
-        }
-        
-        body.dark-mode .text-gray-600,
-        body.dark-mode .text-gray-700 {
-            color: #d1d5db;
-        }
-        
-        body.dark-mode .text-gray-800 {
-            color: #f3f4f6;
-        }
-        
-        body.dark-mode .text-indigo-900 {
-            color: #c7d2fe;
-        }
+        body.dark .stat-value-sm { color: #F3F4F6; }
 
-        body.dark-mode .text-indigo-700 {
-            color: #a5b4fc;
-        }
-        
-        body.dark-mode input[type="number"],
-        body.dark-mode input[type="text"],
-        body.dark-mode select {
-            background: #374151;
-            border-color: #4b5563;
-            color: #f8fafc;
-        }
-        
-        body.dark-mode input[type="number"]:focus,
-        body.dark-mode input[type="text"]:focus,
-        body.dark-mode select:focus {
-            border-color: #9CA3AF;
-            background: #4b5563;
-        }
-        
-        body.dark-mode .bg-amber-50 {
-            background: #78350f;
-            border-color: #92400e;
-        }
-        
-        body.dark-mode .bg-blue-50 {
-            background: #1e3a8a;
-            border-color: #1e40af;
-        }
-        
-        body.dark-mode .bg-green-50 {
-            background: #14532d;
-            border-color: #166534;
-        }
-        
-        body.dark-mode .bg-yellow-50 {
-            background: #713f12;
-            border-color: #854d0e;
-        }
-        
-        body.dark-mode .bg-indigo-50 {
-            background: #312e81;
-            border-color: #3730a3;
-        }
-        
-        body.dark-mode .bg-orange-50 {
-            background: #7c2d12;
-            border-color: #9a3412;
-        }
-        
-        body.dark-mode .bg-gray-50 {
-            background: #374151;
-            border-color: #4b5563;
-        }
-        
-        body.dark-mode .border-gray-200,
-        body.dark-mode .border-gray-300 {
-            border-color: #4b5563;
-        }
-        
-        body.dark-mode .border-amber-200 {
-            border-color: #92400e;
-        }
-        
-        body.dark-mode .border-blue-200 {
-            border-color: #1e40af;
-        }
-        
-        body.dark-mode .border-green-200 {
-            border-color: #166534;
-        }
-        
-        body.dark-mode .border-yellow-200 {
-            border-color: #854d0e;
-        }
-        
-        body.dark-mode .border-indigo-200,
-        body.dark-mode .border-indigo-300 {
-            border-color: #3730a3;
-        }
-        
-        body.dark-mode .border-orange-200 {
-            border-color: #9a3412;
-        }
-        
-        body.dark-mode input[type="range"]::-webkit-slider-runnable-track,
-        body.dark-mode input[type="range"]::-webkit-slider-track {
-            background: #9CA3AF;
-        }
-        
-        body.dark-mode input[type="range"]::-moz-range-track {
-            background: #9CA3AF;
-        }
-        
-        body.dark-mode .chart-container,
-        body.dark-mode .chart-container-small {
-            background: #1f2937;
-            border-radius: 8px;
-            padding: 10px;
-        }
-        
-        body.dark-mode .text-blue-900 {
-            color: #bfdbfe;
-        }
-        
-        body.dark-mode h1,
-        body.dark-mode h3,
-        body.dark-mode h4 {
-            color: #f3f4f6;
-        }
-        
-        body.dark-mode .summary-card {
-            background: #1F2937;
-            border-color: #374151;
-        }
-        
-        body.dark-mode .summary-card .label {
-            color: #9CA3AF;
-        }
-        
-        body.dark-mode .summary-card .value {
-            color: #E5E7EB;
-        }
-
-        body.dark-mode .breakdown-hover {
-            background: #1f2937;
-            border-color: #374151;
-            color: #d1d5db;
-        }
-
-        body.dark-mode .breakdown-hover .title {
-            color: #f3f4f6;
-        }
-
-        body.dark-mode .breakdown-hover .v {
-            color: #f3f4f6;
-        }
-
-        body.dark-mode .breakdown-hover .row {
-            border-bottom-color: #374151;
-        }
-        
-        body.dark-mode .text-gray-500 {
-            color: #9ca3af;
-        }
-        
-        /* Clickable amounts styling */
-        .clickable-amount {
-            transition: all 0.2s;
-        }
-        
-        .clickable-amount:hover {
-            text-decoration-thickness: 2px;
-        }
-        
-        body.dark-mode .clickable-amount {
-            color: #818cf8 !important;
-        }
-        
-        body.dark-mode .clickable-amount:hover {
-            color: #a5b4fc !important;
-        }
-        
-        /* Preview Modal */
-        #previewModal {
+        /* Tabs */
+        .tabs {
             display: flex;
+            border-bottom: 1px solid #E5E7EB;
+            margin-bottom: 16px;
+            overflow-x: auto;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
-        
-        #previewModal.hidden {
-            display: none;
+        .tabs::-webkit-scrollbar { display: none; }
+        body.dark .tabs { border-bottom-color: #374151; }
+        .tab-btn {
+            padding: 10px 16px; background: transparent; border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer; font-size: 14px; font-weight: 500;
+            color: #6B7280; display: inline-flex; align-items: center; gap: 6px;
+            white-space: nowrap;
+            transition: color 0.2s, border-color 0.2s;
         }
-        
-        body.dark-mode #previewModal .bg-white {
-            background: #1f2937;
-            color: #f8fafc;
+        body.dark .tab-btn { color: #9CA3AF; }
+        .tab-btn:hover { color: #111827; }
+        body.dark .tab-btn:hover { color: #E5E7EB; }
+        .tab-btn.active {
+            color: #4F46E5;
+            border-bottom-color: #4F46E5;
         }
-        
-        body.dark-mode #previewModal h3 {
-            color: #f3f4f6;
+        body.dark .tab-btn.active { color: #A5B4FC; border-bottom-color: #A5B4FC; }
+        .tab-btn .material-icons { font-size: 18px; }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Strategy chips row */
+        .strategy-row {
+            display: flex; flex-wrap: wrap; gap: 8px;
+            margin-bottom: 12px; align-items: center;
         }
-        
-        body.dark-mode #previewModal .text-gray-700 {
-            color: #d1d5db;
+        .strategy-pill {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 10px;
+            border: 1px solid #E5E7EB; border-radius: 999px;
+            background: #F9FAFB; font-size: 12px; color: #374151;
         }
-        
-        body.dark-mode #previewModal button {
-            color: #f8fafc;
+        body.dark .strategy-pill { background: #111827; border-color: #374151; color: #D1D5DB; }
+        .strategy-pill .star { color: #F59E0B; }
+
+        .chart-wrap {
+            position: relative;
+            width: 100%;
+            height: 420px;
         }
-        
-        body.dark-mode #previewModal .bg-green-50 {
-            background: #14532d;
-            border-color: #166534;
-        }
-        
-        body.dark-mode #previewModal .text-green-700,
-        body.dark-mode #previewModal .text-green-800 {
-            color: #86efac;
-        }
-        
-        body.dark-mode #previewModal .bg-blue-50 {
-            background: #1e3a8a;
-            border-color: #1e40af;
-        }
-        
-        body.dark-mode #previewModal .text-blue-700,
-        body.dark-mode #previewModal .text-blue-800 {
-            color: #93c5fd;
-        }
-        
-        body.dark-mode #previewModal .bg-yellow-50 {
-            background: #713f12;
-            border-color: #854d0e;
-        }
-        
-        body.dark-mode #previewModal .text-yellow-700,
-        body.dark-mode #previewModal .text-yellow-800 {
-            color: #fde047;
-        }
-        
-        body.dark-mode #previewModal .bg-gray-50 {
-            background: #374151;
-            border-color: #4b5563;
-        }
-        
-        body.dark-mode #previewModal .border-gray-200 {
-            border-color: #4b5563;
-        }
-        
-        /* Chart Age Range improvements */
-        body.dark-mode #chartAgeMinInput,
-        body.dark-mode #chartAgeMaxInput {
-            background: #374151;
-            border-color: #4b5563;
-            color: #f8fafc;
-        }
-        
-        body.dark-mode #chartAgeMinInput:focus,
-        body.dark-mode #chartAgeMaxInput:focus {
-            border-color: #9CA3AF;
-            background: #4b5563;
-        }
-        
-        body.dark-mode button[onclick*="setChartRange"] {
-            background: #1f2937;
-            border-color: #374151;
-            color: #f8fafc;
-        }
-        
-        body.dark-mode button[onclick*="setChartRange"]:hover {
-            background: #374151;
-            border-color: #4b5563;
-        }
-        
-        body.dark-mode button[onclick*="setChartRange('all')"] {
-            background: #4f46e5;
-            border-color: #6366f1;
-        }
-        
-        body.dark-mode button[onclick*="setChartRange('all')"]:hover {
-            background: #6366f1;
-        }
-        
-        body.dark-mode .bg-white.border.border-gray-300 {
-            background: #1f2937;
-            border-color: #374151;
-        }
-        
-        body.dark-mode .bg-white.border.border-gray-300 .text-gray-800 {
-            color: #f3f4f6;
-        }
-        
-        body.dark-mode .bg-white.border.border-gray-300 .text-gray-600 {
-            color: #9ca3af;
-        }
-        
-        /* Visual Range Slider Styles */
-        #rangeSliderContainer {
-            -webkit-user-select: none;
-            user-select: none;
+        @media (max-width: 768px) {
+            .chart-wrap { height: 320px; }
         }
 
-        /* Standalone visual range slider (do not rely on Tailwind utility classes) */
-        #rangeSliderContainer {
+        /* Year-range slider (dual handle, two stacked range inputs) */
+        .range-slider {
+            margin-top: 14px;
+            padding: 10px 12px;
+            background: #F9FAFB;
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        body.dark .range-slider { background: #111827; border-color: #374151; }
+        .range-slider-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 6px; font-size: 12px; color: #6B7280;
+        }
+        body.dark .range-slider-header { color: #9CA3AF; }
+        .range-slider-header strong { color: #111827; font-weight: 600; }
+        body.dark .range-slider-header strong { color: #E5E7EB; }
+        .range-slider-track-wrap {
             position: relative;
-            background: #ffffff;
-            border: 1px solid #d1d5db;
-            border-radius: 12px;
+            height: 28px;
+        }
+        .range-slider-track {
+            position: absolute;
+            top: 12px; left: 0; right: 0; height: 4px;
+            background: #E5E7EB; border-radius: 999px;
+            overflow: hidden;
+        }
+        body.dark .range-slider-track { background: #374151; }
+        .range-slider-fill {
+            position: absolute; top: 0; bottom: 0;
+            background: #4F46E5; border-radius: 999px;
+        }
+        body.dark .range-slider-fill { background: #A5B4FC; }
+        .range-slider input[type=range] {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 28px;
+            background: transparent; pointer-events: none;
+            -webkit-appearance: none; appearance: none;
+            margin: 0; padding: 0; border: 0;
+            box-shadow: none;
+        }
+        .range-slider input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none;
+            width: 18px; height: 18px;
+            background: #FFFFFF; border: 2px solid #4F46E5;
+            border-radius: 50%; cursor: pointer;
+            pointer-events: auto;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+            margin-top: -7px; /* visually centre on 4px track inside 28px track-wrap */
+        }
+        body.dark .range-slider input[type=range]::-webkit-slider-thumb {
+            background: #1F2937; border-color: #A5B4FC;
+        }
+        .range-slider input[type=range]::-moz-range-thumb {
+            width: 18px; height: 18px;
+            background: #FFFFFF; border: 2px solid #4F46E5;
+            border-radius: 50%; cursor: pointer;
+            pointer-events: auto;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+        }
+        body.dark .range-slider input[type=range]::-moz-range-thumb {
+            background: #1F2937; border-color: #A5B4FC;
+        }
+        .range-slider input[type=range]::-webkit-slider-runnable-track {
+            background: transparent; border: 0; height: 4px;
+        }
+        .range-slider input[type=range]::-moz-range-track {
+            background: transparent; border: 0; height: 4px;
+        }
+        .range-slider-presets {
+            display: flex; flex-wrap: wrap; gap: 6px;
+            margin-top: 8px;
+        }
+        .range-preset-btn {
+            font-size: 11px; padding: 3px 9px;
+            border: 1px solid #E5E7EB; background: #FFFFFF;
+            color: #4B5563; border-radius: 999px;
+            cursor: pointer; font-weight: 500;
+            transition: all 0.15s;
+        }
+        body.dark .range-preset-btn { background: #1F2937; border-color: #374151; color: #D1D5DB; }
+        .range-preset-btn:hover {
+            border-color: #4F46E5; color: #4F46E5;
+        }
+        body.dark .range-preset-btn:hover { border-color: #A5B4FC; color: #A5B4FC; }
+        .range-preset-btn.active {
+            background: #4F46E5; color: white; border-color: #4F46E5;
+        }
+        body.dark .range-preset-btn.active { background: #A5B4FC; color: #1F2937; border-color: #A5B4FC; }
+
+        /* Right panel - assumptions */
+        .assumptions-panel {
+            position: sticky; top: 16px;
+            max-height: calc(100vh - 32px);
+            overflow-y: auto;
+            padding: 0;
+        }
+        .assumptions-panel-inner {
             padding: 16px;
         }
+        .assumptions-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 16px 16px 12px;
+            border-bottom: 1px solid #E5E7EB;
+            position: sticky; top: 0; background: #FFFFFF; z-index: 1;
+        }
+        body.dark .assumptions-header { background: #1F2937; border-bottom-color: #374151; }
+        .assumptions-title { font-size: 16px; font-weight: 700; }
 
-        #rangeTrackArea {
-            position: relative;
-            height: 56px;
-            margin-top: 6px;
-        }
+        .accordion-section { border-bottom: 1px solid #F3F4F6; }
+        body.dark .accordion-section { border-bottom-color: #374151; }
+        .accordion-section:last-child { border-bottom: none; }
 
-        #rangeTrack {
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            height: 8px;
-            background: #e5e7eb;
-            border-radius: 999px;
+        .accordion-trigger {
+            width: 100%; display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 16px; background: transparent; border: none;
+            cursor: pointer; text-align: left;
+            font-weight: 600; font-size: 14px; color: #111827;
+            transition: background-color 0.2s, color 0.3s;
         }
+        body.dark .accordion-trigger { color: #E5E7EB; }
+        .accordion-trigger:hover { background: #F9FAFB; }
+        body.dark .accordion-trigger:hover { background: #111827; }
 
-        #rangeHighlight {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            height: 8px;
-            background: #6366f1;
-            border-radius: 999px;
+        .accordion-trigger .material-icons {
+            font-size: 18px; color: #6B7280;
+            transition: transform 0.2s;
         }
+        body.dark .accordion-trigger .material-icons { color: #9CA3AF; }
+        .accordion-trigger.open .material-icons { transform: rotate(90deg); }
 
-        .range-handle {
-            position: absolute;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            width: 16px;
-            height: 44px;
-            background: #ffffff;
-            border: 2px solid #9ca3af;
-            border-radius: 10px;
-            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
-            cursor: grab;
-            transition: border-color 0.15s ease, box-shadow 0.15s ease;
-            z-index: 5;
+        .accordion-content {
+            display: none;
+            padding: 0 16px 16px;
         }
+        .accordion-content.open { display: block; }
 
-        .range-handle:hover {
-            border-color: #6366f1;
-            box-shadow: 0 10px 18px rgba(0, 0, 0, 0.16);
-        }
-
-        .range-handle:active {
-            cursor: grabbing;
-        }
-
-        .range-handle::after {
-            content: "";
-            position: absolute;
-            left: 50%;
-            top: 8px;
-            transform: translateX(-50%);
-            width: 2px;
-            height: 28px;
-            background: #4b5563;
-            border-radius: 999px;
-        }
-
-        #rangeLabels {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 8px;
-            font-size: 12px;
-            color: #6b7280;
-        }
-
-        #rangePresets {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid #e5e7eb;
-        }
-
-        #rangePresets button {
-            padding: 6px 10px;
-            background: #ffffff;
-            border: 1px solid #d1d5db;
-            color: #374151;
-            border-radius: 8px;
-            font-size: 12px;
-        }
-
-        #rangePresets button:hover {
-            background: #f9fafb;
-        }
-
-        #rangePresets button.preset-primary {
-            background: #4f46e5;
-            border-color: #4f46e5;
-            color: #ffffff;
-            font-weight: 600;
-        }
-
-        #rangePresets button.preset-primary:hover {
-            background: #4338ca;
-            border-color: #4338ca;
-        }
-        
-        .cursor-grab {
-            cursor: grab;
-        }
-        
-        .cursor-grab:active,
-        .active.cursor-grabbing {
-            cursor: grabbing;
-        }
-        
-        #rangeTrack {
-            transition: background-color 0.3s;
-        }
-        
-        body.dark-mode #rangeSliderContainer {
-            background: #1f2937;
-            border-color: #374151;
-        }
-        
-        body.dark-mode #rangeTrack {
-            background: #4b5563;
-        }
-        
-        body.dark-mode #rangeHighlight {
-            background: #6366f1;
-        }
-        
-        body.dark-mode #leftHandle,
-        body.dark-mode #rightHandle {
-            background: #1f2937;
-            border-color: #6b7280;
-        }
-        
-        body.dark-mode #leftHandle:hover,
-        body.dark-mode #rightHandle:hover {
-            border-color: #818cf8;
-        }
-        
-        body.dark-mode #leftHandle .bg-gray-600,
-        body.dark-mode #rightHandle .bg-gray-600 {
-            background: #9ca3af;
-        }
-        
-        body.dark-mode #ageRangeDisplay {
-            color: #f3f4f6;
-        }
-        
-        body.dark-mode #minAgeLabel,
-        body.dark-mode #maxAgeLabel {
-            color: #9ca3af;
-        }
-        
-        body.dark-mode #rangeSliderContainer button {
-            background: #1f2937;
-            border-color: #4b5563;
-            color: #d1d5db;
-        }
-        
-        body.dark-mode #rangeSliderContainer button:hover {
-            background: #374151;
-            border-color: #6b7280;
-        }
-        
-        body.dark-mode #rangeSliderContainer button.bg-indigo-600 {
-            background: #6366f1;
-            border-color: #6366f1;
-            color: white;
-        }
-        
-        body.dark-mode #rangeSliderContainer button.bg-indigo-600:hover {
-            background: #818cf8;
-        }
-        
-        body.dark-mode #rangeSliderContainer .border-gray-200 {
-            border-color: #4b5563;
-        }
-        
-        /* Dark Mode Toggle Button */
-        .dark-mode-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-            background: #1f2937;
-            border: 2px solid #374151;
-            border-radius: 8px;
-            padding: 8px 12px;
-            cursor: pointer;
-            display: flex;
+        .field-grid {
+            display: grid;
+            grid-template-columns: 110px 1fr;
+            gap: 10px 14px;
             align-items: center;
-            gap: 6px;
-            color: #f8fafc;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.2s;
         }
-        
-        .dark-mode-toggle:hover {
-            background: #374151;
-            border-color: #4b5563;
+        .field-label {
+            font-size: 13px; color: #374151; font-weight: 500;
+            display: inline-flex; align-items: center; gap: 6px;
         }
-        
-        body.dark-mode .dark-mode-toggle {
-            background: #f8fafc;
-            border-color: #e5e7eb;
-            color: #111827;
+        body.dark .field-label { color: #D1D5DB; }
+
+        /* Help icon with hover tooltip */
+        .help-icon {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 15px; height: 15px; flex-shrink: 0;
+            border-radius: 50%;
+            background: #E5E7EB; color: #6B7280;
+            font-size: 10px; font-weight: 700;
+            cursor: help; position: relative;
+            line-height: 1;
         }
-        
-        body.dark-mode .dark-mode-toggle:hover {
-            background: #e5e7eb;
-            border-color: #d1d5db;
-        }
-        
-        @media (max-width: 768px) {
-            .dark-mode-toggle {
-                top: 10px;
-                right: 10px;
-                padding: 6px 10px;
-                font-size: 12px;
-            }
-        }
-        
-        /* Table styles */
-        body.dark-mode table {
-            border-color: #4b5563;
-        }
-        
-        body.dark-mode table th {
-            background: #374151;
-            color: #f3f4f6;
-            border-color: #4b5563;
-        }
-        
-        body.dark-mode table td {
-            color: #d1d5db;
-            border-color: #4b5563;
-        }
-        
-        body.dark-mode table tr:hover {
-            background: #374151;
-        }
-        
-        /* Annual breakdown table: align headers with column data */
-        #breakdownTable thead th:first-child,
-        #breakdownTable tbody td:first-child {
+        body.dark .help-icon { background: #374151; color: #9CA3AF; }
+        .help-icon:hover { background: #4F46E5; color: white; }
+        /* Tooltip text is shown in #helpTooltip (fixed to viewport) so it is not
+           clipped by .assumptions-panel overflow-y:auto or covered by the chart. */
+
+        #helpTooltip {
+            position: fixed;
+            z-index: 2147483000;
+            max-width: min(280px, calc(100vw - 20px));
+            padding: 10px 12px;
+            background: #111827;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 400;
+            line-height: 1.45;
             text-align: left;
+            border-radius: 8px;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
+            pointer-events: none;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.12s ease;
         }
-        #breakdownTable thead th:not(:first-child),
-        #breakdownTable tbody td:not(:first-child) {
+        #helpTooltip.is-visible {
+            visibility: visible;
+            opacity: 1;
+        }
+        body.dark #helpTooltip {
+            background: #1F2937;
+            color: #F3F4F6;
+            border: 1px solid #374151;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+        }
+
+        .field-input-wrap {
+            display: flex; align-items: center; gap: 6px;
+            min-width: 0;
+        }
+        .field-prefix {
+            font-size: 13px; color: #6B7280; flex-shrink: 0;
+        }
+        body.dark .field-prefix { color: #9CA3AF; }
+        .field-suffix {
+            font-size: 13px; color: #6B7280; flex-shrink: 0;
+        }
+        body.dark .field-suffix { color: #9CA3AF; }
+
+        input[type="number"], input[type="date"], input[type="text"], select {
+            width: 100%;
+            padding: 9px 11px;
+            border: 1px solid #E5E7EB;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            background: #FFFFFF;
+            color: #111827;
+            box-sizing: border-box;
+            transition: border-color 0.2s, background-color 0.3s, color 0.3s;
+            min-width: 0;
+        }
+        body.dark input[type="number"],
+        body.dark input[type="date"],
+        body.dark input[type="text"],
+        body.dark select {
+            background: #111827; border-color: #374151; color: #E5E7EB;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #4F46E5;
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.15);
+        }
+        body.dark input:focus, body.dark select:focus {
+            border-color: #A5B4FC;
+            box-shadow: 0 0 0 2px rgba(165, 180, 252, 0.2);
+        }
+
+        /* Cash flow / tax table */
+        .table-wrap {
+            overflow-x: auto;
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+        }
+        body.dark .table-wrap { border-color: #374151; }
+        table.data {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+        table.data th, table.data td {
+            padding: 8px 10px;
             text-align: right;
+            border-bottom: 1px solid #F3F4F6;
+            white-space: nowrap;
         }
+        body.dark table.data th, body.dark table.data td {
+            border-bottom-color: #374151;
+        }
+        table.data thead th {
+            background: #F9FAFB;
+            font-weight: 600;
+            color: #374151;
+            position: sticky; top: 0;
+        }
+        body.dark table.data thead th { background: #111827; color: #D1D5DB; }
+        table.data tbody tr:hover { background: rgba(79, 70, 229, 0.04); }
+        body.dark table.data tbody tr:hover { background: rgba(165, 180, 252, 0.06); }
+        table.data td.first, table.data th.first { text-align: left; }
+        table.data td.retired { background: rgba(79, 70, 229, 0.03); }
+        body.dark table.data td.retired { background: rgba(165, 180, 252, 0.04); }
+
+        /* Compare strategies grid */
+        .compare-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 12px;
+        }
+        .compare-card {
+            background: #F9FAFB; border: 1px solid #E5E7EB;
+            border-radius: 10px; padding: 14px;
+        }
+        body.dark .compare-card { background: #111827; border-color: #374151; }
+        .compare-card.best { border-color: #10B981; box-shadow: 0 0 0 1px #10B981; }
+        body.dark .compare-card.best { border-color: #34D399; box-shadow: 0 0 0 1px #34D399; }
+        .compare-strategy {
+            font-size: 13px; font-weight: 600; margin-bottom: 8px;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .compare-row {
+            display: flex; justify-content: space-between; font-size: 12px;
+            padding: 3px 0;
+            color: #4B5563;
+        }
+        body.dark .compare-row { color: #9CA3AF; }
+        .compare-row strong {
+            color: #111827; font-weight: 600;
+        }
+        body.dark .compare-row strong { color: #E5E7EB; }
+        .compare-bar-wrap {
+            margin-top: 10px;
+            height: 6px; background: #E5E7EB; border-radius: 999px; overflow: hidden;
+        }
+        body.dark .compare-bar-wrap { background: #374151; }
+        .compare-bar {
+            height: 100%; background: #4F46E5;
+        }
+
+        /* Help/info text */
+        .help-text {
+            font-size: 11px; color: #9CA3AF;
+            margin-top: 4px; line-height: 1.4;
+        }
+        body.dark .help-text { color: #6B7280; }
+
+        /* Disclaimer */
+        .disclaimer {
+            margin-top: 16px;
+            font-size: 11px; color: #9CA3AF; line-height: 1.6;
+            max-width: 1400px; margin-left: auto; margin-right: auto;
+            padding: 0 8px;
+        }
+        body.dark .disclaimer { color: #6B7280; }
+
+        /* Subtle past income mini-grid */
+        .past-income-grid {
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 6px;
+            margin-bottom: 6px;
+            align-items: center;
+        }
+        .past-income-list {
+            max-height: 240px; overflow-y: auto;
+            padding-right: 4px; margin-top: 8px;
+        }
+        .add-row-btn {
+            width: 100%; padding: 6px; border: 1px dashed #D1D5DB;
+            border-radius: 6px; background: transparent; cursor: pointer;
+            font-size: 12px; color: #6B7280; font-weight: 500;
+            transition: border-color 0.2s, color 0.2s;
+        }
+        body.dark .add-row-btn { border-color: #4B5563; color: #9CA3AF; }
+        .add-row-btn:hover { border-color: #4F46E5; color: #4F46E5; }
+        body.dark .add-row-btn:hover { border-color: #A5B4FC; color: #A5B4FC; }
+        .remove-row-btn {
+            background: transparent; border: none; cursor: pointer;
+            color: #EF4444; padding: 0 4px;
+        }
+        .remove-row-btn:hover { color: #DC2626; }
+
+        /* Value tag (shows realtime) */
+        .computed-tag {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 2px 8px; border-radius: 999px;
+            background: #EEF2FF; color: #4F46E5;
+            font-size: 11px; font-weight: 600;
+        }
+        body.dark .computed-tag { background: #1E1B4B; color: #A5B4FC; }
+    
+
+        /* RDSP: collapse assumptions + FAB (mobile-friendly) */
+        .layout.assumptions-collapsed { grid-template-columns: 1fr; }
+        .layout.assumptions-collapsed .assumptions-panel { display: none; }
+        .assumptions-open-btn {
+            display: none; position: fixed; right: 16px; bottom: 16px; z-index: 900;
+            align-items: center; gap: 6px; padding: 10px 14px;
+            background: #4F46E5; color: #fff; border: none; border-radius: 999px;
+            font-size: 13px; font-weight: 600; cursor: pointer;
+            box-shadow: 0 8px 24px rgba(79,70,229,0.35);
+        }
+        body.assumptions-collapsed .assumptions-open-btn { display: inline-flex; }
+        body.dark .assumptions-open-btn { background: #A5B4FC; color: #1F2937; }
+        .icon-btn {
+            background: transparent; border: 1px solid #E5E7EB; border-radius: 8px;
+            width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center;
+            cursor: pointer; color: #6B7280;
+        }
+        body.dark .icon-btn { border-color: #374151; color: #9CA3AF; }
+        .icon-btn:hover { background: #F9FAFB; color: #111827; }
+        body.dark .icon-btn:hover { background: #111827; color: #E5E7EB; }
+        .btn-quiet {
+            background: transparent; border: 1px solid #E5E7EB; border-radius: 8px;
+            padding: 6px 10px; font-size: 12px; font-weight: 600; color: #4B5563; cursor: pointer;
+        }
+        body.dark .btn-quiet { border-color: #374151; color: #D1D5DB; }
+        .btn-quiet:hover { border-color: #4F46E5; color: #4F46E5; }
+        .btn-primary {
+            width: 100%; padding: 10px 12px; margin-top: 10px;
+            background: #4F46E5; color: #fff; border: none; border-radius: 8px;
+            font-size: 13px; font-weight: 600; cursor: pointer;
+        }
+        body.dark .btn-primary { background: #A5B4FC; color: #1F2937; }
+        .btn-primary:hover { filter: brightness(1.05); }
+
+        .stat-row { grid-template-columns: repeat(4, 1fr); }
+        @media (max-width: 900px) { .stat-row { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 520px) { .stat-row { grid-template-columns: 1fr; } }
+
+        .radio-stack { display: flex; flex-direction: column; gap: 8px; }
+        .radio-row {
+            display: flex; gap: 10px; align-items: flex-start;
+            padding: 10px 12px; border: 1px solid #E5E7EB; border-radius: 8px;
+            background: #F9FAFB; cursor: pointer;
+        }
+        body.dark .radio-row { background: #111827; border-color: #374151; }
+        .radio-row:hover { border-color: #C7D2FE; }
+        .radio-row input { margin-top: 3px; }
+        .radio-row strong { display: block; font-size: 13px; }
+        .radio-row span.desc { display: block; font-size: 11px; color: #6B7280; margin-top: 2px; line-height: 1.35; }
+        body.dark .radio-row span.desc { color: #9CA3AF; }
+
+        .check-row { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; margin: 8px 0; }
+        .check-row input { margin-top: 3px; }
+        .check-row .desc { display: block; font-size: 11px; color: #6B7280; margin-top: 2px; }
+        body.dark .check-row .desc { color: #9CA3AF; }
+
+        .nested-block {
+            margin-top: 10px; padding-top: 10px; border-top: 1px solid #E5E7EB;
+        }
+        body.dark .nested-block { border-top-color: #374151; }
+
+        .note-box {
+            font-size: 11px; color: #4B5563; line-height: 1.4;
+            background: #EEF2FF; border: 1px solid #C7D2FE; border-radius: 8px;
+            padding: 8px 10px; margin-top: 8px;
+        }
+        body.dark .note-box { background: #1E1B4B; border-color: #3730A3; color: #C7D2FE; }
+        .warn-box {
+            font-size: 11px; line-height: 1.4;
+            background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 8px;
+            padding: 8px 10px; margin: 8px 0; color: #92400E;
+        }
+        body.dark .warn-box { background: #451A03; border-color: #92400E; color: #FDE68A; }
+
+        .collapsible-content.collapsed { display: none; }
+        .collapsible-content.expanded { display: block; }
+
+        /* Carry-forward year rows */
+        .cf-year-row {
+            border: 1px solid #E5E7EB; border-radius: 8px; padding: 8px 10px; margin-bottom: 8px;
+            background: #F9FAFB;
+        }
+        body.dark .cf-year-row { background: #111827; border-color: #374151; }
+        .cf-year-top { display: flex; justify-content: space-between; gap: 8px; align-items: center; margin-bottom: 6px; }
+        .cf-year-meta { font-size: 12px; font-weight: 600; }
+        .cf-year-toggles { display: flex; gap: 10px; font-size: 11px; color: #6B7280; }
+        body.dark .cf-year-toggles { color: #9CA3AF; }
+        .cf-year-income { display: grid; grid-template-columns: 50px 1fr; gap: 8px; align-items: center; }
+        .cf-year-income label { font-size: 11px; color: #6B7280; }
+        .cf-year-amounts { display: flex; gap: 12px; font-size: 11px; color: #6B7280; margin-top: 6px; }
+        body.dark .cf-year-amounts { color: #9CA3AF; }
+
+        /* Dual-handle age range (keep existing DOM) */
+        #rangeSliderContainer { margin-top: 8px; }
+        #rangeTrackArea { position: relative; height: 28px; margin: 8px 0 4px; }
+        #rangeTrack {
+            position: absolute; top: 12px; left: 0; right: 0; height: 4px;
+            background: #E5E7EB; border-radius: 999px;
+        }
+        body.dark #rangeTrack { background: #374151; }
+        #rangeHighlight {
+            position: absolute; top: 12px; height: 4px; background: #4F46E5; border-radius: 999px;
+        }
+        body.dark #rangeHighlight { background: #A5B4FC; }
+        .range-handle {
+            position: absolute; top: 5px; width: 18px; height: 18px; margin-left: -9px;
+            background: #fff; border: 2px solid #4F46E5; border-radius: 50%;
+            cursor: grab; z-index: 2; box-shadow: 0 1px 3px rgba(0,0,0,.15);
+        }
+        body.dark .range-handle { background: #1F2937; border-color: #A5B4FC; }
+        #rangeLabels { display: flex; justify-content: space-between; font-size: 11px; color: #6B7280; }
+        body.dark #rangeLabels { color: #9CA3AF; }
+        #rangePresets { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+        #rangePresets button {
+            font-size: 11px; padding: 3px 9px; border: 1px solid #E5E7EB; background: #fff;
+            color: #4B5563; border-radius: 999px; cursor: pointer; font-weight: 500;
+        }
+        body.dark #rangePresets button { background: #1F2937; border-color: #374151; color: #D1D5DB; }
+        #rangePresets button.preset-primary, #rangePresets button:hover {
+            border-color: #4F46E5; color: #4F46E5;
+        }
+
+        .chart-wrap { position: relative; width: 100%; height: 380px; }
+        @media (max-width: 768px) { .chart-wrap { height: 300px; } }
+        .chart-wrap-sm { position: relative; width: 100%; height: 280px; }
+
+        .breakdown-layout { display: grid; grid-template-columns: 1fr 240px; gap: 12px; }
+        @media (max-width: 800px) { .breakdown-layout { grid-template-columns: 1fr; } }
+        .breakdown-hover {
+            border: 1px solid #E5E7EB; border-radius: 8px; padding: 12px;
+            background: #F9FAFB; font-size: 12px; min-height: 160px;
+        }
+        body.dark .breakdown-hover { background: #111827; border-color: #374151; }
+        .breakdown-hover .title { font-weight: 700; margin-bottom: 8px; }
+        .breakdown-hover .muted { color: #6B7280; }
+        body.dark .breakdown-hover .muted { color: #9CA3AF; }
+        .breakdown-hover .row { display: flex; justify-content: space-between; gap: 8px; padding: 4px 0; border-bottom: 1px solid #E5E7EB; }
+        body.dark .breakdown-hover .row { border-bottom-color: #374151; }
+        .breakdown-hover .k { color: #6B7280; }
+        body.dark .breakdown-hover .k { color: #9CA3AF; }
+        .breakdown-hover .v { font-weight: 600; }
+
+        .modal.hidden { display: none; }
+        .modal {
+            position: fixed; inset: 0; background: rgba(0,0,0,.45);
+            z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 16px;
+        }
+        .modal-card {
+            background: #fff; border-radius: 12px; max-width: 560px; width: 100%;
+            max-height: 80vh; overflow: auto; padding: 16px; border: 1px solid #E5E7EB;
+        }
+        body.dark .modal-card { background: #1F2937; border-color: #374151; }
+
+        .full-span { grid-column: 1 / -1; }
+        .field-grid.stacked { grid-template-columns: 1fr; }
+        .field-grid.stacked .field-label { margin-bottom: -4px; }
+
+        /* Avoid global button resets fighting scoped buttons */
+        button { font-family: inherit; }
+
     </style>
 </head>
 <body>
-    <button class="dark-mode-toggle" onclick="toggleDarkMode()" id="darkModeToggle">
-        <span class="material-icons" id="darkModeIcon">dark_mode</span>
-        <span id="darkModeText">Dark Mode</span>
-    </button>
-    
-    <div class="max-w-7xl">
-        <a href="../index.html" class="back-link">
-            <span class="material-icons" style="font-size:18px;">arrow_back</span>
-            Back to Portfolio
-        </a>
-        
-        <div class="rdsp-page-header">
-            <div>
-                <h1>Enhanced RDSP Calculator</h1>
-                <p class="text-sm text-gray-600">Based on 2025/2026 CRA Rules with Advanced Withdrawal Planning</p>
+
+<button class="dark-mode-toggle" onclick="toggleDarkMode()" id="darkModeToggle" type="button">
+    <span class="material-icons" id="darkModeIcon" style="font-size:18px;">dark_mode</span>
+    <span id="darkModeText">Dark</span>
+</button>
+
+<div class="page">
+    <a href="../index.html" class="back-link"><span class="material-icons" style="font-size:18px;">arrow_back</span>Back to Portfolio</a>
+    <h1>RDSP Calculator</h1>
+    <p class="subtitle">Canadian Registered Disability Savings Plan — grants, bonds, LDAPs/DAPs, and tax estimates (AB · BC · ON)</p>
+
+    <div class="layout" id="rdspLayout">
+        <!-- LEFT: Results -->
+        <div class="results">
+            <div class="stat-row" id="summaryCards">
+                <div class="stat-card">
+                    <div class="stat-icon"><span class="material-icons">account_balance_wallet</span></div>
+                    <div class="stat-info">
+                        <div class="stat-label-sm">Final Balance</div>
+                        <div class="stat-value-sm" id="statFinalBalance">$0</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:#DBEAFE;color:#2563EB"><span class="material-icons">volunteer_activism</span></div>
+                    <div class="stat-info">
+                        <div class="stat-label-sm">Lifetime Government</div>
+                        <div class="stat-value-sm" id="statGovtTotal">$0</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:#D1FAE5;color:#059669"><span class="material-icons">payments</span></div>
+                    <div class="stat-info">
+                        <div class="stat-label-sm">Total Withdrawals</div>
+                        <div class="stat-value-sm" id="statTotalWithdrawals">$0</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:#FCE7F3;color:#DB2777"><span class="material-icons">receipt_long</span></div>
+                    <div class="stat-info">
+                        <div class="stat-label-sm">Est. Tax on RDSP</div>
+                        <div class="stat-value-sm" id="statEstTax">$0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="tabs">
+                    <button type="button" class="tab-btn active" data-tab="growth"><span class="material-icons">show_chart</span>Growth</button>
+                    <button type="button" class="tab-btn" data-tab="breakdown"><span class="material-icons">bar_chart</span>Breakdown</button>
+                    <button type="button" class="tab-btn" data-tab="withdrawals"><span class="material-icons">account_balance</span>Withdrawals &amp; Tax</button>
+                    <button type="button" class="tab-btn" data-tab="compare"><span class="material-icons">compare_arrows</span>Compare</button>
+                </div>
+
+                <div class="tab-content active" id="tab-growth">
+                    <div class="chart-wrap"><canvas id="balanceChart"></canvas></div>
+                    <div id="comparisonChartNote" class="note-box" style="display:none;">
+                        <strong>Comparison overlay:</strong>
+                        dashed line is level “Optimal” withdrawals of
+                        <strong id="comparisonAmountLabel">—</strong>
+                        from age <span id="comparisonStartLabel">60</span> so balance reaches ~$0 by end age.
+                    </div>
+                    <div class="help-text" id="inflationChartNote" style="margin-top:8px;">Values in today’s dollars (inflation-adjusted).</div>
+
+                    <div class="range-slider" id="rangeSliderContainer" style="margin-top:14px;">
+                        <div class="range-slider-header">
+                            <span>Chart age range</span>
+                            <strong id="ageRangeDisplay">30 – 90</strong>
+                        </div>
+                        <div id="rangeTrackArea">
+                            <div id="rangeTrack"></div>
+                            <div id="rangeHighlight" style="left:0%;width:100%;"></div>
+                            <div id="leftHandle" class="range-handle" style="left:0%;" onmousedown="startDrag('left', event)" ontouchstart="startDrag('left', event)"></div>
+                            <div id="rightHandle" class="range-handle" style="left:100%;" onmousedown="startDrag('right', event)" ontouchstart="startDrag('right', event)"></div>
+                        </div>
+                        <div id="rangeLabels"><span id="minAgeLabel">30</span><span id="maxAgeLabel">90</span></div>
+                        <div id="rangePresets">
+                            <button type="button" onclick="setChartRange('early')">Early</button>
+                            <button type="button" onclick="setChartRange('mid')">Mid</button>
+                            <button type="button" onclick="setChartRange('late')">Late</button>
+                            <button type="button" onclick="setChartRange('all')" class="preset-primary">All years</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="tab-breakdown">
+                    <div class="breakdown-layout">
+                        <div class="chart-wrap-sm" id="breakdownChartContainer"><canvas id="breakdownChart"></canvas></div>
+                        <div id="breakdownHoverPanel" class="breakdown-hover">
+                            <div class="title">Year details</div>
+                            <div class="muted">Hover or tap a bar to see contributions, grants, growth, and withdrawals.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="tab-withdrawals">
+                    <div id="withdrawalChartContainer" style="display:none;">
+                        <div class="chart-wrap-sm"><canvas id="withdrawalChart"></canvas></div>
+                        <p class="help-text" style="margin-top:8px;">Only grants, bonds, and growth are taxable. Est. Tax is the extra liability on that slice given other income, province, and DTC.</p>
+                    </div>
+                    <div id="withdrawalEmpty" class="help-text">No withdrawals in the selected range yet — choose LDAP or Scheduled / Manual in Assumptions.</div>
+                </div>
+
+                <div class="tab-content" id="tab-compare">
+                    <p class="help-text" style="margin-bottom:10px;">LDAP vs Optimal overlay is controlled in Assumptions → Compare. Switch to the Growth tab to see the dashed balance line.</p>
+                    <div id="comparePanelHint" class="note-box">Enable “Compare LDAP vs Optimal” while in LDAP mode to project a level withdrawal path to $0.</div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top:16px;">
+                <div style="font-size:14px;font-weight:700;margin-bottom:10px;">Year-by-year</div>
+                <div class="table-wrap" style="max-height:380px;" id="breakdownTableContainer">
+                    <table class="data" id="breakdownTable">
+                        <thead>
+                            <tr>
+                                <th class="first">Age</th>
+                                <th>Balance</th>
+                                <th>Contrib</th>
+                                <th>Grant</th>
+                                <th>Bond</th>
+                                <th>Growth</th>
+                                <th>Withdrawal</th>
+                                <th>Penalty</th>
+                            </tr>
+                        </thead>
+                        <tbody id="breakdownTableBody"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
-        <!-- Preview Modal -->
-            <div id="previewModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center" style="display: none;">
-                <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4 max-h-96 overflow-y-auto">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-semibold text-gray-800" id="previewModalTitle"></h3>
-                        <button onclick="closePreviewModal()" class="text-gray-500 hover:text-gray-700">
-                            <span class="material-icons">close</span>
-                        </button>
-                    </div>
-                    <div id="previewModalContent" class="text-sm text-gray-700 space-y-3"></div>
-                    <button onclick="closePreviewModal()" class="mt-4 w-full px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
-                        Close
+        <!-- RIGHT: Assumptions -->
+        <aside class="card assumptions-panel" id="rdspAssumptions" aria-label="Assumptions panel">
+            <div class="assumptions-header">
+                <div class="assumptions-title">Assumptions</div>
+                <div style="display:flex;gap:6px;align-items:center;">
+                    <button type="button" class="btn-quiet" onclick="resetCalculator()">Reset</button>
+                    <button type="button" class="icon-btn" onclick="toggleAssumptionsPanel(false)" title="Hide assumptions" aria-label="Hide assumptions">
+                        <span class="material-icons" style="font-size:18px;">chevron_right</span>
                     </button>
                 </div>
             </div>
 
-
-        <div class="rdsp-layout" id="rdspLayout">
-            <!-- LEFT: results / charts -->
-            <div class="rdsp-results">
-            <div class="rdsp-results-card">
-            <!-- Summary Cards -->
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-3" id="summaryCards"></div>
-            </div>
-
-            <div class="rdsp-results-card">
-                <div class="flex items-center justify-between mb-2">
-                    <h3 class="font-semibold text-lg text-gray-800">Chart Age Range</h3>
-                    <div class="text-sm font-semibold text-gray-700" id="ageRangeDisplay">30 - 90</div>
-                </div>
-
-                <div id="rangeSliderContainer">
-                    <div id="rangeTrackArea">
-                        <div id="rangeTrack"></div>
-                        <div id="rangeHighlight" style="left: 0%; width: 100%;"></div>
-
-                        <div
-                            id="leftHandle"
-                            class="range-handle"
-                            style="left: 0%;"
-                            onmousedown="startDrag('left', event)"
-                            ontouchstart="startDrag('left', event)"
-                        ></div>
-
-                        <div
-                            id="rightHandle"
-                            class="range-handle"
-                            style="left: 100%;"
-                            onmousedown="startDrag('right', event)"
-                            ontouchstart="startDrag('right', event)"
-                        ></div>
+            <div class="accordion-section">
+                <button type="button" class="accordion-trigger open" data-acc="personal"><span>Personal</span><span class="material-icons">chevron_right</span></button>
+                <div class="accordion-content open" data-acc-content="personal">
+                    <div class="field-grid">
+                        <label class="field-label" for="currentAge">Current age</label>
+                        <input type="number" id="currentAge" value="30" min="0" max="120" oninput="updateCalculations()">
+                        <label class="field-label" for="dtcStartAge">DTC start age</label>
+                        <input type="number" id="dtcStartAge" value="17" min="0" max="49" oninput="updateCalculations()">
+                        <label class="field-label" for="familyIncome">Family income <span class="help-icon" title="Used for CDSG/CDSB eligibility thresholds">?</span></label>
+                        <div class="field-input-wrap"><span class="field-prefix">$</span><input type="number" id="familyIncome" value="100000" min="0" step="1000" oninput="updateCalculations()"></div>
+                        <label class="field-label" for="endAge">End age</label>
+                        <input type="number" id="endAge" value="90" min="1" max="120" oninput="updateCalculations()">
                     </div>
-
-                    <div id="rangeLabels">
-                        <span id="minAgeLabel">30</span>
-                        <span id="maxAgeLabel">90</span>
-                    </div>
-
-                    <div id="rangePresets">
-                        <button onclick="setChartRange('early')">Early (30-50)</button>
-                        <button onclick="setChartRange('mid')">Mid (50-70)</button>
-                        <button onclick="setChartRange('late')">Late (70-90)</button>
-                        <button onclick="setChartRange('all')" class="preset-primary">All Years</button>
-                    </div>
+                    <div id="incomeEligibility" class="help-text" style="margin-top:8px;"></div>
                 </div>
             </div>
 
-            <div class="rdsp-results-card">
-                <h3 class="font-semibold text-lg text-gray-800 mb-4">Account Value Over Time</h3>
-                <div class="chart-container">
-                    <canvas id="balanceChart"></canvas>
-                </div>
-                <div id="comparisonChartNote" class="mt-3 text-xs text-gray-600 bg-indigo-50 border border-indigo-100 rounded-lg px-3 py-2" style="display: none;">
-                    <strong class="text-indigo-800">Comparison overlay:</strong>
-                    dashed line is a level “Optimal” withdrawal of
-                    <strong id="comparisonAmountLabel">—</strong>
-                    from age <span id="comparisonStartLabel">60</span> so the balance reaches ~$0 by end age.
-                    Your plan (solid line) stays on LDAP.
-                </div>
-                <div class="mt-2 text-xs text-gray-500" id="inflationChartNote">
-                    Chart values are in today’s dollars (inflation-adjusted).
-                </div>
-                <div class="mt-4 flex items-center gap-4 flex-wrap">
-                    <label for="returnRateSlider" class="text-sm font-medium text-gray-700 dark:text-gray-300">Interest rate</label>
-                    <input type="range" id="returnRateSlider" min="0" max="20" step="0.1" value="10" class="flex-1 min-w-[120px] max-w-[280px]" aria-label="Interest rate (%)" oninput="syncReturnRateFromSlider()">
-                    <span id="returnRateSliderValue" class="text-sm font-medium text-gray-800 dark:text-gray-200 tabular-nums">10%</span>
-                </div>
-
-                <div class="mt-6">
-                    <h3 class="font-semibold text-lg text-gray-800 mb-4">Annual Breakdown</h3>
-                    <div id="breakdownChartContainer" class="chart-container-small">
-                        <div class="breakdown-layout">
-                            <div class="breakdown-canvas">
-                                <canvas id="breakdownChart"></canvas>
-                            </div>
-                            <div id="breakdownHoverPanel" class="breakdown-hover">
-                                <div class="title">Hover details</div>
-                                <div class="muted">Move your mouse over the chart to see the full breakdown for that age.</div>
-                            </div>
-                        </div>
+            <div class="accordion-section">
+                <button type="button" class="accordion-trigger open" data-acc="contrib"><span>Contributions &amp; returns</span><span class="material-icons">chevron_right</span></button>
+                <div class="accordion-content open" data-acc-content="contrib">
+                    <div class="field-grid">
+                        <label class="field-label" for="annualContribution">Annual contrib</label>
+                        <div class="field-input-wrap"><span class="field-prefix">$</span><input type="number" id="annualContribution" value="1500" min="0" step="100" oninput="updateCalculations()"></div>
+                        <label class="field-label" for="returnRate">Return</label>
+                        <div class="field-input-wrap"><input type="number" id="returnRate" value="10" min="0" max="30" step="0.1" oninput="updateCalculations()"><span class="field-suffix">%</span></div>
+                        <label class="field-label" for="inflationRate">Inflation</label>
+                        <div class="field-input-wrap"><input type="number" id="inflationRate" value="3" min="0" max="20" step="0.1" oninput="updateCalculations()"><span class="field-suffix">%</span></div>
+                        <label class="field-label">Real return</label>
+                        <div><span class="computed-tag" id="realReturnDisplay">—</span></div>
                     </div>
-                    <div id="breakdownTableContainer">
-                        <div class="overflow-x-auto">
-                            <table class="w-full border-collapse border border-gray-300 text-sm" id="breakdownTable">
-                                <thead>
-                                    <tr class="bg-gray-100">
-                                        <th class="border border-gray-300 px-3 py-2 text-left font-semibold text-gray-800">Age</th>
-                                        <th class="border border-gray-300 px-3 py-2 text-right font-semibold text-gray-800">Balance</th>
-                                        <th class="border border-gray-300 px-3 py-2 text-right font-semibold text-gray-800">Contributions</th>
-                                        <th class="border border-gray-300 px-3 py-2 text-right font-semibold text-gray-800">Grants</th>
-                                        <th class="border border-gray-300 px-3 py-2 text-right font-semibold text-gray-800">Bonds</th>
-                                        <th class="border border-gray-300 px-3 py-2 text-right font-semibold text-gray-800">Growth</th>
-                                        <th class="border border-gray-300 px-3 py-2 text-right font-semibold text-gray-800">Withdrawals</th>
-                                        <th class="border border-gray-300 px-3 py-2 text-right font-semibold text-gray-800">10Y Penalty</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="breakdownTableBody">
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mt-6" id="withdrawalChartContainer" style="display: none;">
-                    <h3 class="font-semibold text-lg text-gray-800 mb-1">Withdrawal Breakdown</h3>
-                    <p class="text-xs text-gray-500 mb-4">Only grants, bonds, and growth are taxable. Est. Tax = extra income-tax <em>liability</em> on that slice (federal + provincial, with BPA and optional disability amount). Net = Total − Est. Tax (cash after setting aside that liability — withholding at source may be lower).</p>
-                    <div class="chart-container-small">
-                        <canvas id="withdrawalChart"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            <div class="rdsp-results-card">
-                <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 text-sm text-gray-700">
-                    <h4 class="font-semibold mb-2 text-gray-800">Enhanced Features Based on CRA Rules:</h4>
-                    <ul class="space-y-1 text-xs text-gray-600">
-                        <li>• <strong>LDAP (Lifetime Disability Assistance Payments):</strong> Automatic pension-style withdrawals starting at 60</li>
-                        <li>• <strong>10-Year Repayment Rule:</strong> Early withdrawals (before 60) lose $3 of grants/bonds for every $1 withdrawn</li>
-                        <li>• <strong>Taxable Withdrawals:</strong> Grants, bonds, and growth are taxed; personal contributions come out tax-free (CRA FMV proportion). Est. Tax uses federal + provincial brackets with BPA and disability amount (DTC).</li>
-                        <li>• <strong>LDAP Formula:</strong> Before 80: balance ÷ (83 - age), After 80: balance ÷ 3</li>
-                        <li>• <strong>Carry-forward:</strong> Catch up on past 10 DTC-approved years (max $10,500 grants + $11,000 bonds per year)</li>
-                    </ul>
-                </div>
-            </div>
-
-            </div>
-
-            <!-- RIGHT: sticky assumptions / controls -->
-            <aside class="rdsp-assumptions" id="rdspAssumptions" aria-label="Assumptions panel">
-                <div class="rdsp-assumptions-header">
-                    <h2>Assumptions</h2>
-                    <div class="rdsp-assumptions-header-actions">
-                        <button type="button" onclick="resetCalculator()" class="px-3 py-1.5 bg-gray-600 text-white text-sm rounded-md hover:bg-gray-700 flex items-center gap-1" title="Reset all inputs">
-                            <span class="material-icons" style="font-size:16px;">refresh</span>
-                            Reset
-                        </button>
-                        <button type="button" class="rdsp-icon-btn" onclick="toggleAssumptionsPanel(false)" title="Hide assumptions panel" aria-label="Hide assumptions panel">
-                            <span class="material-icons" style="font-size:18px;">chevron_right</span>
-                        </button>
-                    </div>
-                </div>
-                <div class="rdsp-assumptions-body">
-            <!-- Input Section -->
-                <!-- Personal Information -->
-                <div class="space-y-4 mb-6">
-                    <h3 class="rdsp-section-title">Personal Information</h3>
-                    
-                    <div>
-                        <label for="currentAge" class="block text-sm font-medium text-gray-700 mb-1">Current Age</label>
-                        <input type="number" id="currentAge" aria-label="Current Age" value="30" min="0" max="100" oninput="updateCalculations()">
-                    </div>
-
-                    <div>
-                        <label for="dtcStartAge" class="block text-sm font-medium text-gray-700 mb-1">Age When DTC Approved</label>
-                        <input type="number" id="dtcStartAge" aria-label="Age When DTC Approved" value="17" min="0" max="100" oninput="updateCalculations()">
-                    </div>
-
-                    <div>
-                        <label for="familyIncome" class="block text-sm font-medium text-gray-700 mb-1">Current Family Net Income (2026)</label>
-                        <input type="number" id="familyIncome" aria-label="Current Family Net Income (2026)" value="100000" min="0" oninput="updateCalculations()">
-                        <div class="text-xs text-gray-500 mt-1" id="incomeEligibility"></div>
-                    </div>
-
-                    <div>
-                        <label for="endAge" class="block text-sm font-medium text-gray-700 mb-1">End Projection at Age</label>
-                        <input type="number" id="endAge" aria-label="End Projection at Age" value="90" min="0" max="120" oninput="updateCalculations()">
-                        <div class="text-xs text-gray-500 mt-1">Set the final age for projections and graph</div>
-                    </div>
-                </div>
-
-                <!-- Contribution & Investment Details -->
-                <div class="space-y-4 mb-6">
-                    <h3 class="rdsp-section-title">Contributions & Investment</h3>
-                    
-                    <div>
-                        <label for="annualContribution" class="block text-sm font-medium text-gray-700 mb-1">Annual Contribution (until age 59)</label>
-                        <input type="number" id="annualContribution" aria-label="Annual Contribution (until age 59)" value="1500" min="0" oninput="updateCalculations()">
-                        <div class="text-xs text-gray-500 mt-1">Lifetime max: $200,000. Optimal: $1,500/yr (low income) or $1,000/yr (high income)</div>
-                    </div>
-                    
-                    <div id="stopContribsContainer" style="display: none;">
-                        <div class="flex items-center space-x-2 bg-gray-50 p-3 rounded-lg border border-gray-200">
+                    <div id="stopContribsContainer" class="nested-block" style="display:none;">
+                        <label class="check-row" for="stopContribsAtWithdrawal">
                             <input type="checkbox" id="stopContribsAtWithdrawal" checked onchange="updateCalculations()">
-                            <label class="text-sm text-gray-700">
-                                Stop contributions when early retirement/withdrawals begin
-                                <div class="text-xs text-gray-600 mt-0.5">(Useful for early retirement scenarios at 45-50)</div>
-                            </label>
+                            <span>Stop contributions when withdrawals begin</span>
+                        </label>
+                    </div>
+                    <div class="nested-block">
+                        <label class="check-row" for="payDividends">
+                            <input type="checkbox" id="payDividends" onchange="updateCalculations()">
+                            <span>Pay out dividends</span>
+                        </label>
+                        <div id="dividendRateContainer" style="display:none;" class="field-grid" >
+                            <label class="field-label" for="dividendRate">Dividend rate</label>
+                            <div class="field-input-wrap"><input type="number" id="dividendRate" value="2" min="0" max="20" step="0.1" oninput="updateCalculations()"><span class="field-suffix">%</span></div>
                         </div>
                     </div>
-
-                    <div>
-                        <label for="returnRate" class="block text-sm font-medium text-gray-700 mb-1">Annual Return Rate (%)</label>
-                        <input type="number" id="returnRate" aria-label="Annual Return Rate (%)" value="10" min="0" max="20" step="0.1" oninput="updateCalculations()">
-                        <div class="text-xs text-gray-500 mt-1">Nominal investment return before inflation</div>
-                        <div class="mt-2">
-                            <button type="button" onclick="toggleYearlyRates()" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">
-                                <span id="yearlyRatesToggleText">+ Adjust rate per year</span>
-                            </button>
-                        </div>
-                        <div id="yearlyRatesContainer" style="display: none;" class="mt-3 p-3 bg-gray-50 border border-gray-200 rounded-lg">
-                            <div class="text-xs text-gray-600 mb-2">Set custom return rates for specific years. Leave blank to use default rate.</div>
-                            <div id="yearlyRatesList" class="space-y-2 max-h-60 overflow-y-auto"></div>
-                            <button type="button" onclick="addYearlyRate()" class="mt-2 text-sm text-indigo-600 hover:text-indigo-700 font-medium">+ Add year</button>
+                    <div class="nested-block">
+                        <label class="check-row" for="calculateRequiredRate">
+                            <input type="checkbox" id="calculateRequiredRate" onchange="updateCalculations()">
+                            <span>Solve required return</span>
+                        </label>
+                        <div id="requiredRateContainer" style="display:none;">
+                            <div class="field-grid" style="margin-top:8px;">
+                                <label class="field-label" for="requiredRateStartAge">From age</label>
+                                <input type="number" id="requiredRateStartAge" value="60" min="0" max="120" oninput="updateCalculations()">
+                            </div>
+                            <div id="requiredRateResult" class="computed-tag" style="margin-top:8px;">—</div>
                         </div>
                     </div>
-
-                    <div>
-                        <label for="inflationRate" class="block text-sm font-medium text-gray-700 mb-1">Inflation Rate (%)</label>
-                        <input type="number" id="inflationRate" aria-label="Inflation Rate (%)" value="3" min="0" max="20" step="0.1" oninput="updateCalculations()">
-                        <div class="text-xs text-gray-500 mt-1">Used to show balances in today’s dollars. Real return: <span id="realReturnDisplay" class="font-semibold text-gray-700">—</span></div>
-                    </div>
-
-                    <div class="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                        <div class="flex items-center space-x-2 mb-2">
-                            <input type="checkbox" id="calculateRequiredRate" aria-label="Calculate required return rate" onchange="toggleRequiredRateCalculation()">
-                            <label for="calculateRequiredRate" class="text-sm font-medium text-gray-700">Calculate required return rate to maintain balance</label>
+                    <!-- Hidden slider kept for JS sync compatibility -->
+                    <input type="range" id="returnRateSlider" min="0" max="20" step="0.1" value="10" style="display:none;" aria-hidden="true">
+                    <span id="returnRateSliderValue" style="display:none;">10%</span>
+                    <div style="margin-top:10px;">
+                        <button type="button" class="add-row-btn" onclick="toggleYearlyRates()"><span id="yearlyRatesToggleText">Show yearly rates</span></button>
+                        <div id="yearlyRatesContainer" style="display:none;margin-top:8px;">
+                            <div id="yearlyRatesList"></div>
                         </div>
-                        <div id="requiredRateContainer" style="display: none;" class="mt-2">
-                            <label for="requiredRateStartAge" class="block text-xs text-gray-600 mb-1">Start withdrawals at age</label>
-                            <input type="number" id="requiredRateStartAge" aria-label="Start withdrawals at age" value="60" min="18" max="90" step="1" onchange="calculateRequiredReturnRate()" class="w-full px-2 py-1 text-sm border border-gray-300 rounded">
-                            <div id="requiredRateResult" class="mt-2 text-sm text-gray-800"></div>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center space-x-2">
-                        <input type="checkbox" id="payDividends" aria-label="Pay Out Dividends" onchange="updateCalculations()">
-                        <label for="payDividends" class="text-sm font-medium text-gray-700">Pay Out Dividends</label>
-                    </div>
-
-                    <div id="dividendRateContainer" style="display: none;">
-                        <label for="dividendRate" class="block text-sm font-medium text-gray-700 mb-1">Dividend Rate (%)</label>
-                        <input type="number" id="dividendRate" aria-label="Dividend Rate (%)" value="2" min="0" max="20" step="0.1" oninput="updateCalculations()">
                     </div>
                 </div>
-
-
-            <!-- Carry-Forward Section -->
-            <div class="mb-6 bg-gray-50 border border-gray-200 rounded-lg p-3">
-                <h3 class="rdsp-section-title">Carry-Forward Eligibility</h3>
-                <p class="text-xs text-gray-600 mb-3 leading-snug" id="carryForwardSummary"></p>
-                <div class="space-y-2 max-h-72 overflow-y-auto" id="carryForwardYears"></div>
             </div>
-            
 
-            <!-- Withdrawal Planning -->
-            <div class="mb-6">
-                <h3 class="rdsp-section-title">Withdrawals</h3>
-                
-                <!-- Withdrawal Type Selection -->
-                <div class="rdsp-option-card">
-                    <span class="rdsp-option-card-label">Withdrawal Mode</span>
-                    <div class="rdsp-option-list">
-                        <label class="rdsp-radio-row" for="ldap">
+            <div class="accordion-section">
+                <button type="button" class="accordion-trigger" data-acc="carry"><span>Carry-forward</span><span class="material-icons">chevron_right</span></button>
+                <div class="accordion-content" data-acc-content="carry">
+                    <p class="help-text" id="carryForwardSummary" style="margin-bottom:8px;"></p>
+                    <div class="past-income-list" id="carryForwardYears"></div>
+                </div>
+            </div>
+
+            <div class="accordion-section">
+                <button type="button" class="accordion-trigger open" data-acc="withdraw"><span>Withdrawals</span><span class="material-icons">chevron_right</span></button>
+                <div class="accordion-content open" data-acc-content="withdraw">
+                    <div class="radio-stack">
+                        <label class="radio-row" for="ldap">
                             <input type="radio" name="withdrawalType" id="ldap" value="ldap" checked onchange="updateCalculations()">
-                            <span class="rdsp-radio-text">
-                                <strong>LDAP</strong>
-                                <span class="rdsp-radio-desc">CRA formula withdrawals from a start age (60+)</span>
-                            </span>
+                            <span><strong>LDAP</strong><span class="desc">CRA formula from a start age (60+)</span></span>
                         </label>
-                        <label class="rdsp-radio-row" for="manual">
+                        <label class="radio-row" for="manual">
                             <input type="radio" name="withdrawalType" id="manual" value="manual" onchange="updateCalculations()">
-                            <span class="rdsp-radio-text">
-                                <strong>Scheduled / Manual (DAPs)</strong>
-                                <span class="rdsp-radio-desc">Age range (e.g. 55–90), fixed/auto/tax-optimal amounts, or edit individual years</span>
-                            </span>
+                            <span><strong>Scheduled / Manual (DAPs)</strong><span class="desc">Age range, auto / fixed / tax-optimal, or edit years</span></span>
                         </label>
                     </div>
-                    
-                    <div id="ldapAgeContainer" class="rdsp-field-block">
-                        <label for="ldapAge">Start LDAP at age</label>
-                        <input type="number" id="ldapAge" aria-label="Start LDAP at age" value="60" min="60" max="120" oninput="updateCalculations()">
-                        <div class="rdsp-field-hint">Before 80: balance ÷ (83 − age). After 80: balance ÷ 3.</div>
+
+                    <div id="ldapAgeContainer" class="nested-block">
+                        <div class="field-grid">
+                            <label class="field-label" for="ldapAge">LDAP start</label>
+                            <input type="number" id="ldapAge" value="60" min="60" max="120" oninput="updateCalculations()">
+                        </div>
+                        <p class="help-text">Before 80: balance ÷ (83 − age). After 80: balance ÷ 3.</p>
+                    </div>
+
+                    <div id="manualWithdrawalSection" class="nested-block" style="display:none;">
+                        <div class="cf-year-row" style="cursor:pointer;margin-bottom:8px;" onclick="toggleManualWithdrawals()" id="manualWithdrawalsToggle" role="button" aria-expanded="true">
+                            <div class="cf-year-top">
+                                <div class="cf-year-meta">Scheduled withdrawals</div>
+                                <span class="material-icons" id="manualWithdrawalsIcon" style="font-size:18px;color:#6B7280;">expand_less</span>
+                            </div>
+                        </div>
+                        <div id="manualWithdrawalsContent" class="collapsible-content expanded">
+                            <div class="warn-box"><strong>10-year rule:</strong> Before 60, repay $3 of grants/bonds per $1 withdrawn (last 10 years).</div>
+                            <div class="field-grid">
+                                <label class="field-label" for="manualStartAge">Start age</label>
+                                <input type="number" id="manualStartAge" value="55" min="0" max="120" oninput="syncManualQuickPlan()" onblur="commitManualQuickPlanAges()">
+                                <label class="field-label" for="manualEndAge">End age</label>
+                                <input type="number" id="manualEndAge" value="90" min="0" max="120" oninput="syncManualQuickPlan()" onblur="commitManualQuickPlanAges()">
+                            </div>
+                            <div style="margin-top:10px;">
+                                <div class="field-label" style="margin-bottom:6px;">Annual amount</div>
+                                <label class="check-row"><input type="radio" name="manualAmountMode" value="auto" checked onchange="onManualAmountModeChange()"><span>Auto to $0 by end age</span></label>
+                                <label class="check-row"><input type="radio" name="manualAmountMode" value="fixed" onchange="onManualAmountModeChange()"><span>Fixed annual amount</span></label>
+                                <label class="check-row"><input type="radio" name="manualAmountMode" value="taxOptimal" onchange="onManualAmountModeChange()"><span>Tax-optimal sizing</span></label>
+                                <div id="manualAutoAmountPreview" class="note-box">Estimated annual: <strong id="manualAutoAmountValue">—</strong></div>
+                                <div id="manualFixedAmountRow" style="display:none;" class="field-grid">
+                                    <label class="field-label" for="manualAnnualWithdrawal">Amount</label>
+                                    <div class="field-input-wrap"><span class="field-prefix">$</span><input type="number" id="manualAnnualWithdrawal" value="5000" min="0" step="100" oninput="syncManualQuickPlan()"></div>
+                                </div>
+                                <div id="manualTaxOptimalNote" class="warn-box" style="display:none;">Tax-optimal changes withdrawal size from other income / RRSP — and therefore the balance path.</div>
+                            </div>
+                            <button type="button" class="btn-primary" onclick="generateWithdrawalSchedule()">Apply / generate yearly withdrawals</button>
+                            <div id="withdrawalsList" style="margin-top:10px;"></div>
+                            <button type="button" class="add-row-btn" style="margin-top:8px;" onclick="addWithdrawal()">+ Add manual withdrawal</button>
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                    <div class="rdsp-option-card">
-                    <label for="withdrawalOtherIncome" class="rdsp-option-card-label">Other taxable income in withdrawal years</label>
-                    <input type="number" id="withdrawalOtherIncome" aria-label="Other taxable income during withdrawals" value="20000" min="0" step="1000" oninput="updateCalculations()">
-                    <div class="rdsp-field-hint">
-                        Beneficiary’s other taxable income (pension, employment, RRSP/RRIF, etc.) — not family income for grants.
-                        Est. Tax is the <strong>extra tax liability</strong> from the taxable RDSP slice (grants/bonds/growth), using federal + provincial brackets and credits.
-                        Issuers may withhold little or nothing until taxable DAPs exceed basic personal + disability amounts (~$26k federal); you can still owe tax on filing.
-                    </div>
-
-                    <div class="rdsp-field-block">
-                        <label for="taxProvince">Province for tax estimate</label>
-                        <select id="taxProvince" onchange="updateCalculations()" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
+            <div class="accordion-section">
+                <button type="button" class="accordion-trigger" data-acc="tax"><span>Tax context</span><span class="material-icons">chevron_right</span></button>
+                <div class="accordion-content" data-acc-content="tax">
+                    <div class="field-grid">
+                        <label class="field-label" for="withdrawalOtherIncome">Other income</label>
+                        <div class="field-input-wrap"><span class="field-prefix">$</span><input type="number" id="withdrawalOtherIncome" value="20000" min="0" step="1000" oninput="updateCalculations()"></div>
+                        <label class="field-label" for="taxProvince">Province</label>
+                        <select id="taxProvince" onchange="updateCalculations()">
                             <option value="AB" selected>Alberta</option>
                             <option value="BC">British Columbia</option>
                             <option value="ON">Ontario</option>
                         </select>
                     </div>
-
-                    <label class="rdsp-check-row mt-3" for="claimDisabilityAmount">
+                    <p class="help-text" style="margin-top:6px;">Beneficiary taxable income in withdrawal years (not family income for grants). Est. Tax = marginal liability on taxable RDSP slice.</p>
+                    <label class="check-row" for="claimDisabilityAmount">
                         <input type="checkbox" id="claimDisabilityAmount" checked onchange="updateCalculations()">
-                        <span class="rdsp-check-row-text">
-                            <strong>Claim disability amount (DTC)</strong>
-                            <span class="rdsp-radio-desc">RDSP beneficiaries usually claim this — materially lowers Est. Tax</span>
-                        </span>
+                        <span>Claim disability amount (DTC)<span class="desc">Usually claimed with an RDSP — lowers Est. Tax</span></span>
                     </label>
-
-                    <div class="rdsp-field-block">
-                        <label class="rdsp-check-row" for="useRrspWithdrawals">
-                            <input type="checkbox" id="useRrspWithdrawals" onchange="updateCalculations()">
-                            <span class="rdsp-check-row-text">
-                                <strong>Also withdrawing from RRSP / RRIF</strong>
-                                <span class="rdsp-radio-desc">Fully taxable — added to other income for tax estimates</span>
-                            </span>
-                        </label>
-                        <div id="rrspWithdrawalRow" style="display: none;" class="mt-2">
-                            <label for="rrspWithdrawalAmount">RRSP / RRIF withdrawal ($/yr)</label>
-                            <input type="number" id="rrspWithdrawalAmount" value="15000" min="0" step="500" oninput="updateCalculations()">
-                        </div>
-                    </div>
-
-                    <div class="mt-3">
-                        <label class="rdsp-check-row" for="useTfsaWithdrawals">
-                            <input type="checkbox" id="useTfsaWithdrawals" onchange="updateCalculations()">
-                            <span class="rdsp-check-row-text">
-                                <strong>Also withdrawing from TFSA</strong>
-                                <span class="rdsp-radio-desc">Tax-free — does not increase taxable income; shown as extra cash beside Net</span>
-                            </span>
-                        </label>
-                        <div id="tfsaWithdrawalRow" style="display: none;" class="mt-2">
-                            <label for="tfsaWithdrawalAmount">TFSA withdrawal ($/yr)</label>
-                            <input type="number" id="tfsaWithdrawalAmount" value="10000" min="0" step="500" oninput="updateCalculations()">
-                        </div>
-                    </div>
-                    <div id="otherIncomeSummary" class="text-xs text-gray-600 mt-3 bg-white border border-gray-200 rounded-md px-2 py-1.5"></div>
-                </div>
-
-                <!-- Strategy Comparison Toggle (LDAP only) -->
-                <div id="comparisonToggleContainer" class="rdsp-option-card">
-                    <label class="rdsp-check-row" for="showComparison">
-                        <input type="checkbox" id="showComparison" aria-label="Compare LDAP vs Optimal withdrawals" onchange="updateCalculations()">
-                        <span class="rdsp-check-row-text">
-                            <strong>Compare LDAP vs “Optimal” withdrawals</strong>
-                            <span class="rdsp-radio-desc">Overlays a dashed balance line (level withdrawals to ~$0). Does not change your LDAP plan.</span>
-                        </span>
+                    <label class="check-row" for="useRrspWithdrawals">
+                        <input type="checkbox" id="useRrspWithdrawals" onchange="updateCalculations()">
+                        <span>Also withdrawing RRSP / RRIF<span class="desc">Taxable — added to other income</span></span>
                     </label>
-                    
-                    <div id="comparisonAgeContainer" style="display: none;" class="rdsp-field-block">
-                        <label for="comparisonStartAge">Comparison starts at age</label>
-                        <input type="number" id="comparisonStartAge" value="60" min="60" max="120" oninput="updateCalculations()">
-                        <div class="rdsp-field-hint">Optimal withdrawals begin at this age (60+).</div>
+                    <div id="rrspWithdrawalRow" style="display:none;" class="field-grid">
+                        <label class="field-label" for="rrspWithdrawalAmount">RRSP / RRIF</label>
+                        <div class="field-input-wrap"><span class="field-prefix">$</span><input type="number" id="rrspWithdrawalAmount" value="15000" min="0" step="500" oninput="updateCalculations()"></div>
                     </div>
-                </div>
-                
-                <!-- Manual Withdrawal Section -->
-                <div id="manualWithdrawalSection" style="display: none;">
-                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 mb-3 cursor-pointer" onclick="toggleManualWithdrawals()">
-                        <div class="flex items-center justify-between">
-                            <div class="text-sm font-semibold text-gray-800">Scheduled withdrawals</div>
-                            <span class="material-icons text-gray-600 text-lg" id="manualWithdrawalsIcon">expand_more</span>
-                        </div>
+                    <label class="check-row" for="useTfsaWithdrawals">
+                        <input type="checkbox" id="useTfsaWithdrawals" onchange="updateCalculations()">
+                        <span>Also withdrawing TFSA<span class="desc">Tax-free cash beside Net</span></span>
+                    </label>
+                    <div id="tfsaWithdrawalRow" style="display:none;" class="field-grid">
+                        <label class="field-label" for="tfsaWithdrawalAmount">TFSA</label>
+                        <div class="field-input-wrap"><span class="field-prefix">$</span><input type="number" id="tfsaWithdrawalAmount" value="10000" min="0" step="500" oninput="updateCalculations()"></div>
                     </div>
-                    <div id="manualWithdrawalsContent" class="collapsible-content collapsed">
-                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 mb-3">
-                        <div class="text-xs font-semibold text-gray-800 mb-1">⚠️ 10-Year Repayment Rule</div>
-                        <div class="text-xs text-gray-700">Withdrawals before age 60 require repaying $3 in grants/bonds for every $1 withdrawn (from last 10 years)</div>
-                    </div>
-
-                    <!-- Quick plan: auto-generate withdrawals -->
-                    <div class="bg-white rounded-lg p-3 border border-gray-300 mb-3">
-                        <div class="text-sm font-semibold text-gray-800 mb-2">Age range &amp; amount</div>
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label class="block text-xs text-gray-600 mb-1">Start age</label>
-                                <input type="number" id="manualStartAge" value="55" min="0" max="120" oninput="syncManualQuickPlan()" onblur="commitManualQuickPlanAges()">
-                            </div>
-                            <div>
-                                <label class="block text-xs text-gray-600 mb-1">End age</label>
-                                <input type="number" id="manualEndAge" value="90" min="0" max="120" oninput="syncManualQuickPlan()" onblur="commitManualQuickPlanAges()">
-                            </div>
-                            <div class="col-span-2">
-                                <div class="text-xs font-medium text-gray-700 mb-2">Annual amount</div>
-                                <label class="flex items-start gap-2 text-xs text-gray-700 mb-2 cursor-pointer">
-                                    <input type="radio" name="manualAmountMode" value="auto" checked class="mt-0.5" onchange="onManualAmountModeChange()">
-                                    <span>Auto-calculate so balance reaches <strong>$0</strong> by end age</span>
-                                </label>
-                                <label class="flex items-start gap-2 text-xs text-gray-700 mb-2 cursor-pointer">
-                                    <input type="radio" name="manualAmountMode" value="fixed" class="mt-0.5" onchange="onManualAmountModeChange()">
-                                    <span>Fixed annual withdrawal amount</span>
-                                </label>
-                                <label class="flex items-start gap-2 text-xs text-gray-700 mb-2 cursor-pointer">
-                                    <input type="radio" name="manualAmountMode" value="taxOptimal" class="mt-0.5" onchange="onManualAmountModeChange()">
-                                    <span><strong>Tax-optimal</strong> — fill lower brackets using other income / RRSP above, while still depleting by end age</span>
-                                </label>
-                                <div id="manualAutoAmountPreview" class="text-xs text-indigo-700 bg-indigo-50 border border-indigo-200 rounded-md px-2 py-1.5 mb-2">
-                                    Estimated annual withdrawal: <strong id="manualAutoAmountValue">—</strong>
-                                    <span class="text-gray-500 block mt-0.5">Uses return rate, contributions, and grants. Recalculates when ages or rate change.</span>
-                                </div>
-                                <div id="manualFixedAmountRow" style="display: none;">
-                                    <label class="block text-xs text-gray-600 mb-1" for="manualAnnualWithdrawal">Annual withdrawal amount ($)</label>
-                                    <input type="number" id="manualAnnualWithdrawal" value="5000" min="0" step="100" oninput="syncManualQuickPlan()">
-                                </div>
-                                <div id="manualTaxOptimalNote" style="display: none;" class="text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-md px-2 py-1.5 mb-2">
-                                    Tax-optimal sizes each year’s RDSP withdrawal from your other taxable income (and RRSP if enabled). That <em>does</em> change the RDSP balance path — unlike LDAP / fixed / auto, where other income only changes Est. Tax and Net.
-                                </div>
-                                <div class="text-xs text-gray-500 mt-1">Generate a yearly schedule you can edit afterwards, or rely on live tax-optimal sizing without generating.</div>
-                            </div>
-                        </div>
-                        <button onclick="generateWithdrawalSchedule()" class="w-full px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 mt-3">
-                            Apply / generate yearly withdrawals
-                        </button>
-                    </div>
-                    
-                    <div id="withdrawalsList"></div>
-                    
-                    <button onclick="addWithdrawal()" class="w-full px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 mt-3">
-                        + Add Manual Withdrawal
-                    </button>
-                    </div>
+                    <div id="otherIncomeSummary" class="note-box"></div>
                 </div>
             </div>
 
+            <div class="accordion-section" id="comparisonToggleContainer">
+                <button type="button" class="accordion-trigger" data-acc="compare"><span>Compare</span><span class="material-icons">chevron_right</span></button>
+                <div class="accordion-content" data-acc-content="compare">
+                    <label class="check-row" for="showComparison">
+                        <input type="checkbox" id="showComparison" onchange="updateCalculations()">
+                        <span>Compare LDAP vs “Optimal”<span class="desc">Dashed balance overlay on Growth tab</span></span>
+                    </label>
+                    <div id="comparisonAgeContainer" style="display:none;" class="field-grid">
+                        <label class="field-label" for="comparisonStartAge">Starts at</label>
+                        <input type="number" id="comparisonStartAge" value="60" min="60" max="120" oninput="updateCalculations()">
+                    </div>
                 </div>
-            </aside>
-        </div>
+            </div>
+        </aside>
     </div>
 
-    <button type="button" id="assumptionsOpenBtn" class="rdsp-assumptions-open-btn" onclick="toggleAssumptionsPanel(true)" aria-label="Show assumptions panel">
-        <span class="material-icons" style="font-size:18px;">tune</span>
-        Assumptions
-    </button>
+    <p class="disclaimer">
+        Planning estimate only — not tax, legal, or financial advice. Models CDSG/CDSB, carry-forward, LDAP/DAP rules, 10-year assistance holdback, and approximate federal + provincial tax with BPA and optional disability amount.
+        Confirm figures with your issuer and a qualified advisor. CRA rules: grants/bonds/growth are taxable on withdrawal; personal contributions are not.
+    </p>
+</div>
 
-    <script>
+<button type="button" id="assumptionsOpenBtn" class="assumptions-open-btn" onclick="toggleAssumptionsPanel(true)" aria-label="Show assumptions">
+    <span class="material-icons" style="font-size:18px;">tune</span> Assumptions
+</button>
+
+<div id="previewModal" class="modal hidden" onclick="if(event.target===this)closePreviewModal()">
+    <div class="modal-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+            <strong id="previewModalTitle">Preview</strong>
+            <button type="button" class="icon-btn" onclick="closePreviewModal()"><span class="material-icons" style="font-size:18px;">close</span></button>
+        </div>
+        <div id="previewModalContent"></div>
+    </div>
+</div>
+
+<script>
+
         // State management
         let state = {
             currentAge: 30,
@@ -2351,8 +1073,9 @@
             showComparison: false,
             carryForwardYears: [],
             chartAgeRange: [30, 90],
-            manualWithdrawalsCollapsed: true // Track collapse state for manual withdrawals
+            manualWithdrawalsCollapsed: false // open when Scheduled / Manual is selected
         };
+        let previousWithdrawalType = state.withdrawalType;
         
         let allProjectionData = []; // Store all data for filtering
         let noGrowthProjectionData = []; // Same scenario, but with 0% return (used for hover when Growth is hidden)
@@ -2362,7 +1085,7 @@
         // Dark Mode Toggle
         function toggleDarkMode() {
             const body = document.body;
-            const isDark = body.classList.toggle('dark-mode');
+            const isDark = body.classList.toggle('dark');
             
             // Update icon and text
             const icon = document.getElementById('darkModeIcon');
@@ -2370,10 +1093,10 @@
             
             if (isDark) {
                 icon.textContent = 'light_mode';
-                text.textContent = 'Light Mode';
+                if (text) text.textContent = 'Light Mode';
             } else {
                 icon.textContent = 'dark_mode';
-                text.textContent = 'Dark Mode';
+                if (text) text.textContent = 'Dark Mode';
             }
             
             // Save preference
@@ -2396,12 +1119,12 @@
             
             // Only apply dark mode if explicitly saved as 'true', default to light
             if (saved === 'true') {
-                document.body.classList.add('dark-mode');
+                document.body.classList.add('dark');
                 document.getElementById('darkModeIcon').textContent = 'light_mode';
                 document.getElementById('darkModeText').textContent = 'Light Mode';
             } else {
                 // Default to light mode
-                document.body.classList.remove('dark-mode');
+                document.body.classList.remove('dark');
                 document.getElementById('darkModeIcon').textContent = 'dark_mode';
                 document.getElementById('darkModeText').textContent = 'Dark Mode';
             }
@@ -3038,17 +1761,17 @@
 
             const manualSection = document.getElementById('manualWithdrawalSection');
             if (manualSection) {
-                manualSection.style.display = state.withdrawalType === 'manual' ? 'block' : 'none';
-                if (state.withdrawalType === 'manual') {
-                    const content = document.getElementById('manualWithdrawalsContent');
-                    const icon = document.getElementById('manualWithdrawalsIcon');
-                    if (content && state.manualWithdrawalsCollapsed) {
-                        content.classList.remove('expanded');
-                        content.classList.add('collapsed');
-                    }
-                    if (icon) icon.textContent = state.manualWithdrawalsCollapsed ? 'expand_more' : 'expand_less';
+                const isManual = state.withdrawalType === 'manual';
+                manualSection.style.display = isManual ? 'block' : 'none';
+                // Opening Manual mode always expands Scheduled withdrawals
+                if (isManual && previousWithdrawalType !== 'manual') {
+                    state.manualWithdrawalsCollapsed = false;
+                }
+                if (isManual) {
+                    syncManualWithdrawalsOpenState();
                 }
             }
+            previousWithdrawalType = state.withdrawalType;
             
             // Recalculate required rate if enabled
             if (document.getElementById('calculateRequiredRate')?.checked) {
@@ -3145,24 +1868,14 @@
         }
 
         function updateSummaryCards(summary) {
-            const cards = [
-                { label: 'Final Balance', value: summary.finalBalance },
-                { label: 'Your Contributions', value: summary.totalContributions },
-                { label: 'Total Grants', value: summary.totalGrants },
-                { label: 'Total Bonds', value: summary.totalBonds },
-                { label: 'Govt. Total', value: summary.totalGovernment },
-                { label: 'Total Withdrawals', value: summary.totalWithdrawals },
-                { label: 'Taxable Withdrawals', value: summary.totalTaxableWithdrawals },
-                { label: 'Est. Tax on RDSP', value: summary.totalEstimatedTax || 0 },
-            ];
-            
-            const container = document.getElementById('summaryCards');
-            container.innerHTML = cards.map(card => `
-                <div class="summary-card">
-                    <div class="label">${card.label}</div>
-                    <div class="value">${formatCurrency(card.value)}</div>
-                </div>
-            `).join('');
+            const set = (id, v) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = formatCurrency(v || 0);
+            };
+            set('statFinalBalance', summary.finalBalance);
+            set('statGovtTotal', summary.totalGovernment);
+            set('statTotalWithdrawals', summary.totalWithdrawals);
+            set('statEstTax', summary.totalEstimatedTax || 0);
         }
 
         function updateCarryForwardDisplay() {
@@ -3399,44 +2112,35 @@
             if (isEditingInside(container)) return;
             
             container.innerHTML = `
-                <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 mb-3">
-                    <div class="flex items-center justify-between">
+                <div class="cf-year-row">
+                    <div class="cf-year-top">
                         <div>
-                            <div class="text-sm font-semibold text-gray-800">
-                                ${state.withdrawals.length} withdrawal${state.withdrawals.length !== 1 ? 's' : ''} scheduled
-                            </div>
+                            <div class="cf-year-meta">${state.withdrawals.length} withdrawal${state.withdrawals.length !== 1 ? 's' : ''} scheduled</div>
                             ${state.withdrawals.some(w => w.age < 60) ? `
-                                <div class="text-xs text-gray-700 mt-1">
-                                    ${state.withdrawals.filter(w => w.age < 60).length} early withdrawal${state.withdrawals.filter(w => w.age < 60).length !== 1 ? 's' : ''} (before 60) - penalties will apply
+                                <div class="help-text" style="margin-top:4px;">
+                                    ${state.withdrawals.filter(w => w.age < 60).length} before age 60 — 10-year penalties apply
                                 </div>
                             ` : ''}
                         </div>
-                        <button onclick="clearWithdrawals()" class="px-3 py-1 bg-gray-700 text-white text-sm rounded-md hover:bg-gray-800">
-                            Clear All
-                        </button>
+                        <button type="button" class="btn-quiet" onclick="clearWithdrawals()">Clear</button>
                     </div>
                 </div>
                 ${state.withdrawals.map((withdrawal, index) => `
-                    <div class="flex gap-3 items-center bg-gray-50 p-3 rounded-lg mb-2">
-                        <div class="flex-1">
-                            <label class="block text-xs text-gray-600 mb-1">Age</label>
-                            <input type="number" value="${withdrawal.age}" 
+                    <div class="cf-year-row">
+                        <div class="field-grid">
+                            <label class="field-label">Age</label>
+                            <input type="number" value="${withdrawal.age}"
                                 oninput="updateWithdrawal(${index}, 'age', this.value)"
-                                onblur="commitWithdrawalField(${index}, 'age', this)"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-gray-500 focus:border-transparent" 
-                                min="0">
+                                onblur="commitWithdrawalField(${index}, 'age', this)" min="0">
+                            <label class="field-label">Amount</label>
+                            <div class="field-input-wrap">
+                                <span class="field-prefix">$</span>
+                                <input type="number" value="${withdrawal.amount}"
+                                    oninput="updateWithdrawal(${index}, 'amount', this.value)"
+                                    onblur="commitWithdrawalField(${index}, 'amount', this)" min="0">
+                            </div>
                         </div>
-                        <div class="flex-1">
-                            <label class="block text-xs text-gray-600 mb-1">Amount</label>
-                            <input type="number" value="${withdrawal.amount}" 
-                                oninput="updateWithdrawal(${index}, 'amount', this.value)"
-                                onblur="commitWithdrawalField(${index}, 'amount', this)"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-gray-500 focus:border-transparent" 
-                                min="0">
-                        </div>
-                        <button onclick="removeWithdrawal(${index})" class="mt-5 px-3 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-800">
-                            Remove
-                        </button>
+                        <button type="button" class="add-row-btn" style="margin-top:8px;color:#EF4444;border-color:#FECACA;" onclick="removeWithdrawal(${index})">Remove</button>
                     </div>
                 `).join('')}
             `;
@@ -3741,23 +2445,28 @@
             }
         }
 
-        // Toggle manual withdrawals section
-        function toggleManualWithdrawals() {
+        function syncManualWithdrawalsOpenState() {
             const content = document.getElementById('manualWithdrawalsContent');
             const icon = document.getElementById('manualWithdrawalsIcon');
+            const toggle = document.getElementById('manualWithdrawalsToggle');
             if (!content || !icon) return;
-            
-            state.manualWithdrawalsCollapsed = !state.manualWithdrawalsCollapsed;
-            
             if (state.manualWithdrawalsCollapsed) {
                 content.classList.remove('expanded');
                 content.classList.add('collapsed');
                 icon.textContent = 'expand_more';
+                if (toggle) toggle.setAttribute('aria-expanded', 'false');
             } else {
                 content.classList.remove('collapsed');
                 content.classList.add('expanded');
                 icon.textContent = 'expand_less';
+                if (toggle) toggle.setAttribute('aria-expanded', 'true');
             }
+        }
+
+        // Toggle manual withdrawals section
+        function toggleManualWithdrawals() {
+            state.manualWithdrawalsCollapsed = !state.manualWithdrawalsCollapsed;
+            syncManualWithdrawalsOpenState();
         }
 
         // Toggle yearly rates section
@@ -4064,7 +2773,7 @@
 
         // Get chart colors based on dark mode
         function getChartColors() {
-            const isDark = document.body.classList.contains('dark-mode');
+            const isDark = document.body.classList.contains('dark');
             return {
                 text: isDark ? '#d1d5db' : '#374151',
                 grid: isDark ? '#374151' : '#e5e7eb',
@@ -4312,6 +3021,8 @@
             const withdrawalData = data.filter(d => d.withdrawal > 0);
             if (withdrawalData.length > 0) {
                 document.getElementById('withdrawalChartContainer').style.display = 'block';
+                const emptyEl = document.getElementById('withdrawalEmpty');
+                if (emptyEl) emptyEl.style.display = 'none';
                 const withdrawalCtx = document.getElementById('withdrawalChart').getContext('2d');
                 if (withdrawalChart) withdrawalChart.destroy();
                 withdrawalChart = new Chart(withdrawalCtx, {
@@ -4374,6 +3085,8 @@
                 });
             } else {
                 document.getElementById('withdrawalChartContainer').style.display = 'none';
+                const emptyEl = document.getElementById('withdrawalEmpty');
+                if (emptyEl) emptyEl.style.display = 'block';
             }
             
             // Always keep the table in sync (we show chart + table together)
@@ -4385,25 +3098,17 @@
             const tbody = document.getElementById('breakdownTableBody');
             tbody.innerHTML = '';
             
-            const isDark = document.body.classList.contains('dark-mode');
-            const rowClass = isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-50';
-            const textClass = isDark ? 'text-gray-300' : 'text-gray-800';
-            const textSecondaryClass = isDark ? 'text-gray-400' : 'text-gray-700';
-            const borderClass = isDark ? 'border-gray-600' : 'border-gray-300';
-            
             data.forEach(d => {
                 const row = document.createElement('tr');
-                row.className = rowClass;
-                
                 row.innerHTML = `
-                    <td class="border ${borderClass} px-3 py-2 text-left ${textClass}">${d.age}</td>
-                    <td class="border ${borderClass} px-3 py-2 text-right ${textClass} font-medium">${formatCurrency(d.balance)}</td>
-                    <td class="border ${borderClass} px-3 py-2 text-right ${textSecondaryClass}">${formatCurrency(d.contribution)}</td>
-                    <td class="border ${borderClass} px-3 py-2 text-right ${textSecondaryClass}">${formatCurrency(d.grant)}</td>
-                    <td class="border ${borderClass} px-3 py-2 text-right ${textSecondaryClass}">${formatCurrency(d.bond)}</td>
-                    <td class="border ${borderClass} px-3 py-2 text-right ${textSecondaryClass}">${formatCurrency(d.growth)}</td>
-                    <td class="border ${borderClass} px-3 py-2 text-right ${textSecondaryClass}">${formatCurrency(d.withdrawal)}</td>
-                    <td class="border ${borderClass} px-3 py-2 text-right ${textSecondaryClass}">${formatCurrency(d.repaymentPenalty)}</td>
+                    <td class="first">${d.age}</td>
+                    <td>${formatCurrency(d.balance)}</td>
+                    <td>${formatCurrency(d.contribution)}</td>
+                    <td>${formatCurrency(d.grant)}</td>
+                    <td>${formatCurrency(d.bond)}</td>
+                    <td>${formatCurrency(d.growth)}</td>
+                    <td>${formatCurrency(d.withdrawal)}</td>
+                    <td>${formatCurrency(d.repaymentPenalty)}</td>
                 `;
                 tbody.appendChild(row);
             });
@@ -4494,10 +3199,31 @@
             updateVisualSlider();
             
             // Initialize
+            
+        // Accordion + result tabs (retirement-style UX)
+        document.querySelectorAll('.accordion-trigger').forEach(t => {
+            t.addEventListener('click', () => {
+                const id = t.getAttribute('data-acc');
+                const content = document.querySelector('[data-acc-content="' + id + '"]');
+                const open = t.classList.toggle('open');
+                if (content) content.classList.toggle('open', open);
+            });
+        });
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                btn.classList.add('active');
+                const tab = document.getElementById('tab-' + btn.dataset.tab);
+                if (tab) tab.classList.add('active');
+                setTimeout(resizeRdspCharts, 50);
+            });
+        });
+
             initAssumptionsPanel();
             state.carryForwardYears = initializeCarryForwardYears();
             updateCalculations();
-    </script>
+    
+</script>
 </body>
 </html>
-
