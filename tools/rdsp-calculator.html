@@ -917,7 +917,7 @@
 
             <div class="card" style="margin-top:16px;">
                 <div style="font-size:14px;font-weight:700;margin-bottom:10px;">Year-by-year</div>
-                <div class="table-wrap" style="max-height:380px;" id="breakdownTableContainer">
+                <div class="table-wrap" id="breakdownTableContainer">
                     <table class="data" id="breakdownTable">
                         <thead>
                             <tr>
@@ -2992,6 +2992,109 @@
             };
         }
 
+        function colorWithAlpha(color, alpha) {
+            if (!color || typeof color !== 'string') return `rgba(148, 163, 184, ${alpha})`;
+            const c = color.trim();
+            if (c.startsWith('rgba(')) {
+                const parts = c.slice(5, -1).split(',').map(p => p.trim());
+                return `rgba(${parts[0]}, ${parts[1]}, ${parts[2]}, ${alpha})`;
+            }
+            if (c.startsWith('rgb(')) {
+                const parts = c.slice(4, -1).split(',').map(p => p.trim());
+                return `rgba(${parts[0]}, ${parts[1]}, ${parts[2]}, ${alpha})`;
+            }
+            let hex = c.replace('#', '');
+            if (hex.length === 3) hex = hex.split('').map(ch => ch + ch).join('');
+            if (hex.length !== 6) return `rgba(148, 163, 184, ${alpha})`;
+            const r = parseInt(hex.slice(0, 2), 16);
+            const g = parseInt(hex.slice(2, 4), 16);
+            const b = parseInt(hex.slice(4, 6), 16);
+            return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        }
+
+        const indexHighlightPlugin = {
+            id: 'indexHighlight',
+            afterDatasetsDraw(chart) {
+                const idx = chart.$highlightIndex;
+                if (idx == null || idx < 0) return;
+                const meta = chart.getDatasetMeta(0);
+                if (!meta?.data?.[idx]) return;
+                const el = meta.data[idx];
+                const { ctx, chartArea, scales } = chart;
+                let half = 14;
+                if (scales?.x && chart.data.labels.length > 1) {
+                    const left = scales.x.getPixelForValue(idx - 0.5);
+                    const right = scales.x.getPixelForValue(idx + 0.5);
+                    half = Math.max(10, Math.abs(right - left) / 2);
+                } else if (meta.data.length > 1) {
+                    half = Math.max(10, Math.abs(meta.data[1].x - meta.data[0].x) / 2);
+                }
+                ctx.save();
+                ctx.fillStyle = document.body.classList.contains('dark')
+                    ? 'rgba(129, 140, 248, 0.16)'
+                    : 'rgba(79, 70, 229, 0.10)';
+                ctx.fillRect(el.x - half, chartArea.top, half * 2, chartArea.bottom - chartArea.top);
+                ctx.restore();
+            }
+        };
+        if (typeof Chart !== 'undefined' && Chart.register) {
+            Chart.register(indexHighlightPlugin);
+        }
+
+        function setChartHighlight(chart, index, kind) {
+            if (!chart) return;
+            if (chart.$highlightIndex === index) return;
+            chart.$highlightIndex = index;
+
+            if (kind === 'bar') {
+                chart.data.datasets.forEach(ds => {
+                    const solid = typeof ds._baseColor === 'string'
+                        ? ds._baseColor
+                        : (typeof ds.backgroundColor === 'string' ? ds.backgroundColor : '#94a3b8');
+                    ds._baseColor = solid;
+                    const n = (ds.data || []).length;
+                    if (index == null) {
+                        ds.backgroundColor = solid;
+                        ds.borderWidth = 0;
+                        ds.borderColor = solid;
+                    } else {
+                        const dim = colorWithAlpha(solid, 0.22);
+                        ds.backgroundColor = Array.from({ length: n }, (_, i) => (i === index ? solid : dim));
+                        ds.borderWidth = Array.from({ length: n }, (_, i) => (i === index ? 2 : 0));
+                        ds.borderColor = Array.from({ length: n }, (_, i) => (i === index ? solid : 'transparent'));
+                    }
+                });
+            } else if (kind === 'line') {
+                chart.data.datasets.forEach(ds => {
+                    const solid = typeof ds._baseBorder === 'string'
+                        ? ds._baseBorder
+                        : (typeof ds.borderColor === 'string' ? ds.borderColor : '#94a3b8');
+                    ds._baseBorder = solid;
+                    if (ds._basePointRadius === undefined) {
+                        ds._basePointRadius = typeof ds.pointRadius === 'number' ? ds.pointRadius : 0;
+                    }
+                    const n = (ds.data || []).length;
+                    if (index == null) {
+                        ds.borderColor = solid;
+                        ds.borderWidth = ds._baseBorderWidth || ds.borderWidth || 2;
+                        ds.pointRadius = ds._basePointRadius;
+                        ds.pointBackgroundColor = solid;
+                        ds.pointBorderColor = '#ffffff';
+                        ds.pointBorderWidth = 0;
+                    } else {
+                        ds.borderColor = colorWithAlpha(solid, 0.28);
+                        ds.borderWidth = Math.max(1, (ds._baseBorderWidth || 2) - 0.5);
+                        ds.pointRadius = Array.from({ length: n }, (_, i) => (i === index ? 6 : 0));
+                        ds.pointBackgroundColor = Array.from({ length: n }, (_, i) => (i === index ? solid : 'transparent'));
+                        ds.pointBorderColor = Array.from({ length: n }, (_, i) => (i === index ? '#ffffff' : 'transparent'));
+                        ds.pointBorderWidth = 2;
+                    }
+                });
+            }
+
+            chart.update('none');
+        }
+
         function updateCharts() {
             const data = getFilteredChartData();
             if (data.length === 0) return;
@@ -3015,11 +3118,14 @@
                 label: showOptimalOverlay ? 'LDAP Balance' : 'Account Balance',
                 data: data.map(d => d.balance),
                 borderColor: '#4f46e5',
+                _baseBorder: '#4f46e5',
+                _baseBorderWidth: 2,
                 backgroundColor: 'rgba(79, 70, 229, 0.1)',
                 fill: !showOptimalOverlay,
                 tension: 0.4,
                 borderWidth: 2,
                 pointRadius: 0,
+                _basePointRadius: 0,
                 pointHoverRadius: 4
             }];
             if (showOptimalOverlay) {
@@ -3027,12 +3133,15 @@
                     label: 'Optimal (level to $0)',
                     data: optimalSeries,
                     borderColor: '#f59e0b',
+                    _baseBorder: '#f59e0b',
+                    _baseBorderWidth: 2,
                     backgroundColor: 'transparent',
                     fill: false,
                     tension: 0.35,
                     borderWidth: 2,
                     borderDash: [7, 5],
                     pointRadius: 0,
+                    _basePointRadius: 0,
                     pointHoverRadius: 4,
                     spanGaps: false
                 });
@@ -3047,6 +3156,13 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     interaction: { mode: 'index', intersect: false },
+                    onHover: (evt, activeEls) => {
+                        if (!activeEls || activeEls.length === 0) {
+                            setChartHighlight(balanceChart, null, 'line');
+                            return;
+                        }
+                        setChartHighlight(balanceChart, activeEls[0].index, 'line');
+                    },
                     plugins: {
                         legend: { 
                             display: true,
@@ -3096,16 +3212,21 @@
                 data: {
                     labels: data.map(d => d.age),
                     datasets: [
-                        { label: 'Contributions', data: data.map(d => d.contribution), borderColor: '#3b82f6', tension: 0.4 },
-                        { label: 'Grants', data: data.map(d => d.grant), borderColor: '#8b5cf6', tension: 0.4 },
-                        { label: 'Bonds', data: data.map(d => d.bond), borderColor: '#ec4899', tension: 0.4 },
-                        { label: 'Growth', data: data.map(d => d.growth), borderColor: '#10b981', tension: 0.4 },
-                        { label: 'Withdrawals', data: data.map(d => d.withdrawal), borderColor: '#ef4444', tension: 0.4 },
+                        { label: 'Contributions', data: data.map(d => d.contribution), borderColor: '#3b82f6', _baseBorder: '#3b82f6', _baseBorderWidth: 2, borderWidth: 2, pointRadius: 0, _basePointRadius: 0, tension: 0.4 },
+                        { label: 'Grants', data: data.map(d => d.grant), borderColor: '#8b5cf6', _baseBorder: '#8b5cf6', _baseBorderWidth: 2, borderWidth: 2, pointRadius: 0, _basePointRadius: 0, tension: 0.4 },
+                        { label: 'Bonds', data: data.map(d => d.bond), borderColor: '#ec4899', _baseBorder: '#ec4899', _baseBorderWidth: 2, borderWidth: 2, pointRadius: 0, _basePointRadius: 0, tension: 0.4 },
+                        { label: 'Growth', data: data.map(d => d.growth), borderColor: '#10b981', _baseBorder: '#10b981', _baseBorderWidth: 2, borderWidth: 2, pointRadius: 0, _basePointRadius: 0, tension: 0.4 },
+                        { label: 'Withdrawals', data: data.map(d => d.withdrawal), borderColor: '#ef4444', _baseBorder: '#ef4444', _baseBorderWidth: 2, borderWidth: 2, pointRadius: 0, _basePointRadius: 0, tension: 0.4 },
                         ...(state.withdrawalType === 'manual' ? [{
                             label: '10-Year Penalty',
                             data: data.map(d => d.repaymentPenalty),
                             borderColor: '#f97316',
+                            _baseBorder: '#f97316',
+                            _baseBorderWidth: 2,
+                            borderWidth: 2,
                             borderDash: [5, 5],
+                            pointRadius: 0,
+                            _basePointRadius: 0,
                             tension: 0.4
                         }] : [])
                     ]
@@ -3151,11 +3272,13 @@
                 if (!panel) return;
 
                 if (!activeEls || activeEls.length === 0) {
+                    setChartHighlight(breakdownChart, null, 'line');
                     panel.innerHTML = `<div class="title">Hover details</div><div class="muted">Move your mouse over the chart to see the full breakdown for that age.</div>`;
                     return;
                 }
 
                 const idx = activeEls[0].index;
+                setChartHighlight(breakdownChart, idx, 'line');
                 const dataPoint = data[idx];
                 if (!dataPoint || dataPoint.age === undefined) return;
                 
@@ -3241,14 +3364,15 @@
                     data: {
                         labels: withdrawalData.map(d => d.age),
                         datasets: [
-                            { label: 'Total Withdrawal', data: withdrawalData.map(d => d.withdrawal), backgroundColor: '#3b82f6' },
-                            { label: 'Taxable Portion', data: withdrawalData.map(d => d.taxableWithdrawal), backgroundColor: '#ef4444' },
-                            { label: 'Est. Tax', data: withdrawalData.map(d => d.estimatedTax || 0), backgroundColor: '#a855f7' },
-                            { label: 'Net', data: withdrawalData.map(d => d.netWithdrawal != null ? d.netWithdrawal : Math.max(0, d.withdrawal - (d.estimatedTax || 0))), backgroundColor: '#10b981' },
+                            { label: 'Total Withdrawal', data: withdrawalData.map(d => d.withdrawal), backgroundColor: '#3b82f6', _baseColor: '#3b82f6' },
+                            { label: 'Taxable Portion', data: withdrawalData.map(d => d.taxableWithdrawal), backgroundColor: '#ef4444', _baseColor: '#ef4444' },
+                            { label: 'Est. Tax', data: withdrawalData.map(d => d.estimatedTax || 0), backgroundColor: '#a855f7', _baseColor: '#a855f7' },
+                            { label: 'Net', data: withdrawalData.map(d => d.netWithdrawal != null ? d.netWithdrawal : Math.max(0, d.withdrawal - (d.estimatedTax || 0))), backgroundColor: '#10b981', _baseColor: '#10b981' },
                             ...(state.withdrawalType === 'manual' ? [{
                                 label: '10-Year Penalty',
                                 data: withdrawalData.map(d => d.repaymentPenalty),
-                                backgroundColor: '#f97316'
+                                backgroundColor: '#f97316',
+                                _baseColor: '#f97316'
                             }] : [])
                         ]
                     },
@@ -3316,10 +3440,12 @@
                     const panel = document.getElementById('withdrawalHoverPanel');
                     if (!panel) return;
                     if (!activeEls || activeEls.length === 0) {
+                        setChartHighlight(withdrawalChart, null, 'bar');
                         panel.innerHTML = `<div class="title">Year details</div><div class="muted">Hover a year to see total withdrawal, taxable portion, est. tax, and net.</div>`;
                         return;
                     }
                     const idx = activeEls[0].index;
+                    setChartHighlight(withdrawalChart, idx, 'bar');
                     renderWithdrawalHud(withdrawalData[idx]);
                 };
             } else {
