@@ -646,9 +646,25 @@
             border-color: #4F46E5; color: #4F46E5;
         }
 
-        .chart-wrap { position: relative; width: 100%; height: 380px; }
-        @media (max-width: 768px) { .chart-wrap { height: 300px; } }
-        .chart-wrap-sm { position: relative; width: 100%; height: 280px; }
+        .chart-wrap { position: relative; width: 100%; height: 340px; }
+        @media (max-width: 768px) { .chart-wrap { height: 280px; } }
+        .chart-wrap-sm { position: relative; width: 100%; height: 260px; }
+        .section-title {
+            font-size: 14px; font-weight: 700; margin: 0 0 10px;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .section-title .material-icons { font-size: 18px; color: #4F46E5; }
+        body.dark .section-title .material-icons { color: #A5B4FC; }
+        .rate-slider-row {
+            display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+            margin-top: 12px; padding: 10px 12px;
+            background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 8px;
+        }
+        body.dark .rate-slider-row { background: #111827; border-color: #374151; }
+        .rate-slider-row label { font-size: 12px; font-weight: 600; color: #4B5563; white-space: nowrap; }
+        body.dark .rate-slider-row label { color: #D1D5DB; }
+        .rate-slider-row input[type=range] { flex: 1; min-width: 120px; accent-color: #4F46E5; }
+        .rate-slider-row .rate-value { font-size: 13px; font-weight: 700; min-width: 3.2rem; text-align: right; }
 
         .breakdown-layout { display: grid; grid-template-columns: 1fr 240px; gap: 12px; }
         @media (max-width: 800px) { .breakdown-layout { grid-template-columns: 1fr; } }
@@ -733,66 +749,61 @@
             </div>
 
             <div class="card">
-                <div class="tabs">
-                    <button type="button" class="tab-btn active" data-tab="growth"><span class="material-icons">show_chart</span>Growth</button>
-                    <button type="button" class="tab-btn" data-tab="breakdown"><span class="material-icons">bar_chart</span>Breakdown</button>
-                    <button type="button" class="tab-btn" data-tab="withdrawals"><span class="material-icons">account_balance</span>Withdrawals &amp; Tax</button>
-                    <button type="button" class="tab-btn" data-tab="compare"><span class="material-icons">compare_arrows</span>Compare</button>
+                <div class="section-title"><span class="material-icons">show_chart</span> Account growth</div>
+                <div class="chart-wrap"><canvas id="balanceChart"></canvas></div>
+                <div id="comparisonChartNote" class="note-box" style="display:none;">
+                    <strong>Comparison overlay:</strong>
+                    dashed line is level “Optimal” withdrawals of
+                    <strong id="comparisonAmountLabel">—</strong>
+                    from age <span id="comparisonStartLabel">60</span> so balance reaches ~$0 by end age.
+                </div>
+                <div class="help-text" id="inflationChartNote" style="margin-top:8px;">Values in today’s dollars (inflation-adjusted).</div>
+
+                <div class="rate-slider-row">
+                    <label for="returnRateSlider">Interest rate</label>
+                    <input type="range" id="returnRateSlider" min="0" max="20" step="0.1" value="10" aria-label="Interest rate (%)" oninput="syncReturnRateFromSlider()">
+                    <span class="rate-value" id="returnRateSliderValue">10%</span>
                 </div>
 
-                <div class="tab-content active" id="tab-growth">
-                    <div class="chart-wrap"><canvas id="balanceChart"></canvas></div>
-                    <div id="comparisonChartNote" class="note-box" style="display:none;">
-                        <strong>Comparison overlay:</strong>
-                        dashed line is level “Optimal” withdrawals of
-                        <strong id="comparisonAmountLabel">—</strong>
-                        from age <span id="comparisonStartLabel">60</span> so balance reaches ~$0 by end age.
+                <div class="range-slider" id="rangeSliderContainer" style="margin-top:12px;">
+                    <div class="range-slider-header">
+                        <span>Chart age range</span>
+                        <strong id="ageRangeDisplay">30 – 90</strong>
                     </div>
-                    <div class="help-text" id="inflationChartNote" style="margin-top:8px;">Values in today’s dollars (inflation-adjusted).</div>
-
-                    <div class="range-slider" id="rangeSliderContainer" style="margin-top:14px;">
-                        <div class="range-slider-header">
-                            <span>Chart age range</span>
-                            <strong id="ageRangeDisplay">30 – 90</strong>
-                        </div>
-                        <div id="rangeTrackArea">
-                            <div id="rangeTrack"></div>
-                            <div id="rangeHighlight" style="left:0%;width:100%;"></div>
-                            <div id="leftHandle" class="range-handle" style="left:0%;" onmousedown="startDrag('left', event)" ontouchstart="startDrag('left', event)"></div>
-                            <div id="rightHandle" class="range-handle" style="left:100%;" onmousedown="startDrag('right', event)" ontouchstart="startDrag('right', event)"></div>
-                        </div>
-                        <div id="rangeLabels"><span id="minAgeLabel">30</span><span id="maxAgeLabel">90</span></div>
-                        <div id="rangePresets">
-                            <button type="button" onclick="setChartRange('early')">Early</button>
-                            <button type="button" onclick="setChartRange('mid')">Mid</button>
-                            <button type="button" onclick="setChartRange('late')">Late</button>
-                            <button type="button" onclick="setChartRange('all')" class="preset-primary">All years</button>
-                        </div>
+                    <div id="rangeTrackArea">
+                        <div id="rangeTrack"></div>
+                        <div id="rangeHighlight" style="left:0%;width:100%;"></div>
+                        <div id="leftHandle" class="range-handle" style="left:0%;" onmousedown="startDrag('left', event)" ontouchstart="startDrag('left', event)"></div>
+                        <div id="rightHandle" class="range-handle" style="left:100%;" onmousedown="startDrag('right', event)" ontouchstart="startDrag('right', event)"></div>
+                    </div>
+                    <div id="rangeLabels"><span id="minAgeLabel">30</span><span id="maxAgeLabel">90</span></div>
+                    <div id="rangePresets">
+                        <button type="button" onclick="setChartRange('early')">Early</button>
+                        <button type="button" onclick="setChartRange('mid')">Mid</button>
+                        <button type="button" onclick="setChartRange('late')">Late</button>
+                        <button type="button" onclick="setChartRange('all')" class="preset-primary">All years</button>
                     </div>
                 </div>
+            </div>
 
-                <div class="tab-content" id="tab-breakdown">
-                    <div class="breakdown-layout">
-                        <div class="chart-wrap-sm" id="breakdownChartContainer"><canvas id="breakdownChart"></canvas></div>
-                        <div id="breakdownHoverPanel" class="breakdown-hover">
-                            <div class="title">Year details</div>
-                            <div class="muted">Hover or tap a bar to see contributions, grants, growth, and withdrawals.</div>
-                        </div>
+            <div class="card" style="margin-top:16px;">
+                <div class="section-title"><span class="material-icons">bar_chart</span> Annual breakdown</div>
+                <div class="breakdown-layout">
+                    <div class="chart-wrap-sm" id="breakdownChartContainer"><canvas id="breakdownChart"></canvas></div>
+                    <div id="breakdownHoverPanel" class="breakdown-hover">
+                        <div class="title">Year details</div>
+                        <div class="muted">Hover or tap a bar to see contributions, grants, growth, and withdrawals.</div>
                     </div>
                 </div>
+            </div>
 
-                <div class="tab-content" id="tab-withdrawals">
-                    <div id="withdrawalChartContainer" style="display:none;">
-                        <div class="chart-wrap-sm"><canvas id="withdrawalChart"></canvas></div>
-                        <p class="help-text" style="margin-top:8px;">Only grants, bonds, and growth are taxable. Est. Tax is the extra liability on that slice given other income, province, and DTC.</p>
-                    </div>
-                    <div id="withdrawalEmpty" class="help-text">No withdrawals in the selected range yet — choose LDAP or Scheduled / Manual in Assumptions.</div>
+            <div class="card" style="margin-top:16px;">
+                <div class="section-title"><span class="material-icons">account_balance</span> Withdrawals &amp; tax</div>
+                <div id="withdrawalChartContainer" style="display:none;">
+                    <div class="chart-wrap-sm"><canvas id="withdrawalChart"></canvas></div>
+                    <p class="help-text" style="margin-top:8px;">Only grants, bonds, and growth are taxable. Est. Tax is the extra liability on that slice given other income, province, and DTC. Enable LDAP vs Optimal under Assumptions → Compare for the dashed growth overlay.</p>
                 </div>
-
-                <div class="tab-content" id="tab-compare">
-                    <p class="help-text" style="margin-bottom:10px;">LDAP vs Optimal overlay is controlled in Assumptions → Compare. Switch to the Growth tab to see the dashed balance line.</p>
-                    <div id="comparePanelHint" class="note-box">Enable “Compare LDAP vs Optimal” while in LDAP mode to project a level withdrawal path to $0.</div>
-                </div>
+                <div id="withdrawalEmpty" class="help-text">No withdrawals in the selected range yet — choose LDAP or Scheduled / Manual in Assumptions.</div>
             </div>
 
             <div class="card" style="margin-top:16px;">
@@ -870,7 +881,7 @@
                             <input type="checkbox" id="payDividends" onchange="updateCalculations()">
                             <span>Pay out dividends</span>
                         </label>
-                        <div id="dividendRateContainer" style="display:none;" class="field-grid" >
+                        <div id="dividendRateContainer" style="display:none;" class="field-grid">
                             <label class="field-label" for="dividendRate">Dividend rate</label>
                             <div class="field-input-wrap"><input type="number" id="dividendRate" value="2" min="0" max="20" step="0.1" oninput="updateCalculations()"><span class="field-suffix">%</span></div>
                         </div>
@@ -888,9 +899,6 @@
                             <div id="requiredRateResult" class="computed-tag" style="margin-top:8px;">—</div>
                         </div>
                     </div>
-                    <!-- Hidden slider kept for JS sync compatibility -->
-                    <input type="range" id="returnRateSlider" min="0" max="20" step="0.1" value="10" style="display:none;" aria-hidden="true">
-                    <span id="returnRateSliderValue" style="display:none;">10%</span>
                     <div style="margin-top:10px;">
                         <button type="button" class="add-row-btn" onclick="toggleYearlyRates()"><span id="yearlyRatesToggleText">Show yearly rates</span></button>
                         <div id="yearlyRatesContainer" style="display:none;margin-top:8px;">
@@ -3207,16 +3215,6 @@
                 const content = document.querySelector('[data-acc-content="' + id + '"]');
                 const open = t.classList.toggle('open');
                 if (content) content.classList.toggle('open', open);
-            });
-        });
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                btn.classList.add('active');
-                const tab = document.getElementById('tab-' + btn.dataset.tab);
-                if (tab) tab.classList.add('active');
-                setTimeout(resizeRdspCharts, 50);
             });
         });
 
