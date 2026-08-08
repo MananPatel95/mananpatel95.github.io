@@ -1997,7 +1997,7 @@
 
                 <div class="mt-6" id="withdrawalChartContainer" style="display: none;">
                     <h3 class="font-semibold text-lg text-gray-800 mb-1">Withdrawal Breakdown</h3>
-                    <p class="text-xs text-gray-500 mb-4">Only grants, bonds, and growth are taxable (return of your contributions is not). Est. Tax is the <em>marginal</em> tax on that taxable slice given your other income (approx. AB + federal). Net ≈ Total − Est. Tax.</p>
+                    <p class="text-xs text-gray-500 mb-4">Only grants, bonds, and growth are taxable. Est. Tax = extra income-tax <em>liability</em> on that slice (federal + provincial, with BPA and optional disability amount). Net = Total − Est. Tax (cash after setting aside that liability — withholding at source may be lower).</p>
                     <div class="chart-container-small">
                         <canvas id="withdrawalChart"></canvas>
                     </div>
@@ -2010,7 +2010,7 @@
                     <ul class="space-y-1 text-xs text-gray-600">
                         <li>• <strong>LDAP (Lifetime Disability Assistance Payments):</strong> Automatic pension-style withdrawals starting at 60</li>
                         <li>• <strong>10-Year Repayment Rule:</strong> Early withdrawals (before 60) lose $3 of grants/bonds for every $1 withdrawn</li>
-                        <li>• <strong>Taxable Withdrawals:</strong> Grants, bonds, and growth are taxed; personal contributions come out tax-free (CRA FMV proportion)</li>
+                        <li>• <strong>Taxable Withdrawals:</strong> Grants, bonds, and growth are taxed; personal contributions come out tax-free (CRA FMV proportion). Est. Tax uses federal + provincial brackets with BPA and disability amount (DTC).</li>
                         <li>• <strong>LDAP Formula:</strong> Before 80: balance ÷ (83 - age), After 80: balance ÷ 3</li>
                         <li>• <strong>Carry-forward:</strong> Catch up on past 10 DTC-approved years (max $10,500 grants + $11,000 bonds per year)</li>
                     </ul>
@@ -2167,15 +2167,31 @@
                     </div>
                 </div>
 
-                <!-- Tax context: other income + optional RRSP/TFSA (does NOT change RDSP growth unless tax-optimal sizing is on) -->
-                <div class="rdsp-option-card">
+                    <div class="rdsp-option-card">
                     <label for="withdrawalOtherIncome" class="rdsp-option-card-label">Other taxable income in withdrawal years</label>
                     <input type="number" id="withdrawalOtherIncome" aria-label="Other taxable income during withdrawals" value="20000" min="0" step="1000" oninput="updateCalculations()">
                     <div class="rdsp-field-hint">
-                        Pension / employment / etc. (beneficiary’s taxable income, not family income for grants).
-                        Used for <strong>Est. Tax</strong> / <strong>Net</strong> (and tax-optimal sizing). Does <strong>not</strong> change RDSP growth under LDAP / fixed / auto.
-                        Tax estimate ≈ Alberta + federal combined brackets with basic personal amount; disability amount credit is not subtracted (so Est. Tax may be slightly high for DTC claimants).
+                        Beneficiary’s other taxable income (pension, employment, RRSP/RRIF, etc.) — not family income for grants.
+                        Est. Tax is the <strong>extra tax liability</strong> from the taxable RDSP slice (grants/bonds/growth), using federal + provincial brackets and credits.
+                        Issuers may withhold little or nothing until taxable DAPs exceed basic personal + disability amounts (~$26k federal); you can still owe tax on filing.
                     </div>
+
+                    <div class="rdsp-field-block">
+                        <label for="taxProvince">Province for tax estimate</label>
+                        <select id="taxProvince" onchange="updateCalculations()" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
+                            <option value="AB" selected>Alberta</option>
+                            <option value="BC">British Columbia</option>
+                            <option value="ON">Ontario</option>
+                        </select>
+                    </div>
+
+                    <label class="rdsp-check-row mt-3" for="claimDisabilityAmount">
+                        <input type="checkbox" id="claimDisabilityAmount" checked onchange="updateCalculations()">
+                        <span class="rdsp-check-row-text">
+                            <strong>Claim disability amount (DTC)</strong>
+                            <span class="rdsp-radio-desc">RDSP beneficiaries usually claim this — materially lowers Est. Tax</span>
+                        </span>
+                    </label>
 
                     <div class="rdsp-field-block">
                         <label class="rdsp-check-row" for="useRrspWithdrawals">
@@ -2325,6 +2341,8 @@
             manualAmountMode: 'auto', // auto | fixed | taxOptimal
             withdrawalType: 'ldap',
             withdrawalOtherIncome: 20000, // base taxable income excluding RDSP
+            taxProvince: 'AB',
+            claimDisabilityAmount: true,
             useRrspWithdrawals: false,
             rrspWithdrawalAmount: 15000,
             useTfsaWithdrawals: false,
@@ -2513,35 +2531,100 @@
             return { grants: availableGrants, bonds: availableBonds };
         }
 
-        // Approx. Alberta + federal combined ordinary-income rates (2025), with federal BPA in the 0% band.
-        // Source shape: Sun Life / EY Alberta combined tables. Planning estimate only — not a tax filing.
-        const TAX_BRACKETS = [
-            { upTo: 16129, rate: 0 },
-            { upTo: 22323, rate: 0.145 },
-            { upTo: 57375, rate: 0.225 },
-            { upTo: 60000, rate: 0.285 },
-            { upTo: 114750, rate: 0.305 },
-            { upTo: 151234, rate: 0.36 },
-            { upTo: 177882, rate: 0.38 },
-            { upTo: 241974, rate: 0.423 },
-            { upTo: 253414, rate: 0.433 },
-            { upTo: 362961, rate: 0.47 },
-            { upTo: Infinity, rate: 0.48 }
-        ];
-        // Soft cap for “tax-optimal” sizing: top of the ~22.5% combined band
-        const TAX_OPTIMAL_INCOME_CAP = 57375;
+        // 2025 federal + provincial tax (planning estimate). Credits: BPA, optional disability amount.
+        const TAX_RATES_2025 = {
+            federal: [
+                { max: 57375, rate: 0.145 },
+                { max: 114750, rate: 0.205 },
+                { max: 177882, rate: 0.26 },
+                { max: 253414, rate: 0.29 },
+                { max: Infinity, rate: 0.33 }
+            ],
+            federalBpa: 16129,
+            federalDisability: 10138,
+            federalCreditRate: 0.145, // non-refundable credits at lowest federal rate
+            // Soft cap for tax-optimal sizing: top of federal first bracket
+            taxOptimalIncomeCap: 57375,
+            provinces: {
+                AB: {
+                    name: 'Alberta',
+                    brackets: [
+                        { max: 60000, rate: 0.08 },
+                        { max: 151234, rate: 0.10 },
+                        { max: 181481, rate: 0.12 },
+                        { max: 241974, rate: 0.13 },
+                        { max: 362961, rate: 0.14 },
+                        { max: Infinity, rate: 0.15 }
+                    ],
+                    bpa: 22323,
+                    disability: 16135
+                },
+                BC: {
+                    name: 'British Columbia',
+                    brackets: [
+                        { max: 49279, rate: 0.0506 },
+                        { max: 98556, rate: 0.077 },
+                        { max: 113158, rate: 0.105 },
+                        { max: 137407, rate: 0.1229 },
+                        { max: 186306, rate: 0.147 },
+                        { max: 259829, rate: 0.168 },
+                        { max: Infinity, rate: 0.205 }
+                    ],
+                    bpa: 12932,
+                    disability: 9612
+                },
+                ON: {
+                    name: 'Ontario',
+                    brackets: [
+                        { max: 52886, rate: 0.0505 },
+                        { max: 105775, rate: 0.0915 },
+                        { max: 150000, rate: 0.1116 },
+                        { max: 220000, rate: 0.1216 },
+                        { max: Infinity, rate: 0.1316 }
+                    ],
+                    bpa: 12747,
+                    disability: 10558
+                }
+            }
+        };
+
+        function progressiveTax(income, brackets) {
+            let remaining = Math.max(0, Number(income) || 0);
+            let prev = 0;
+            let tax = 0;
+            for (const b of brackets) {
+                const width = b.max - prev;
+                const slice = Math.min(remaining, width);
+                tax += slice * b.rate;
+                remaining -= slice;
+                prev = b.max;
+                if (remaining <= 0) break;
+            }
+            return tax;
+        }
 
         function estimateIncomeTax(taxableIncome) {
             const income = Math.max(0, Number(taxableIncome) || 0);
-            let tax = 0;
-            let prev = 0;
-            for (const b of TAX_BRACKETS) {
-                const slice = Math.max(0, Math.min(income, b.upTo) - prev);
-                tax += slice * b.rate;
-                prev = b.upTo;
-                if (income <= b.upTo) break;
+            const provKey = state.taxProvince || 'AB';
+            const prov = TAX_RATES_2025.provinces[provKey] || TAX_RATES_2025.provinces.AB;
+            const claimDtc = state.claimDisabilityAmount !== false;
+
+            const fedGross = progressiveTax(income, TAX_RATES_2025.federal);
+            let fedCredits = TAX_RATES_2025.federalBpa * TAX_RATES_2025.federalCreditRate;
+            if (claimDtc) {
+                fedCredits += TAX_RATES_2025.federalDisability * TAX_RATES_2025.federalCreditRate;
             }
-            return tax;
+            const fedTax = Math.max(0, fedGross - fedCredits);
+
+            const provGross = progressiveTax(income, prov.brackets);
+            const provCreditRate = prov.brackets[0].rate;
+            let provCredits = prov.bpa * provCreditRate;
+            if (claimDtc) {
+                provCredits += prov.disability * provCreditRate;
+            }
+            const provTax = Math.max(0, provGross - provCredits);
+
+            return fedTax + provTax;
         }
 
         function estimateRdspTax(otherIncome, taxablePortion) {
@@ -2567,10 +2650,10 @@
             };
         }
 
-        // Room used by tax-optimal mode: fill up toward the ~22.5% band (not tiny micro-brackets)
+        // Room used by tax-optimal mode: fill up toward top of federal first bracket
         function taxBracketRoom(otherIncome) {
             const other = Math.max(0, Number(otherIncome) || 0);
-            return Math.max(0, TAX_OPTIMAL_INCOME_CAP - other);
+            return Math.max(0, TAX_RATES_2025.taxOptimalIncomeCap - other);
         }
 
         // Taxable income used for Est. Tax / Net / tax-optimal (RRSP adds; TFSA does not)
@@ -2589,11 +2672,16 @@
             const rrsp = state.useRrspWithdrawals ? Math.max(0, state.rrspWithdrawalAmount || 0) : 0;
             const tfsa = state.useTfsaWithdrawals ? Math.max(0, state.tfsaWithdrawalAmount || 0) : 0;
             const taxable = base + rrsp;
+            const prov = TAX_RATES_2025.provinces[state.taxProvince || 'AB'] || TAX_RATES_2025.provinces.AB;
+            const dtc = state.claimDisabilityAmount !== false;
+            const taxOnOther = estimateIncomeTax(taxable);
             const parts = [
-                `Taxable other income for RDSP tax calc: <strong>$${taxable.toLocaleString('en-CA')}</strong>`
+                `<strong>${prov.name}</strong>${dtc ? ' · DTC on' : ' · DTC off'}`,
+                `· other taxable <strong>$${taxable.toLocaleString('en-CA')}</strong>`,
+                `· est. tax on other alone <strong>$${Math.round(taxOnOther).toLocaleString('en-CA')}</strong>`
             ];
-            if (rrsp > 0) parts.push(`(includes RRSP/RRIF $${rrsp.toLocaleString('en-CA')}/yr)`);
-            if (tfsa > 0) parts.push(`+ TFSA $${tfsa.toLocaleString('en-CA')}/yr tax-free cash`);
+            if (rrsp > 0) parts.push(`(incl. RRSP/RRIF $${rrsp.toLocaleString('en-CA')}/yr)`);
+            if (tfsa > 0) parts.push(`+ TFSA $${tfsa.toLocaleString('en-CA')}/yr tax-free`);
             el.innerHTML = parts.join(' ');
         }
 
@@ -2625,6 +2713,7 @@
             let totalBonds = 0;
             let totalWithdrawals = 0;
             let totalTaxableWithdrawals = 0;
+            let totalEstimatedTax = 0;
             let lifetimeGrantTotal = 0;
             let lifetimeBondTotal = 0;
             let grantsInLast10Years = [];
@@ -2813,6 +2902,7 @@
                 accountBalance -= yearlyWithdrawal;
                 totalWithdrawals += yearlyWithdrawal;
                 totalTaxableWithdrawals += taxableWithdrawal;
+                totalEstimatedTax += estimatedTax;
                 
                 data.push({
                     age,
@@ -2822,6 +2912,7 @@
                     bond: Math.round(yearlyBond),
                     withdrawal: Math.round(yearlyWithdrawal),
                     taxableWithdrawal: Math.round(taxableWithdrawal),
+                    nonTaxableWithdrawal: Math.round(Math.max(0, yearlyWithdrawal - taxableWithdrawal)),
                     estimatedTax: Math.round(estimatedTax),
                     netWithdrawal: Math.round(netWithdrawal),
                     householdCash: Math.round(householdCash),
@@ -2849,6 +2940,7 @@
                     totalGovernment: Math.round(totalGrants + totalBonds),
                     totalWithdrawals: Math.round(totalWithdrawals),
                     totalTaxableWithdrawals: Math.round(totalTaxableWithdrawals),
+                    totalEstimatedTax: Math.round(totalEstimatedTax),
                 }
             };
         }
@@ -2912,6 +3004,9 @@
             state.stopContribsAtWithdrawal = document.getElementById('stopContribsAtWithdrawal')?.checked ?? true;
             state.showComparison = document.getElementById('showComparison')?.checked ?? false;
             state.withdrawalOtherIncome = readNumberInput('withdrawalOtherIncome', state.withdrawalOtherIncome ?? 20000);
+            const taxProvEl = document.getElementById('taxProvince');
+            if (taxProvEl) state.taxProvince = taxProvEl.value || 'AB';
+            state.claimDisabilityAmount = document.getElementById('claimDisabilityAmount')?.checked ?? true;
             state.useRrspWithdrawals = document.getElementById('useRrspWithdrawals')?.checked ?? false;
             state.rrspWithdrawalAmount = readNumberInput('rrspWithdrawalAmount', state.rrspWithdrawalAmount || 15000);
             state.useTfsaWithdrawals = document.getElementById('useTfsaWithdrawals')?.checked ?? false;
@@ -3056,7 +3151,9 @@
                 { label: 'Total Grants', value: summary.totalGrants },
                 { label: 'Total Bonds', value: summary.totalBonds },
                 { label: 'Govt. Total', value: summary.totalGovernment },
+                { label: 'Total Withdrawals', value: summary.totalWithdrawals },
                 { label: 'Taxable Withdrawals', value: summary.totalTaxableWithdrawals },
+                { label: 'Est. Tax on RDSP', value: summary.totalEstimatedTax || 0 },
             ];
             
             const container = document.getElementById('summaryCards');
@@ -4185,14 +4282,17 @@
                 if (dataPoint.taxableWithdrawal > 0) {
                     const pct = dataPoint.withdrawal > 0 ? Math.round(100 * dataPoint.taxableWithdrawal / dataPoint.withdrawal) : 0;
                     rows.push(`<div class="row"><span class="k">Taxable portion (${pct}%)</span><span class="v">${formatCurrency(dataPoint.taxableWithdrawal)}</span></div>`);
+                    if (dataPoint.nonTaxableWithdrawal > 0) {
+                        rows.push(`<div class="row"><span class="k">Tax-free (your contributions)</span><span class="v">${formatCurrency(dataPoint.nonTaxableWithdrawal)}</span></div>`);
+                    }
                 }
                 if (dataPoint.estimatedTax > 0) {
                     const effOnTaxable = dataPoint.taxableWithdrawal > 0 ? Math.round(100 * dataPoint.estimatedTax / dataPoint.taxableWithdrawal) : 0;
                     const effOnTotal = dataPoint.withdrawal > 0 ? Math.round(100 * dataPoint.estimatedTax / dataPoint.withdrawal) : 0;
-                    rows.push(`<div class="row"><span class="k">Est. tax (on RDSP)</span><span class="v">${formatCurrency(dataPoint.estimatedTax)}</span></div>`);
+                    rows.push(`<div class="row"><span class="k">Est. tax liability</span><span class="v">${formatCurrency(dataPoint.estimatedTax)}</span></div>`);
                     rows.push(`<div class="row"><span class="k">Effective rate</span><span class="v">${effOnTaxable}% of taxable · ${effOnTotal}% of total</span></div>`);
                 }
-                if (dataPoint.netWithdrawal > 0) rows.push(`<div class="row"><span class="k">RDSP net (after tax)</span><span class="v">${formatCurrency(dataPoint.netWithdrawal)}</span></div>`);
+                if (dataPoint.netWithdrawal > 0) rows.push(`<div class="row"><span class="k">RDSP net (after est. tax)</span><span class="v">${formatCurrency(dataPoint.netWithdrawal)}</span></div>`);
                 if (dataPoint.rrspCash > 0) rows.push(`<div class="row"><span class="k">RRSP / RRIF cash</span><span class="v">${formatCurrency(dataPoint.rrspCash)}</span></div>`);
                 if (dataPoint.tfsaCash > 0) rows.push(`<div class="row"><span class="k">TFSA cash</span><span class="v">${formatCurrency(dataPoint.tfsaCash)}</span></div>`);
                 if (dataPoint.householdCash > 0 && (dataPoint.rrspCash > 0 || dataPoint.tfsaCash > 0)) {
@@ -4331,6 +4431,8 @@
             state.manualAnnualWithdrawal = 5000;
             state.manualAmountMode = 'auto';
             state.withdrawalOtherIncome = 20000;
+            state.taxProvince = 'AB';
+            state.claimDisabilityAmount = true;
             state.useRrspWithdrawals = false;
             state.rrspWithdrawalAmount = 15000;
             state.useTfsaWithdrawals = false;
@@ -4359,6 +4461,10 @@
             if (manualAnnualWithdrawalEl) manualAnnualWithdrawalEl.value = state.manualAnnualWithdrawal;
             const otherIncomeEl = document.getElementById('withdrawalOtherIncome');
             if (otherIncomeEl) otherIncomeEl.value = state.withdrawalOtherIncome;
+            const taxProvEl = document.getElementById('taxProvince');
+            if (taxProvEl) taxProvEl.value = state.taxProvince;
+            const dtcCb = document.getElementById('claimDisabilityAmount');
+            if (dtcCb) dtcCb.checked = true;
             const rrspCb = document.getElementById('useRrspWithdrawals');
             const tfsaCb = document.getElementById('useTfsaWithdrawals');
             const rrspAmt = document.getElementById('rrspWithdrawalAmount');
