@@ -775,6 +775,34 @@
         .chart-hud .swatch {
             width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0;
         }
+        .hud-head {
+            display: flex; align-items: flex-start; justify-content: space-between;
+            gap: 8px; margin-bottom: 8px;
+        }
+        .hud-head .title { margin-bottom: 0; }
+        .hud-dismiss {
+            flex-shrink: 0; width: 28px; height: 28px; padding: 0;
+            border: 1px solid #E5E7EB; border-radius: 8px; background: #fff;
+            color: #6B7280; cursor: pointer;
+            display: inline-flex; align-items: center; justify-content: center;
+        }
+        body.dark .hud-dismiss { background: #1F2937; border-color: #374151; color: #9CA3AF; }
+        .hud-dismiss:hover { color: #111827; border-color: #C7D2FE; background: #EEF2FF; }
+        body.dark .hud-dismiss:hover { color: #E5E7EB; border-color: #A5B4FC; background: #111827; }
+        .chart-focus-clear {
+            display: none; position: absolute; top: 8px; right: 8px; z-index: 3;
+            font-size: 11px; font-weight: 600; letter-spacing: 0.01em;
+            padding: 4px 8px; border-radius: 999px; cursor: pointer;
+            border: 1px solid #E5E7EB; background: rgba(255,255,255,0.94);
+            color: #4B5563; box-shadow: 0 1px 2px rgba(0,0,0,.06);
+        }
+        body.dark .chart-focus-clear {
+            background: rgba(17,24,39,0.92); border-color: #374151; color: #D1D5DB;
+        }
+        .chart-focus-clear:hover { border-color: #4F46E5; color: #4F46E5; }
+        body.dark .chart-focus-clear:hover { border-color: #A5B4FC; color: #A5B4FC; }
+        .chart-wrap.is-focused .chart-focus-clear,
+        .chart-wrap-sm.is-focused .chart-focus-clear { display: inline-flex; align-items: center; gap: 2px; }
 
         .modal.hidden { display: none; }
         .modal {
@@ -844,7 +872,10 @@
 
             <div class="card">
                 <div class="section-title"><span class="material-icons">show_chart</span> Account growth</div>
-                <div class="chart-wrap"><canvas id="balanceChart"></canvas></div>
+                <div class="chart-wrap" id="balanceChartWrap">
+                    <canvas id="balanceChart"></canvas>
+                    <button type="button" class="chart-focus-clear" onclick="clearChartFocus()" aria-label="Clear focused year">Clear · Esc</button>
+                </div>
                 <div id="comparisonChartNote" class="note-box" style="display:none;">
                     <strong>Comparison overlay:</strong>
                     dashed line is level “Optimal” withdrawals of
@@ -892,10 +923,13 @@
             <div class="card" style="margin-top:16px;">
                 <div class="section-title"><span class="material-icons">bar_chart</span> Annual breakdown</div>
                 <div class="breakdown-layout">
-                    <div class="chart-wrap-sm" id="breakdownChartContainer"><canvas id="breakdownChart"></canvas></div>
+                    <div class="chart-wrap-sm" id="breakdownChartContainer">
+                        <canvas id="breakdownChart"></canvas>
+                        <button type="button" class="chart-focus-clear" onclick="clearChartFocus()" aria-label="Clear focused year">Clear · Esc</button>
+                    </div>
                     <div id="breakdownHoverPanel" class="chart-hud">
                         <div class="title">Year details</div>
-                        <div class="muted">Hover or tap a bar to see contributions, grants, growth, and withdrawals.</div>
+                        <div class="muted">Hover or tap a year for details. Press Esc, tap Clear, or click outside to exit.</div>
                     </div>
                 </div>
             </div>
@@ -904,10 +938,13 @@
                 <div class="section-title"><span class="material-icons">account_balance</span> Withdrawals &amp; tax</div>
                 <div id="withdrawalChartContainer" style="display:none;">
                     <div class="breakdown-layout">
-                        <div class="chart-wrap-sm"><canvas id="withdrawalChart"></canvas></div>
+                        <div class="chart-wrap-sm" id="withdrawalChartWrap">
+                            <canvas id="withdrawalChart"></canvas>
+                            <button type="button" class="chart-focus-clear" onclick="clearChartFocus()" aria-label="Clear focused year">Clear · Esc</button>
+                        </div>
                         <div id="withdrawalHoverPanel" class="chart-hud">
                             <div class="title">Year details</div>
-                            <div class="muted">Hover a year to see total withdrawal, taxable portion, est. tax, and net.</div>
+                            <div class="muted">Hover or tap a year for details. Press Esc, tap Clear, or click outside to exit.</div>
                         </div>
                     </div>
                     <p class="help-text" style="margin-top:8px;">Only grants, bonds, and growth are taxable. Est. Tax is the extra liability on that slice given other income, province, and DTC.</p>
@@ -3095,9 +3132,53 @@
             chart.update('none');
         }
 
+        function hudFocusTitle(title) {
+            return `<div class="hud-head">
+                <div class="title">${title}</div>
+                <button type="button" class="hud-dismiss" onclick="clearChartFocus()" aria-label="Clear focused year" title="Clear (Esc)">
+                    <span class="material-icons" style="font-size:16px;">close</span>
+                </button>
+            </div>`;
+        }
+
+        function resetBreakdownHud() {
+            const panel = document.getElementById('breakdownHoverPanel');
+            if (!panel) return;
+            panel.innerHTML = `<div class="title">Year details</div><div class="muted">Hover or tap a year for details. Press Esc, tap Clear, or click outside to exit.</div>`;
+        }
+
+        function resetWithdrawalHud() {
+            const panel = document.getElementById('withdrawalHoverPanel');
+            if (!panel) return;
+            panel.innerHTML = `<div class="title">Year details</div><div class="muted">Hover or tap a year for details. Press Esc, tap Clear, or click outside to exit.</div>`;
+        }
+
+        function setChartWrapFocused(wrapId, focused) {
+            const wrap = document.getElementById(wrapId);
+            if (wrap) wrap.classList.toggle('is-focused', !!focused);
+        }
+
+        function syncChartFocusChrome() {
+            setChartWrapFocused('balanceChartWrap', balanceChart && balanceChart.$highlightIndex != null);
+            setChartWrapFocused('breakdownChartContainer', breakdownChart && breakdownChart.$highlightIndex != null);
+            setChartWrapFocused('withdrawalChartWrap', withdrawalChart && withdrawalChart.$highlightIndex != null);
+        }
+
+        function clearChartFocus() {
+            setChartHighlight(balanceChart, null, 'line');
+            setChartHighlight(breakdownChart, null, 'line');
+            setChartHighlight(withdrawalChart, null, 'bar');
+            resetBreakdownHud();
+            resetWithdrawalHud();
+            syncChartFocusChrome();
+        }
+
         function updateCharts() {
             const data = getFilteredChartData();
             if (data.length === 0) return;
+            resetBreakdownHud();
+            resetWithdrawalHud();
+            ['balanceChartWrap', 'breakdownChartContainer', 'withdrawalChartWrap'].forEach(id => setChartWrapFocused(id, false));
             const colors = getChartColors();
             const showOptimalOverlay = state.withdrawalType === 'ldap'
                 && state.showComparison
@@ -3157,11 +3238,16 @@
                     maintainAspectRatio: false,
                     interaction: { mode: 'index', intersect: false },
                     onHover: (evt, activeEls) => {
-                        if (!activeEls || activeEls.length === 0) {
-                            setChartHighlight(balanceChart, null, 'line');
-                            return;
-                        }
+                        if (!activeEls || activeEls.length === 0) return;
                         setChartHighlight(balanceChart, activeEls[0].index, 'line');
+                        syncChartFocusChrome();
+                    },
+                    onClick: (evt, activeEls, chart) => {
+                        if (activeEls && activeEls.length) return;
+                        const area = chart?.chartArea;
+                        if (!area || evt.x == null) return;
+                        if (evt.x < area.left || evt.x > area.right || evt.y < area.top || evt.y > area.bottom) return;
+                        clearChartFocus();
                     },
                     plugins: {
                         legend: { 
@@ -3267,18 +3353,22 @@
             });
 
             // Update the hover side panel (so hover doesn't cover the chart)
+            breakdownChart.options.onClick = (evt, activeEls, chart) => {
+                if (activeEls && activeEls.length) return;
+                const area = chart?.chartArea;
+                if (!area || evt.x == null) return;
+                if (evt.x < area.left || evt.x > area.right || evt.y < area.top || evt.y > area.bottom) return;
+                clearChartFocus();
+            };
             breakdownChart.options.onHover = (evt, activeEls) => {
                 const panel = document.getElementById('breakdownHoverPanel');
                 if (!panel) return;
 
-                if (!activeEls || activeEls.length === 0) {
-                    setChartHighlight(breakdownChart, null, 'line');
-                    panel.innerHTML = `<div class="title">Hover details</div><div class="muted">Move your mouse over the chart to see the full breakdown for that age.</div>`;
-                    return;
-                }
+                if (!activeEls || activeEls.length === 0) return;
 
                 const idx = activeEls[0].index;
                 setChartHighlight(breakdownChart, idx, 'line');
+                syncChartFocusChrome();
                 const dataPoint = data[idx];
                 if (!dataPoint || dataPoint.age === undefined) return;
                 
@@ -3310,7 +3400,7 @@
                 }
 
                 const rows = [];
-                rows.push(`<div class="title">Age ${age}</div>`);
+                rows.push(hudFocusTitle(`Age ${age}`));
                 rows.push(`<div class="row"><span class="k">Account balance</span><span class="v">${formatCurrency(displayBalance)}</span></div>`);
 
                 if (dataPoint.contribution > 0) rows.push(`<div class="row"><span class="k">Contributions</span><span class="v">${formatCurrency(dataPoint.contribution)}</span></div>`);
@@ -3412,7 +3502,7 @@
                         ? dataPoint.netWithdrawal
                         : Math.max(0, (dataPoint.withdrawal || 0) - (dataPoint.estimatedTax || 0));
                     const rows = [
-                        `<div class="title">Age ${dataPoint.age}</div>`,
+                        hudFocusTitle(`Age ${dataPoint.age}`),
                         `<div class="row"><span class="k"><span class="swatch" style="background:#3b82f6"></span>Total withdrawal</span><span class="v">${formatCurrency(dataPoint.withdrawal || 0)}</span></div>`,
                         `<div class="row"><span class="k"><span class="swatch" style="background:#ef4444"></span>Taxable</span><span class="v">${formatCurrency(dataPoint.taxableWithdrawal || 0)}</span></div>`,
                         `<div class="row"><span class="k"><span class="swatch" style="background:#a855f7"></span>Est. tax</span><span class="v">${formatCurrency(dataPoint.estimatedTax || 0)}</span></div>`,
@@ -3436,16 +3526,20 @@
                     panel.innerHTML = rows.join('');
                 };
 
+                withdrawalChart.options.onClick = (evt, activeEls, chart) => {
+                    if (activeEls && activeEls.length) return;
+                    const area = chart?.chartArea;
+                    if (!area || evt.x == null) return;
+                    if (evt.x < area.left || evt.x > area.right || evt.y < area.top || evt.y > area.bottom) return;
+                    clearChartFocus();
+                };
                 withdrawalChart.options.onHover = (evt, activeEls) => {
                     const panel = document.getElementById('withdrawalHoverPanel');
                     if (!panel) return;
-                    if (!activeEls || activeEls.length === 0) {
-                        setChartHighlight(withdrawalChart, null, 'bar');
-                        panel.innerHTML = `<div class="title">Year details</div><div class="muted">Hover a year to see total withdrawal, taxable portion, est. tax, and net.</div>`;
-                        return;
-                    }
+                    if (!activeEls || activeEls.length === 0) return;
                     const idx = activeEls[0].index;
                     setChartHighlight(withdrawalChart, idx, 'bar');
+                    syncChartFocusChrome();
                     renderWithdrawalHud(withdrawalData[idx]);
                 };
             } else {
@@ -3567,6 +3661,21 @@
                 if (e.target === this) {
                     closePreviewModal();
                 }
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key !== 'Escape') return;
+                const preview = document.getElementById('previewModal');
+                if (preview && !preview.classList.contains('hidden')) {
+                    closePreviewModal();
+                    return;
+                }
+                clearChartFocus();
+            });
+
+            document.addEventListener('pointerdown', function(e) {
+                if (e.target.closest('.chart-wrap, .chart-wrap-sm, .chart-hud, .breakdown-hover, .chart-focus-clear, .hud-dismiss')) return;
+                clearChartFocus();
             });
             
             // Initialize visual slider
