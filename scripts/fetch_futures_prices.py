@@ -25,6 +25,8 @@ YAHOO_SYMBOLS = {
     "M2K": "M2K=F",
     "CL": "CL=F",
     "MCL": "MCL=F",
+    "GC": "GC=F",
+    "MGC": "MGC=F",
 }
 
 CHART_URL = "https://query1.finance.yahoo.com/v8/finance/chart/{symbol}?interval=1d&range=5d"

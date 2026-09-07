@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-07T00:42:29+00:00",
+  "updatedAt": "2026-09-07T00:50:32+00:00",
   "source": "Yahoo Finance delayed quotes",
   "prices": {
     "ES": {
@@ -10,7 +10,7 @@
       "changePercent": 1.0369,
       "dayHigh": 7723.75,
       "dayLow": 7715.25,
-      "asOf": "2026-09-07T00:32:19+00:00",
+      "asOf": "2026-09-07T00:40:23+00:00",
       "exchange": "CME"
     },
     "MES": {
@@ -21,7 +21,7 @@
       "changePercent": 1.0369,
       "dayHigh": 7723.75,
       "dayLow": 7715.25,
-      "asOf": "2026-09-07T00:32:22+00:00",
+      "asOf": "2026-09-07T00:40:23+00:00",
       "exchange": "CME"
     },
     "NQ": {
@@ -32,7 +32,7 @@
       "changePercent": 1.5098,
       "dayHigh": 29595.25,
       "dayLow": 29534.75,
-      "asOf": "2026-09-07T00:32:18+00:00",
+      "asOf": "2026-09-07T00:40:22+00:00",
       "exchange": "CME"
     },
     "MNQ": {
@@ -43,7 +43,7 @@
       "changePercent": 1.5098,
       "dayHigh": 29595.25,
       "dayLow": 29530.25,
-      "asOf": "2026-09-07T00:32:22+00:00",
+      "asOf": "2026-09-07T00:40:27+00:00",
       "exchange": "CME"
     },
     "YM": {
@@ -54,7 +54,7 @@
       "changePercent": 1.1585,
       "dayHigh": 53336.0,
       "dayLow": 53255.0,
-      "asOf": "2026-09-07T00:32:08+00:00",
+      "asOf": "2026-09-07T00:39:46+00:00",
       "exchange": "CBT"
     },
     "MYM": {
@@ -65,7 +65,7 @@
       "changePercent": 1.1585,
       "dayHigh": 53338.0,
       "dayLow": 53251.0,
-      "asOf": "2026-09-07T00:32:17+00:00",
+      "asOf": "2026-09-07T00:40:18+00:00",
       "exchange": "CBT"
     },
     "RTY": {
@@ -76,7 +76,7 @@
       "changePercent": 1.7745,
       "dayHigh": 2977.4,
       "dayLow": 2974.5,
-      "asOf": "2026-09-07T00:32:20+00:00",
+      "asOf": "2026-09-07T00:40:02+00:00",
       "exchange": "CME"
     },
     "M2K": {
@@ -87,7 +87,7 @@
       "changePercent": 1.7745,
       "dayHigh": 2977.5,
       "dayLow": 2974.0,
-      "asOf": "2026-09-07T00:31:23+00:00",
+      "asOf": "2026-09-07T00:40:07+00:00",
       "exchange": "CME"
     },
     "CL": {
@@ -98,7 +98,7 @@
       "changePercent": 1.3966,
       "dayHigh": 92.57,
       "dayLow": 91.65,
-      "asOf": "2026-09-07T00:32:21+00:00",
+      "asOf": "2026-09-07T00:40:29+00:00",
       "exchange": "NYM"
     },
     "MCL": {
@@ -109,8 +109,30 @@
       "changePercent": 0.0,
       "dayHigh": 92.94,
       "dayLow": 91.63,
-      "asOf": "2026-09-07T00:32:26+00:00",
+      "asOf": "2026-09-07T00:40:29+00:00",
       "exchange": "NYM"
+    },
+    "GC": {
+      "yahooSymbol": "GC=F",
+      "price": 4476.6,
+      "previousClose": 4348.0,
+      "change": 128.6,
+      "changePercent": 2.9577,
+      "dayHigh": 4481.3,
+      "dayLow": 4463.6,
+      "asOf": "2026-09-07T00:40:26+00:00",
+      "exchange": "CMX"
+    },
+    "MGC": {
+      "yahooSymbol": "MGC=F",
+      "price": 4476.6,
+      "previousClose": 4362.8,
+      "change": 113.8,
+      "changePercent": 2.6084,
+      "dayHigh": 4481.5,
+      "dayLow": 4462.1,
+      "asOf": "2026-09-07T00:40:29+00:00",
+      "exchange": "CMX"
     }
   }
 }
