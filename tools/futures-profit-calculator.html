@@ -142,8 +142,16 @@
         
         .input-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: 1fr 1fr;
             gap: 20px;
+            align-items: start;
+        }
+
+        .symbol-contracts-row {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(11.5rem, 13.5rem);
+            gap: 24px;
             align-items: start;
         }
         
@@ -153,6 +161,10 @@
             display: flex;
             flex-direction: column;
             width: 100%;
+            min-width: 0;
+        }
+
+        .input-group.contract-symbol select {
             min-width: 0;
         }
         
@@ -421,6 +433,177 @@
             border-color: #374151;
             color: #9CA3AF;
         }
+
+        .last-price-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        body.dark .last-price-row {
+            border-top-color: #374151;
+        }
+
+        .last-price-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .last-price-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        body.dark .last-price-value {
+            color: #E5E7EB;
+        }
+
+        .last-price-change.up {
+            color: #10b981;
+        }
+
+        .last-price-change.down {
+            color: #ef4444;
+        }
+
+        .last-price-change.flat {
+            color: #6B7280;
+        }
+
+        .last-price-asof {
+            font-size: 12px;
+            color: #6B7280;
+        }
+
+        body.dark .last-price-asof {
+            color: #9CA3AF;
+        }
+
+        .last-price-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .price-action-btn {
+            padding: 8px 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            background: white;
+            color: #111827;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        body.dark .price-action-btn {
+            background: #111827;
+            border-color: #374151;
+            color: #E5E7EB;
+        }
+
+        .price-action-btn:hover:not(:disabled) {
+            border-color: #3b82f6;
+            color: #3b82f6;
+        }
+
+        .price-action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .daily-prices {
+            margin-top: 16px;
+        }
+
+        .daily-prices-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .daily-prices-header .label {
+            font-size: 12px;
+            color: #6B7280;
+            font-weight: 600;
+        }
+
+        body.dark .daily-prices-header .label {
+            color: #9CA3AF;
+        }
+
+        .daily-prices-header .asof {
+            font-size: 11px;
+            color: #9CA3AF;
+        }
+
+        .daily-prices-wrap {
+            overflow-x: auto;
+        }
+
+        .daily-prices-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .daily-prices-table th,
+        .daily-prices-table td {
+            text-align: left;
+            padding: 8px 6px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        body.dark .daily-prices-table th,
+        body.dark .daily-prices-table td {
+            border-bottom-color: #374151;
+        }
+
+        .daily-prices-table th {
+            font-size: 11px;
+            color: #6B7280;
+            font-weight: 600;
+        }
+
+        body.dark .daily-prices-table th {
+            color: #9CA3AF;
+        }
+
+        .daily-prices-table td {
+            color: #111827;
+        }
+
+        body.dark .daily-prices-table td {
+            color: #E5E7EB;
+        }
+
+        .daily-prices-table td.num,
+        .daily-prices-table th.num {
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .daily-prices-table tbody tr {
+            cursor: pointer;
+        }
+
+        .daily-prices-table tbody tr:hover {
+            background: rgba(59, 130, 246, 0.08);
+        }
+
+        .daily-prices-table tbody tr.active {
+            background: rgba(59, 130, 246, 0.12);
+        }
         
         @media (max-width: 768px) {
             body {
@@ -445,7 +628,8 @@
                 font-size: 24px;
             }
             
-            .input-grid {
+            .input-grid,
+            .symbol-contracts-row {
                 grid-template-columns: 1fr;
             }
             
@@ -473,25 +657,27 @@
         
         <div class="input-section">
             <div class="input-grid">
-                <div class="input-group">
-                    <label for="symbol">Contract Symbol</label>
-                    <select id="symbol">
-                        <option value="ES">ES - E-mini S&P 500</option>
-                        <option value="MES">MES - Micro E-mini S&P 500</option>
-                        <option value="NQ">NQ - E-mini NASDAQ-100</option>
-                        <option value="MNQ" selected>MNQ - Micro E-mini NASDAQ-100</option>
-                        <option value="YM">YM - E-mini Dow</option>
-                        <option value="MYM">MYM - Micro E-mini Dow</option>
-                        <option value="RTY">RTY - E-mini Russell 2000</option>
-                        <option value="M2K">M2K - Micro E-mini Russell 2000</option>
-                        <option value="CL">CL - Crude Oil (WTI)</option>
-                        <option value="MCL">MCL - Micro WTI Crude Oil</option>
-                    </select>
-                </div>
-                
-                <div class="input-group">
-                    <label for="contracts">Number of Contracts</label>
-                    <input type="number" id="contracts" value="4" min="1" step="1">
+                <div class="symbol-contracts-row">
+                    <div class="input-group contract-symbol">
+                        <label for="symbol">Contract Symbol</label>
+                        <select id="symbol" autocomplete="off">
+                            <option value="MNQ" selected>MNQ - Micro E-mini NASDAQ-100</option>
+                            <option value="NQ">NQ - E-mini NASDAQ-100</option>
+                            <option value="MES">MES - Micro E-mini S&P 500</option>
+                            <option value="ES">ES - E-mini S&P 500</option>
+                            <option value="YM">YM - E-mini Dow</option>
+                            <option value="MYM">MYM - Micro E-mini Dow</option>
+                            <option value="RTY">RTY - E-mini Russell 2000</option>
+                            <option value="M2K">M2K - Micro E-mini Russell 2000</option>
+                            <option value="CL">CL - Crude Oil (WTI)</option>
+                            <option value="MCL">MCL - Micro WTI Crude Oil</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group contract-count">
+                        <label for="contracts">Number of Contracts</label>
+                        <input type="number" id="contracts" value="1" min="1" step="1">
+                    </div>
                 </div>
                 
                 <div class="input-group full-width">
@@ -516,6 +702,37 @@
             <div class="contract-specs">
                 <div class="label">Contract Specifications</div>
                 <div class="value" id="contractSpecs">Multiplier: $2 | Tick: $0.50</div>
+                <div class="last-price-row">
+                    <div class="last-price-meta">
+                        <div class="last-price-value" id="lastPriceValue">Last price: loading…</div>
+                        <div class="last-price-asof" id="lastPriceAsOf">Delayed weekday snapshot</div>
+                    </div>
+                    <div class="last-price-actions">
+                        <button type="button" class="price-action-btn" id="useAsEntry" disabled>Use as entry</button>
+                        <button type="button" class="price-action-btn" id="useAsExit" disabled>Use as exit</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="daily-prices">
+                <div class="daily-prices-header">
+                    <div class="label">Daily prices</div>
+                    <div class="asof" id="pricesUpdatedAt"></div>
+                </div>
+                <div class="daily-prices-wrap">
+                    <table class="daily-prices-table">
+                        <thead>
+                            <tr>
+                                <th>Contract</th>
+                                <th class="num">Last</th>
+                                <th class="num">Change</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pricesTableBody">
+                            <tr><td colspan="3">Loading delayed quotes…</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
         
@@ -558,12 +775,12 @@
             </div>
             
             <div class="trade-summary" id="tradeSummary">
-                📈 LONG 4 MNQ @ 24880 → 25000
+                📈 LONG 1 MNQ @ 24880 → 25000
             </div>
         </div>
         
         <div class="disclaimer">
-            <strong>⚠️ Disclaimer:</strong> This calculator is for informational purposes only. Commission rates may vary by broker. The default commission rate is $1 per contract per side ($2 round trip). Always verify current contract specifications and commission rates with your broker before trading.
+            <strong>⚠️ Disclaimer:</strong> This calculator is for informational purposes only. Last prices are delayed snapshots updated once each weekday and are not live quotes. Commission rates may vary by broker. The default commission rate is $1 per contract per side ($2 round trip). Always verify current contract specifications and commission rates with your broker before trading.
         </div>
     </div>
 
@@ -616,6 +833,150 @@
         };
 
         let currentPosition = 'long';
+        let futuresSnapshot = null;
+
+        function priceDecimals(tickSize) {
+            if (!tickSize || tickSize >= 1) return 0;
+            const parts = String(tickSize).split('.');
+            return parts[1] ? parts[1].length : 0;
+        }
+
+        function formatContractPrice(symbol, price) {
+            if (price == null || Number.isNaN(Number(price))) return '—';
+            const spec = contractSpecs[symbol];
+            const decimals = spec ? priceDecimals(spec.tickSize) : 2;
+            return Number(price).toLocaleString('en-US', {
+                minimumFractionDigits: decimals,
+                maximumFractionDigits: decimals
+            });
+        }
+
+        function formatSignedPrice(symbol, value) {
+            if (value == null || Number.isNaN(Number(value))) return '—';
+            const sign = value > 0 ? '+' : value < 0 ? '-' : '';
+            return sign + formatContractPrice(symbol, Math.abs(value));
+        }
+
+        function formatPercent(value) {
+            if (value == null || Number.isNaN(Number(value))) return '';
+            const sign = value > 0 ? '+' : value < 0 ? '-' : '';
+            return sign + Math.abs(value).toFixed(2) + '%';
+        }
+
+        function formatAsOf(iso) {
+            if (!iso) return '';
+            const date = new Date(iso);
+            if (Number.isNaN(date.getTime())) return '';
+            return date.toLocaleString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                timeZoneName: 'short'
+            });
+        }
+
+        function getQuote(symbol) {
+            return futuresSnapshot && futuresSnapshot.prices
+                ? futuresSnapshot.prices[symbol]
+                : null;
+        }
+
+        function setPriceInput(id, symbol, price) {
+            if (price == null) return;
+            const spec = contractSpecs[symbol];
+            const decimals = spec ? priceDecimals(spec.tickSize) : 2;
+            document.getElementById(id).value = Number(price).toFixed(decimals);
+        }
+
+        function applyLastPrice(which) {
+            const symbol = document.getElementById('symbol').value;
+            const quote = getQuote(symbol);
+            if (!quote) return;
+            if (which === 'entry' || which === 'both') setPriceInput('entryPrice', symbol, quote.price);
+            if (which === 'exit' || which === 'both') setPriceInput('exitPrice', symbol, quote.price);
+            updateDisplay();
+        }
+
+        function updateLastPriceDisplay() {
+            const symbol = document.getElementById('symbol').value;
+            const quote = getQuote(symbol);
+            const valueEl = document.getElementById('lastPriceValue');
+            const asOfEl = document.getElementById('lastPriceAsOf');
+            const entryBtn = document.getElementById('useAsEntry');
+            const exitBtn = document.getElementById('useAsExit');
+
+            if (!quote) {
+                valueEl.textContent = futuresSnapshot ? 'Last price unavailable' : 'Last price: loading…';
+                asOfEl.textContent = 'Delayed weekday snapshot';
+                entryBtn.disabled = true;
+                exitBtn.disabled = true;
+                return;
+            }
+
+            const changeClass = quote.change > 0 ? 'up' : quote.change < 0 ? 'down' : 'flat';
+            const changeText = formatSignedPrice(symbol, quote.change);
+            const pctText = formatPercent(quote.changePercent);
+            valueEl.innerHTML = 'Last: ' + formatContractPrice(symbol, quote.price)
+                + ' <span class="last-price-change ' + changeClass + '">' + changeText
+                + (pctText ? ' (' + pctText + ')' : '') + '</span>';
+            asOfEl.textContent = 'Delayed quote' + (quote.asOf ? ' · ' + formatAsOf(quote.asOf) : '');
+            entryBtn.disabled = false;
+            exitBtn.disabled = false;
+        }
+
+        function renderPricesTable() {
+            const tbody = document.getElementById('pricesTableBody');
+            const updatedEl = document.getElementById('pricesUpdatedAt');
+            const selected = document.getElementById('symbol').value;
+
+            if (!futuresSnapshot || !futuresSnapshot.prices || Object.keys(futuresSnapshot.prices).length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3">Daily prices unavailable</td></tr>';
+                return;
+            }
+
+            updatedEl.textContent = futuresSnapshot.updatedAt
+                ? 'Updated ' + formatAsOf(futuresSnapshot.updatedAt)
+                : '';
+
+            tbody.innerHTML = '';
+            Object.keys(contractSpecs).forEach(symbol => {
+                const quote = getQuote(symbol);
+                const tr = document.createElement('tr');
+                if (symbol === selected) tr.classList.add('active');
+                const changeClass = quote && quote.change > 0 ? 'up' : quote && quote.change < 0 ? 'down' : 'flat';
+                tr.innerHTML =
+                    '<td>' + symbol + ' · ' + contractSpecs[symbol].name + '</td>' +
+                    '<td class="num">' + (quote ? formatContractPrice(symbol, quote.price) : '—') + '</td>' +
+                    '<td class="num last-price-change ' + changeClass + '">' +
+                        (quote ? formatSignedPrice(symbol, quote.change) : '—') +
+                    '</td>';
+                tr.addEventListener('click', () => {
+                    document.getElementById('symbol').value = symbol;
+                    syncPriceInputSteps();
+                    applyLastPrice('both');
+                    renderPricesTable();
+                });
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function loadDailyPrices() {
+            try {
+                const response = await fetch('data/futures-prices.json', { cache: 'no-store' });
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                futuresSnapshot = await response.json();
+                applyLastPrice('both');
+                updateLastPriceDisplay();
+                renderPricesTable();
+            } catch (err) {
+                futuresSnapshot = { prices: {} };
+                updateLastPriceDisplay();
+                document.getElementById('pricesTableBody').innerHTML =
+                    '<tr><td colspan="3">Could not load daily prices</td></tr>';
+            }
+        }
 
         function syncPriceInputSteps() {
             const symbol = document.getElementById('symbol').value;
@@ -713,6 +1074,7 @@
             const spec = contractSpecs[symbol];
             document.getElementById('contractSpecs').textContent = 
                 `Multiplier: $${spec.multiplier} | Tick: $${spec.tickValue.toFixed(2)}`;
+            updateLastPriceDisplay();
         }
 
         // Position button handlers
@@ -728,15 +1090,24 @@
         // Input handlers
         document.getElementById('symbol').addEventListener('change', () => {
             syncPriceInputSteps();
-            updateDisplay();
+            if (getQuote(document.getElementById('symbol').value)) {
+                applyLastPrice('both');
+            } else {
+                updateDisplay();
+            }
+            renderPricesTable();
         });
         document.getElementById('contracts').addEventListener('input', updateDisplay);
         document.getElementById('entryPrice').addEventListener('input', updateDisplay);
         document.getElementById('exitPrice').addEventListener('input', updateDisplay);
+        document.getElementById('useAsEntry').addEventListener('click', () => applyLastPrice('entry'));
+        document.getElementById('useAsExit').addEventListener('click', () => applyLastPrice('exit'));
 
         // Initial calculation
+        document.getElementById('symbol').value = 'MNQ';
         syncPriceInputSteps();
         updateDisplay();
+        loadDailyPrices();
     </script>
 </body>
 </html>
