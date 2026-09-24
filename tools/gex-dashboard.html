@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEX Dashboard | Gamma exposure by ticker</title>
+    <meta name="description" content="Watchlist of gamma exposure. Refresh delayed CBOE data, then open a ticker for call and put walls and net gamma by strike.">
+    <meta name="author" content="Manan Patel">
+    <meta name="robots" content="index, follow">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mananpatel.info/tools/gex-dashboard.html">
+    <meta property="og:title" content="GEX Dashboard">
+    <meta property="og:description" content="Gamma exposure, call and put walls, and net gamma by strike. Delayed CBOE data.">
+    <meta property="og:site_name" content="Manan Patel">
+    <link rel="canonical" href="https://mananpatel.info/tools/gex-dashboard.html">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        html, body { margin: 0; height: 100%; background: #070809; color: #f3f4f6; }
+        body {
+            font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-variant-numeric: tabular-nums;
+        }
+        button, input { font: inherit; color: inherit; }
+        button { cursor: pointer; }
+        .app {
+            display: grid;
+            grid-template-columns: 320px minmax(0, 1fr);
+            height: 100vh;
+            background: #0c0e12;
+        }
+        aside {
+            min-height: 0;
+            overflow: auto;
+            border-right: 1px solid #23272e;
+            padding: 22px 16px 24px;
+        }
+        .brand { margin: 0; font-size: 1.15rem; font-weight: 700; letter-spacing: -0.03em; }
+        .home { display: inline-block; margin: 8px 0 18px; color: #c5cad1; text-decoration: none; font-size: 0.88rem; }
+        .home:hover { color: #fff; }
+        #main {
+            min-height: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 22px 28px 18px;
+        }
+        .wl-head, .controls, .section-sub, .head {
+            display: flex; justify-content: space-between; gap: 12px; align-items: flex-end;
+        }
+        .kicker {
+            margin: 0; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: #9aa1ab;
+        }
+        .count { margin: 2px 0 0; color: #c5cad1; font-size: 0.92rem; }
+        .refresh {
+            border: 0; background: #c6f135; color: #111; font-weight: 700;
+            border-radius: 999px; padding: 10px 14px; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .refresh svg { width: 16px; height: 16px; }
+        .refresh.busy svg { animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(-360deg); } }
+        .ticker {
+            display: flex; align-items: center; gap: 4px;
+            padding: 8px 8px; border-radius: 10px; margin: 0 -8px;
+        }
+        .ticker.on { background: #171b20; }
+        .ticker-open {
+            flex: 1; display: flex; justify-content: space-between; gap: 12px;
+            text-align: left; background: none; border: 0; padding: 4px 0; min-width: 0;
+        }
+        .t-sym { font-weight: 750; font-size: 1.02rem; }
+        .t-sub { margin-top: 3px; color: #9aa1ab; font-size: 0.82rem; }
+        .t-quote { text-align: right; }
+        .t-px { font-weight: 650; }
+        .up { color: #b6ef3c; }
+        .down { color: #ff5d5d; }
+        .muted { color: #9aa1ab; }
+        .remove {
+            background: none; border: 0; color: #6b7280; font-size: 1rem; line-height: 1;
+            padding: 6px; border-radius: 6px;
+        }
+        .remove:hover { color: #fff; background: #23272e; }
+        .add { display: flex; gap: 8px; margin-top: 16px; }
+        .add input {
+            flex: 1; background: #15181d; border: 1px solid #2a2f36; border-radius: 10px;
+            padding: 11px 12px; outline: none;
+        }
+        .add button {
+            border: 0; background: #1c2128; border-radius: 10px; padding: 0 14px; font-weight: 650;
+        }
+        .head { align-items: flex-start; margin-top: 8px; }
+        .sym { margin: 2px 0 0; font-size: 2.4rem; font-weight: 700; letter-spacing: -0.04em; line-height: 1; }
+        .quote { text-align: right; }
+        .px { font-size: 1.55rem; font-weight: 700; letter-spacing: -0.03em; }
+        .chg { margin-top: 4px; font-weight: 650; }
+        .meta { margin: 10px 0 0; color: #9aa1ab; font-size: 0.92rem; line-height: 1.45; }
+        h2 { margin: 16px 0 0; font-size: 1.15rem; letter-spacing: -0.03em; }
+        .section-sub { margin-top: 6px; color: #9aa1ab; font-size: 0.88rem; align-items: flex-start; }
+        .section-sub span:last-child { white-space: nowrap; }
+        .stage {
+            display: grid;
+            grid-template-columns: minmax(0, 1.65fr) minmax(280px, 0.7fr);
+            gap: 28px;
+            flex: 1;
+            min-height: 0;
+        }
+        .col { min-height: 0; min-width: 0; display: flex; flex-direction: column; }
+        .chart-toolbar { display: flex; justify-content: space-between; gap: 12px; align-items: flex-end; margin-top: 18px; }
+        .chart-toolbar h2 { margin: 0; }
+        .intervals { display: flex; gap: 4px; }
+        .intervals button {
+            background: #171b20; border: 0; color: #c5cad1; border-radius: 8px; padding: 6px 9px;
+        }
+        .intervals button.on { background: #c6f135; color: #111; font-weight: 750; }
+        .chart-box { position: relative; flex: 1; min-height: 280px; }
+        .chart-legend {
+            position: absolute; z-index: 2; left: 10px; top: 8px; right: 72px;
+            display: flex; flex-wrap: wrap; gap: 8px 12px;
+            font-size: 12px; color: #d5d8de; pointer-events: none;
+        }
+        .chart-legend b { font-weight: 650; }
+        canvas { width: 100%; height: 100%; display: block; cursor: crosshair; touch-action: none; }
+        .gex-scroll { flex: 1; min-height: 0; overflow: auto; margin-top: 8px; }
+        .empty { color: #9aa1ab; padding-top: 12vh; font-size: 1.05rem; }
+        .stats {
+            display: grid; grid-template-columns: 1fr 1fr 1fr;
+            margin-top: 18px; border-top: 1px solid #2a2f36; border-bottom: 1px solid #2a2f36;
+        }
+        .stat { padding: 14px 10px; }
+        .stat + .stat { border-left: 1px solid #2a2f36; }
+        .stat p { margin: 0; color: #9aa1ab; font-size: 0.88rem; }
+        .stat strong { display: block; margin-top: 8px; font-size: 1.45rem; font-weight: 700; }
+        .controls { align-items: flex-end; margin-top: 0; gap: 10px; }
+        .control-label { margin: 0 0 6px; color: #9aa1ab; font-size: 0.78rem; }
+        .expiry { position: relative; }
+        .expiry-btn, .depths {
+            background: #171b20; border: 0; border-radius: 12px; color: #fff;
+        }
+        .expiry-btn { padding: 10px 12px; display: inline-flex; align-items: center; gap: 8px; text-align: left; }
+        .menu {
+            position: absolute; z-index: 6; top: calc(100% + 6px); left: 0; min-width: 240px;
+            max-height: 320px; overflow: auto; background: #1b2026; border-radius: 14px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.45); padding: 6px;
+        }
+        .menu[hidden] { display: none; }
+        .menu button {
+            display: flex; justify-content: space-between; gap: 12px; width: 100%;
+            background: none; border: 0; text-align: left; padding: 9px 10px; border-radius: 8px; color: #d5d8de;
+        }
+        .menu button.on, .menu button:hover { background: #111418; color: #fff; }
+        .depths { display: flex; padding: 3px; }
+        .depths button { background: none; border: 0; color: #c5cad1; border-radius: 9px; padding: 7px 9px; }
+        .depths button.on { background: #c6f135; color: #111; font-weight: 750; }
+        .chart-head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-end; margin-top: 22px; }
+        .chart-head h2 { margin: 0; }
+        .chart-note { margin: 4px 0 0; color: #9aa1ab; font-size: 0.82rem; }
+        .unit { color: #9aa1ab; font-size: 0.78rem; white-space: nowrap; }
+        .gex-chart { margin-top: 0; }
+        .gex-row { display: grid; grid-template-columns: 42px 1fr; align-items: center; height: 18px; }
+        .ylab { color: #8b919a; font-size: 0.72rem; }
+        .track { position: relative; height: 14px; }
+        .zero { position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: #3a414b; }
+        .bar { position: absolute; top: 3px; height: 8px; }
+        .bar.pos { left: 50%; background: #c6f135; }
+        .bar.neg { right: 50%; background: #ff6b6b; }
+        .gex-row.wall-call .track::after,
+        .gex-row.wall-put .track::after,
+        .gex-row.spot .track::before {
+            content: ""; position: absolute; left: 0; right: 0; top: 50%;
+        }
+        .gex-row.wall-call .track::after { border-top: 1px dashed #c6f135; }
+        .gex-row.wall-put .track::after { border-top: 1px dashed #ff6b6b; }
+        .gex-row.spot .track::before { border-top: 1px solid #f5c518; z-index: 1; }
+        .axis { display: flex; justify-content: space-between; color: #8b919a; font-size: 0.75rem; margin: 6px 0 0 42px; }
+        .legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 16px; color: #c5cad1; font-size: 0.82rem; }
+        .legend span { display: inline-flex; align-items: center; gap: 6px; }
+        .sw { width: 18px; height: 4px; border-radius: 1px; background: #c6f135; }
+        .sw.neg { background: #ff6b6b; }
+        .sw.spot { background: #f5c518; }
+        .method { margin-top: 8px; border-top: 1px solid #2a2f36; }
+        .method summary { cursor: pointer; font-weight: 700; padding: 14px 0; }
+        .method p { margin: 0 0 12px; color: #b7bdc6; line-height: 1.5; font-size: 0.92rem; }
+        .err { color: #ff8d8d; font-size: 0.82rem; margin-top: 8px; }
+    </style>
+</head>
+<body>
+    <div class="app" id="app">
+        <aside id="side"></aside>
+        <section id="main"></section>
+    </div>
+    <script>
+        (function () {
+            var DEFAULTS = ["SPY", "QQQ", "SMH", "IGV", "INTC", "AMD", "META", "AAPL", "NKE", "LULU"];
+            var MAX = 20;
+            var DEPTHS = [11, 21, 34, 61, 121];
+            var KEY = "gex-watchlist";
+            var STORE = "gex-feed-v1";
+            var DATA_TTL = 12 * 60 * 60 * 1000;
+            var ERROR_TTL = 30 * 60 * 1000;
+            var memJson = {};
+            var inflight = {};
+            var state = {
+                symbols: loadSymbols(),
+                cache: {},
+                selected: null,
+                expiry: null,
+                depth: 61,
+                interval: "5m",
+                refreshing: false
+            };
+            var INTERVALS = [
+                { id: "5m", label: "5m", yahoo: "5m", range: "5d", window: 78 },
+                { id: "15m", label: "15m", yahoo: "15m", range: "1mo", window: 160 },
+                { id: "1h", label: "1H", yahoo: "60m", range: "3mo", window: 180 },
+                { id: "1d", label: "1D", yahoo: "1d", range: "1y", window: 160 }
+            ];
+            var chart = { key: "", start: 0, end: 0, priceManual: false, priceMin: 0, priceMax: 0 };
+            var chartDraw = function () {};
+            var side = document.getElementById("side");
+            var main = document.getElementById("main");
+            if (!state.selected) state.selected = state.symbols[0] || null;
+
+            function loadSymbols() {
+                try {
+                    var saved = JSON.parse(localStorage.getItem(KEY));
+                    if (Array.isArray(saved) && saved.length) return saved.filter(validSymbol).slice(0, MAX);
+                } catch (e) {}
+                return DEFAULTS.slice();
+            }
+            function saveSymbols() { localStorage.setItem(KEY, JSON.stringify(state.symbols)); }
+            function validSymbol(s) { return /^[A-Z][A-Z0-9.]{0,9}$/.test(s); }
+            function esc(s) {
+                return String(s).replace(/[&<>"]/g, function (c) {
+                    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+                });
+            }
+            function formatPx(n) {
+                return "US$" + Number(n).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            }
+            function formatPct(n) {
+                var v = Number(n);
+                if (!isFinite(v)) return "";
+                return (v > 0 ? "+" : "") + v.toFixed(2) + "%";
+            }
+            function formatGex(n) {
+                if (!isFinite(n)) return "—";
+                var sign = n < 0 ? "-" : "";
+                var a = Math.abs(n);
+                if (a >= 1e9) return sign + "$" + (a / 1e9).toFixed(2) + "B";
+                if (a >= 1e6) return sign + "$" + (a / 1e6).toFixed(1) + "M";
+                if (a >= 1e3) return sign + "$" + (a / 1e3).toFixed(1) + "K";
+                return sign + "$" + Math.round(a);
+            }
+            function formatStrike(k) {
+                if (k == null || !isFinite(k)) return "—";
+                var r = Math.round(k * 1000) / 1000;
+                return String(r);
+            }
+            function addDaysISO(iso, days) {
+                var p = iso.split("-").map(Number);
+                var dt = new Date(Date.UTC(p[0], p[1] - 1, p[2] + days));
+                var m = String(dt.getUTCMonth() + 1).padStart(2, "0");
+                var d = String(dt.getUTCDate()).padStart(2, "0");
+                return dt.getUTCFullYear() + "-" + m + "-" + d;
+            }
+            function formatWhen(date) {
+                var day = date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+                var time = date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+                return day + " at " + time;
+            }
+            function zonedTime(iso, timeZone) {
+                var bits = iso.split("T");
+                var date = bits[0].split("-").map(Number);
+                var clock = bits[1].split(":").map(Number);
+                var utc = Date.UTC(date[0], date[1] - 1, date[2], clock[0], clock[1] || 0, clock[2] || 0);
+                var fmt = new Intl.DateTimeFormat("en-US", {
+                    timeZone: timeZone, hourCycle: "h23",
+                    year: "numeric", month: "2-digit", day: "2-digit",
+                    hour: "2-digit", minute: "2-digit", second: "2-digit"
+                });
+                var parts = {};
+                fmt.formatToParts(new Date(utc)).forEach(function (p) { parts[p.type] = p.value; });
+                var shown = Date.UTC(+parts.year, +parts.month - 1, +parts.day, (+parts.hour) % 24, +parts.minute, +parts.second);
+                return new Date(utc - (shown - utc));
+            }
+            function aggregate(snapshot, expiry) {
+                var names = expiry ? [expiry] : snapshot.expiries;
+                var lo = snapshot.spot * 0.8;
+                var hi = snapshot.spot * 1.2;
+                var strikes = new Map();
+                var net = 0;
+                var count = 0;
+                names.forEach(function (name) {
+                    var bucket = snapshot.byExpiry[name];
+                    if (!bucket) return;
+                    count += bucket.count;
+                    bucket.strikes.forEach(function (row, strike) {
+                        if (strike < lo || strike > hi) return;
+                        net += row.net;
+                        var acc = strikes.get(strike);
+                        if (!acc) {
+                            acc = { call: 0, put: 0, net: 0 };
+                            strikes.set(strike, acc);
+                        }
+                        acc.call += row.call;
+                        acc.put += row.put;
+                        acc.net += row.net;
+                    });
+                });
+                var callWall = null, putWall = null, callMax = 0, putMax = 0;
+                strikes.forEach(function (row, strike) {
+                    if (row.call > callMax) { callMax = row.call; callWall = strike; }
+                    if (row.put > putMax) { putMax = row.put; putWall = strike; }
+                });
+                return { net: net, strikes: strikes, callWall: callWall, putWall: putWall, count: expiry ? (snapshot.byExpiry[expiry] ? snapshot.byExpiry[expiry].count : 0) : snapshot.nonzero };
+            }
+            function intervalById(id) {
+                for (var i = 0; i < INTERVALS.length; i++) if (INTERVALS[i].id === id) return INTERVALS[i];
+                return INTERVALS[0];
+            }
+            function nyToday() {
+                return new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
+            }
+            function money(s) {
+                if (s == null) return null;
+                var t = String(s).replace(/[$,\s]/g, "");
+                if (!t || t === "--") return null;
+                var n = parseFloat(t);
+                return n === n ? n : null;
+            }
+            function normPdf(x) { return Math.exp(-0.5 * x * x) / Math.sqrt(2 * Math.PI); }
+            function normCdf(x) {
+                var ax = Math.abs(x);
+                var t = 1 / (1 + 0.2316419 * ax);
+                var d = 0.3989422804 * Math.exp(-ax * ax / 2);
+                var p = d * t * (0.319381530 + t * (-0.356563782 + t * (1.781477937 + t * (-1.821255978 + t * 1.330274429))));
+                return x >= 0 ? 1 - p : p;
+            }
+            function bsPrice(isCall, S, K, T, r, q, sigma) {
+                var vol = sigma * Math.sqrt(T);
+                var d1 = (Math.log(S / K) + (r - q + 0.5 * sigma * sigma) * T) / vol;
+                var d2 = d1 - vol;
+                var dfq = Math.exp(-q * T);
+                var dfr = Math.exp(-r * T);
+                if (isCall) return S * dfq * normCdf(d1) - K * dfr * normCdf(d2);
+                return K * dfr * normCdf(-d2) - S * dfq * normCdf(-d1);
+            }
+            function impliedVol(isCall, S, K, T, r, q, price) {
+                var intrinsic = isCall ? Math.max(S - K, 0) : Math.max(K - S, 0);
+                if (!(price > intrinsic + 0.01)) return null;
+                var sigma = 0.25;
+                for (var i = 0; i < 18; i++) {
+                    var vol = sigma * Math.sqrt(T);
+                    var d1 = (Math.log(S / K) + (r - q + 0.5 * sigma * sigma) * T) / vol;
+                    var diff = bsPrice(isCall, S, K, T, r, q, sigma) - price;
+                    var vega = S * Math.exp(-q * T) * normPdf(d1) * Math.sqrt(T);
+                    if (Math.abs(diff) < 0.015) return sigma;
+                    if (vega < 1e-5) break;
+                    sigma -= diff / vega;
+                    if (sigma < 0.02) sigma = 0.02;
+                    if (sigma > 4) sigma = 4;
+                }
+                return sigma > 0.02 && sigma < 4 ? sigma : null;
+            }
+            function contractGamma(S, K, T, r, q, sigma) {
+                var vol = sigma * Math.sqrt(T);
+                var d1 = (Math.log(S / K) + (r - q + 0.5 * sigma * sigma) * T) / vol;
+                return Math.exp(-q * T) * normPdf(d1) / (S * sigma * Math.sqrt(T));
+            }
+            function readStore() {
+                try { return JSON.parse(localStorage.getItem(STORE)) || {}; }
+                catch (e) { return {}; }
+            }
+            function writeStore(data) {
+                try {
+                    localStorage.setItem(STORE, JSON.stringify(data));
+                } catch (e) {
+                    var slim = {};
+                    Object.keys(data).forEach(function (k) {
+                        slim[k] = { savedAt: data[k].savedAt, snapshot: data[k].snapshot, series: {}, chainError: data[k].chainError };
+                    });
+                    try { localStorage.setItem(STORE, JSON.stringify(slim)); } catch (err) {}
+                }
+            }
+            function packSnapshot(s) {
+                if (!s) return null;
+                var byExpiry = {};
+                Object.keys(s.byExpiry || {}).forEach(function (exp) {
+                    var bucket = s.byExpiry[exp];
+                    byExpiry[exp] = { count: bucket.count, strikes: Array.from(bucket.strikes.entries()) };
+                });
+                return {
+                    symbol: s.symbol,
+                    spot: s.spot,
+                    changePct: s.changePct,
+                    priceTime: s.priceTime ? s.priceTime.getTime() : null,
+                    gexTime: s.gexTime ? s.gexTime.getTime() : null,
+                    nonzero: s.nonzero,
+                    expiries: s.expiries,
+                    byExpiry: byExpiry,
+                    pending: false,
+                    chainError: !!s.chainError,
+                    div: s.div
+                };
+            }
+            function unpackSnapshot(s) {
+                if (!s) return null;
+                var byExpiry = {};
+                Object.keys(s.byExpiry || {}).forEach(function (exp) {
+                    var bucket = s.byExpiry[exp];
+                    byExpiry[exp] = { count: bucket.count, strikes: new Map(bucket.strikes || []) };
+                });
+                return {
+                    symbol: s.symbol,
+                    spot: s.spot,
+                    changePct: s.changePct,
+                    priceTime: s.priceTime ? new Date(s.priceTime) : null,
+                    gexTime: s.gexTime ? new Date(s.gexTime) : null,
+                    nonzero: s.nonzero,
+                    expiries: s.expiries || [],
+                    byExpiry: byExpiry,
+                    pending: false,
+                    chainError: !!s.chainError,
+                    div: s.div
+                };
+            }
+            function isFresh(symbol) {
+                var item = state.cache[symbol];
+                if (!item || !item.savedAt || !item.snapshot || item.snapshot.pending) return false;
+                var ttl = item.chainError ? ERROR_TTL : DATA_TTL;
+                return Date.now() - item.savedAt < ttl;
+            }
+            function persistSymbol(symbol) {
+                var item = state.cache[symbol];
+                if (!item || !item.snapshot || item.snapshot.pending || !item.savedAt) return;
+                var all = readStore();
+                all[symbol] = {
+                    savedAt: item.savedAt,
+                    snapshot: packSnapshot(item.snapshot),
+                    series: item.series || {},
+                    chainError: !!item.chainError
+                };
+                writeStore(all);
+            }
+            function hydrate() {
+                var all = readStore();
+                state.symbols.forEach(function (symbol) {
+                    var entry = all[symbol];
+                    if (!entry || !entry.savedAt || !entry.snapshot) return;
+                    var ttl = entry.chainError ? ERROR_TTL : DATA_TTL;
+                    if (Date.now() - entry.savedAt >= ttl) return;
+                    state.cache[symbol] = {
+                        status: "ready",
+                        snapshot: unpackSnapshot(entry.snapshot),
+                        series: entry.series || {},
+                        chainError: !!entry.chainError,
+                        savedAt: entry.savedAt
+                    };
+                });
+            }
+            async function fetchJsonNet(url, attempt) {
+                var res = await fetch("https://r.jina.ai/" + url, {
+                    headers: {
+                        "Accept": "application/json",
+                        "X-Return-Format": "text",
+                        "X-Cache-Tolerance": "43200"
+                    }
+                });
+                if (!res.ok) {
+                    if (attempt < 2 && (res.status === 429 || res.status >= 500)) {
+                        await new Promise(function (r) { setTimeout(r, 800 * (attempt + 1)); });
+                        return fetchJsonNet(url, attempt + 1);
+                    }
+                    throw new Error("Feed unavailable");
+                }
+                var wrapped = await res.json();
+                var data = wrapped.data || {};
+                if (data.httpStatus >= 400 || !data.text) throw new Error("No data");
+                return JSON.parse(data.text);
+            }
+            function fetchJson(url) {
+                if (memJson[url]) return Promise.resolve(memJson[url]);
+                if (inflight[url]) return inflight[url];
+                inflight[url] = fetchJsonNet(url, 0).then(function (data) {
+                    memJson[url] = data;
+                    delete inflight[url];
+                    return data;
+                }, function (err) {
+                    delete inflight[url];
+                    throw err;
+                });
+                return inflight[url];
+            }
+            function yahooUrl(symbol, spec) {
+                var sym = symbol.replace(/\./g, "-");
+                return "https://query1.finance.yahoo.com/v8/finance/chart/" + encodeURIComponent(sym) + "?interval=" + spec.yahoo + "&range=" + spec.range + "&includePrePost=false";
+            }
+            function parseYahoo(payload) {
+                var result = payload.chart && payload.chart.result && payload.chart.result[0];
+                if (!result || !result.timestamp) throw new Error("No bars");
+                var meta = result.meta || {};
+                var q = result.indicators.quote[0];
+                var bars = [];
+                for (var i = 0; i < result.timestamp.length; i++) {
+                    var o = q.open[i], h = q.high[i], l = q.low[i], c = q.close[i];
+                    if (o == null || h == null || l == null || c == null) continue;
+                    bars.push({ t: result.timestamp[i] * 1000, o: o, h: h, l: l, c: c, v: q.volume[i] || 0 });
+                }
+                if (bars.length < 2) throw new Error("No bars");
+                var price = Number(meta.regularMarketPrice);
+                var prev = Number(meta.previousClose);
+                return {
+                    bars: bars,
+                    symbol: meta.symbol,
+                    spot: price,
+                    changePct: prev ? ((price - prev) / prev) * 100 : 0,
+                    priceTime: meta.regularMarketTime ? new Date(meta.regularMarketTime * 1000) : null,
+                    asset: meta.instrumentType === "ETF" ? "etf" : "stocks"
+                };
+            }
+            function nasdaqUrl(symbol, asset) {
+                var from = nyToday();
+                return "https://api.nasdaq.com/api/quote/" + encodeURIComponent(symbol) + "/option-chain?assetclass=" + asset + "&limit=6000&fromdate=" + from + "&todate=" + addDaysISO(from, 92) + "&excode=oprac&callput=callput&money=all&type=all";
+            }
+            async function fetchChain(symbol, asset) {
+                var payload = await fetchJson(nasdaqUrl(symbol, asset));
+                var total = payload.data && payload.data.totalRecord;
+                if (!total) payload = await fetchJson(nasdaqUrl(symbol, asset === "etf" ? "stocks" : "etf"));
+                if (!payload.data || !payload.data.table) throw new Error("No chain");
+                return payload;
+            }
+            function buildSnapshot(payload, quote) {
+                var spot = quote.spot;
+                var q = quote.asset === "etf" ? 0.012 : 0;
+                var r = 0.04;
+                var start = nyToday();
+                var end = addDaysISO(start, 92);
+                var byExpiry = {};
+                var nonzero = 0;
+                var tCache = {};
+                function yearFrac(expiry) {
+                    if (tCache[expiry] != null) return tCache[expiry];
+                    var close = zonedTime(expiry + "T16:00:00", "America/New_York");
+                    tCache[expiry] = (close.getTime() - Date.now()) / (365.25 * 24 * 3600 * 1000);
+                    return tCache[expiry];
+                }
+                ((payload.data.table && payload.data.table.rows) || []).forEach(function (row) {
+                    var strike = money(row.strike);
+                    var occ = String(row.drillDownURL || "").match(/(\d{6})[cp]\d{8}/i);
+                    if (!occ || strike == null) return;
+                    var yymmdd = occ[1];
+                    var expiry = "20" + yymmdd.slice(0, 2) + "-" + yymmdd.slice(2, 4) + "-" + yymmdd.slice(4, 6);
+                    if (expiry < start || expiry > end) return;
+                    var rawT = yearFrac(expiry);
+                    if (!(rawT > 0)) return;
+                    var T = Math.max(rawT, 1 / (365.25 * 24));
+                    ["C", "P"].forEach(function (right) {
+                        var prefix = right === "C" ? "c_" : "p_";
+                        var oi = money(row[prefix + "Openinterest"]);
+                        if (!(oi > 0)) return;
+                        var bid = money(row[prefix + "Bid"]);
+                        var ask = money(row[prefix + "Ask"]);
+                        var last = money(row[prefix + "Last"]);
+                        var px = bid > 0 && ask > 0 ? (bid + ask) / 2 : (last > 0 ? last : (ask > 0 ? ask : bid));
+                        if (!(px > 0)) return;
+                        var sigma = impliedVol(right === "C", spot, strike, T, r, q, px);
+                        if (!sigma) return;
+                        var gamma = contractGamma(spot, strike, T, r, q, sigma);
+                        if (!(gamma > 0)) return;
+                        nonzero += 1;
+                        var signed = gamma * oi * 100 * spot * spot * 0.01;
+                        if (right === "P") signed = -signed;
+                        if (!byExpiry[expiry]) byExpiry[expiry] = { count: 0, strikes: new Map() };
+                        var bucket = byExpiry[expiry];
+                        bucket.count += 1;
+                        var acc = bucket.strikes.get(strike);
+                        if (!acc) {
+                            acc = { call: 0, put: 0, net: 0 };
+                            bucket.strikes.set(strike, acc);
+                        }
+                        acc.net += signed;
+                        if (right === "C") acc.call += Math.abs(signed);
+                        else acc.put += Math.abs(signed);
+                    });
+                });
+                return {
+                    symbol: quote.symbol,
+                    spot: spot,
+                    changePct: quote.changePct,
+                    priceTime: quote.priceTime,
+                    gexTime: quote.priceTime,
+                    nonzero: nonzero,
+                    expiries: Object.keys(byExpiry).sort(),
+                    byExpiry: byExpiry,
+                    pending: false,
+                    chainError: false,
+                    div: q
+                };
+            }
+            function recall(symbol) {
+                if (isFresh(symbol)) return true;
+                var entry = readStore()[symbol];
+                if (!entry || !entry.savedAt || !entry.snapshot) return false;
+                var ttl = entry.chainError ? ERROR_TTL : DATA_TTL;
+                if (Date.now() - entry.savedAt >= ttl) return false;
+                state.cache[symbol] = {
+                    status: "ready",
+                    snapshot: unpackSnapshot(entry.snapshot),
+                    series: entry.series || {},
+                    chainError: !!entry.chainError,
+                    savedAt: entry.savedAt
+                };
+                return true;
+            }
+            async function loadSymbol(symbol) {
+                if (recall(symbol) && isFresh(symbol)) {
+                    var cached = state.cache[symbol];
+                    if (!cached.series || !cached.series[state.interval]) await ensureSeries(symbol, state.interval);
+                    return;
+                }
+                var prev = state.cache[symbol];
+                state.cache[symbol] = {
+                    status: "loading",
+                    snapshot: prev && prev.snapshot,
+                    series: (prev && prev.series) || {},
+                    chainError: prev && prev.chainError
+                };
+                render({ keepSide: true, keepMain: true });
+                var spec = intervalById(state.interval);
+                try {
+                    var quote = parseYahoo(await fetchJson(yahooUrl(symbol, spec)));
+                    var series = Object.assign({}, (state.cache[symbol] && state.cache[symbol].series) || {});
+                    series[spec.id] = quote.bars;
+                    var partial = {
+                        symbol: quote.symbol || symbol,
+                        spot: quote.spot,
+                        changePct: quote.changePct,
+                        priceTime: quote.priceTime,
+                        gexTime: quote.priceTime,
+                        nonzero: 0,
+                        expiries: [],
+                        byExpiry: {},
+                        pending: true,
+                        chainError: false
+                    };
+                    state.cache[symbol] = { status: "loading", snapshot: partial, series: series, quote: quote, chainError: false };
+                    render({ keepSide: true, keepMain: true });
+                    try {
+                        var chain = await fetchChain(symbol, quote.asset);
+                        var item = state.cache[symbol];
+                        if (!item) return;
+                        item.snapshot = buildSnapshot(chain, quote);
+                        item.snapshot.symbol = quote.symbol || symbol;
+                        item.status = "ready";
+                        item.savedAt = Date.now();
+                        item.chainError = false;
+                        persistSymbol(symbol);
+                    } catch (err) {
+                        var failed = state.cache[symbol];
+                        if (!failed) return;
+                        failed.status = "ready";
+                        failed.chainError = true;
+                        failed.savedAt = Date.now();
+                        failed.snapshot.pending = false;
+                        failed.snapshot.chainError = true;
+                        persistSymbol(symbol);
+                    }
+                } catch (e) {
+                    var keep = state.cache[symbol];
+                    if (keep && keep.snapshot && keep.series && keep.series[spec.id]) {
+                        keep.status = "ready";
+                    } else {
+                        state.cache[symbol] = { status: "error", series: {} };
+                    }
+                }
+                render({ keepSide: true, keepMain: true });
+            }
+            async function ensureSeries(symbol, interval) {
+                var item = state.cache[symbol];
+                var have = item && item.series && item.series[interval];
+                if (!have) render({ keepSide: true, keepMain: true });
+                if (!have) {
+                    try {
+                        var pack = parseYahoo(await fetchJson(yahooUrl(symbol, intervalById(interval))));
+                        var current = state.cache[symbol];
+                        if (!current) return;
+                        current.series = current.series || {};
+                        current.series[interval] = pack.bars;
+                        if (!current.savedAt) current.savedAt = Date.now();
+                        persistSymbol(symbol);
+                    } catch (e) {}
+                }
+                if (state.selected === symbol && state.interval === interval) render({ keepSide: true, keepMain: true });
+            }
+            function pool(items, limit, fn) {
+                var queue = items.slice();
+                var workers = [];
+                for (var i = 0; i < limit; i++) {
+                    workers.push((async function () {
+                        while (queue.length) await fn(queue.shift());
+                    })());
+                }
+                return Promise.all(workers);
+            }
+            async function refreshAll() {
+                if (state.refreshing) return;
+                var needed = state.symbols.filter(function (symbol) { return !isFresh(symbol); });
+                if (!needed.length) return;
+                state.refreshing = true;
+                render({ keepSide: true, keepMain: true });
+                await pool(needed, 1, loadSymbol);
+                state.refreshing = false;
+                render({ keepSide: true, keepMain: true });
+            }
+
+            function render(opts) {
+                var sideY = side.scrollTop;
+                var mainY = main.scrollTop;
+                renderSide();
+                renderMain();
+                if (opts && opts.keepSide) side.scrollTop = sideY;
+                if (opts && opts.keepMain) main.scrollTop = mainY;
+            }
+            function renderSide() {
+                var rows = state.symbols.map(function (symbol) {
+                    var item = state.cache[symbol];
+                    var sub = "Loading";
+                    var px = "—";
+                    var chg = "";
+                    var cls = "muted";
+                    if (item && item.snapshot && item.snapshot.spot) {
+                        var s = item.snapshot;
+                        if (s.pending) sub = "Loading gamma";
+                        else if (item.chainError) sub = "Gamma unavailable";
+                        else sub = "GEX " + formatGex(aggregate(s, null).net) + (s.gexTime ? " · " + formatWhen(s.gexTime) : "");
+                        px = formatPx(s.spot);
+                        chg = formatPct(s.changePct);
+                        cls = Number(s.changePct) >= 0 ? "up" : "down";
+                    } else if (item && item.status === "error") {
+                        sub = "Couldn't load this ticker";
+                    }
+                    var on = symbol === state.selected ? " on" : "";
+                    return '<div class="ticker' + on + '"><button class="ticker-open" type="button" data-act="open" data-sym="' + esc(symbol) + '"><div><div class="t-sym">' + esc(symbol) + '</div><div class="t-sub">' + esc(sub) + '</div></div><div class="t-quote"><div class="t-px">' + esc(px) + '</div><div class="t-chg ' + cls + '">' + esc(chg) + '</div></div></button><button class="remove" type="button" data-act="remove" data-sym="' + esc(symbol) + '" aria-label="Remove ' + esc(symbol) + '">×</button></div>';
+                }).join("");
+                var add = state.symbols.length < MAX
+                    ? '<form class="add" id="addForm"><input id="addInput" maxlength="10" placeholder="Add ticker" autocapitalize="characters" aria-label="Ticker"><button type="submit">Add</button></form>'
+                    : "";
+                side.innerHTML = '<h1 class="brand">GEX Dashboard</h1><a class="home" href="../">← Home</a><div class="wl-head"><div><p class="kicker">Watchlist</p><p class="count">' + state.symbols.length + ' of ' + MAX + ' tickers</p></div><button class="refresh' + (state.refreshing ? " busy" : "") + '" type="button" data-act="refresh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 12a8 8 0 1 1-2.2-5.5"/><path d="M20 4v5h-5"/></svg> Refresh all</button></div>' + rows + add;
+            }
+            function renderMain() {
+                var symbol = state.selected;
+                var item = symbol ? state.cache[symbol] : null;
+                if (!symbol) {
+                    main.innerHTML = '<p class="empty">Add a ticker to see gamma.</p>';
+                    return;
+                }
+                if (!item || !item.snapshot) {
+                    var msg = item && item.status === "error" ? "Couldn't load " + symbol + "." : "Loading " + symbol + "…";
+                    main.innerHTML = '<p class="empty">' + esc(msg) + '</p>';
+                    return;
+                }
+                renderDetail();
+            }
+            function renderDetail() {
+                var symbol = state.selected;
+                var item = state.cache[symbol];
+                var snapshot = item.snapshot;
+                if (state.expiry && snapshot.expiries.indexOf(state.expiry) === -1) state.expiry = null;
+                var view = aggregate(snapshot, state.expiry);
+                var expCount = snapshot.expiries.length;
+                var expLabel = state.expiry ? state.expiry : ("Next 92 days · " + expCount + " exp");
+                var menu = '<button type="button" data-act="expiry" data-exp="" class="' + (state.expiry ? "" : "on") + '"><span>Next 92 days · ' + expCount + ' expiries</span></button>';
+                snapshot.expiries.forEach(function (exp) {
+                    var net = aggregate(snapshot, exp).net;
+                    menu += '<button type="button" data-act="expiry" data-exp="' + exp + '" class="' + (state.expiry === exp ? "on" : "") + '"><span>' + exp + '</span><span>' + formatGex(net) + '</span></button>';
+                });
+                var depths = DEPTHS.map(function (n) {
+                    return '<button type="button" data-act="depth" data-n="' + n + '" class="' + (state.depth === n ? "on" : "") + '">' + n + '</button>';
+                }).join("");
+                var priceWhen = snapshot.priceTime ? formatWhen(snapshot.priceTime) : "the latest print";
+                var cls = Number(snapshot.changePct) >= 0 ? "up" : "down";
+                var netCls = view.net >= 0 ? "up" : "down";
+                var gammaNote = snapshot.pending ? "Loading the option chain…" : (item.chainError ? "The option chain didn't load." : "Gamma from the Nasdaq chain. Open interest is the prior daily print.");
+                var contractLine = state.expiry
+                    ? view.count.toLocaleString("en-US") + " nonzero contracts contributed to the " + state.expiry + " expiry."
+                    : snapshot.nonzero.toLocaleString("en-US") + " nonzero contracts contributed to this 92-day snapshot.";
+                var netText = snapshot.pending || item.chainError ? "—" : formatGex(view.net);
+                var callText = snapshot.pending || item.chainError ? "—" : formatStrike(view.callWall);
+                var putText = snapshot.pending || item.chainError ? "—" : formatStrike(view.putWall);
+                var intervals = INTERVALS.map(function (spec) {
+                    return '<button type="button" data-act="interval" data-iv="' + spec.id + '" class="' + (state.interval === spec.id ? "on" : "") + '">' + spec.label + '</button>';
+                }).join("");
+                main.innerHTML =
+                    '<div class="stage"><div class="col">' +
+                    '<p class="kicker">Selected</p>' +
+                    '<div class="head"><div><div class="sym">' + esc(snapshot.symbol || symbol) + '</div></div><div class="quote"><div class="px">' + formatPx(snapshot.spot) + '</div><div class="chg ' + cls + '">' + formatPct(snapshot.changePct) + '</div></div></div>' +
+                    '<p class="meta">As of ' + esc(priceWhen) + ' · Yahoo prices · ' + esc(gammaNote) + '</p>' +
+                    '<div class="chart-toolbar"><div><h2>Price</h2><p class="chart-note">Drag to pan · drag the price scale up or down · double-click resets</p></div><div class="intervals">' + intervals + '</div></div>' +
+                    '<div class="chart-box"><div class="chart-legend" id="chartLegend"></div><canvas id="candles"></canvas></div>' +
+                    '<div class="stats"><div class="stat"><p>Net gamma</p><strong class="' + netCls + '">' + netText + '</strong></div><div class="stat"><p>Call wall</p><strong>' + callText + '</strong></div><div class="stat"><p>Put wall</p><strong>' + putText + '</strong></div></div>' +
+                    '</div><div class="col">' +
+                    '<div class="controls"><div class="expiry"><p class="control-label">Expiry window</p><button class="expiry-btn" type="button" data-act="menu">' + esc(expLabel) + ' ▾</button><div class="menu" id="expMenu" hidden>' + menu + '</div></div><div><p class="control-label">Strike depth</p><div class="depths">' + depths + '</div></div></div>' +
+                    gammaHtml(snapshot, view) +
+                    '<div class="legend"><span><i class="sw"></i> Positive gamma</span><span><i class="sw neg"></i> Negative gamma</span><span><i class="sw spot"></i> Nearest spot strike</span></div>' +
+                    '<details class="method"><summary>Method &amp; limitations</summary><p>Dollar gamma per 1% move = gamma × open interest × 100 × spot<sup>2</sup> × 0.01. Calls are positive and puts are negative. Gamma is Black–Scholes from the bid/ask mid, with a 4% rate and a 1.2% dividend yield on ETFs. Prices come from Yahoo and the chain comes from Nasdaq. Open interest is still the prior daily print. Each ticker is kept for 12 hours in this browser and on the shared fetch cache, so reloading does not ask for the chain again. This is a structure map, not a trade signal.</p><p>' + esc(contractLine) + '</p></details>' +
+                    '</div></div>';
+                var bars = (item.series && item.series[state.interval]) || [];
+                requestAnimationFrame(function () { bindChart(bars, view.callWall, view.putWall); });
+            }
+            function gammaHtml(snapshot, view) {
+                if (snapshot.pending) return '<p class="chart-note">Loading gamma…</p>';
+                if (snapshot.chainError) return '<p class="err">Gamma feed unavailable.</p>';
+                var strikes = Array.from(view.strikes.keys());
+                var universe = strikes.length;
+                strikes.sort(function (a, b) { return Math.abs(a - snapshot.spot) - Math.abs(b - snapshot.spot); });
+                var shown = strikes.slice(0, state.depth);
+                shown.sort(function (a, b) { return b - a; });
+                var maxAbs = 0;
+                shown.forEach(function (k) { maxAbs = Math.max(maxAbs, Math.abs(view.strikes.get(k).net)); });
+                var nearest = shown[0];
+                var best = Infinity;
+                shown.forEach(function (k) {
+                    var d = Math.abs(k - snapshot.spot);
+                    if (d < best) { best = d; nearest = k; }
+                });
+                var rows = shown.map(function (k) {
+                    var row = view.strikes.get(k);
+                    var cls = "";
+                    if (k === view.callWall) cls += " wall-call";
+                    if (k === view.putWall) cls += " wall-put";
+                    if (k === nearest) cls += " spot";
+                    var width = maxAbs ? (Math.abs(row.net) / maxAbs) * 50 : 0;
+                    var bar = row.net === 0 ? "" : '<i class="bar ' + (row.net > 0 ? "pos" : "neg") + '" style="width:' + width.toFixed(2) + '%"></i>';
+                    return '<div class="gex-row' + cls + '"><div class="ylab">' + formatStrike(k) + '</div><div class="track"><i class="zero"></i>' + bar + '</div></div>';
+                }).join("");
+                return '<div class="chart-head"><div><h2>Net gamma by strike — ' + esc(snapshot.symbol) + '</h2><p class="chart-note">' + shown.length + ' of ' + universe + ' strikes within ±20% of spot</p></div><div class="unit">$M per 1% move</div></div><div class="gex-scroll"><div class="gex-chart">' + rows + '</div><div class="axis"><span>' + formatGex(-maxAbs) + '</span><span>$0</span><span>' + formatGex(maxAbs) + '</span></div></div>';
+            }
+            function formatVol(n) {
+                var a = Math.abs(n || 0);
+                if (a >= 1e9) return (a / 1e9).toFixed(2) + "B";
+                if (a >= 1e6) return (a / 1e6).toFixed(2) + "M";
+                if (a >= 1e3) return (a / 1e3).toFixed(1) + "K";
+                return String(Math.round(a));
+            }
+            function formatBarTime(ms) {
+                var opts = state.interval === "1d"
+                    ? { month: "short", day: "numeric", timeZone: "America/New_York" }
+                    : { month: "short", day: "numeric", hour: "numeric", minute: "2-digit", timeZone: "America/New_York" };
+                return new Date(ms).toLocaleString("en-US", opts);
+            }
+            function axisTime(ms, prev) {
+                var day = new Date(ms).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "America/New_York" });
+                if (state.interval === "1d") return day;
+                var prevDay = prev == null ? "" : new Date(prev).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "America/New_York" });
+                if (day !== prevDay) return day;
+                return new Date(ms).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZone: "America/New_York" });
+            }
+            function defaultWindow(n) {
+                var span = Math.min(n + 5, intervalById(state.interval).window + 5);
+                return { start: Math.max(0, n + 5 - span), end: n + 5 };
+            }
+            function bindChart(bars, callWall, putWall) {
+                var canvas = document.getElementById("candles");
+                var legend = document.getElementById("chartLegend");
+                chartDraw = function () {};
+                if (!canvas || !bars || bars.length < 2) return;
+                var key = (state.selected || "") + "|" + state.interval + "|" + bars.length;
+                if (chart.key !== key) {
+                    var win = defaultWindow(bars.length);
+                    chart.key = key;
+                    chart.start = win.start;
+                    chart.end = win.end;
+                    chart.priceManual = false;
+                }
+                var hover = null;
+                var drag = null;
+                var geom = { left: 8, right: 0, top: 28, bottom: 0, min: 0, max: 1 };
+                function clampView() {
+                    var span = Math.max(12, chart.end - chart.start);
+                    if (chart.start < 0) { chart.start = 0; chart.end = span; }
+                    var maxEnd = bars.length + 5;
+                    if (chart.end > maxEnd) { chart.end = maxEnd; chart.start = Math.max(0, maxEnd - span); }
+                    if (chart.end - chart.start < 12) chart.start = Math.max(0, chart.end - 12);
+                }
+                function draw() {
+                    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+                    var w = canvas.clientWidth;
+                    var h = canvas.clientHeight;
+                    if (!w || !h) return;
+                    canvas.width = Math.round(w * dpr);
+                    canvas.height = Math.round(h * dpr);
+                    var ctx = canvas.getContext("2d");
+                    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                    ctx.clearRect(0, 0, w, h);
+                    clampView();
+                    var left = 8, right = w - 64, top = 28, axis = 22, volH = Math.max(36, h * 0.18);
+                    var bottom = h - axis - volH;
+                    var vis = [];
+                    for (var i = Math.floor(chart.start); i < Math.min(bars.length, Math.ceil(chart.end)); i++) vis.push(bars[i]);
+                    if (!vis.length) return;
+                    var min = Infinity, max = -Infinity, maxVol = 0;
+                    vis.forEach(function (c) {
+                        min = Math.min(min, c.l);
+                        max = Math.max(max, c.h);
+                        maxVol = Math.max(maxVol, c.v || 0);
+                    });
+                    var pad = (max - min) * 0.08 || 1;
+                    if (!(chart.priceManual && chart.priceMax > chart.priceMin)) {
+                        min -= pad;
+                        max += pad;
+                    } else {
+                        min = chart.priceMin;
+                        max = chart.priceMax;
+                    }
+                    geom = { left: left, right: right, top: top, bottom: bottom, min: min, max: max };
+                    function y(p) { return top + (max - p) / (max - min) * (bottom - top); }
+                    function xAt(i) { return left + (i - chart.start + 0.5) * (right - left) / (chart.end - chart.start); }
+                    ctx.font = "11px Inter, sans-serif";
+                    ctx.textBaseline = "middle";
+                    ctx.strokeStyle = "#23282f";
+                    ctx.fillStyle = "#8b919a";
+                    for (var g = 0; g < 4; g++) {
+                        var price = max - (max - min) * g / 3;
+                        var yy = y(price);
+                        ctx.beginPath();
+                        ctx.moveTo(left, yy);
+                        ctx.lineTo(right, yy);
+                        ctx.stroke();
+                        ctx.fillText(price.toFixed(price >= 1000 ? 0 : 2), right + 8, yy);
+                    }
+                    function wall(price, color, label) {
+                        if (price == null || price < min || price > max) return;
+                        var yy = y(price);
+                        ctx.save();
+                        ctx.strokeStyle = color;
+                        ctx.setLineDash([4, 3]);
+                        ctx.beginPath();
+                        ctx.moveTo(left, yy);
+                        ctx.lineTo(right, yy);
+                        ctx.stroke();
+                        ctx.setLineDash([]);
+                        ctx.fillStyle = color;
+                        ctx.fillText(label, left + 4, yy - 8);
+                        ctx.restore();
+                    }
+                    wall(callWall, "#c6f135", "Call " + formatStrike(callWall));
+                    wall(putWall, "#ff6b6b", "Put " + formatStrike(putWall));
+                    var slot = (right - left) / (chart.end - chart.start);
+                    var body = Math.max(1, slot * 0.62);
+                    for (var n = Math.floor(chart.start); n < Math.min(bars.length, Math.ceil(chart.end)); n++) {
+                        var c = bars[n];
+                        var up = c.c >= c.o;
+                        var color = up ? "#c6f135" : "#ff6b6b";
+                        var x = xAt(n);
+                        ctx.strokeStyle = color;
+                        ctx.fillStyle = color;
+                        ctx.beginPath();
+                        ctx.moveTo(x, y(c.h));
+                        ctx.lineTo(x, y(c.l));
+                        ctx.stroke();
+                        var y1 = y(Math.max(c.o, c.c));
+                        var y2 = y(Math.min(c.o, c.c));
+                        ctx.fillRect(x - body / 2, y1, body, Math.max(1, y2 - y1));
+                        if (maxVol) {
+                            var vh = (c.v || 0) / maxVol * (volH - 8);
+                            ctx.globalAlpha = 0.45;
+                            ctx.fillRect(x - body / 2, h - axis - vh, body, vh);
+                            ctx.globalAlpha = 1;
+                        }
+                    }
+                    var last = bars[bars.length - 1];
+                    var lastY = y(last.c);
+                    if (lastY >= top && lastY <= bottom) {
+                        ctx.strokeStyle = last.c >= last.o ? "#c6f135" : "#ff6b6b";
+                        ctx.setLineDash([2, 3]);
+                        ctx.beginPath();
+                        ctx.moveTo(left, lastY);
+                        ctx.lineTo(right, lastY);
+                        ctx.stroke();
+                        ctx.setLineDash([]);
+                        ctx.fillStyle = last.c >= last.o ? "#c6f135" : "#ff6b6b";
+                        ctx.fillRect(right, lastY - 8, 58, 16);
+                        ctx.fillStyle = "#111";
+                        ctx.fillText(last.c.toFixed(2), right + 4, lastY);
+                    }
+                    ctx.fillStyle = "#8b919a";
+                    ctx.textBaseline = "alphabetic";
+                    var lastLabelX = -999;
+                    var prevT = null;
+                    var step = Math.max(1, Math.ceil((chart.end - chart.start) / 8));
+                    for (var t = Math.ceil(chart.start); t < Math.min(bars.length, chart.end); t += step) {
+                        var lx = xAt(t);
+                        if (lx - lastLabelX < 76) continue;
+                        ctx.fillText(axisTime(bars[t].t, prevT), lx - 16, h - 6);
+                        lastLabelX = lx;
+                        prevT = bars[t].t;
+                    }
+                    var bar = hover != null ? bars[hover] : last;
+                    if (hover == null) {
+                        for (var b = bars.length - 1; b >= 0; b--) {
+                            if (bars[b].v > 0) { bar = bars[b]; break; }
+                        }
+                    }
+                    if (legend && bar) {
+                        var upBar = bar.c >= bar.o;
+                        legend.innerHTML = '<span>' + formatBarTime(bar.t) + '</span>' +
+                            '<span>O <b class="' + (upBar ? "up" : "down") + '">' + bar.o.toFixed(2) + '</b></span>' +
+                            '<span>H <b>' + bar.h.toFixed(2) + '</b></span>' +
+                            '<span>L <b>' + bar.l.toFixed(2) + '</b></span>' +
+                            '<span>C <b class="' + (upBar ? "up" : "down") + '">' + bar.c.toFixed(2) + '</b></span>' +
+                            '<span>Vol <b>' + formatVol(bar.v) + '</b></span>';
+                    }
+                    if (hover != null && hover >= Math.floor(chart.start) && hover < chart.end) {
+                        var hx = xAt(hover);
+                        var hy = y(bars[hover].c);
+                        ctx.strokeStyle = "#9aa1ab";
+                        ctx.setLineDash([3, 3]);
+                        ctx.beginPath();
+                        ctx.moveTo(hx, top);
+                        ctx.lineTo(hx, h - axis);
+                        ctx.moveTo(left, hy);
+                        ctx.lineTo(right, hy);
+                        ctx.stroke();
+                        ctx.setLineDash([]);
+                        ctx.fillStyle = "#e8eaed";
+                        ctx.fillRect(right, hy - 8, 58, 16);
+                        ctx.fillStyle = "#111";
+                        ctx.textBaseline = "middle";
+                        ctx.fillText(bars[hover].c.toFixed(2), right + 4, hy);
+                    }
+                }
+                function indexAt(clientX) {
+                    var rect = canvas.getBoundingClientRect();
+                    var x = clientX - rect.left;
+                    var left = 8, right = canvas.clientWidth - 64;
+                    var idx = Math.floor(chart.start + (x - left) / Math.max(1, right - left) * (chart.end - chart.start));
+                    if (idx < 0 || idx >= bars.length) return null;
+                    return idx;
+                }
+                function localPoint(e) {
+                    var rect = canvas.getBoundingClientRect();
+                    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+                }
+                function onPriceScale(pt) {
+                    return pt.x >= geom.right && pt.y >= geom.top && pt.y <= geom.bottom;
+                }
+                function priceAt(y) {
+                    var span = geom.bottom - geom.top;
+                    if (!(span > 0)) return geom.max;
+                    return geom.max - (y - geom.top) / span * (geom.max - geom.min);
+                }
+                function setPrice(min, max) {
+                    if (!(max > min)) return;
+                    var span = max - min;
+                    var mid = (max + min) / 2;
+                    var floor = Math.max(Math.abs(mid) * 0.0008, 0.05);
+                    var cap = Math.max(Math.abs(mid) * 8, span);
+                    if (span < floor) {
+                        min = mid - floor / 2;
+                        max = mid + floor / 2;
+                    } else if (span > cap) {
+                        min = mid - cap / 2;
+                        max = mid + cap / 2;
+                    }
+                    chart.priceMin = min;
+                    chart.priceMax = max;
+                    chart.priceManual = true;
+                }
+                canvas.onwheel = function (e) {
+                    e.preventDefault();
+                    var pt = localPoint(e);
+                    if (onPriceScale(pt)) {
+                        var anchor = priceAt(pt.y);
+                        var frac = (geom.bottom - pt.y) / Math.max(1, geom.bottom - geom.top);
+                        var span = geom.max - geom.min;
+                        var next = span * (e.deltaY > 0 ? 1.12 : 0.88);
+                        setPrice(anchor - frac * next, anchor + (1 - frac) * next);
+                    } else {
+                        var left = geom.left, right = geom.right;
+                        var fracT = Math.min(1, Math.max(0, (pt.x - left) / Math.max(1, right - left)));
+                        var spanT = chart.end - chart.start;
+                        var nextT = Math.max(12, Math.min(bars.length + 5, spanT * (e.deltaY > 0 ? 1.18 : 0.82)));
+                        var anchorT = chart.start + fracT * spanT;
+                        chart.start = anchorT - fracT * nextT;
+                        chart.end = chart.start + nextT;
+                    }
+                    draw();
+                };
+                canvas.onpointerdown = function (e) {
+                    var pt = localPoint(e);
+                    if (onPriceScale(pt)) {
+                        var frac = (pt.y - geom.top) / Math.max(1, geom.bottom - geom.top);
+                        drag = { kind: "scale", y: pt.y, min: geom.min, max: geom.max, anchor: priceAt(pt.y), frac: frac };
+                        canvas.style.cursor = "ns-resize";
+                    } else {
+                        drag = { kind: "pan", x: e.clientX, y: pt.y, start: chart.start, end: chart.end, min: geom.min, max: geom.max };
+                    }
+                    canvas.setPointerCapture(e.pointerId);
+                };
+                canvas.onpointermove = function (e) {
+                    var pt = localPoint(e);
+                    hover = onPriceScale(pt) ? null : indexAt(e.clientX);
+                    canvas.style.cursor = onPriceScale(pt) || (drag && drag.kind === "scale") ? "ns-resize" : "crosshair";
+                    if (drag && drag.kind === "scale") {
+                        var plotH = Math.max(1, geom.bottom - geom.top);
+                        var factor = Math.exp((pt.y - drag.y) / (plotH * 0.72));
+                        var span = (drag.max - drag.min) * factor;
+                        var anchor = drag.anchor;
+                        setPrice(anchor - (1 - drag.frac) * span, anchor + drag.frac * span);
+                    } else if (drag && drag.kind === "pan") {
+                        var slot = (geom.right - geom.left) / Math.max(1, drag.end - drag.start);
+                        var shift = (drag.x - e.clientX) / Math.max(1, slot);
+                        var spanT = drag.end - drag.start;
+                        chart.start = drag.start + shift;
+                        chart.end = chart.start + spanT;
+                        var plotH = Math.max(1, geom.bottom - geom.top);
+                        var priceShift = (pt.y - drag.y) / plotH * (drag.max - drag.min);
+                        setPrice(drag.min + priceShift, drag.max + priceShift);
+                    }
+                    draw();
+                };
+                canvas.onpointerup = function () { drag = null; };
+                canvas.onlostpointercapture = function () { drag = null; };
+                canvas.onpointerleave = function () {
+                    if (drag) return;
+                    hover = null;
+                    canvas.style.cursor = "crosshair";
+                    draw();
+                };
+                canvas.ondblclick = function (e) {
+                    var pt = localPoint(e);
+                    chart.priceManual = false;
+                    if (!onPriceScale(pt)) {
+                        var win = defaultWindow(bars.length);
+                        chart.start = win.start;
+                        chart.end = win.end;
+                    }
+                    draw();
+                };
+                chartDraw = draw;
+                draw();
+            }
+
+            document.getElementById("app").addEventListener("click", function (e) {
+                var el = e.target.closest("[data-act]");
+                if (!el) return;
+                var act = el.getAttribute("data-act");
+                if (act === "refresh") refreshAll();
+                if (act === "open") {
+                    state.selected = el.getAttribute("data-sym");
+                    state.expiry = null;
+                    render({ keepSide: true });
+                }
+                if (act === "remove") {
+                    var symRemove = el.getAttribute("data-sym");
+                    var removedCurrent = state.selected === symRemove;
+                    state.symbols = state.symbols.filter(function (s) { return s !== symRemove; });
+                    delete state.cache[symRemove];
+                    if (removedCurrent) state.selected = state.symbols[0] || null;
+                    saveSymbols();
+                    render({ keepSide: true, keepMain: !removedCurrent });
+                }
+                if (act === "menu") {
+                    var menu = document.getElementById("expMenu");
+                    if (menu) menu.hidden = !menu.hidden;
+                }
+                if (act === "expiry") {
+                    state.expiry = el.getAttribute("data-exp") || null;
+                    render({ keepSide: true, keepMain: true });
+                }
+                if (act === "depth") {
+                    state.depth = Number(el.getAttribute("data-n"));
+                    render({ keepSide: true, keepMain: true });
+                }
+                if (act === "interval") {
+                    var iv = el.getAttribute("data-iv");
+                    if (!iv || iv === state.interval || !state.selected) return;
+                    state.interval = iv;
+                    chart.key = "";
+                    ensureSeries(state.selected, iv);
+                }
+            });
+            document.getElementById("app").addEventListener("submit", function (e) {
+                if (e.target.id !== "addForm") return;
+                e.preventDefault();
+                var input = document.getElementById("addInput");
+                var symbol = input.value.trim().toUpperCase();
+                if (!validSymbol(symbol) || state.symbols.indexOf(symbol) !== -1 || state.symbols.length >= MAX) return;
+                state.symbols.push(symbol);
+                saveSymbols();
+                loadSymbol(symbol);
+            });
+            document.addEventListener("click", function (e) {
+                var menu = document.getElementById("expMenu");
+                if (!menu || menu.hidden) return;
+                if (!e.target.closest(".expiry")) menu.hidden = true;
+            });
+            window.addEventListener("resize", function () { chartDraw(); });
+
+            hydrate();
+            render();
+            refreshAll();
+        })();
+    </script>
+</body>
+</html>

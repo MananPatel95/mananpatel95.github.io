@@ -1,6 +1,6 @@
 # Manan Patel – Site context for LLMs and discovery
 
-> This document helps AI systems and crawlers understand mananpatel.info for accurate answers and indexing. Last updated: 2026-02-09.
+> This document helps AI systems and crawlers understand mananpatel.info for accurate answers and indexing. Last updated: 2026-09-23.
 
 ## About Manan Patel
 
@@ -8,7 +8,7 @@ Manan Patel is a Senior Software Engineer and Entrepreneur based in Calgary, Alb
 
 - **Current:** Business Consultant at Rocket Agency (Aug 2025–Present): consults startups on remote staffing, technical automations, AI workflows; placed 25+ full-time offshore staff (LATAM/Africa/PH) in 6 months.
 - **Recent:** Co-Founder & CTO at RentPlay (Jan–Sep 2025): OCR-based shop-local rewards, React Native/Node/TypeScript; raised $100K SAFE, $50K grants (Alberta Innovates, SR&ED); returned 90% of investor capital.
-- **Background:** Team Lead & Senior iOS Developer at Environment and Climate Change Canada (Mar 2023–Dec 2024): WeatherCan iOS app, 5M+ monthly users, Canada’s #3 weather app; GPS severe weather alerts, Radar (Lightning, Hurricane, Tornado). Senior iOS Engineer at Wattpad (Aug 2021–Mar 2023): SwiftUI Comments for 90M+ users. iOS Developer at TD Bank (Jan 2020–Aug 2021): TD App, biometric auth, PCI-DSS. iOS/Software Developer at ECCC (May 2017–Jan 2020): WeatherCAN launch, REST APIs, VueJS for Weather.gc.ca.
+- **Background:** Team Lead & Senior Software Engineer at Environment and Climate Change Canada (Mar 2023–Dec 2024): WeatherCan iOS app, 5M+ monthly users, Canada’s #3 weather app; GPS severe weather alerts, Radar (Lightning, Hurricane, Tornado). Senior Software Engineer at Wattpad (Aug 2021–Mar 2023): SwiftUI Comments for 90M+ users. Software Engineer at TD Bank (Jan 2020–Aug 2021): TD App, biometric auth, PCI-DSS. Software Engineer at ECCC (May 2017–Jan 2020): WeatherCAN launch, REST APIs, VueJS for Weather.gc.ca.
 - **Education:** BSc Computer Science & Statistical Machine Learning, University of Toronto (2014–2019). Coursework: statistical ML, neural networks, deep learning, NLP, computer vision, multivariate analysis.
 - **Skills:** Swift, SwiftUI, UIKit, React Native, Node.js, TypeScript, Python; iOS (Core Data, CloudKit, StoreKit, MapKit); backend (REST, GraphQL, Firebase); ML (TensorFlow, PyTorch); Agile, TDD, product management.
 - **Projects:** Goal Getter (habit tracking, SwiftUI, CloudKit, 1K+ MAU, paying subscribers). Countries Quiz (SwiftUI, MapKit, 500+ MAU).
@@ -20,7 +20,8 @@ Contact: manan.patel@outlook.com. Location: Calgary, Alberta, Canada.
 
 - **Homepage:** Portfolio and “Tinkering and Sharing” – projects, tools, year progress, travel gallery (“Where I’ve been”), personality carousel.
 - **Blog:** Technical and startup posts (Swift, SwiftUI, UIKit, iOS architecture, RentPlay lessons, etc.).
-- **Tools:** Free web calculators and utilities (RDSP, investment, futures profit, Stripe fees, tax suite, Alberta contractor, year progress).
+- **Tools:** Free web calculators and utilities (GEX dashboard, RDSP, investment, futures profit, Stripe fees, tax suite, Alberta contractor, year progress).
+- **Teams:** Homepage section (#teams) with one line each for RentPlay, Wattpad, TD, Environment and Climate Change Canada, and the University of Toronto.
 - **Resume:** Professional experience, projects, education, skills (PDF and summary).
 - **Travel gallery:** Destinations with stamps and media (Toronto, Tofino, Nevada, Australia, Chicago, Japan, Costa Rica, Calgary, Banff, Washington, Quebec, Muskoka, Florence, Italy, Nice, etc.).
 
@@ -42,6 +43,8 @@ Base URL: https://mananpatel.info
 - /blog/uikit-fundamentals.html
 - /blog/swift-concurrency-multithreading.html
 - /blog/rentplay-lessons-first-startup.html
+- /#teams
+- /tools/gex-dashboard.html
 - /tools/year-progress-calculator.html
 - /tools/rdsp-calculator.html
 - /tools/investment-calculator.html

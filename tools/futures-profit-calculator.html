@@ -7,1112 +7,934 @@
     <meta name="description" content="Calculate profit and loss for futures contracts including ES, NQ, MNQ, YM, RTY, CL, MCL, GC, MGC and more. Free futures trading calculator with commission calculations.">
     <meta name="keywords" content="futures profit calculator, futures p&l calculator, futures trading calculator, es futures calculator, nq futures calculator, cl crude oil futures, mcl micro crude, gc gold futures, mgc micro gold">
     <meta name="author" content="Manan Patel">
-    
+    <link rel="canonical" href="https://mananpatel.info/tools/futures-profit-calculator.html">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    
     <style>
+        * { box-sizing: border-box; }
+        html, body { margin: 0; height: 100%; background: #070809; color: #f3f4f6; }
         body {
-            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-            background: #f8fafc;
-            min-height: 100vh;
-            color: #111827;
-            line-height: 1.6;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        
-        body.dark {
-            background: #121212;
-            color: #E5E7EB;
-        }
-        
-        .header-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .theme-toggle {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            background: white;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
-            font-size: 14px;
-            color: #111827;
-            transition: all 0.3s;
-        }
-        
-        body.dark .theme-toggle {
-            background: #1F2937;
-            border-color: #374151;
-            color: #E5E7EB;
-        }
-        
-        .theme-toggle:hover {
-            background: #f8f9fa;
-        }
-        
-        body.dark .theme-toggle:hover {
-            background: #374151;
-        }
-        
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            color: #6B7280;
-            text-decoration: none;
-            font-size: 14px;
-            transition: color 0.3s;
-            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
-        }
-        
-        body.dark .back-link {
-            color: #9CA3AF;
-        }
-        
-        .back-link:hover {
-            color: #111827;
-        }
-        
-        body.dark .back-link:hover {
-            color: #E5E7EB;
-        }
-        
-        .container {
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            border: 1px solid #e5e7eb;
-            transition: background-color 0.3s, border-color 0.3s;
-        }
-        
-        body.dark .container {
-            background: #1F2937;
-            border-color: #374151;
-        }
-        
-        h1 {
-            color: #1f2937;
-            text-align: center;
-            margin-bottom: 10px;
-            font-size: 32px;
-            font-weight: 700;
-            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
-            transition: color 0.3s;
-        }
-        
-        body.dark h1 {
-            color: #E5E7EB;
-        }
-        
-        .subtitle {
-            text-align: center;
-            color: #6B7280;
-            margin-bottom: 30px;
-            font-size: 16px;
-            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
-            transition: color 0.3s;
-        }
-        
-        body.dark .subtitle {
-            color: #9CA3AF;
-        }
-        
-        .input-section {
-            background: #f8f9fa;
-            padding: 25px;
-            border-radius: 10px;
-            margin-bottom: 25px;
-            transition: background-color 0.3s;
-        }
-        
-        body.dark .input-section {
-            background: #111827;
-        }
-        
-        .input-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            align-items: start;
-        }
-
-        .symbol-contracts-row {
-            grid-column: 1 / -1;
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) minmax(11.5rem, 13.5rem);
-            gap: 24px;
-            align-items: start;
-        }
-        
-        .input-group {
-            margin-bottom: 0;
-            margin-top: 0;
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            min-width: 0;
-        }
-
-        .input-group.contract-symbol select {
-            min-width: 0;
-        }
-        
-        .input-group.full-width {
-            grid-column: 1 / -1;
-            margin-bottom: 0;
-        }
-        
-        .input-group.exit-price {
-            margin-top: 0;
-            margin-left: 0;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            margin-top: 0;
-            font-weight: 600;
-            color: #374151;
-            font-size: 14px;
-            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
-            transition: color 0.3s;
-        }
-        
-        body.dark label {
-            color: #9CA3AF;
-        }
-        
-        input, select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s, color 0.3s;
-            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
-            background: white;
-            color: #111827;
-            box-sizing: border-box;
-            margin: 0;
-        }
-        
-        body.dark input, body.dark select {
-            background: #1F2937;
-            border-color: #374151;
-            color: #E5E7EB;
-        }
-        
-        input:focus, select:focus {
-            outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-        
-        body.dark input:focus, body.dark select:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-        }
-        
-        .position-buttons {
-            display: flex;
-            gap: 12px;
-        }
-        
-        .position-btn {
-            flex: 1;
-            padding: 12px;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            background: white;
-            color: #111827;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
-            font-size: 14px;
-        }
-        
-        body.dark .position-btn {
-            background: #1F2937;
-            border-color: #374151;
-            color: #E5E7EB;
-        }
-        
-        .position-btn:hover {
-            background: #f8f9fa;
-        }
-        
-        body.dark .position-btn:hover {
-            background: #374151;
-        }
-        
-        .position-btn.active.long {
-            background: #10b981;
-            color: white;
-            border-color: #10b981;
-        }
-        
-        .position-btn.active.short {
-            background: #ef4444;
-            color: white;
-            border-color: #ef4444;
-        }
-        
-        .contract-specs {
-            background: #f8f9fa;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 10px;
-            transition: background-color 0.3s, border-color 0.3s;
-        }
-        
-        body.dark .contract-specs {
-            background: #1F2937;
-            border-color: #374151;
-        }
-        
-        .contract-specs .label {
-            font-size: 12px;
-            color: #6B7280;
-            margin-bottom: 4px;
-            transition: color 0.3s;
-        }
-        
-        body.dark .contract-specs .label {
-            color: #9CA3AF;
-        }
-        
-        .contract-specs .value {
-            font-size: 14px;
-            color: #111827;
-            font-weight: 600;
-            transition: color 0.3s;
-        }
-        
-        body.dark .contract-specs .value {
-            color: #E5E7EB;
-        }
-        
-        .results {
-            background: #f8f9fa;
-            color: #111827;
-            padding: 30px;
-            border-radius: 12px;
-            margin-top: 25px;
-            border: 1px solid #e5e7eb;
-            transition: background-color 0.3s, border-color 0.3s, color 0.3s;
-        }
-        
-        body.dark .results {
-            background: #111827;
-            border-color: #374151;
-            color: #E5E7EB;
-        }
-        
-        .results-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 25px;
-        }
-        
-        .results-header h2 {
-            margin: 0;
-            font-size: 20px;
-            font-weight: 700;
-            color: #111827;
-            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
-            transition: color 0.3s;
-        }
-        
-        body.dark .results-header h2 {
-            color: #E5E7EB;
-        }
-        
-        .results-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .result-item {
-            background: rgba(0, 0, 0, 0.05);
-            padding: 20px;
-            border-radius: 8px;
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            transition: background-color 0.3s, border-color 0.3s;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        body.dark .result-item {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .result-item .label {
-            font-size: 12px;
-            color: #6B7280;
-            margin-bottom: 8px;
-            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
-            transition: color 0.3s;
-        }
-        
-        body.dark .result-item .label {
-            color: #9CA3AF;
-        }
-        
-        .result-item .value {
-            font-size: 24px;
-            font-weight: 700;
-            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
-            text-align: right;
-            letter-spacing: 0.5px;
-        }
-        
-        .result-item .value.profit {
-            color: #10b981;
-        }
-        
-        .result-item .value.loss {
-            color: #ef4444;
-        }
-        
-        .result-item .value.neutral {
-            color: #111827;
-            transition: color 0.3s;
-        }
-        
-        body.dark .result-item .value.neutral {
-            color: #E5E7EB;
-        }
-        
-        .trade-summary {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
-            font-size: 14px;
-            color: #6B7280;
-            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
-            transition: border-color 0.3s, color 0.3s;
-        }
-        
-        body.dark .trade-summary {
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-            color: #9CA3AF;
-        }
-        
-        .disclaimer {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            padding: 20px;
-            margin-top: 25px;
-            color: #6c757d;
-            font-size: 13px;
-            line-height: 1.5;
-            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
-            transition: background-color 0.3s, border-color 0.3s, color 0.3s;
-        }
-        
-        body.dark .disclaimer {
-            background: #1F2937;
-            border-color: #374151;
-            color: #9CA3AF;
-        }
-
-        .last-price-row {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid #e5e7eb;
-        }
-
-        body.dark .last-price-row {
-            border-top-color: #374151;
-        }
-
-        .last-price-meta {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .last-price-value {
-            font-size: 16px;
-            font-weight: 700;
-            color: #111827;
-        }
-
-        body.dark .last-price-value {
-            color: #E5E7EB;
-        }
-
-        .last-price-change.up {
-            color: #10b981;
-        }
-
-        .last-price-change.down {
-            color: #ef4444;
-        }
-
-        .last-price-change.flat {
-            color: #6B7280;
-        }
-
-        .last-price-asof {
-            font-size: 12px;
-            color: #6B7280;
-        }
-
-        body.dark .last-price-asof {
-            color: #9CA3AF;
-        }
-
-        .last-price-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .price-action-btn {
-            padding: 8px 12px;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            background: white;
-            color: #111827;
-            font-family: inherit;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        body.dark .price-action-btn {
-            background: #111827;
-            border-color: #374151;
-            color: #E5E7EB;
-        }
-
-        .price-action-btn:hover:not(:disabled) {
-            border-color: #3b82f6;
-            color: #3b82f6;
-        }
-
-        .price-action-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .daily-prices {
-            margin-top: 16px;
-        }
-
-        .daily-prices-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            gap: 12px;
-            margin-bottom: 8px;
-        }
-
-        .daily-prices-header .label {
-            font-size: 12px;
-            color: #6B7280;
-            font-weight: 600;
-        }
-
-        body.dark .daily-prices-header .label {
-            color: #9CA3AF;
-        }
-
-        .daily-prices-header .asof {
-            font-size: 11px;
-            color: #9CA3AF;
-        }
-
-        .daily-prices-wrap {
-            overflow-x: auto;
-        }
-
-        .daily-prices-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-        }
-
-        .daily-prices-table th,
-        .daily-prices-table td {
-            text-align: left;
-            padding: 8px 6px;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        body.dark .daily-prices-table th,
-        body.dark .daily-prices-table td {
-            border-bottom-color: #374151;
-        }
-
-        .daily-prices-table th {
-            font-size: 11px;
-            color: #6B7280;
-            font-weight: 600;
-        }
-
-        body.dark .daily-prices-table th {
-            color: #9CA3AF;
-        }
-
-        .daily-prices-table td {
-            color: #111827;
-        }
-
-        body.dark .daily-prices-table td {
-            color: #E5E7EB;
-        }
-
-        .daily-prices-table td.num,
-        .daily-prices-table th.num {
-            text-align: right;
+            font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             font-variant-numeric: tabular-nums;
         }
-
-        .daily-prices-table tbody tr {
-            cursor: pointer;
+        button, input, select { font: inherit; color: inherit; }
+        button { cursor: pointer; }
+        .app {
+            display: grid;
+            grid-template-columns: 320px minmax(0, 1fr);
+            height: 100vh;
+            background: #0c0e12;
         }
-
-        .daily-prices-table tbody tr:hover {
-            background: rgba(59, 130, 246, 0.08);
+        aside {
+            min-height: 0;
+            overflow: auto;
+            border-right: 1px solid #23272e;
+            padding: 22px 16px 24px;
         }
-
-        .daily-prices-table tbody tr.active {
-            background: rgba(59, 130, 246, 0.12);
+        .brand { margin: 0; font-size: 1.15rem; font-weight: 700; letter-spacing: -0.03em; }
+        .home { display: inline-block; margin: 8px 0 18px; color: #c5cad1; text-decoration: none; font-size: 0.88rem; }
+        .home:hover { color: #fff; }
+        .kicker { margin: 0; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: #9aa1ab; }
+        .ticker {
+            display: flex; align-items: center; justify-content: space-between; gap: 12px;
+            width: 100%; text-align: left; background: none; border: 0;
+            padding: 8px; border-radius: 10px; margin: 0 -8px;
         }
-        
-        @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-            
-            .container {
-                padding: 20px;
-            }
-            
-            .header-controls {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 12px;
-            }
-            
-            .theme-toggle {
-                align-self: flex-end;
-            }
-            
-            h1 {
-                font-size: 24px;
-            }
-            
-            .input-grid,
-            .symbol-contracts-row {
-                grid-template-columns: 1fr;
-            }
-            
-            .results-grid {
-                grid-template-columns: 1fr;
-            }
+        .ticker.on { background: #171b20; }
+        .t-sym { font-weight: 750; font-size: 1.02rem; }
+        .t-sub { margin-top: 3px; color: #9aa1ab; font-size: 0.82rem; }
+        .t-quote { text-align: right; }
+        .t-px { font-weight: 650; }
+        .up { color: #b6ef3c; }
+        .down { color: #ff5d5d; }
+        .muted { color: #9aa1ab; }
+        main {
+            min-height: 0; overflow: hidden;
+            display: flex; flex-direction: column;
+            padding: 22px 28px 18px;
+        }
+        .stage {
+            display: grid;
+            grid-template-columns: minmax(0, 1.65fr) minmax(300px, 0.72fr);
+            gap: 28px;
+            flex: 1;
+            min-height: 0;
+        }
+        .col { min-height: 0; min-width: 0; display: flex; flex-direction: column; }
+        .pnl { overflow: auto; padding-right: 4px; }
+        .pnl h2 { margin-top: 6px; }
+        .head { display: flex; justify-content: space-between; gap: 16px; align-items: flex-end; }
+        .sym { margin: 2px 0 0; font-size: 2.4rem; font-weight: 700; letter-spacing: -0.04em; line-height: 1; }
+        .quote { text-align: right; }
+        .px { font-size: 1.55rem; font-weight: 700; letter-spacing: -0.03em; }
+        .chg { margin-top: 4px; font-weight: 650; }
+        .meta { margin: 10px 0 0; color: #9aa1ab; font-size: 0.92rem; }
+        h2 { margin: 0; font-size: 1.15rem; letter-spacing: -0.03em; }
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            align-items: end;
+            margin-top: 16px;
+        }
+        .controls .wide { grid-column: 1 / -1; }
+        label { display: block; margin: 0 0 6px; color: #9aa1ab; font-size: 0.78rem; }
+        input, select {
+            width: 100%; background: #15181d; border: 1px solid #2a2f36; border-radius: 10px;
+            padding: 11px 12px; outline: none;
+        }
+        input:focus, select:focus { border-color: #4b5563; }
+        .sides { display: flex; gap: 6px; }
+        .sides button {
+            flex: 1; border: 0; background: #171b20; color: #c5cad1;
+            border-radius: 10px; padding: 11px 8px; font-weight: 650;
+        }
+        .sides button.on.long { background: #c6f135; color: #111; }
+        .sides button.on.short { background: #ff6b6b; color: #111; }
+        .uses { display: flex; gap: 6px; }
+        .uses button {
+            border: 0; background: #171b20; color: #d5d8de; border-radius: 10px; padding: 11px 12px;
+        }
+        .uses button:disabled { color: #6b7280; cursor: default; }
+        .chart-toolbar { display: flex; justify-content: space-between; gap: 12px; align-items: flex-end; margin-top: 18px; }
+        .chart-note { margin: 4px 0 0; color: #9aa1ab; font-size: 0.82rem; }
+        .pick {
+            position: absolute; z-index: 4;
+            background: #171b20; border: 1px solid #2a2f36; border-radius: 10px;
+            padding: 8px; min-width: 132px;
+            box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+        }
+        .pick[hidden] { display: none; }
+        .pick-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+        .pick-top span { font-weight: 700; }
+        .pick-top button, .pick-actions button { border: 0; border-radius: 8px; }
+        .pick-top button { background: none; color: #9aa1ab; padding: 0 4px; font-size: 1rem; line-height: 1; }
+        .pick-actions { display: flex; gap: 6px; }
+        .pick-actions button { flex: 1; padding: 8px 10px; font-weight: 650; background: #111418; color: #f3f4f6; }
+        #pickEntry { background: #c6f135; color: #111; }
+        #pickExit { background: #ff6b6b; color: #111; }
+        .intervals { display: flex; gap: 4px; }
+        .intervals button { background: #171b20; border: 0; color: #c5cad1; border-radius: 8px; padding: 6px 9px; }
+        .intervals button.on { background: #c6f135; color: #111; font-weight: 750; }
+        .chart-box { position: relative; flex: 1; min-height: 280px; margin-top: 8px; }
+        .chart-legend {
+            position: absolute; z-index: 2; left: 10px; top: 8px; right: 72px;
+            display: flex; flex-wrap: wrap; gap: 8px 12px;
+            font-size: 12px; color: #d5d8de; pointer-events: none;
+        }
+        .chart-legend b { font-weight: 650; }
+        canvas { width: 100%; height: 100%; display: block; cursor: crosshair; touch-action: none; }
+        .stats {
+            display: grid; grid-template-columns: 1fr 1fr;
+            margin-top: 18px; border-top: 1px solid #2a2f36; border-bottom: 1px solid #2a2f36;
+        }
+        .stat { padding: 14px 10px; border-top: 1px solid #2a2f36; }
+        .stat:nth-child(odd) { border-right: 1px solid #2a2f36; }
+        .stat:nth-child(-n+2) { border-top: 0; }
+        .stat p { margin: 0; color: #9aa1ab; font-size: 0.88rem; }
+        .stat strong { display: block; margin-top: 8px; font-size: 1.35rem; font-weight: 700; }
+        .summary { margin: 14px 0 0; color: #d5d8de; }
+        .method { margin-top: 18px; border-top: 1px solid #2a2f36; }
+        .method summary { cursor: pointer; font-weight: 700; padding: 14px 0; }
+        .method p { margin: 0 0 12px; color: #b7bdc6; line-height: 1.5; font-size: 0.92rem; }
+        @media (max-width: 980px) {
+            .app { grid-template-columns: 1fr; height: auto; }
+            aside { border-right: 0; border-bottom: 1px solid #23272e; max-height: 280px; }
+            main { overflow: auto; }
+            .stage { grid-template-columns: 1fr; }
+            .chart-box { height: 420px; flex: none; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header-controls">
-            <a href="../index.html" class="back-link">
-                <span class="material-icons" style="font-size: 18px; margin-right: 8px;">arrow_back</span>
-                Back to Portfolio
-            </a>
-            <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-                <span class="material-icons" id="themeIcon" style="font-size: 18px;">dark_mode</span>
-                <span id="themeText">Dark</span>
-            </button>
+    <div class="app">
+        <aside>
+            <h1 class="brand">Futures P&L</h1>
+            <a class="home" href="../">← Home</a>
+            <p class="kicker">Contracts</p>
+            <div id="contractList"></div>
+        </aside>
+        <main>
+            <div class="stage">
+                <div class="col">
+                    <p class="kicker">Selected</p>
+                    <div class="head">
+                        <div>
+                            <div class="sym" id="symTitle">MNQ</div>
+                            <p class="meta" id="specLine">Multiplier $2 · tick $0.50</p>
         </div>
-        
-        <h1>📈 Futures Profit Calculator</h1>
-        <p class="subtitle">Calculate profit and loss for futures contracts with commission calculations</p>
-        
-        <div class="input-section">
-            <div class="input-grid">
-                <div class="symbol-contracts-row">
-                    <div class="input-group contract-symbol">
-                        <label for="symbol">Contract Symbol</label>
-                        <select id="symbol" autocomplete="off">
-                            <option value="MNQ" selected>MNQ - Micro E-mini NASDAQ-100</option>
-                            <option value="NQ">NQ - E-mini NASDAQ-100</option>
-                            <option value="MES">MES - Micro E-mini S&P 500</option>
-                            <option value="ES">ES - E-mini S&P 500</option>
-                            <option value="YM">YM - E-mini Dow</option>
-                            <option value="MYM">MYM - Micro E-mini Dow</option>
-                            <option value="RTY">RTY - E-mini Russell 2000</option>
-                            <option value="M2K">M2K - Micro E-mini Russell 2000</option>
-                            <option value="CL">CL - Crude Oil (WTI)</option>
-                            <option value="MCL">MCL - Micro WTI Crude Oil</option>
-                            <option value="GC">GC - Gold</option>
-                            <option value="MGC">MGC - Micro Gold</option>
-                        </select>
+                        <div class="quote">
+                            <div class="px" id="lastPx">—</div>
+                            <div class="chg muted" id="lastChg"></div>
                     </div>
-                    
-                    <div class="input-group contract-count">
-                        <label for="contracts">Number of Contracts</label>
-                        <input type="number" id="contracts" value="1" min="1" step="1">
+                    </div>
+                    <div class="chart-toolbar">
+                        <div>
+                            <h2>Price</h2>
+                            <p class="chart-note">Click a price for entry or exit · drag to pan · double-click resets</p>
+                </div>
+                        <div class="intervals" id="intervals">
+                            <button type="button" data-iv="5m" class="on">5m</button>
+                            <button type="button" data-iv="15m">15m</button>
+                            <button type="button" data-iv="1h">1H</button>
+                            <button type="button" data-iv="1d">1D</button>
                     </div>
                 </div>
-                
-                <div class="input-group full-width">
-                    <label>Position Type</label>
-                    <div class="position-buttons">
-                        <button class="position-btn active long" data-position="long">Long</button>
-                        <button class="position-btn short" data-position="short">Short</button>
-                    </div>
+                    <div class="chart-box">
+                        <div class="chart-legend" id="chartLegend"></div>
+                        <canvas id="candles"></canvas>
+                        <div class="pick" id="pick" hidden>
+                            <div class="pick-top">
+                                <span id="pickPx"></span>
+                                <button type="button" id="pickClose" aria-label="Close">×</button>
                 </div>
-                
-                <div class="input-group">
-                    <label for="entryPrice">Entry Price</label>
-                    <input type="number" id="entryPrice" value="24880" step="0.25">
-                </div>
-                
-                <div class="input-group exit-price">
-                    <label for="exitPrice">Exit Price</label>
-                    <input type="number" id="exitPrice" value="25000" step="0.25">
+                            <div class="pick-actions">
+                                <button type="button" id="pickEntry">Entry</button>
+                                <button type="button" id="pickExit">Exit</button>
                 </div>
             </div>
-            
-            <div class="contract-specs">
-                <div class="label">Contract Specifications</div>
-                <div class="value" id="contractSpecs">Multiplier: $2 | Tick: $0.50</div>
-                <div class="last-price-row">
-                    <div class="last-price-meta">
-                        <div class="last-price-value" id="lastPriceValue">Last price: loading…</div>
-                        <div class="last-price-asof" id="lastPriceAsOf">Delayed weekday snapshot</div>
                     </div>
-                    <div class="last-price-actions">
-                        <button type="button" class="price-action-btn" id="useAsEntry" disabled>Use as entry</button>
-                        <button type="button" class="price-action-btn" id="useAsExit" disabled>Use as exit</button>
                     </div>
+                <div class="col pnl">
+                    <p class="kicker">Calculator</p>
+                    <h2>Futures profit</h2>
+                    <div class="controls">
+                        <div>
+                            <label for="contracts">Contracts</label>
+                            <input type="number" id="contracts" value="1" min="1" step="1">
                 </div>
+                        <div>
+                            <label>Side</label>
+                            <div class="sides">
+                                <button type="button" class="long on" data-position="long">Long</button>
+                                <button type="button" class="short" data-position="short">Short</button>
             </div>
-
-            <div class="daily-prices">
-                <div class="daily-prices-header">
-                    <div class="label">Daily prices</div>
-                    <div class="asof" id="pricesUpdatedAt"></div>
                 </div>
-                <div class="daily-prices-wrap">
-                    <table class="daily-prices-table">
-                        <thead>
-                            <tr>
-                                <th>Contract</th>
-                                <th class="num">Last</th>
-                                <th class="num">Change</th>
-                            </tr>
-                        </thead>
-                        <tbody id="pricesTableBody">
-                            <tr><td colspan="3">Loading delayed quotes…</td></tr>
-                        </tbody>
-                    </table>
+                        <div>
+                            <label for="entryPrice">Entry</label>
+                            <input type="number" id="entryPrice" value="24880" step="0.25">
                 </div>
+                        <div>
+                            <label for="exitPrice">Exit</label>
+                            <input type="number" id="exitPrice" value="25000" step="0.25">
             </div>
+                        <div class="wide">
+                            <label>Last</label>
+                            <div class="uses">
+                                <button type="button" id="useAsEntry" disabled>Use as entry</button>
+                                <button type="button" id="useAsExit" disabled>Use as exit</button>
         </div>
-        
-        <div class="results">
-            <div class="results-header">
-                <span style="font-size: 24px;" id="trendIcon">📈</span>
-                <h2>Trade Results</h2>
             </div>
-            
-            <div class="results-grid">
-                <div class="result-item">
-                    <div class="label">Net P&L (After Commissions)</div>
-                    <div class="value" id="netProfit">$0.00</div>
                 </div>
-                
-                <div class="result-item">
-                    <div class="label">Gross P&L (Before Commissions)</div>
-                    <div class="value" id="grossProfit">$0.00</div>
+                    <div class="stats">
+                        <div class="stat"><p>Net P&L</p><strong id="netProfit">$0.00</strong></div>
+                        <div class="stat"><p>Gross P&L</p><strong id="grossProfit">$0.00</strong></div>
+                        <div class="stat"><p>Per contract</p><strong id="netProfitPerContract">$0.00</strong></div>
+                        <div class="stat"><p>Commissions</p><strong id="totalCommission" class="down">$0.00</strong></div>
+                        <div class="stat"><p>Points</p><strong id="pointDifference">0</strong></div>
+                        <div class="stat"><p>Ticks</p><strong id="ticks">0</strong></div>
                 </div>
-                
-                <div class="result-item">
-                    <div class="label">Net P&L Per Contract</div>
-                    <div class="value" id="netProfitPerContract">$0.00</div>
+                    <p class="summary" id="tradeSummary"></p>
+                    <details class="method">
+                        <summary>Method</summary>
+                        <p>P&L is the point difference times the contract multiplier times the number of contracts. Commission is $1 per contract per side, $2 round trip. Entry and exit are the lines on the chart. Prices in the list are a delayed weekday snapshot. Candles come from Yahoo and are kept for 12 hours so reloading does not ask again. This is a calculator, not a live quote or a trade signal.</p>
+                    </details>
                 </div>
-                
-                <div class="result-item">
-                    <div class="label">Total Commissions</div>
-                    <div class="value loss" id="totalCommission">-$0.00</div>
                 </div>
-                
-                <div class="result-item">
-                    <div class="label">Point Difference</div>
-                    <div class="value neutral" id="pointDifference">+0.00 points</div>
+        </main>
                 </div>
-                
-                <div class="result-item">
-                    <div class="label">Number of Ticks</div>
-                    <div class="value neutral" id="ticks">0 ticks</div>
-                </div>
-            </div>
-            
-            <div class="trade-summary" id="tradeSummary">
-                📈 LONG 1 MNQ @ 24880 → 25000
-            </div>
-        </div>
-        
-        <div class="disclaimer">
-            <strong>⚠️ Disclaimer:</strong> This calculator is for informational purposes only. Last prices are delayed snapshots updated once each weekday and are not live quotes. Commission rates may vary by broker. The default commission rate is $1 per contract per side ($2 round trip). Always verify current contract specifications and commission rates with your broker before trading.
-        </div>
-    </div>
-
     <script>
-        // Theme toggle functionality
-        const themeToggle = document.getElementById('themeToggle');
-        const themeIcon = document.getElementById('themeIcon');
-        const themeText = document.getElementById('themeText');
-        
-        // Check for saved theme preference or default to light mode
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'dark') {
-            document.body.classList.add('dark');
-            themeIcon.textContent = 'light_mode';
-            themeText.textContent = 'Light';
-        } else {
-            // Default to light mode
-            document.body.classList.remove('dark');
-            themeIcon.textContent = 'dark_mode';
-            themeText.textContent = 'Dark';
-        }
-        
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark');
-            const isDark = document.body.classList.contains('dark');
-            
-            if (isDark) {
-                localStorage.setItem('theme', 'dark');
-                themeIcon.textContent = 'light_mode';
-                themeText.textContent = 'Light';
-            } else {
-                localStorage.setItem('theme', 'light');
-                themeIcon.textContent = 'dark_mode';
-                themeText.textContent = 'Dark';
-            }
-        });
-        
-        // Contract specifications
-        const contractSpecs = {
-            'ES': { name: 'E-mini S&P 500', multiplier: 50, tickSize: 0.25, tickValue: 12.50 },
-            'MES': { name: 'Micro E-mini S&P 500', multiplier: 5, tickSize: 0.25, tickValue: 1.25 },
-            'NQ': { name: 'E-mini NASDAQ-100', multiplier: 20, tickSize: 0.25, tickValue: 5.00 },
-            'MNQ': { name: 'Micro E-mini NASDAQ-100', multiplier: 2, tickSize: 0.25, tickValue: 0.50 },
-            'YM': { name: 'E-mini Dow', multiplier: 5, tickSize: 1, tickValue: 5.00 },
-            'MYM': { name: 'Micro E-mini Dow', multiplier: 0.5, tickSize: 1, tickValue: 0.50 },
-            'RTY': { name: 'E-mini Russell 2000', multiplier: 50, tickSize: 0.10, tickValue: 5.00 },
-            'M2K': { name: 'Micro E-mini Russell 2000', multiplier: 5, tickSize: 0.10, tickValue: 0.50 },
-            'CL': { name: 'Crude Oil (WTI)', multiplier: 1000, tickSize: 0.01, tickValue: 10.00 },
-            'MCL': { name: 'Micro WTI Crude Oil', multiplier: 100, tickSize: 0.01, tickValue: 1.00 },
-            'GC': { name: 'Gold', multiplier: 100, tickSize: 0.10, tickValue: 10.00 },
-            'MGC': { name: 'Micro Gold', multiplier: 10, tickSize: 0.10, tickValue: 1.00 },
+        var contractSpecs = {
+            ES: { name: 'E-mini S&P 500', multiplier: 50, tickSize: 0.25, tickValue: 12.50, yahoo: 'ES=F' },
+            MES: { name: 'Micro E-mini S&P 500', multiplier: 5, tickSize: 0.25, tickValue: 1.25, yahoo: 'MES=F' },
+            NQ: { name: 'E-mini NASDAQ-100', multiplier: 20, tickSize: 0.25, tickValue: 5.00, yahoo: 'NQ=F' },
+            MNQ: { name: 'Micro E-mini NASDAQ-100', multiplier: 2, tickSize: 0.25, tickValue: 0.50, yahoo: 'MNQ=F' },
+            YM: { name: 'E-mini Dow', multiplier: 5, tickSize: 1, tickValue: 5.00, yahoo: 'YM=F' },
+            MYM: { name: 'Micro E-mini Dow', multiplier: 0.5, tickSize: 1, tickValue: 0.50, yahoo: 'MYM=F' },
+            RTY: { name: 'E-mini Russell 2000', multiplier: 50, tickSize: 0.10, tickValue: 5.00, yahoo: 'RTY=F' },
+            M2K: { name: 'Micro E-mini Russell 2000', multiplier: 5, tickSize: 0.10, tickValue: 0.50, yahoo: 'M2K=F' },
+            CL: { name: 'Crude Oil (WTI)', multiplier: 1000, tickSize: 0.01, tickValue: 10.00, yahoo: 'CL=F' },
+            MCL: { name: 'Micro WTI Crude Oil', multiplier: 100, tickSize: 0.01, tickValue: 1.00, yahoo: 'MCL=F' },
+            GC: { name: 'Gold', multiplier: 100, tickSize: 0.10, tickValue: 10.00, yahoo: 'GC=F' },
+            MGC: { name: 'Micro Gold', multiplier: 10, tickSize: 0.10, tickValue: 1.00, yahoo: 'MGC=F' }
         };
-
-        let currentPosition = 'long';
-        let futuresSnapshot = null;
+        var INTERVALS = {
+            '5m': { yahoo: '5m', range: '5d', window: 78 },
+            '15m': { yahoo: '15m', range: '1mo', window: 160 },
+            '1h': { yahoo: '60m', range: '3mo', window: 180 },
+            '1d': { yahoo: '1d', range: '1y', window: 160 }
+        };
+        var CHART_TTL = 12 * 60 * 60 * 1000;
+        var currentPosition = 'long';
+        var pricesTouched = false;
+        var pick = { next: null, price: null, timer: null };
+        var futuresSnapshot = null;
+        var liveQuote = {};
+        var seriesCache = {};
+        var interval = '5m';
+        var chart = { key: '', start: 0, end: 0, priceManual: false, priceMin: 0, priceMax: 0 };
+        var chartDraw = function () {};
+        var memJson = {};
+        var inflight = {};
 
         function priceDecimals(tickSize) {
             if (!tickSize || tickSize >= 1) return 0;
-            const parts = String(tickSize).split('.');
+            var parts = String(tickSize).split('.');
             return parts[1] ? parts[1].length : 0;
         }
-
         function formatContractPrice(symbol, price) {
-            if (price == null || Number.isNaN(Number(price))) return '—';
-            const spec = contractSpecs[symbol];
-            const decimals = spec ? priceDecimals(spec.tickSize) : 2;
-            return Number(price).toLocaleString('en-US', {
-                minimumFractionDigits: decimals,
-                maximumFractionDigits: decimals
-            });
+            var spec = contractSpecs[symbol];
+            var decimals = spec ? priceDecimals(spec.tickSize) : 2;
+            return Number(price).toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
         }
-
         function formatSignedPrice(symbol, value) {
-            if (value == null || Number.isNaN(Number(value))) return '—';
-            const sign = value > 0 ? '+' : value < 0 ? '-' : '';
+            var sign = value > 0 ? '+' : value < 0 ? '-' : '';
             return sign + formatContractPrice(symbol, Math.abs(value));
         }
-
         function formatPercent(value) {
-            if (value == null || Number.isNaN(Number(value))) return '';
-            const sign = value > 0 ? '+' : value < 0 ? '-' : '';
-            return sign + Math.abs(value).toFixed(2) + '%';
+            if (value == null || !isFinite(value)) return '';
+            var sign = value > 0 ? '+' : '';
+            return sign + Number(value).toFixed(2) + '%';
         }
-
-        function formatAsOf(iso) {
-            if (!iso) return '';
-            const date = new Date(iso);
-            if (Number.isNaN(date.getTime())) return '';
-            return date.toLocaleString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                year: 'numeric',
-                hour: 'numeric',
-                minute: '2-digit',
-                timeZoneName: 'short'
-            });
+        function formatCurrency(value) {
+            var sign = value >= 0 ? '+' : '-';
+            var formatted = Math.abs(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            return sign + '$' + formatted;
         }
-
+        function selectedSymbol() { return document.getElementById('symTitle').dataset.symbol || 'MNQ'; }
         function getQuote(symbol) {
-            return futuresSnapshot && futuresSnapshot.prices
-                ? futuresSnapshot.prices[symbol]
-                : null;
+            if (liveQuote[symbol]) return liveQuote[symbol];
+            return futuresSnapshot && futuresSnapshot.prices ? futuresSnapshot.prices[symbol] : null;
         }
-
         function setPriceInput(id, symbol, price) {
             if (price == null) return;
-            const spec = contractSpecs[symbol];
-            const decimals = spec ? priceDecimals(spec.tickSize) : 2;
+            var spec = contractSpecs[symbol];
+            var decimals = spec ? priceDecimals(spec.tickSize) : 2;
             document.getElementById(id).value = Number(price).toFixed(decimals);
         }
-
         function applyLastPrice(which) {
-            const symbol = document.getElementById('symbol').value;
-            const quote = getQuote(symbol);
+            var symbol = selectedSymbol();
+            var quote = getQuote(symbol);
             if (!quote) return;
             if (which === 'entry' || which === 'both') setPriceInput('entryPrice', symbol, quote.price);
             if (which === 'exit' || which === 'both') setPriceInput('exitPrice', symbol, quote.price);
             updateDisplay();
         }
-
-        function updateLastPriceDisplay() {
-            const symbol = document.getElementById('symbol').value;
-            const quote = getQuote(symbol);
-            const valueEl = document.getElementById('lastPriceValue');
-            const asOfEl = document.getElementById('lastPriceAsOf');
-            const entryBtn = document.getElementById('useAsEntry');
-            const exitBtn = document.getElementById('useAsExit');
-
+        function calculateProfit() {
+            var symbol = selectedSymbol();
+            var contracts = parseFloat(document.getElementById('contracts').value) || 0;
+            var entryPrice = parseFloat(document.getElementById('entryPrice').value) || 0;
+            var exitPrice = parseFloat(document.getElementById('exitPrice').value) || 0;
+            var spec = contractSpecs[symbol];
+            if (!spec) return null;
+            var pointDifference = currentPosition === 'long' ? exitPrice - entryPrice : entryPrice - exitPrice;
+            var grossProfit = pointDifference * spec.multiplier * contracts;
+            var totalCommission = contracts * 2;
+            var netProfit = grossProfit - totalCommission;
+            var ticks = Math.abs(pointDifference / spec.tickSize);
+            var netProfitPerContract = pointDifference * spec.multiplier - 2;
+            return { grossProfit: grossProfit, netProfit: netProfit, totalCommission: totalCommission, ticks: ticks, netProfitPerContract: netProfitPerContract, pointDifference: pointDifference, entryPrice: entryPrice, exitPrice: exitPrice };
+        }
+        function paintStat(id, value, positive) {
+            var el = document.getElementById(id);
+            el.textContent = formatCurrency(value);
+            el.className = positive ? 'up' : 'down';
+        }
+        function updateDisplay() {
+            var result = calculateProfit();
+            if (!result) return;
+            var symbol = selectedSymbol();
+            var spec = contractSpecs[symbol];
+            document.getElementById('specLine').textContent = 'Multiplier $' + spec.multiplier + ' · tick $' + spec.tickValue.toFixed(2);
+            paintStat('netProfit', result.netProfit, result.netProfit >= 0);
+            paintStat('grossProfit', result.grossProfit, result.grossProfit >= 0);
+            paintStat('netProfitPerContract', result.netProfitPerContract, result.netProfitPerContract >= 0);
+            paintStat('totalCommission', -result.totalCommission, false);
+            var pointEl = document.getElementById('pointDifference');
+            pointEl.textContent = (result.pointDifference >= 0 ? '+' : '') + result.pointDifference.toFixed(2);
+            pointEl.className = result.pointDifference >= 0 ? 'up' : 'down';
+            document.getElementById('ticks').textContent = result.ticks.toFixed(0);
+            var contracts = document.getElementById('contracts').value;
+            document.getElementById('tradeSummary').textContent = currentPosition.toUpperCase() + ' ' + contracts + ' ' + symbol + '  ' + document.getElementById('entryPrice').value + ' → ' + document.getElementById('exitPrice').value;
+            var quote = getQuote(symbol);
+            var pxEl = document.getElementById('lastPx');
+            var chgEl = document.getElementById('lastChg');
+            var entryBtn = document.getElementById('useAsEntry');
+            var exitBtn = document.getElementById('useAsExit');
             if (!quote) {
-                valueEl.textContent = futuresSnapshot ? 'Last price unavailable' : 'Last price: loading…';
-                asOfEl.textContent = 'Delayed weekday snapshot';
+                pxEl.textContent = futuresSnapshot ? '—' : '…';
+                chgEl.textContent = '';
                 entryBtn.disabled = true;
                 exitBtn.disabled = true;
-                return;
-            }
-
-            const changeClass = quote.change > 0 ? 'up' : quote.change < 0 ? 'down' : 'flat';
-            const changeText = formatSignedPrice(symbol, quote.change);
-            const pctText = formatPercent(quote.changePercent);
-            valueEl.innerHTML = 'Last: ' + formatContractPrice(symbol, quote.price)
-                + ' <span class="last-price-change ' + changeClass + '">' + changeText
-                + (pctText ? ' (' + pctText + ')' : '') + '</span>';
-            asOfEl.textContent = 'Delayed quote' + (quote.asOf ? ' · ' + formatAsOf(quote.asOf) : '');
+            } else {
+                pxEl.textContent = formatContractPrice(symbol, quote.price);
+                chgEl.textContent = formatSignedPrice(symbol, quote.change) + (quote.changePercent != null ? ' (' + formatPercent(quote.changePercent) + ')' : '');
+                chgEl.className = 'chg ' + (quote.change > 0 ? 'up' : quote.change < 0 ? 'down' : 'muted');
             entryBtn.disabled = false;
             exitBtn.disabled = false;
         }
-
-        function renderPricesTable() {
-            const tbody = document.getElementById('pricesTableBody');
-            const updatedEl = document.getElementById('pricesUpdatedAt');
-            const selected = document.getElementById('symbol').value;
-
-            if (!futuresSnapshot || !futuresSnapshot.prices || Object.keys(futuresSnapshot.prices).length === 0) {
-                tbody.innerHTML = '<tr><td colspan="3">Daily prices unavailable</td></tr>';
-                return;
-            }
-
-            updatedEl.textContent = futuresSnapshot.updatedAt
-                ? 'Updated ' + formatAsOf(futuresSnapshot.updatedAt)
-                : '';
-
-            tbody.innerHTML = '';
-            Object.keys(contractSpecs).forEach(symbol => {
-                const quote = getQuote(symbol);
-                const tr = document.createElement('tr');
-                if (symbol === selected) tr.classList.add('active');
-                const changeClass = quote && quote.change > 0 ? 'up' : quote && quote.change < 0 ? 'down' : 'flat';
-                tr.innerHTML =
-                    '<td>' + symbol + ' · ' + contractSpecs[symbol].name + '</td>' +
-                    '<td class="num">' + (quote ? formatContractPrice(symbol, quote.price) : '—') + '</td>' +
-                    '<td class="num last-price-change ' + changeClass + '">' +
-                        (quote ? formatSignedPrice(symbol, quote.change) : '—') +
-                    '</td>';
-                tr.addEventListener('click', () => {
-                    document.getElementById('symbol').value = symbol;
-                    syncPriceInputSteps();
-                    applyLastPrice('both');
-                    renderPricesTable();
-                });
-                tbody.appendChild(tr);
+            renderList();
+            chartDraw();
+        }
+        function renderList() {
+            var list = document.getElementById('contractList');
+            var selected = selectedSymbol();
+            var y = list.scrollTop;
+            list.innerHTML = '';
+            Object.keys(contractSpecs).forEach(function (symbol) {
+                var quote = getQuote(symbol);
+                var btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'ticker' + (symbol === selected ? ' on' : '');
+                var cls = quote && quote.change > 0 ? 'up' : quote && quote.change < 0 ? 'down' : 'muted';
+                btn.innerHTML = '<div><div class="t-sym">' + symbol + '</div><div class="t-sub">' + contractSpecs[symbol].name + '</div></div><div class="t-quote"><div class="t-px">' + (quote ? formatContractPrice(symbol, quote.price) : '—') + '</div><div class="' + cls + '">' + (quote ? formatSignedPrice(symbol, quote.change) : '') + '</div></div>';
+                btn.addEventListener('click', function () { selectSymbol(symbol); });
+                list.appendChild(btn);
             });
+            list.scrollTop = y;
         }
-
-        async function loadDailyPrices() {
-            try {
-                const response = await fetch('data/futures-prices.json', { cache: 'no-store' });
-                if (!response.ok) throw new Error('HTTP ' + response.status);
-                futuresSnapshot = await response.json();
-                applyLastPrice('both');
-                updateLastPriceDisplay();
-                renderPricesTable();
-            } catch (err) {
-                futuresSnapshot = { prices: {} };
-                updateLastPriceDisplay();
-                document.getElementById('pricesTableBody').innerHTML =
-                    '<tr><td colspan="3">Could not load daily prices</td></tr>';
-            }
-        }
-
-        function syncPriceInputSteps() {
-            const symbol = document.getElementById('symbol').value;
-            const spec = contractSpecs[symbol];
-            if (!spec) return;
+        function selectSymbol(symbol) {
+            document.getElementById('symTitle').textContent = symbol;
+            document.getElementById('symTitle').dataset.symbol = symbol;
+            var spec = contractSpecs[symbol];
             document.getElementById('entryPrice').step = String(spec.tickSize);
             document.getElementById('exitPrice').step = String(spec.tickSize);
+            chart.priceManual = false;
+            chart.key = '';
+            pricesTouched = false;
+            pick.next = null;
+            document.getElementById('pick').hidden = true;
+            if (getQuote(symbol)) applyLastPrice('both');
+            else updateDisplay();
+            ensureSeries(symbol, interval);
         }
 
-        function calculateProfit() {
-            const symbol = document.getElementById('symbol').value;
-            const contracts = parseFloat(document.getElementById('contracts').value) || 0;
-            const entryPrice = parseFloat(document.getElementById('entryPrice').value) || 0;
-            const exitPrice = parseFloat(document.getElementById('exitPrice').value) || 0;
-            const position = currentPosition;
-
-            const spec = contractSpecs[symbol];
-            if (!spec) return null;
-
-            const pointDifference = position === 'long' 
-                ? exitPrice - entryPrice 
-                : entryPrice - exitPrice;
-            
-            const grossProfit = pointDifference * spec.multiplier * contracts;
-            const totalCommission = contracts * 2; // $1 to buy + $1 to sell per contract
-            const netProfit = grossProfit - totalCommission;
-            const ticks = Math.abs(pointDifference / spec.tickSize);
-            const profitPerContract = pointDifference * spec.multiplier;
-            const netProfitPerContract = profitPerContract - 2; // $2 commission per contract
-            
-            return { 
-                grossProfit, 
-                netProfit, 
-                totalCommission, 
-                ticks, 
-                profitPerContract, 
-                netProfitPerContract, 
-                pointDifference 
+        function readStore() {
+            try { return JSON.parse(localStorage.getItem('futures-chart-v1')) || {}; }
+            catch (e) { return {}; }
+        }
+        function writeStore(data) {
+            try { localStorage.setItem('futures-chart-v1', JSON.stringify(data)); }
+            catch (e) {}
+        }
+        async function fetchJsonNet(url, attempt) {
+            var res = await fetch('https://r.jina.ai/' + url, {
+                headers: { 'Accept': 'application/json', 'X-Return-Format': 'text', 'X-Cache-Tolerance': '43200' }
+            });
+            if (!res.ok) {
+                if (attempt < 2 && (res.status === 429 || res.status >= 500)) {
+                    await new Promise(function (r) { setTimeout(r, 800 * (attempt + 1)); });
+                    return fetchJsonNet(url, attempt + 1);
+                }
+                throw new Error('Feed unavailable');
+            }
+            var wrapped = await res.json();
+            var data = wrapped.data || {};
+            if (data.httpStatus >= 400 || !data.text) throw new Error('No data');
+            return JSON.parse(data.text);
+        }
+        function fetchJson(url) {
+            if (memJson[url]) return Promise.resolve(memJson[url]);
+            if (inflight[url]) return inflight[url];
+            inflight[url] = fetchJsonNet(url, 0).then(function (data) {
+                memJson[url] = data;
+                delete inflight[url];
+                return data;
+            }, function (err) {
+                delete inflight[url];
+                throw err;
+            });
+            return inflight[url];
+        }
+        function parseYahoo(payload) {
+            var result = payload.chart && payload.chart.result && payload.chart.result[0];
+            if (!result || !result.timestamp) throw new Error('No bars');
+            var meta = result.meta || {};
+            var q = result.indicators.quote[0];
+            var bars = [];
+            for (var i = 0; i < result.timestamp.length; i++) {
+                var o = q.open[i], h = q.high[i], l = q.low[i], c = q.close[i];
+                if (o == null || h == null || l == null || c == null) continue;
+                bars.push({ t: result.timestamp[i] * 1000, o: o, h: h, l: l, c: c, v: q.volume[i] || 0 });
+            }
+            if (bars.length < 2) throw new Error('No bars');
+            var price = Number(meta.regularMarketPrice);
+            var prev = Number(meta.previousClose);
+            return {
+                bars: bars,
+                price: price,
+                change: prev ? price - prev : 0,
+                changePercent: prev ? ((price - prev) / prev) * 100 : 0
             };
         }
-
-        function formatCurrency(value) {
-            const sign = value >= 0 ? '+' : '-';
-            const absValue = Math.abs(value);
-            const formatted = absValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            return sign + '$' + formatted;
+        function cacheKey(symbol, iv) { return symbol + '|' + iv; }
+        function remember(symbol, iv, pack) {
+            var entry = {
+                savedAt: Date.now(),
+                bars: pack.bars,
+                quote: { price: pack.price, change: pack.change, changePercent: pack.changePercent }
+            };
+            seriesCache[cacheKey(symbol, iv)] = entry;
+            var all = readStore();
+            all[cacheKey(symbol, iv)] = entry;
+            writeStore(all);
+            liveQuote[symbol] = entry.quote;
+        }
+        function cachedBars(symbol, iv) {
+            var key = cacheKey(symbol, iv);
+            var hit = seriesCache[key];
+            if (!(hit && Date.now() - hit.savedAt < CHART_TTL)) {
+                var stored = readStore()[key];
+                if (stored && stored.savedAt && Date.now() - stored.savedAt < CHART_TTL && stored.bars) {
+                    seriesCache[key] = stored;
+                    hit = stored;
+                } else hit = null;
+            }
+            if (!hit || !hit.quote) return null;
+            liveQuote[symbol] = hit.quote;
+            return hit.bars;
+        }
+        async function ensureSeries(symbol, iv) {
+            var have = cachedBars(symbol, iv);
+            if (!have) {
+                try {
+                    var spec = INTERVALS[iv];
+                    var yahoo = contractSpecs[symbol].yahoo;
+                    var url = 'https://query1.finance.yahoo.com/v8/finance/chart/' + encodeURIComponent(yahoo) + '?interval=' + spec.yahoo + '&range=' + spec.range + '&includePrePost=false';
+                    var pack = parseYahoo(await fetchJson(url));
+                    remember(symbol, iv, pack);
+                    have = pack.bars;
+                } catch (e) {
+                    have = null;
+                }
+            }
+            if (selectedSymbol() === symbol && interval === iv) {
+                if (!pricesTouched && getQuote(symbol)) applyLastPrice('both');
+                else updateDisplay();
+                bindChart(have || []);
+            }
         }
 
-        function updateDisplay() {
-            const result = calculateProfit();
-            if (!result) return;
-
-            const isProfit = result.netProfit >= 0;
-            const isGrossProfit = result.grossProfit >= 0;
-            const isNetPerContractProfit = result.netProfitPerContract >= 0;
-
-            // Update trend icon
-            document.getElementById('trendIcon').textContent = isProfit ? '📈' : '📉';
-
-            // Update net P&L
-            const netProfitEl = document.getElementById('netProfit');
-            netProfitEl.textContent = formatCurrency(result.netProfit);
-            netProfitEl.className = 'value ' + (isProfit ? 'profit' : 'loss');
-
-            // Update gross P&L
-            const grossProfitEl = document.getElementById('grossProfit');
-            grossProfitEl.textContent = formatCurrency(result.grossProfit);
-            grossProfitEl.className = 'value ' + (isGrossProfit ? 'profit' : 'loss');
-
-            // Update net P&L per contract
-            const netPerContractEl = document.getElementById('netProfitPerContract');
-            netPerContractEl.textContent = formatCurrency(result.netProfitPerContract);
-            netPerContractEl.className = 'value ' + (isNetPerContractProfit ? 'profit' : 'loss');
-
-            // Update commission
-            document.getElementById('totalCommission').textContent = formatCurrency(-result.totalCommission);
-
-            // Update point difference
-            const pointDiffSign = result.pointDifference >= 0 ? '+' : '';
-            document.getElementById('pointDifference').textContent = pointDiffSign + result.pointDifference.toFixed(2) + ' points';
-
-            // Update ticks
-            document.getElementById('ticks').textContent = result.ticks.toFixed(0) + ' ticks';
-
-            // Update trade summary
-            const symbol = document.getElementById('symbol').value;
-            const contracts = document.getElementById('contracts').value;
-            const entryPrice = document.getElementById('entryPrice').value;
-            const exitPrice = document.getElementById('exitPrice').value;
-            const positionIcon = currentPosition === 'long' ? '📈' : '📉';
-            document.getElementById('tradeSummary').textContent = 
-                `${positionIcon} ${currentPosition.toUpperCase()} ${contracts} ${symbol} @ ${entryPrice} → ${exitPrice}`;
-
-            // Update contract specs
-            const spec = contractSpecs[symbol];
-            document.getElementById('contractSpecs').textContent = 
-                `Multiplier: $${spec.multiplier} | Tick: $${spec.tickValue.toFixed(2)}`;
-            updateLastPriceDisplay();
+        function defaultWindow(n) {
+            var span = Math.min(n + 5, INTERVALS[interval].window + 5);
+            return { start: Math.max(0, n + 5 - span), end: n + 5 };
+        }
+        function formatVol(n) {
+            var a = Math.abs(n || 0);
+            if (a >= 1e6) return (a / 1e6).toFixed(2) + 'M';
+            if (a >= 1e3) return (a / 1e3).toFixed(1) + 'K';
+            return String(Math.round(a));
+        }
+        function formatBarTime(ms) {
+            var opts = interval === '1d'
+                ? { month: 'short', day: 'numeric', timeZone: 'America/New_York' }
+                : { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' };
+            return new Date(ms).toLocaleString('en-US', opts);
+        }
+        function axisTime(ms, prev) {
+            var day = new Date(ms).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'America/New_York' });
+            if (interval === '1d') return day;
+            var prevDay = prev == null ? '' : new Date(prev).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'America/New_York' });
+            if (day !== prevDay) return day;
+            return new Date(ms).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' });
+        }
+        function bindChart(bars) {
+            var canvas = document.getElementById('candles');
+            var legend = document.getElementById('chartLegend');
+            var symbol = selectedSymbol();
+            chartDraw = function () { bindChart(bars); };
+            if (!canvas) return;
+            if (!bars || bars.length < 2) {
+                if (legend) legend.textContent = 'Loading candles…';
+                return;
+            }
+            var key = symbol + '|' + interval + '|' + bars.length;
+            if (chart.key !== key) {
+                var win = defaultWindow(bars.length);
+                chart.key = key;
+                chart.start = win.start;
+                chart.end = win.end;
+                chart.priceManual = false;
+            }
+            var hover = null;
+            var drag = null;
+            var geom = { left: 8, right: 0, top: 28, bottom: 0, min: 0, max: 1 };
+            var decimals = priceDecimals(contractSpecs[symbol].tickSize);
+            function pxText(n) { return Number(n).toFixed(decimals); }
+            function clampView() {
+                var span = Math.max(12, chart.end - chart.start);
+                if (chart.start < 0) { chart.start = 0; chart.end = span; }
+                var maxEnd = bars.length + 5;
+                if (chart.end > maxEnd) { chart.end = maxEnd; chart.start = Math.max(0, maxEnd - span); }
+                if (chart.end - chart.start < 12) chart.start = Math.max(0, chart.end - 12);
+            }
+            function draw() {
+                var dpr = Math.min(window.devicePixelRatio || 1, 2);
+                var w = canvas.clientWidth;
+                var h = canvas.clientHeight;
+                if (!w || !h) return;
+                canvas.width = Math.round(w * dpr);
+                canvas.height = Math.round(h * dpr);
+                var ctx = canvas.getContext('2d');
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                ctx.clearRect(0, 0, w, h);
+                clampView();
+                var left = 8, right = w - 72, top = 28, axis = 22, volH = Math.max(36, h * 0.18);
+                var bottom = h - axis - volH;
+                var vis = [];
+                for (var i = Math.floor(chart.start); i < Math.min(bars.length, Math.ceil(chart.end)); i++) vis.push(bars[i]);
+                if (!vis.length) return;
+                var min = Infinity, max = -Infinity, maxVol = 0;
+                vis.forEach(function (c) {
+                    min = Math.min(min, c.l);
+                    max = Math.max(max, c.h);
+                    maxVol = Math.max(maxVol, c.v || 0);
+                });
+                var result = calculateProfit();
+                var anchor = vis[vis.length - 1].c;
+                function near(p) {
+                    return isFinite(p) && p > 0 && Math.abs(p - anchor) / anchor < 0.25;
+                }
+                if (result && !(chart.priceManual && chart.priceMax > chart.priceMin)) {
+                    if (near(result.entryPrice)) {
+                        min = Math.min(min, result.entryPrice);
+                        max = Math.max(max, result.entryPrice);
+                    }
+                    if (near(result.exitPrice)) {
+                        min = Math.min(min, result.exitPrice);
+                        max = Math.max(max, result.exitPrice);
+                    }
+                }
+                var pad = (max - min) * 0.08 || 1;
+                if (!(chart.priceManual && chart.priceMax > chart.priceMin)) {
+                    min -= pad;
+                    max += pad;
+                } else {
+                    min = chart.priceMin;
+                    max = chart.priceMax;
+                }
+                geom = { left: left, right: right, top: top, bottom: bottom, min: min, max: max };
+                function y(p) { return top + (max - p) / (max - min) * (bottom - top); }
+                function xAt(i) { return left + (i - chart.start + 0.5) * (right - left) / (chart.end - chart.start); }
+                ctx.font = '11px Inter, sans-serif';
+                ctx.textBaseline = 'middle';
+                ctx.strokeStyle = '#23282f';
+                ctx.fillStyle = '#8b919a';
+                for (var g = 0; g < 4; g++) {
+                    var price = max - (max - min) * g / 3;
+                    var yy = y(price);
+                    ctx.beginPath();
+                    ctx.moveTo(left, yy);
+                    ctx.lineTo(right, yy);
+                    ctx.stroke();
+                    ctx.fillText(pxText(price), right + 8, yy);
+                }
+                if (result) {
+                    var profit = result.netProfit >= 0;
+                    var ye = y(result.entryPrice);
+                    var yx = y(result.exitPrice);
+                    ctx.fillStyle = profit ? 'rgba(198,241,53,0.10)' : 'rgba(255,107,107,0.12)';
+                    ctx.fillRect(left, Math.min(ye, yx), right - left, Math.abs(yx - ye));
+                }
+                var slot = (right - left) / (chart.end - chart.start);
+                var body = Math.max(1, slot * 0.62);
+                for (var n = Math.floor(chart.start); n < Math.min(bars.length, Math.ceil(chart.end)); n++) {
+                    var c = bars[n];
+                    var up = c.c >= c.o;
+                    var color = up ? '#c6f135' : '#ff6b6b';
+                    var x = xAt(n);
+                    ctx.strokeStyle = color;
+                    ctx.fillStyle = color;
+                    ctx.beginPath();
+                    ctx.moveTo(x, y(c.h));
+                    ctx.lineTo(x, y(c.l));
+                    ctx.stroke();
+                    var y1 = y(Math.max(c.o, c.c));
+                    var y2 = y(Math.min(c.o, c.c));
+                    ctx.fillRect(x - body / 2, y1, body, Math.max(1, y2 - y1));
+                    if (maxVol) {
+                        ctx.globalAlpha = 0.45;
+                        ctx.fillRect(x - body / 2, h - axis - ((c.v || 0) / maxVol * (volH - 8)), body, (c.v || 0) / maxVol * (volH - 8));
+                        ctx.globalAlpha = 1;
+                    }
+                }
+                if (result) {
+                    var entryLabel = 'Entry ' + pxText(result.entryPrice);
+                    var exitLabel = 'Exit ' + pxText(result.exitPrice);
+                    var stacked = Math.abs(y(result.entryPrice) - y(result.exitPrice)) < 16;
+                    var exitX = stacked ? left + 8 + ctx.measureText(entryLabel).width + 14 : left + 8;
+                    function level(price, color, label, labelX) {
+                        if (price < min || price > max) return;
+                        var ly = y(price);
+                        ctx.save();
+                        ctx.strokeStyle = color;
+                        ctx.lineWidth = 1.25;
+                        ctx.setLineDash([4, 3]);
+                        ctx.beginPath();
+                        ctx.moveTo(left, ly);
+                        ctx.lineTo(right, ly);
+                        ctx.stroke();
+                        ctx.setLineDash([]);
+                        var ty = ly - 8 < top + 6 ? ly + 11 : ly - 8;
+                        ctx.fillStyle = color;
+                        ctx.fillText(label, labelX, ty);
+                        ctx.restore();
+                    }
+                    level(result.entryPrice, '#f5c518', entryLabel, left + 8);
+                    level(result.exitPrice, profit ? '#c6f135' : '#ff6b6b', exitLabel, exitX);
+                }
+                var last = bars[bars.length - 1];
+                var lastY = y(last.c);
+                if (lastY >= top && lastY <= bottom) {
+                    ctx.strokeStyle = last.c >= last.o ? '#c6f135' : '#ff6b6b';
+                    ctx.setLineDash([2, 3]);
+                    ctx.beginPath();
+                    ctx.moveTo(left, lastY);
+                    ctx.lineTo(right, lastY);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                }
+                ctx.fillStyle = '#8b919a';
+                ctx.textBaseline = 'alphabetic';
+                var lastLabelX = -999;
+                var prevT = null;
+                var step = Math.max(1, Math.ceil((chart.end - chart.start) / 8));
+                for (var t = Math.ceil(chart.start); t < Math.min(bars.length, chart.end); t += step) {
+                    var lx = xAt(t);
+                    if (lx - lastLabelX < 76) continue;
+                    ctx.fillText(axisTime(bars[t].t, prevT), lx - 16, h - 6);
+                    lastLabelX = lx;
+                    prevT = bars[t].t;
+                }
+                var bar = hover != null ? bars[hover] : last;
+                if (hover == null) {
+                    for (var b = bars.length - 1; b >= 0; b--) if (bars[b].v > 0) { bar = bars[b]; break; }
+                }
+                if (legend && bar) {
+                    var upBar = bar.c >= bar.o;
+                    legend.innerHTML = '<span>' + formatBarTime(bar.t) + '</span>' +
+                        '<span>O <b class="' + (upBar ? 'up' : 'down') + '">' + pxText(bar.o) + '</b></span>' +
+                        '<span>H <b>' + pxText(bar.h) + '</b></span><span>L <b>' + pxText(bar.l) + '</b></span>' +
+                        '<span>C <b class="' + (upBar ? 'up' : 'down') + '">' + pxText(bar.c) + '</b></span>' +
+                        '<span>Vol <b>' + formatVol(bar.v) + '</b></span>';
+                }
+                if (hover != null && hover >= Math.floor(chart.start) && hover < chart.end) {
+                    var hx = xAt(hover);
+                    var hy = y(bars[hover].c);
+                    ctx.strokeStyle = '#9aa1ab';
+                    ctx.setLineDash([3, 3]);
+                    ctx.beginPath();
+                    ctx.moveTo(hx, top);
+                    ctx.lineTo(hx, h - axis);
+                    ctx.moveTo(left, hy);
+                    ctx.lineTo(right, hy);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                    ctx.fillStyle = '#e8eaed';
+                    ctx.fillRect(right, hy - 8, 64, 16);
+                    ctx.fillStyle = '#111';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(pxText(bars[hover].c), right + 4, hy);
+                }
+            }
+            function localPoint(e) {
+                var rect = canvas.getBoundingClientRect();
+                return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+            }
+            function onPriceScale(pt) { return pt.x >= geom.right && pt.y >= geom.top && pt.y <= geom.bottom; }
+            function priceAt(y) {
+                var span = geom.bottom - geom.top;
+                if (!(span > 0)) return geom.max;
+                return geom.max - (y - geom.top) / span * (geom.max - geom.min);
+            }
+            function setPrice(min, max) {
+                if (!(max > min)) return;
+                var span = max - min;
+                var mid = (max + min) / 2;
+                var floor = Math.max(Math.abs(mid) * 0.0004, contractSpecs[symbol].tickSize);
+                if (span < floor) { min = mid - floor / 2; max = mid + floor / 2; }
+                chart.priceMin = min;
+                chart.priceMax = max;
+                chart.priceManual = true;
+            }
+            function indexAt(clientX) {
+                var rect = canvas.getBoundingClientRect();
+                var x = clientX - rect.left;
+                var idx = Math.floor(chart.start + (x - geom.left) / Math.max(1, geom.right - geom.left) * (chart.end - chart.start));
+                if (idx < 0 || idx >= bars.length) return null;
+                return idx;
+            }
+            canvas.onwheel = function (e) {
+                e.preventDefault();
+                var pt = localPoint(e);
+                if (onPriceScale(pt)) {
+                    var anchor = priceAt(pt.y);
+                    var frac = (geom.bottom - pt.y) / Math.max(1, geom.bottom - geom.top);
+                    var next = (geom.max - geom.min) * (e.deltaY > 0 ? 1.12 : 0.88);
+                    setPrice(anchor - frac * next, anchor + (1 - frac) * next);
+                } else {
+                    var fracT = Math.min(1, Math.max(0, (pt.x - geom.left) / Math.max(1, geom.right - geom.left)));
+                    var spanT = chart.end - chart.start;
+                    var nextT = Math.max(12, Math.min(bars.length + 5, spanT * (e.deltaY > 0 ? 1.18 : 0.82)));
+                    var anchorT = chart.start + fracT * spanT;
+                    chart.start = anchorT - fracT * nextT;
+                    chart.end = chart.start + nextT;
+                }
+                draw();
+            };
+            function snapPrice(price) {
+                var tick = contractSpecs[symbol].tickSize || 0.01;
+                return Number((Math.round(price / tick) * tick).toFixed(priceDecimals(tick)));
+            }
+            function openPick(pt, price) {
+                if (pt.y < geom.top || pt.y > geom.bottom || pt.x < geom.left || pt.x > geom.right) return;
+                var snapped = snapPrice(price);
+                pick.price = snapped;
+                var pop = document.getElementById('pick');
+                document.getElementById('pickPx').textContent = pxText(snapped);
+                document.getElementById('pickEntry').hidden = pick.next === 'exit';
+                document.getElementById('pickExit').hidden = pick.next === 'entry';
+                pop.hidden = false;
+                var box = canvas.parentElement;
+                var left = pt.x + 14;
+                var top = pt.y - 12;
+                pop.style.left = left + 'px';
+                pop.style.top = top + 'px';
+                var pw = pop.offsetWidth;
+                var ph = pop.offsetHeight;
+                if (left + pw > box.clientWidth - 8) left = Math.max(8, pt.x - pw - 14);
+                if (top + ph > box.clientHeight - 8) top = Math.max(8, box.clientHeight - ph - 8);
+                if (top < 8) top = 8;
+                pop.style.left = left + 'px';
+                pop.style.top = top + 'px';
+            }
+            canvas.onpointerdown = function (e) {
+                var pt = localPoint(e);
+                if (onPriceScale(pt)) {
+                    drag = { kind: 'scale', y: pt.y, min: geom.min, max: geom.max, anchor: priceAt(pt.y), frac: (pt.y - geom.top) / Math.max(1, geom.bottom - geom.top) };
+                } else {
+                    drag = { kind: 'press', x: e.clientX, y: e.clientY, py: pt.y, start: chart.start, end: chart.end, min: geom.min, max: geom.max };
+                }
+                canvas.setPointerCapture(e.pointerId);
+            };
+            canvas.onpointermove = function (e) {
+                var pt = localPoint(e);
+                hover = onPriceScale(pt) ? null : indexAt(e.clientX);
+                canvas.style.cursor = onPriceScale(pt) || (drag && drag.kind === 'scale') ? 'ns-resize' : 'crosshair';
+                if (drag && drag.kind === 'press') {
+                    var dx = e.clientX - drag.x;
+                    var dy = e.clientY - drag.y;
+                    if (dx * dx + dy * dy < 16) {
+                        draw();
+                        return;
+                    }
+                    drag.kind = 'pan';
+                }
+                if (drag && drag.kind === 'scale') {
+                    var plotH = Math.max(1, geom.bottom - geom.top);
+                    var factor = Math.exp((pt.y - drag.y) / (plotH * 0.72));
+                    var span = (drag.max - drag.min) * factor;
+                    setPrice(drag.anchor - (1 - drag.frac) * span, drag.anchor + drag.frac * span);
+                } else if (drag && drag.kind === 'pan') {
+                    var slot = (geom.right - geom.left) / Math.max(1, drag.end - drag.start);
+                    var shift = (drag.x - e.clientX) / Math.max(1, slot);
+                    chart.start = drag.start + shift;
+                    chart.end = chart.start + (drag.end - drag.start);
+                    var plotHp = Math.max(1, geom.bottom - geom.top);
+                    var priceShift = (pt.y - drag.py) / plotHp * (drag.max - drag.min);
+                    setPrice(drag.min + priceShift, drag.max + priceShift);
+                }
+                draw();
+            };
+            canvas.onpointerup = function (e) {
+                if (drag && drag.kind === 'press') {
+                    var pt = localPoint(e);
+                    clearTimeout(pick.timer);
+                    pick.timer = setTimeout(function () { openPick(pt, priceAt(pt.y)); }, 220);
+                }
+                drag = null;
+            };
+            canvas.onlostpointercapture = function () { drag = null; };
+            canvas.onpointerleave = function () {
+                if (drag) return;
+                hover = null;
+                canvas.style.cursor = 'crosshair';
+                draw();
+            };
+            canvas.ondblclick = function (e) {
+                clearTimeout(pick.timer);
+                document.getElementById('pick').hidden = true;
+                var pt = localPoint(e);
+                chart.priceManual = false;
+                if (!onPriceScale(pt)) {
+                    var reset = defaultWindow(bars.length);
+                    chart.start = reset.start;
+                    chart.end = reset.end;
+                }
+                draw();
+            };
+            chartDraw = draw;
+            draw();
         }
 
-        // Position button handlers
-        document.querySelectorAll('.position-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.position-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
+        document.querySelectorAll('.sides button').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                document.querySelectorAll('.sides button').forEach(function (b) { b.classList.remove('on'); });
+                btn.classList.add('on');
                 currentPosition = btn.dataset.position;
                 updateDisplay();
             });
         });
-
-        // Input handlers
-        document.getElementById('symbol').addEventListener('change', () => {
-            syncPriceInputSteps();
-            if (getQuote(document.getElementById('symbol').value)) {
-                applyLastPrice('both');
-            } else {
-                updateDisplay();
-            }
-            renderPricesTable();
+        document.getElementById('intervals').addEventListener('click', function (e) {
+            var btn = e.target.closest('[data-iv]');
+            if (!btn) return;
+            interval = btn.getAttribute('data-iv');
+            document.querySelectorAll('.intervals button').forEach(function (b) {
+                b.classList.toggle('on', b === btn);
+            });
+            chart.key = '';
+            chart.priceManual = false;
+            ensureSeries(selectedSymbol(), interval);
         });
         document.getElementById('contracts').addEventListener('input', updateDisplay);
-        document.getElementById('entryPrice').addEventListener('input', updateDisplay);
-        document.getElementById('exitPrice').addEventListener('input', updateDisplay);
-        document.getElementById('useAsEntry').addEventListener('click', () => applyLastPrice('entry'));
-        document.getElementById('useAsExit').addEventListener('click', () => applyLastPrice('exit'));
+        ['entryPrice', 'exitPrice'].forEach(function (id) {
+            document.getElementById(id).addEventListener('input', function () {
+                pricesTouched = true;
+                updateDisplay();
+            });
+        });
+        document.getElementById('useAsEntry').addEventListener('click', function () { applyLastPrice('entry'); });
+        document.getElementById('useAsExit').addEventListener('click', function () { applyLastPrice('exit'); });
+        document.getElementById('pickClose').addEventListener('click', function () {
+            pick.next = null;
+            pick.price = null;
+            document.getElementById('pick').hidden = true;
+        });
+        function applyPick(which) {
+            if (pick.price == null) return;
+            pricesTouched = true;
+            setPriceInput(which === 'entry' ? 'entryPrice' : 'exitPrice', selectedSymbol(), pick.price);
+            pick.next = pick.next == null ? (which === 'entry' ? 'exit' : 'entry') : null;
+            document.getElementById('pick').hidden = true;
+            updateDisplay();
+        }
+        document.getElementById('pickEntry').addEventListener('click', function () { applyPick('entry'); });
+        document.getElementById('pickExit').addEventListener('click', function () { applyPick('exit'); });
+        window.addEventListener('resize', function () { chartDraw(); });
 
-        // Initial calculation
-        document.getElementById('symbol').value = 'MNQ';
-        syncPriceInputSteps();
+        document.getElementById('symTitle').dataset.symbol = 'MNQ';
         updateDisplay();
-        loadDailyPrices();
+        fetch('data/futures-prices.json', { cache: 'force-cache' }).then(function (res) {
+            if (!res.ok) throw new Error('no snapshot');
+            return res.json();
+        }).then(function (data) {
+            futuresSnapshot = data;
+            if (!liveQuote.MNQ) applyLastPrice('both');
+            else updateDisplay();
+        }).catch(function () {
+            futuresSnapshot = { prices: {} };
+            updateDisplay();
+        });
+        ensureSeries('MNQ', '5m');
     </script>
 </body>
 </html>
-

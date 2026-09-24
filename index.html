@@ -12,23 +12,23 @@
     </script>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Manan Patel | iOS Developer &amp; Entrepreneur – Portfolio &amp; Blog</title>
-    <meta name="description" content="Manan Patel – iOS developer and entrepreneur in Calgary. Portfolio: Rocket Agency, GoalGetter, RentPlay. Blog on Swift, SwiftUI, startups, and building products."/>
-    <meta name="keywords" content="Manan Patel, iOS developer, Swift, SwiftUI, entrepreneur, Calgary, mobile development, Rocket Agency, GoalGetter, RentPlay, software engineer"/>
+    <title>Manan Patel | Software Engineer &amp; Entrepreneur – Portfolio &amp; Blog</title>
+    <meta name="description" content="Manan Patel – software engineer and entrepreneur in Calgary. Portfolio: Rocket Agency, GoalGetter, RentPlay. Blog on Swift, SwiftUI, startups, and building products."/>
+    <meta name="keywords" content="Manan Patel, software engineer, Swift, SwiftUI, entrepreneur, Calgary, mobile development, Rocket Agency, GoalGetter, RentPlay"/>
     <meta name="author" content="Manan Patel"/>
     <link rel="canonical" href="https://mananpatel.info/"/>
     <!-- Open Graph -->
     <meta property="og:type" content="website"/>
     <meta property="og:url" content="https://mananpatel.info/"/>
-    <meta property="og:title" content="Manan Patel | iOS Developer &amp; Entrepreneur"/>
-    <meta property="og:description" content="Portfolio and blog – iOS development, Swift, SwiftUI, startups. Calgary-based. Rocket Agency, GoalGetter, RentPlay."/>
+    <meta property="og:title" content="Manan Patel | Software Engineer &amp; Entrepreneur"/>
+    <meta property="og:description" content="Portfolio and blog – software engineering, Swift, SwiftUI, startups. Calgary-based. Rocket Agency, GoalGetter, RentPlay."/>
     <meta property="og:site_name" content="Manan Patel"/>
     <meta property="og:locale" content="en_CA"/>
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image"/>
     <meta name="twitter:url" content="https://mananpatel.info/"/>
-    <meta name="twitter:title" content="Manan Patel | iOS Developer &amp; Entrepreneur"/>
-    <meta name="twitter:description" content="Portfolio and blog – iOS, Swift, startups. Calgary."/>
+    <meta name="twitter:title" content="Manan Patel | Software Engineer &amp; Entrepreneur"/>
+    <meta name="twitter:description" content="Portfolio and blog – software engineering, Swift, startups. Calgary."/>
     <!-- JSON-LD: Brand + ATS-friendly profile -->
     <script type="application/ld+json">
     {
@@ -39,7 +39,7 @@
           "@id": "https://mananpatel.info/#website",
           "url": "https://mananpatel.info/",
           "name": "Manan Patel",
-          "description": "Portfolio and blog – iOS developer and entrepreneur.",
+          "description": "Portfolio and blog – software engineer and entrepreneur.",
           "publisher": { "@id": "https://mananpatel.info/#manan-patel" },
           "inLanguage": "en-CA"
         },
@@ -48,8 +48,8 @@
           "@id": "https://mananpatel.info/#manan-patel",
           "name": "Manan Patel",
           "url": "https://mananpatel.info/",
-          "description": "iOS Developer and Entrepreneur. Building products and sharing insights on mobile development, startups, and growth. Calgary, Canada.",
-          "jobTitle": "iOS Developer | Entrepreneur",
+          "description": "Software Engineer and Entrepreneur. Building products and sharing insights on software, startups, and growth. Calgary, Canada.",
+          "jobTitle": "Software Engineer | Entrepreneur",
           "sameAs": [
             "https://x.com/mananthekid",
             "https://www.linkedin.com/in/mananpatel123/",
@@ -113,305 +113,51 @@
         .scrollbar-hide::-webkit-scrollbar {
           display: none;
         }
-        .header-carousel-container {
-          position: relative;
-          width: 360px;
-          height: 192px;
-          overflow: hidden;
-          border-radius: 0.75rem;
-          flex-shrink: 0;
-        }
-        .header-carousel-wrapper {
-          position: relative;
-          width: 100%;
-          height: 100%;
-          overflow: hidden;
-        }
-        .header-carousel-track {
-          display: flex;
-          height: 100%;
-          gap: 1rem;
-          will-change: transform;
-        }
-        .header-carousel-item {
-          flex-shrink: 0;
-          width: 192px;
-          height: 192px;
-          border-radius: 0.75rem;
-          overflow: hidden;
-        }
-        .header-carousel-item img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          border-radius: 0.75rem;
-        }
-        .header-carousel-speed-control {
-          position: absolute;
-          top: 0;
-          bottom: 0;
-          width: 30px;
-          background: linear-gradient(to right, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7), transparent);
-          -webkit-backdrop-filter: blur(8px);
-          backdrop-filter: blur(8px);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 10;
-          cursor: pointer;
-          opacity: 1;
-          transition: background 0.3s ease-in-out;
-        }
-        .header-carousel-speed-control.left {
-          left: 0;
-        }
-        .header-carousel-speed-control.right {
-          right: 0;
-          background: linear-gradient(to left, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7), transparent);
-        }
-        .header-carousel-speed-control:hover {
-          background: linear-gradient(to right, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.8), transparent);
-        }
-        .header-carousel-speed-control.right:hover {
-          background: linear-gradient(to left, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.8), transparent);
-        }
-        .header-carousel-speed-control .arrow {
-          font-size: 0.875rem;
-          color: #111827;
-          font-weight: 600;
-          opacity: 0 !important;
-          transition: opacity 0.3s ease-in-out;
-          pointer-events: none;
-        }
-        .header-carousel-container:hover .header-carousel-speed-control .arrow {
-          opacity: 1 !important;
-        }
-        .header-carousel-speed-control.left .arrow {
-          animation: pulseLeft 1.5s ease-in-out infinite;
-        }
-        .header-carousel-speed-control.right .arrow {
-          animation: pulseRight 1.5s ease-in-out infinite;
-        }
-        .dark .header-carousel-speed-control {
-          background: linear-gradient(to right, rgba(18, 18, 18, 0.9), rgba(18, 18, 18, 0.7), transparent);
-        }
-        .dark .header-carousel-speed-control.right {
-          background: linear-gradient(to left, rgba(18, 18, 18, 0.9), rgba(18, 18, 18, 0.7), transparent);
-        }
-        .dark .header-carousel-speed-control:hover {
-          background: linear-gradient(to right, rgba(18, 18, 18, 0.95), rgba(18, 18, 18, 0.8), transparent);
-        }
-        .dark .header-carousel-speed-control.right:hover {
-          background: linear-gradient(to left, rgba(18, 18, 18, 0.95), rgba(18, 18, 18, 0.8), transparent);
-        }
-        .dark .header-carousel-speed-control .arrow {
-          color: #E5E7EB;
-          opacity: 0 !important;
-        }
-        .dark .header-carousel-container:hover .header-carousel-speed-control .arrow {
-          opacity: 1 !important;
-        }
-        
-        /* Modal overlay for focused image view */
-        .image-modal-overlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: rgba(0, 0, 0, 0.9);
-          z-index: 1000;
-          display: none;
-          align-items: center;
-          justify-content: center;
-          opacity: 0;
-          transition: opacity 0.3s ease-in-out;
-        }
-        .image-modal-overlay.active {
-          display: flex;
-          opacity: 1;
-        }
-        .image-modal-content {
-          position: relative;
-          width: 90%;
-          max-width: 800px;
-          max-height: 90vh;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-        }
-        .image-modal-image-row {
-          display: flex;
-          align-items: center;
-          gap: 1rem;
-          width: 100%;
-          margin-bottom: 1.5rem;
-        }
-        .image-modal-container {
-          position: relative;
-          flex: 1;
-          min-width: 0;
-          height: 60vh;
-          border-radius: 0.75rem;
-          overflow: hidden;
-          background: #000;
-        }
-        .image-modal-nav {
-          flex-shrink: 0;
-          background: rgba(0, 0, 0, 0.7);
-          border: 2px solid rgba(255, 255, 255, 0.5);
-          color: #fff;
-          width: 3rem;
-          height: 3rem;
-          border-radius: 50%;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 1.75rem;
-          font-weight: bold;
-          transition: background 0.2s, transform 0.15s;
-        }
-        .image-modal-nav:hover {
-          background: rgba(0, 0, 0, 0.9);
-          transform: scale(1.1);
-        }
-        .image-modal-nav.prev {
-          order: -1;
-        }
-        .image-modal-nav.next {
-          order: 1;
-        }
-        .image-modal-nav:disabled {
-          opacity: 0.3;
-          cursor: not-allowed;
-        }
-        .image-modal-container img {
-          width: 100%;
-          height: 100%;
+        .headshot {
+          width: 150px;
+          height: 150px;
           object-fit: cover;
           object-position: center;
-        }
-        .image-modal-info {
-          background: rgba(255, 255, 255, 0.1);
-          backdrop-filter: blur(10px);
+          border: 1px solid #000;
           border-radius: 0.75rem;
-          padding: 1.5rem;
-          color: white;
-          width: 100%;
-          max-width: 600px;
+          flex-shrink: 0;
         }
-        .image-modal-title {
-          font-size: 1.25rem;
-          font-weight: 600;
-          margin-bottom: 0.5rem;
-        }
-        .image-modal-description {
-          font-size: 0.875rem;
-          line-height: 1.5;
-          margin-bottom: 1rem;
-        }
-        .image-modal-actions {
-          display: flex;
-          gap: 1rem;
-          flex-wrap: wrap;
-        }
-        .image-modal-button {
-          padding: 0.5rem 1rem;
-          border: 1px solid rgba(255, 255, 255, 0.3);
-          background: rgba(255, 255, 255, 0.1);
-          color: white;
-          border-radius: 0.5rem;
-          text-decoration: none;
-          font-size: 0.875rem;
-          transition: background 0.2s, border-color 0.2s;
-          display: inline-flex;
-          align-items: center;
-          gap: 0.5rem;
-        }
-        .image-modal-button:hover {
-          background: rgba(255, 255, 255, 0.2);
-          border-color: rgba(255, 255, 255, 0.5);
-        }
-        .image-modal-close {
-          position: absolute;
-          top: -2.5rem;
-          right: 0;
-          background: rgba(255, 255, 255, 0.1);
-          border: none;
-          color: white;
-          width: 2.5rem;
-          height: 2.5rem;
-          border-radius: 0.5rem;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 1.5rem;
-          transition: background 0.2s;
-        }
-        .image-modal-close:hover {
-          background: rgba(255, 255, 255, 0.2);
-        }
-        @keyframes pulseLeft {
-          0%, 100% { transform: translateX(0); opacity: 0.7; }
-          50% { transform: translateX(-5px); opacity: 1; }
-        }
-        @keyframes pulseRight {
-          0%, 100% { transform: translateX(0); opacity: 0.7; }
-          50% { transform: translateX(5px); opacity: 1; }
-        }
-
-        /* Travel gallery – stamp carousel */
-        .travel-gallery-header {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          margin-bottom: 1rem;
-        }
-        .travel-gallery-nav {
-          display: flex;
-          gap: 0.25rem;
-        }
-        .travel-gallery-nav-btn {
-          width: 2rem;
-          height: 2rem;
-          border-radius: 50%;
-          border: 1px solid #E5E7EB;
-          background: #fff;
-          color: #374151;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 1rem;
-          transition: background 0.2s, border-color 0.2s;
-        }
-        .dark .travel-gallery-nav-btn {
-          border-color: #4B5563;
-          background: #1F2937;
-          color: #E5E7EB;
-        }
-        .travel-gallery-nav-btn:hover {
-          background: #F3F4F6;
+        .dark .headshot {
           border-color: #9CA3AF;
         }
-        .dark .travel-gallery-nav-btn:hover {
-          background: #374151;
-          border-color: #6B7280;
+        .re-tip {
+          position: relative;
+          border-bottom: 1px dotted currentColor;
+          cursor: help;
+        }
+        .re-tip-text {
+          display: none;
+          position: absolute;
+          left: 0;
+          top: calc(100% + 0.4rem);
+          width: min(280px, 70vw);
+          padding: 0.6rem 0.75rem;
+          background: #111;
+          color: #fff;
+          font-size: 0.8rem;
+          font-weight: 400;
+          line-height: 1.4;
+          border-radius: 0.5rem;
+          z-index: 20;
+        }
+        .re-tip:hover .re-tip-text,
+        .re-tip:focus .re-tip-text {
+          display: block;
+        }
+        /* Travel gallery – stamp carousel */
+        .travel-gallery-header {
+          margin-bottom: 1rem;
         }
         .travel-stamps-scroll {
-          display: flex;
-          align-items: flex-start;
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
           gap: 1.25rem;
-          overflow-x: auto;
-          scroll-behavior: smooth;
-          padding-bottom: 0.5rem;
-          scrollbar-width: none;
-          -ms-overflow-style: none;
-        }
-        .travel-stamps-scroll::-webkit-scrollbar {
-          display: none;
+          align-items: start;
         }
         .travel-stamp-link {
           flex-shrink: 0;
@@ -622,104 +368,288 @@
           background: #fff;
           color: #111;
         }
+
+        .site-shell {
+          display: grid;
+          grid-template-columns: 220px minmax(0, 1fr);
+          min-height: 100vh;
+        }
+        .site-sidebar {
+          position: sticky;
+          top: 0;
+          height: 100vh;
+          overflow-y: auto;
+          border-right: 1px solid #000;
+          padding: 2rem 1.25rem;
+          display: flex;
+          flex-direction: column;
+          background: #fff;
+        }
+        .dark .site-sidebar {
+          background: #121212;
+          border-right-color: #374151;
+        }
+        .site-logo {
+          font-size: 1.1rem;
+          font-weight: 700;
+          margin-bottom: 2rem;
+          color: inherit;
+          text-decoration: none;
+        }
+        .site-nav {
+          display: flex;
+          flex-direction: column;
+          gap: 1.15rem;
+          margin-bottom: auto;
+        }
+        .site-nav a {
+          color: inherit;
+          text-decoration: none;
+          font-size: 0.9rem;
+          text-align: left;
+          line-height: 1.3;
+        }
+        .site-nav a:hover,
+        .site-nav a.active {
+          text-decoration: underline;
+          text-underline-offset: 3px;
+        }
+        .site-nav a.active {
+          font-weight: 600;
+        }
+        .site-sidebar-footer {
+          margin-top: 2rem;
+          display: flex;
+          flex-direction: column;
+          gap: 0.7rem;
+          font-size: 0.85rem;
+        }
+        .site-sidebar-footer a {
+          color: inherit;
+          text-decoration: none;
+        }
+        .site-sidebar-footer a:hover {
+          text-decoration: underline;
+        }
+        .site-main {
+          min-width: 0;
+        }
+        .site-sticky-header {
+          position: sticky;
+          top: 0;
+          z-index: 40;
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          background: #fff;
+          border-bottom: 1px solid #000;
+          padding: 0.85rem 1.5rem;
+        }
+        .dark .site-sticky-header {
+          background: #121212;
+          border-bottom-color: #374151;
+        }
+        .section-indicator {
+          font-size: 1.05rem;
+          font-weight: 700;
+          letter-spacing: 0.01em;
+          text-transform: uppercase;
+          flex: 1;
+          min-width: 0;
+        }
+        .site-content {
+          width: 100%;
+          padding: 1.5rem 2rem 3rem;
+        }
+        .site-content section[id] {
+          scroll-margin-top: 4.75rem;
+        }
+        .page-view[hidden],
+        #start[hidden],
+        #home-main[hidden] {
+          display: none !important;
+        }
+        .page-kicker,
+        .page-heading {
+          font-weight: 700;
+          text-transform: uppercase;
+          border-bottom: 1px solid #000;
+          padding-bottom: 0.5rem;
+          margin-bottom: 1.5rem;
+        }
+        .page-kicker {
+          font-size: 1.2rem;
+        }
+        .page-heading {
+          font-size: 1.1rem;
+          margin-top: 1.5rem;
+        }
+        .dark .page-kicker,
+        .dark .page-heading {
+          border-bottom-color: #9CA3AF;
+        }
+        .writing-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+          gap: 1.5rem;
+        }
+        .writing-card {
+          border: 1px solid #000;
+          padding: 1rem;
+          min-height: 150px;
+          display: flex;
+          flex-direction: column;
+        }
+        .dark .writing-card {
+          border-color: #9CA3AF;
+        }
+        .writing-card h3 {
+          font-size: 1rem;
+          font-weight: 600;
+          margin: 0 0 0.5rem;
+        }
+        .writing-card p {
+          font-size: 0.9rem;
+          margin: 0 0 0.75rem;
+          flex: 1;
+        }
+        .writing-card .meta {
+          flex: 0;
+          font-size: 0.8rem;
+          color: #6B7280;
+          margin: 0 0 0.75rem;
+        }
+        .dark .writing-card .meta { color: #9CA3AF; }
+        .writing-card a {
+          color: #06c;
+          font-size: 0.9rem;
+        }
+        .notes-group {
+          margin: 0 0 2rem;
+        }
+        .notes-group h3 {
+          font-weight: 700;
+          margin-bottom: 0.75rem;
+        }
+        .notes-group a {
+          display: block;
+          color: #06c;
+          margin: 0.35rem 0;
+        }
+        .back-to-main {
+          margin-top: 2.5rem;
+          border: 1px solid #000;
+          background: #fff;
+          color: #000;
+          padding: 0.35rem 0.75rem;
+          font-size: 0.9rem;
+          cursor: pointer;
+        }
+        .dark .back-to-main {
+          background: #121212;
+          color: #E5E7EB;
+          border-color: #9CA3AF;
+        }
+        .mobile-menu-toggle,
+        .sidebar-backdrop {
+          display: none;
+        }
+        @media (max-width: 768px) {
+          .site-shell {
+            grid-template-columns: 1fr;
+          }
+          .site-sidebar {
+            display: none;
+            position: fixed;
+            z-index: 70;
+            width: min(280px, 86vw);
+            height: 100vh;
+            box-shadow: 8px 0 24px rgba(0, 0, 0, 0.12);
+          }
+          .site-sidebar.open {
+            display: flex;
+          }
+          .sidebar-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.35);
+            z-index: 65;
+          }
+          .sidebar-backdrop.open {
+            display: block;
+          }
+          .mobile-menu-toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.25rem;
+            height: 2.25rem;
+            border: 1px solid #000;
+            background: transparent;
+            color: inherit;
+            font-size: 1.25rem;
+            line-height: 1;
+            cursor: pointer;
+            flex-shrink: 0;
+          }
+          .dark .mobile-menu-toggle {
+            border-color: #9CA3AF;
+          }
+          .site-content {
+            padding: 1.25rem 1rem 2.5rem;
+          }
+        }
       </style>
 </head>
 <body class="bg-background-light dark:bg-background-dark font-sans text-text-light dark:text-text-dark transition-colors duration-300">
-<div class="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8 pt-8 sm:pt-12 lg:pt-16">
-<button id="darkModeToggle" class="fixed top-4 right-4 z-50 w-10 h-10 sm:w-auto sm:h-auto sm:px-3 sm:py-2 border border-border-light dark:border-border-dark rounded-lg flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" aria-label="Toggle dark mode">
+<div class="site-shell">
+<aside class="site-sidebar" id="siteSidebar">
+<a class="site-logo" href="#start">Manan Patel</a>
+<nav class="site-nav" id="siteNav" aria-label="Sections">
+<a href="#start" data-section="start">main</a>
+<a href="#projects" data-section="projects">projects</a>
+<a href="#teams" data-section="teams" data-page="true">teams I've worked with</a>
+<a href="#tools" data-section="tools">tools</a>
+<a href="#writing" data-section="writing" data-page="true">writing</a>
+<a href="#travel" data-section="travel" data-page="true">travel</a>
+</nav>
+<div class="site-sidebar-footer">
+<a href="https://x.com/mananthekid" target="_blank" rel="noopener">X</a>
+<a href="https://www.linkedin.com/in/mananpatel123/" target="_blank" rel="noopener">LinkedIn</a>
+<a href="https://github.com/MananPatel95" target="_blank" rel="noopener">GitHub</a>
+<a href="https://manapate.substack.com" target="_blank" rel="noopener">Substack</a>
+</div>
+</aside>
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+<div class="site-main">
+<div class="site-sticky-header">
+<button type="button" class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Open menu">☰</button>
+<div class="section-indicator" id="sectionIndicator">Main</div>
+<button id="darkModeToggle" class="w-10 h-10 sm:w-auto sm:h-auto sm:px-3 sm:py-2 border border-border-light dark:border-border-dark rounded-lg flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors shrink-0" aria-label="Toggle dark mode">
     <span class="material-icons text-text-light dark:text-text-dark text-lg sm:text-base" id="darkModeIcon">dark_mode</span>
     <span class="hidden sm:inline text-sm text-text-light dark:text-text-dark ml-1" id="darkModeText">Dark</span>
 </button>
-<header class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-<div class="flex-1">
-<h1 class="text-xl sm:text-2xl font-bold text-text-light dark:text-text-dark">Manan Patel</h1>
-<p class="text-xs text-secondary-text-light dark:text-secondary-text-dark mt-1 secondary-text">Tinkering and Sharing</p>
-<div class="flex items-center text-secondary-text-light dark:text-secondary-text-dark mt-2 text-xs secondary-text">
-<span>📍Calgary, Canada</span>
 </div>
-<div class="flex space-x-2 mt-2">
-<a class="w-8 h-8 border border-gray-300 rounded flex items-center justify-center hover:bg-gray-50" href="https://x.com/mananthekid" target="_blank" rel="noopener">
-<svg aria-hidden="true" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
-</a>
-<a class="w-8 h-8 border border-gray-300 rounded flex items-center justify-center hover:bg-gray-50" href="https://www.linkedin.com/in/mananpatel123/" target="_blank" rel="noopener">
-<svg aria-hidden="true" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z"></path></svg>
-</a>
-<a class="w-8 h-8 border border-gray-300 rounded flex items-center justify-center hover:bg-gray-50" href="https://github.com/MananPatel95" target="_blank" rel="noopener">
-<svg aria-hidden="true" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.285 2.866 7.92 6.737 9.208.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.942.359.308.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z" fill-rule="evenodd"></path></svg>
-</a>
-<a class="w-8 h-8 border border-gray-300 rounded flex items-center justify-center hover:bg-gray-50" href="https://manapate.substack.com" target="_blank" rel="noopener" aria-label="Substack">
-<svg aria-hidden="true" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg>
-</a>
-<button id="aboutToggle" class="w-8 h-8 border border-gray-300 rounded flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" aria-label="Toggle about section">
-<span class="material-icons text-text-light dark:text-text-dark text-base">info</span>
-</button>
+<div class="site-content">
+<div id="home-view">
+<header id="start" class="mb-8">
+<div class="flex items-start gap-6">
+<img class="headshot" src="images/headshot-1.jpg" alt="Manan Patel"/>
+<div>
+<h1 class="text-2xl sm:text-3xl font-bold text-text-light dark:text-text-dark">Manan Patel</h1>
+<p class="mt-2 text-base text-text-light dark:text-text-dark">📍 Currently: Calgary, Canada</p>
 </div>
 </div>
-<div class="mt-6 sm:mt-0 flex-shrink-0">
-<div id="headerCarousel" class="header-carousel-container">
-<div class="header-carousel-speed-control left">
-<div class="arrow">‹</div>
-</div>
-<div class="header-carousel-speed-control right">
-<div class="arrow">›</div>
-</div>
-<div class="header-carousel-wrapper">
-<div class="header-carousel-track" id="headerCarouselTrack">
-<div class="header-carousel-item" data-index="0">
-<img src="images/minis_1080/coding-at-desk.png" alt="Coding at desk"/>
-</div>
-<div class="header-carousel-item" data-index="1">
-<img src="images/minis_1080/lifting-weights.png" alt="Lifting weights"/>
-</div>
-<div class="header-carousel-item" data-index="2">
-<img src="images/minis_1080/manan-hiking.png" alt="Hiking"/>
-</div>
-<div class="header-carousel-item" data-index="3">
-<img src="images/minis_1080/manan-kitchen.png" alt="In kitchen"/>
-</div>
-<div class="header-carousel-item" data-index="4">
-<img src="images/minis_1080/manan-movies.png" alt="At movies"/>
-</div>
-<div class="header-carousel-item" data-index="5">
-<img src="images/minis_1080/manan-pickleball.png" alt="Playing pickleball"/>
-</div>
-<div class="header-carousel-item" data-index="6">
-<img src="images/minis_1080/manan-vending-machine-tokyo.png" alt="Vending machine in Tokyo"/>
-</div>
-<!-- Duplicate items for seamless loop -->
-<div class="header-carousel-item" data-index="0">
-<img src="images/minis_1080/coding-at-desk.png" alt="Coding at desk"/>
-</div>
-<div class="header-carousel-item" data-index="1">
-<img src="images/minis_1080/lifting-weights.png" alt="Lifting weights"/>
-</div>
-<div class="header-carousel-item" data-index="2">
-<img src="images/minis_1080/manan-hiking.png" alt="Hiking"/>
-</div>
-</div>
-</div>
-</div>
-</div>
+<p class="mt-6 text-base leading-relaxed text-text-light dark:text-text-dark">Learning, sharing, and building a legacy I can be proud of. My interests include Artificial Intelligence, Augmented Reality, Algorithmic Trading, Consumer Packaged Goods, Lifestyle Businesses, and Impactful Charities.</p>
+<p class="mt-3 text-base leading-relaxed text-text-light dark:text-text-dark">DM me on X for any collaborations or inquiries!</p>
+<h2 class="mt-8 text-xl font-bold text-text-light dark:text-text-dark mb-4 uppercase border-b border-black dark:border-gray-600 pb-2">Right now I'm</h2>
+<ul class="list-disc pl-6 space-y-3 text-text-light dark:text-text-dark">
+<li>Team Lead and Software Engineer @ <a class="underline" href="https://www.canada.ca/en/environment-climate-change.html" target="_blank" rel="noopener">Environment and Climate Change Canada</a></li>
+<li>Working with SMBs to implement AI agents @ <a class="underline" href="https://rocketagency.ca/" target="_blank" rel="noopener">RocketAgency</a></li>
+<li><span class="re-tip" tabindex="0">(Re)<span class="re-tip-text">Am a UofT Specialist in Machine Learning, class of 2019. Then I spent years building mobile apps. The degree has been sitting there like, “I tried to tell you.”</span></span> Learning AI and re tooling skills to become an AI Engineer (<a class="underline" href="#writing">see my notes here</a>)</li>
+</ul>
 </header>
-
-<!-- Image Modal Overlay -->
-<div id="imageModal" class="image-modal-overlay">
-<div class="image-modal-content">
-<button class="image-modal-close" onclick="closeImageModal()">&times;</button>
-<div class="image-modal-image-row">
-<button type="button" class="image-modal-nav prev" id="modalPrevBtn" onclick="navigateModalImage(-1)" aria-label="Previous image">‹</button>
-<div class="image-modal-container">
-<img id="modalImage" src="" alt=""/>
-</div>
-<button type="button" class="image-modal-nav next" id="modalNextBtn" onclick="navigateModalImage(1)" aria-label="Next image">›</button>
-</div>
-<div class="image-modal-info">
-<h3 id="modalTitle" class="image-modal-title"></h3>
-<p id="modalDescription" class="image-modal-description"></p>
-<div id="modalActions" class="image-modal-actions"></div>
-</div>
-</div>
-</div>
 
 <!-- Travel full-screen modal -->
 <div id="travelModal" class="travel-modal-overlay">
@@ -731,17 +661,8 @@
     </div>
   </div>
 </div>
-<main>
-<section id="aboutSection" class="mb-4 pt-4" style="display: none;">
-<h2 class="text-xl font-bold text-text-light dark:text-text-dark mb-4">About</h2>
-        <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text">
-          I was a software engineer at several companies, primarily focused on mobile development, but I caught the entrepreneurial bug, and am now building things I want to see in the world!
-        </p>
-        <p class="text-secondary-text-light dark:text-secondary-text-dark mt-2 secondary-text">
-          Interested in AI, AR, Algo Trading, CPG, Lifestyle Businesses, Impactful Charities. DM me on X for any collaborations or inquiries!
-        </p>
-</section>
-<section class="mb-8 pt-8">
+<main id="home-main">
+<section id="projects" class="mb-8 pt-8">
 <div class="flex justify-between items-center mb-4">
 <h2 class="text-xl font-bold text-text-light dark:text-text-dark">Projects</h2>
 </div>
@@ -776,57 +697,32 @@
 </a>
 </div>
 </section>
-<section class="mb-8 pt-8">
-<h2 class="text-xl font-bold text-text-light dark:text-text-dark mb-6">Blog</h2>
-<div id="blog-posts-home" class="grid grid-cols-1 gap-4">
-<a href="blog/rentplay-lessons-first-startup.html" class="p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-    <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">Lessons from my 1st Startup - RentPlay.ca</h3>
-    <p class="text-secondary-text-light dark:text-secondary-text-dark blog-description">Reflections from my startup RentPlay; on co-founders, validation, distribution, B2B vs B2C</p>
-    <div class="mt-2 text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">Sep 10, 2025</div>
-</a>
-<a href="blog/swiftui-modern-development.html" class="p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-    <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">SwiftUI Modern Development</h3>
-    <p class="text-secondary-text-light dark:text-secondary-text-dark blog-description">Exploring the latest SwiftUI features and modern iOS development practices</p>
-    <div class="mt-2 text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">Dec 15, 2024</div>
-</a>
-<a href="blog/swift-concurrency-multithreading.html" class="p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-    <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">Swift Concurrency &amp; Multithreading</h3>
-    <p class="text-secondary-text-light dark:text-secondary-text-dark blog-description">Understanding async/await and structured concurrency in Swift</p>
-    <div class="mt-2 text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">Dec 10, 2024</div>
-</a>
-</div>
-<div class="mt-6 text-center">
-    <a href="blog/" class="inline-flex items-center px-4 py-2 border border-border-light dark:border-border-dark rounded-lg text-sm font-medium text-text-light dark:text-text-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-        View All Posts
-        <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-        </svg>
-</a>
-</div>
-</section>
-    
-<section class="mb-8">
+<section id="tools" class="mb-8">
     <h2 class="text-xl font-bold text-text-light dark:text-text-dark mb-6">Tools</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <a href="tools/tax-suite.html" class="block p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-            <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1 flex items-center">🧮 Tax Suite — Return Estimator <span class="text-green-500 ml-2">●</span></h3>
-            <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text">T4, pension, RDSP, T5008/trading, RRSP, WFH — approximate tax owed or refund (AB · BC · ON)</p>
-        </a>
-        <a href="tools/stripe-fee-calculator.html" class="block p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-            <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1 flex items-center">💸 Stripe Fee Calculator <span class="text-green-500 ml-2">●</span></h3>
-            <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text">100% Free, Multiple Currencies Supported</p>
+        <a href="tools/gex-dashboard.html" class="block p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+            <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1 flex items-center">GEX Dashboard <span class="text-green-500 ml-2">●</span></h3>
+            <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text">Watchlist of gamma exposure, call and put walls, and net gamma by strike. Delayed CBOE data.</p>
         </a>
         <a href="tools/futures-profit-calculator.html" class="block p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
             <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1 flex items-center">📈 Futures Profit Calculator <span class="text-green-500 ml-2">●</span></h3>
             <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text">Calculate P&L for ES, NQ, MNQ, CL, MCL, GC, MGC and more futures contracts</p>
         </a>
-        <a href="tools/rdsp-calculator.html" class="block p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-            <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1 flex items-center">💰 RDSP Calculator <span class="text-green-500 ml-2">●</span></h3>
-            <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text">Enhanced RDSP calculator with advanced withdrawal planning and CRA rules</p>
-        </a>
         <a href="tools/investment-calculator.html" class="block p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
             <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1 flex items-center">📊 Investment Calculator <span class="text-green-500 ml-2">●</span></h3>
             <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text">Compound interest calculator with fixed or variable annual rates</p>
+        </a>
+        <a href="tools/stripe-fee-calculator.html" class="block p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+            <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1 flex items-center">💸 Stripe Fee Calculator <span class="text-green-500 ml-2">●</span></h3>
+            <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text">100% Free, Multiple Currencies Supported</p>
+        </a>
+        <a href="tools/tax-suite.html" class="block p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+            <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1 flex items-center">🧮 Tax Suite — Return Estimator <span class="text-green-500 ml-2">●</span></h3>
+            <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text">T4, pension, RDSP, T5008/trading, RRSP, WFH — approximate tax owed or refund (AB · BC · ON)</p>
+        </a>
+        <a href="tools/rdsp-calculator.html" class="block p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+            <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1 flex items-center">💰 RDSP Calculator <span class="text-green-500 ml-2">●</span></h3>
+            <p class="text-secondary-text-light dark:text-secondary-text-dark secondary-text">Enhanced RDSP calculator with advanced withdrawal planning and CRA rules</p>
         </a>
         <a href="tools/retirement-calculator.html" class="block p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
             <h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1 flex items-center">🏖️ Retirement Calculator <span class="text-green-500 ml-2">●</span></h3>
@@ -845,19 +741,105 @@
 <div id="yearProgressBar" class="h-full bg-primary" style="width:0%"></div>
  </div>
 <div class="mt-2 grid grid-cols-2 gap-2 text-[10px] secondary-text">
-<div><span id="daysPassed" class="font-semibold text-text-light dark:text-text-dark">286</span> days | <span id="weeksPassed" class="font-semibold text-text-light dark:text-text-dark">40</span> weeks | <span id="monthsPassed" class="font-semibold text-text-light dark:text-text-dark">10</span>ms elapsed</div>
-<div class="text-right"><span id="daysRemaining" class="font-semibold text-text-light dark:text-text-dark">79</span> days | <span id="weeksRemaining" class="font-semibold text-text-light dark:text-text-dark">11</span> weeks | <span id="monthsRemaining" class="font-semibold text-text-light dark:text-text-dark">2</span>ms remaining</div>
+<div><span id="daysPassed" class="font-semibold text-text-light dark:text-text-dark">286</span> days | <span id="weeksPassed" class="font-semibold text-text-light dark:text-text-dark">40</span> weeks | <span id="monthsPassed" class="font-semibold text-text-light dark:text-text-dark">10</span> mo elapsed</div>
+<div class="text-right"><span id="daysRemaining" class="font-semibold text-text-light dark:text-text-dark">79</span> days | <span id="weeksRemaining" class="font-semibold text-text-light dark:text-text-dark">11</span> weeks | <span id="monthsRemaining" class="font-semibold text-text-light dark:text-text-dark">2</span> mo remaining</div>
 </div>
 </div>
 </section>
+</main>
+</div>
 
-<section class="mb-8 pt-8" id="travel-gallery">
+<div id="teams" class="page-view" hidden>
+<div class="writing-grid">
+<article class="writing-card">
+<h3>Co-Founder, CTO · RentPlay</h3>
+<p class="meta">Calgary · Jan 2025 – Sep 2025</p>
+<p>My cofounder, Aby Jerin, and I met at a hackathon. We turned a weekend idea into a real company, and we raised money to chase it.</p>
+</article>
+<article class="writing-card">
+<h3>iOS Engineer · Wattpad</h3>
+<p class="meta">Toronto · Aug 2021 – Mar 2023</p>
+<p>Shipped experiments on Wattpad, including speech to text and early AI video generation from text.</p>
+</article>
+<article class="writing-card">
+<h3>iOS Developer · TD</h3>
+<p class="meta">Toronto · Jan 2020 – Aug 2021</p>
+<p>Helped TD become the first Canadian bank to ship Face ID, Touch ID, and two-factor auth across 5+ avenues.</p>
+</article>
+<article class="writing-card">
+<h3>Software Developer · Environment and Climate Change Canada</h3>
+<p class="meta">Greater Toronto Area · May 2017 – Jan 2020</p>
+<p>Shipped WeatherCAN, Canada’s national weather app, with a two-person team in a year.</p>
+</article>
+<article class="writing-card">
+<h3>Machine Learning Research Assistant · University of Toronto</h3>
+<p class="meta">Toronto · Sep 2016 – Dec 2016</p>
+<p>Trained models in Python and R to read the economic impact of foreign trade policy.</p>
+</article>
+<article class="writing-card">
+<h3>Web and iOS Developer · University of Toronto</h3>
+<p class="meta">Greater Toronto Area · May 2015 – Aug 2016</p>
+<p>Built the UTSC Student Experience app so students could stay connected to campus from their phone.</p>
+</article>
+</div>
+<button type="button" class="back-to-main">← Back to main page</button>
+</div>
+
+<div id="writing" class="page-view" hidden>
+<h3 class="page-heading">AI / ML notes</h3>
+<div class="writing-grid">
+<article class="writing-card">
+<h3>Prompt to Response, what actually happens? And whats in the AI cake?</h3>
+<p>Talk at Platform Calgary, July 2026. AI Summer School: Prompt to Response &amp; Problems to Solve.</p>
+<a href="notes/prompt-to-response.html">Read</a>
+</article>
+</div>
+<h3 class="page-heading">Entrepreneurship and business</h3>
+<div class="writing-grid">
+<article class="writing-card">
+<h3>Lessons from my 1st Startup - RentPlay.ca</h3>
+<p>Reflections on building RentPlay, on co-founders, validation, distribution, B2B vs B2C, and why cashflow beats VC money.</p>
+<a href="blog/rentplay-lessons-first-startup.html">Read</a>
+</article>
+</div>
+<h3 class="page-heading">iOS</h3>
+<div class="writing-grid">
+<article class="writing-card">
+<h3>SwiftUI Modern Development</h3>
+<p>Exploring the latest SwiftUI features and modern iOS development practices.</p>
+<a href="blog/swiftui-modern-development.html">Read</a>
+</article>
+<article class="writing-card">
+<h3>Swift Concurrency &amp; Multithreading</h3>
+<p>Understanding async/await and structured concurrency in Swift.</p>
+<a href="blog/swift-concurrency-multithreading.html">Read</a>
+</article>
+<article class="writing-card">
+<h3>iOS Unit Testing &amp; Mock Objects</h3>
+<p>Best practices for testing iOS applications with mock objects.</p>
+<a href="blog/ios-unit-testing-mock-objects.html">Read</a>
+</article>
+<article class="writing-card">
+<h3>iOS Networking with Async/Await</h3>
+<p>Modern networking patterns in iOS using async/await.</p>
+<a href="blog/ios-networking-async-await.html">Read</a>
+</article>
+</div>
+<h3 class="page-heading">Substack notes</h3>
+<div class="writing-grid">
+<article class="writing-card">
+<h3>Kevin’s Rule</h3>
+<p>How I plan on getting 6 more adventures in 2026.</p>
+<a href="https://manapate.substack.com/p/kevins-rule" target="_blank" rel="noopener">Read</a>
+</article>
+</div>
+<button type="button" class="back-to-main">← Back to main page</button>
+</div>
+
+<div id="travel" class="page-view" hidden>
+<section class="mb-8 pt-2" id="travel-gallery">
     <div class="travel-gallery-header">
         <h2 class="text-xl font-bold text-text-light dark:text-text-dark">Where I've been</h2>
-        <div class="travel-gallery-nav">
-            <button type="button" class="travel-gallery-nav-btn" id="travelGalleryPrev" aria-label="Scroll left">‹</button>
-            <button type="button" class="travel-gallery-nav-btn" id="travelGalleryNext" aria-label="Scroll right">›</button>
-        </div>
     </div>
     <div class="travel-stamps-scroll" id="travelStampsScroll">
         <div class="travel-stamp-link block rounded-lg border border-border-light dark:border-border-dark overflow-hidden hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" data-trip-href="travel/mexico-city-may2026.html" data-travel-media="images/travel_pictures/mexico_city-may2026.jpg" data-media-type="image">
@@ -1202,7 +1184,8 @@
         </div>
     </div>
 </section>
-</main>
+<button type="button" class="back-to-main">← Back to main page</button>
+</div>
 <script>
 (function(){
   var now = new Date();
@@ -1247,158 +1230,6 @@
   }
 })();
 
-// Image Modal Functionality
-(function() {
-    const modal = document.getElementById('imageModal');
-    const modalImage = document.getElementById('modalImage');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalDescription = document.getElementById('modalDescription');
-    const modalActions = document.getElementById('modalActions');
-    
-    // Image data with personality descriptions
-    const imageData = {
-        'coding-at-desk.png': {
-            title: 'The Workstation',
-            description: 'The workstation! Where you\'ll find me for like 10 hours of my day. Cant stop wont stop.',
-            actions: []
-        },
-        'lifting-weights.png': {
-            title: 'Fitness Journey',
-            description: 'Since 2023, I\'ve been on a lifting and recomp journey, -30lbs down and 20 more to go. Strength training is a non-negotiable for me day in and day out now. Hoping to 15% body fat by the end of the year. At like 22% right now.',
-            actions: []
-        },
-        'manan-hiking.png': {
-            title: 'Mountain Explorer',
-            description: 'Moving to Calgary has officially made me a hiker 😄. There\'s nothing like being in the mountains to clear your mind and gain perspective on whats important in life',
-            actions: []
-        },
-        'manan-kitchen.png': {
-            title: 'Kitchen Experiments',
-            description: 'Currently working on a Sesame seed based protein bar. Cause every damn bar nowadays is some kind of chocolate bar. Interested in trying? DM me on X to know what you think!',
-            actions: []
-        },
-        'manan-movies.png': {
-            title: 'Film Buff',
-            description: 'I\'m a big film buff. Letterboxd is love. Letterboxd is life.',
-            actions: [{
-                text: 'View Letterboxd',
-                url: 'https://letterboxd.com/fedsmoker/',
-                icon: '🎬'
-            }]
-        },
-        'manan-pickleball.png': {
-            title: 'Pickleball Player',
-            description: 'Officially an unc so I picked up pickleball too. Great way to stay active and competitive while having fun.',
-            actions: []
-        },
-        'manan-vending-machine-tokyo.png': {
-            title: 'Travel Enthusiast',
-            description: 'Love to travel and backpack around. My last trip was Tofino, Canada!',
-            actions: [{
-                text: 'Travel Gallery',
-                url: '#travel-gallery',
-                icon: '✈️'
-            }]
-        }
-    };
-    
-    // Image order (matching carousel order)
-    const imageOrder = [
-        'coding-at-desk.png',
-        'lifting-weights.png',
-        'manan-hiking.png',
-        'manan-kitchen.png',
-        'manan-movies.png',
-        'manan-pickleball.png',
-        'manan-vending-machine-tokyo.png'
-    ];
-    
-    let currentImageIndex = 0;
-    
-    // Navigation function (exposed globally)
-    window.navigateModalImage = function(direction) {
-        currentImageIndex += direction;
-        
-        // Wrap around
-        if (currentImageIndex < 0) {
-            currentImageIndex = imageOrder.length - 1;
-        } else if (currentImageIndex >= imageOrder.length) {
-            currentImageIndex = 0;
-        }
-        
-        const nextImageSrc = imageOrder[currentImageIndex];
-        openImageModal(nextImageSrc);
-    };
-    
-    // Use data-index so title/description always match the clicked image (carousel has duplicate items)
-    document.querySelectorAll('.header-carousel-item').forEach((item) => {
-        item.addEventListener('click', function() {
-            const dataIndex = parseInt(this.getAttribute('data-index'), 10);
-            if (!isNaN(dataIndex) && dataIndex >= 0 && dataIndex < imageOrder.length) {
-                currentImageIndex = dataIndex;
-                openImageModal(imageOrder[dataIndex]);
-            }
-        });
-    });
-    
-    function openImageModal(imageSrc) {
-        const data = imageData[imageSrc];
-        if (!data) return;
-        const imgIndex = imageOrder.indexOf(imageSrc);
-        if (imgIndex !== -1) currentImageIndex = imgIndex;
-        modalImage.src = `images/minis_1080/${imageSrc}`;
-        modalTitle.textContent = data.title;
-        modalDescription.textContent = data.description;
-        
-        // Build action buttons
-        modalActions.innerHTML = '';
-        data.actions.forEach(action => {
-            const button = document.createElement('a');
-            button.className = 'image-modal-button';
-            button.href = action.url;
-            button.textContent = `${action.icon} ${action.text}`;
-            if (action.url.startsWith('http')) {
-                button.target = '_blank';
-                button.rel = 'noopener';
-            }
-            modalActions.appendChild(button);
-        });
-        
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-    
-    function closeImageModal() {
-        modal.classList.remove('active');
-        document.body.style.overflow = '';
-    }
-    
-    window.closeImageModal = closeImageModal;
-    
-    // Close modal when clicking an in-modal link (e.g. Travel Gallery → #travel-gallery) so the section is visible
-    modalActions.addEventListener('click', function(e) {
-        const a = e.target.closest('a[href^="#"]');
-        if (a) closeImageModal();
-    });
-    
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) closeImageModal();
-    });
-    
-    // Close modal on escape key, navigate with arrow keys
-    document.addEventListener('keydown', function(e) {
-        if (!modal.classList.contains('active')) return;
-        
-        if (e.key === 'Escape') {
-            closeImageModal();
-        } else if (e.key === 'ArrowLeft') {
-            navigateModalImage(-1);
-        } else if (e.key === 'ArrowRight') {
-            navigateModalImage(1);
-        }
-    });
-})();
-
 // Dark mode toggle
 (function() {
     const darkModeToggle = document.getElementById('darkModeToggle');
@@ -1439,182 +1270,6 @@
             if (darkModeText) darkModeText.textContent = 'Dark';
         }
     });
-})();
-
-// Header Carousel - Continuous Horizontal Scrolling
-(function() {
-    const headerCarousel = document.getElementById('headerCarousel');
-    const carouselTrack = document.getElementById('headerCarouselTrack');
-    const leftSpeedControl = document.querySelector('.header-carousel-speed-control.left');
-    const rightSpeedControl = document.querySelector('.header-carousel-speed-control.right');
-    
-    if (!headerCarousel || !carouselTrack) return;
-
-    const itemWidth = 192; // 192px width
-    const gap = 16; // 1rem = 16px
-    const itemTotalWidth = itemWidth + gap;
-    const baseSpeed = 0.5; // pixels per frame
-    const speedMultiplier = 3; // Speed multiplier when hovering over controls
-    let scrollPosition = 0;
-    let animationFrameId = null;
-    let speedDirection = 0; // -1 for left (faster left), 1 for right (faster right), 0 for normal
-    const uniqueItems = 7; // Number of unique images
-
-    // Calculate total width needed for seamless loop
-    const totalWidth = uniqueItems * itemTotalWidth;
-
-    function animate() {
-        let speed = baseSpeed;
-        
-        // Adjust speed and direction based on hover
-        if (speedDirection === -1) {
-            // Hovering left control - speed up leftward scrolling (normal direction, faster)
-            speed = baseSpeed * speedMultiplier;
-        } else if (speedDirection === 1) {
-            // Hovering right control - speed up rightward scrolling (reverse direction, faster)
-            speed = -(baseSpeed * speedMultiplier);
-        }
-        
-        scrollPosition -= speed;
-        
-        // Reset position when we've scrolled past one set of items (going left)
-        if (scrollPosition <= -totalWidth) {
-            scrollPosition += totalWidth;
-        }
-        
-        // Reset position when we've scrolled past one set of items (going right)
-        if (scrollPosition > 0) {
-            scrollPosition -= totalWidth;
-        }
-        
-        carouselTrack.style.transform = `translateX(${scrollPosition}px)`;
-        animationFrameId = requestAnimationFrame(animate);
-    }
-
-    // Left speed control hover (speeds up leftward scrolling - normal direction)
-    if (leftSpeedControl) {
-        leftSpeedControl.addEventListener('mouseenter', (e) => {
-            e.stopPropagation();
-            // Ensure animation is running
-            if (!animationFrameId) {
-                animate();
-            }
-            speedDirection = -1;
-        });
-        
-        leftSpeedControl.addEventListener('mouseleave', () => {
-            speedDirection = 0;
-        });
-    }
-
-    // Right speed control hover (speeds up rightward scrolling - reverse direction)
-    if (rightSpeedControl) {
-        rightSpeedControl.addEventListener('mouseenter', (e) => {
-            e.stopPropagation();
-            // Ensure animation is running
-            if (!animationFrameId) {
-                animate();
-            }
-            speedDirection = 1;
-        });
-        
-        rightSpeedControl.addEventListener('mouseleave', () => {
-            speedDirection = 0;
-        });
-    }
-
-    // Pause on hover over carousel track (but not when hovering speed controls)
-    const carouselWrapper = headerCarousel.querySelector('.header-carousel-wrapper');
-    if (carouselWrapper) {
-        carouselWrapper.addEventListener('mouseenter', (e) => {
-            // Don't pause if hovering over speed controls
-            if (e.target.closest('.header-carousel-speed-control')) {
-                return;
-            }
-            if (animationFrameId) {
-                cancelAnimationFrame(animationFrameId);
-                animationFrameId = null;
-            }
-        });
-
-        carouselWrapper.addEventListener('mouseleave', () => {
-            if (!animationFrameId) {
-                animate();
-            }
-        });
-    }
-
-    // Drag functionality
-    let isDragging = false;
-    let startX = 0;
-    let startScrollPosition = 0;
-
-    headerCarousel.addEventListener('mousedown', (e) => {
-        if (e.target.closest('.header-carousel-speed-control')) return;
-        isDragging = true;
-        startX = e.pageX;
-        startScrollPosition = scrollPosition;
-        if (animationFrameId) {
-            cancelAnimationFrame(animationFrameId);
-            animationFrameId = null;
-        }
-    });
-
-    headerCarousel.addEventListener('touchstart', (e) => {
-        if (e.target.closest('.header-carousel-speed-control')) return;
-        isDragging = true;
-        startX = e.touches[0].pageX;
-        startScrollPosition = scrollPosition;
-        if (animationFrameId) {
-            cancelAnimationFrame(animationFrameId);
-            animationFrameId = null;
-        }
-    });
-
-    headerCarousel.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        e.preventDefault();
-        const deltaX = e.pageX - startX;
-        scrollPosition = startScrollPosition + deltaX;
-        carouselTrack.style.transform = `translateX(${scrollPosition}px)`;
-    });
-
-    headerCarousel.addEventListener('touchmove', (e) => {
-        if (!isDragging) return;
-        const deltaX = e.touches[0].pageX - startX;
-        scrollPosition = startScrollPosition + deltaX;
-        carouselTrack.style.transform = `translateX(${scrollPosition}px)`;
-    });
-
-    headerCarousel.addEventListener('mouseup', () => {
-        if (isDragging) {
-            isDragging = false;
-            if (!animationFrameId) {
-                animate();
-            }
-        }
-    });
-
-    headerCarousel.addEventListener('touchend', () => {
-        if (isDragging) {
-            isDragging = false;
-            if (!animationFrameId) {
-                animate();
-            }
-        }
-    });
-
-    headerCarousel.addEventListener('mouseleave', () => {
-        if (isDragging) {
-            isDragging = false;
-            if (!animationFrameId) {
-                animate();
-            }
-        }
-    });
-
-    // Start animation
-    animate();
 })();
 
 // Travel gallery carousel nav
@@ -1716,79 +1371,120 @@
     });
 })();
 
-// About section toggle
-(function() {
-    const aboutToggle = document.getElementById('aboutToggle');
-    const aboutSection = document.getElementById('aboutSection');
-    const toggleIcon = aboutToggle?.querySelector('.material-icons');
-    
-    if (!aboutToggle || !aboutSection || !toggleIcon) return;
-    
-    // Check for saved preference
-    const savedState = localStorage.getItem('aboutSectionVisible');
-    const isVisible = savedState === 'true';
-    
-    if (isVisible) {
-        aboutSection.style.display = 'block';
-        toggleIcon.textContent = 'info';
-    } else {
-        aboutSection.style.display = 'none';
-        toggleIcon.textContent = 'info_outline';
-    }
-    
-    aboutToggle.addEventListener('click', () => {
-        const isCurrentlyVisible = aboutSection.style.display !== 'none';
-        
-        if (isCurrentlyVisible) {
-            aboutSection.style.display = 'none';
-            toggleIcon.textContent = 'info_outline';
-            localStorage.setItem('aboutSectionVisible', 'false');
-        } else {
-            aboutSection.style.display = 'block';
-            toggleIcon.textContent = 'info';
-            localStorage.setItem('aboutSectionVisible', 'true');
-        }
-    });
-})();
 </script>
 
-<!-- Substack RSS feed -->
 <script>
 (function () {
-    var FEED = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent('https://manapate.substack.com/feed');
+    var labels = {
+        start: 'Main',
+        projects: 'Projects',
+        teams: 'Teams I\'ve worked with',
+        tools: 'Tools',
+        writing: 'Writing',
+        travel: 'Travel'
+    };
+    var pageIds = { teams: true, writing: true, travel: true };
+    var nav = document.getElementById('siteNav');
+    var indicator = document.getElementById('sectionIndicator');
+    var sidebar = document.getElementById('siteSidebar');
+    var backdrop = document.getElementById('sidebarBackdrop');
+    var menuBtn = document.getElementById('mobileMenuToggle');
+    var homeHeader = document.getElementById('start');
+    var homeMain = document.getElementById('home-main');
+    if (!nav || !indicator) return;
 
-    function escHtml(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
-    function stripHtml(s) { var d = document.createElement('div'); d.innerHTML = s; return d.textContent || d.innerText || ''; }
-    function truncate(s, n) { return s.length > n ? s.slice(0, n).trimEnd() + '…' : s; }
-    function formatDate(s) { return new Date(s).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); }
-    function safeUrl(s) { return /^https?:\/\//.test(s) ? s : '#'; }
+    var links = Array.prototype.slice.call(nav.querySelectorAll('a[data-section]'));
+    var homeSections = ['start', 'projects', 'tools'].map(function (id) {
+        return document.getElementById(id);
+    }).filter(Boolean);
+    var activeId = 'start';
+    var showingPage = false;
 
-    fetch(FEED)
-        .then(function (r) { return r.json(); })
-        .then(function (data) {
-            if (data.status !== 'ok' || !data.items || !data.items.length) return;
-            var container = document.getElementById('blog-posts-home');
-            if (!container) return;
-            // Prepend each Substack post before the existing static posts
-            data.items.slice(0, 3).reverse().forEach(function (item) {
-                var url = safeUrl(item.link);
-                var a = document.createElement('a');
-                a.href = url;
-                a.target = '_blank';
-                a.rel = 'noopener noreferrer';
-                a.className = 'p-4 rounded-lg border border-border-light dark:border-border-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors';
-                a.innerHTML =
-                    '<h3 class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">' + escHtml(item.title) + '</h3>' +
-                    '<p class="text-secondary-text-light dark:text-secondary-text-dark blog-description">' + escHtml(truncate(stripHtml(item.description || item.content || ''), 120)) + '</p>' +
-                    '<div class="mt-2 text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">' + formatDate(item.pubDate) + ' • Substack</div>';
-                container.insertBefore(a, container.firstChild);
-            });
-            // Trim to 3 total
-            while (container.children.length > 3) container.removeChild(container.lastChild);
-        })
-        .catch(function () { /* static posts already visible */ });
+    function setActive(id) {
+        if (!labels[id]) return;
+        activeId = id;
+        indicator.textContent = labels[id];
+        links.forEach(function (link) {
+            link.classList.toggle('active', link.getAttribute('data-section') === id);
+        });
+    }
+
+    function showView(id) {
+        if (!labels[id]) id = 'start';
+        showingPage = !!pageIds[id];
+        if (homeHeader) homeHeader.hidden = showingPage;
+        if (homeMain) homeMain.hidden = showingPage;
+        document.querySelectorAll('.page-view').forEach(function (view) {
+            view.hidden = view.id !== id;
+        });
+        setActive(id);
+        window.scrollTo(0, 0);
+        if (!showingPage && id !== 'start') {
+            var target = document.getElementById(id);
+            if (target) target.scrollIntoView();
+        }
+    }
+
+    function sectionTop(section) {
+        return section.getBoundingClientRect().top + window.scrollY;
+    }
+
+    function sectionInView() {
+        if (showingPage) return;
+        var marker = window.scrollY + 140;
+        var current = homeSections[0];
+        homeSections.forEach(function (section) {
+            if (sectionTop(section) <= marker) current = section;
+        });
+        if (current) setActive(current.id);
+    }
+
+    function closeMenu() {
+        if (sidebar) sidebar.classList.remove('open');
+        if (backdrop) backdrop.classList.remove('open');
+        if (menuBtn) menuBtn.setAttribute('aria-label', 'Open menu');
+    }
+
+    links.forEach(function (link) {
+        link.addEventListener('click', function (e) {
+            var id = link.getAttribute('data-section');
+            if (pageIds[id]) e.preventDefault();
+            if (window.location.hash === '#' + id) showView(id);
+            else window.location.hash = id;
+            closeMenu();
+        });
+    });
+
+    document.querySelectorAll('.back-to-main').forEach(function (button) {
+        button.addEventListener('click', function () {
+            if (window.location.hash === '#start' || window.location.hash === '') showView('start');
+            else window.location.hash = 'start';
+        });
+    });
+
+    if (menuBtn && sidebar) {
+        menuBtn.addEventListener('click', function () {
+            var open = sidebar.classList.toggle('open');
+            if (backdrop) backdrop.classList.toggle('open', open);
+            menuBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+        });
+    }
+    if (backdrop) backdrop.addEventListener('click', closeMenu);
+
+    window.addEventListener('scroll', sectionInView, { passive: true });
+    window.addEventListener('hashchange', function () {
+        var id = window.location.hash.replace('#', '');
+        if (!id) id = 'start';
+        if (labels[id]) showView(id);
+    });
+
+    var initial = window.location.hash.replace('#', '');
+    if (labels[initial]) showView(initial);
+    else sectionInView();
 })();
 </script>
+</div>
+</div>
 </div>
 
 </body></html>
