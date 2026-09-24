@@ -34,6 +34,14 @@
         .home { display: inline-block; margin: 8px 0 18px; color: #c5cad1; text-decoration: none; font-size: 0.88rem; }
         .home:hover { color: #fff; }
         .kicker { margin: 0; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: #9aa1ab; }
+        .list-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 8px; }
+        .refresh {
+            border: 0; background: #c6f135; color: #111; font-weight: 700;
+            border-radius: 999px; padding: 8px 12px; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .refresh svg { width: 16px; height: 16px; }
+        .refresh.busy svg { animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(-360deg); } }
         .ticker {
             display: flex; align-items: center; justify-content: space-between; gap: 12px;
             width: 100%; text-align: left; background: none; border: 0;
@@ -155,7 +163,10 @@
         <aside>
             <h1 class="brand">Futures P&L</h1>
             <a class="home" href="../">← Home</a>
-            <p class="kicker">Contracts</p>
+            <div class="list-head">
+                <p class="kicker">Contracts</p>
+                <button class="refresh" type="button" id="refreshPrices"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 12a8 8 0 1 1-2.2-5.5"/><path d="M20 4v5h-5"/></svg> Refresh</button>
+            </div>
             <div id="contractList"></div>
         </aside>
         <main>
@@ -244,7 +255,7 @@
                     <p class="summary" id="tradeSummary"></p>
                     <details class="method">
                         <summary>Method</summary>
-                        <p>P&L is the point difference times the contract multiplier times the number of contracts. Commission is $1 per contract per side, $2 round trip. Entry and exit are the lines on the chart. Prices in the list are a delayed weekday snapshot. Candles come from Yahoo and are kept for 12 hours so reloading does not ask again. This is a calculator, not a live quote or a trade signal.</p>
+                        <p>P&L is the point difference times the contract multiplier times the number of contracts. Commission is $1 per contract per side, $2 round trip. Entry and exit are the lines on the chart. Prices in the list are a delayed weekday snapshot until you refresh. Candles come from Yahoo and are kept for 12 hours so reloading does not ask again. Refresh asks for a new price on every contract and a new chart. This is a calculator, not a live quote or a trade signal.</p>
                     </details>
                 </div>
                 </div>
@@ -283,6 +294,7 @@
         var chartDraw = function () {};
         var memJson = {};
         var inflight = {};
+        var refreshing = false;
 
         function priceDecimals(tickSize) {
             if (!tickSize || tickSize >= 1) return 0;
@@ -443,14 +455,20 @@
             try { localStorage.setItem('futures-chart-v1', JSON.stringify(data)); }
             catch (e) {}
         }
-        async function fetchJsonNet(url, attempt) {
+        async function fetchJsonNet(url, attempt, tolerance) {
+            var fresh = tolerance === '0';
             var res = await fetch('https://r.jina.ai/' + url, {
-                headers: { 'Accept': 'application/json', 'X-Return-Format': 'text', 'X-Cache-Tolerance': '43200' }
+                cache: fresh ? 'no-store' : 'default',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Return-Format': 'text',
+                    'X-Cache-Tolerance': tolerance || '43200'
+                }
             });
             if (!res.ok) {
                 if (attempt < 2 && (res.status === 429 || res.status >= 500)) {
                     await new Promise(function (r) { setTimeout(r, 800 * (attempt + 1)); });
-                    return fetchJsonNet(url, attempt + 1);
+                    return fetchJsonNet(url, attempt + 1, tolerance);
                 }
                 throw new Error('Feed unavailable');
             }
@@ -459,18 +477,19 @@
             if (data.httpStatus >= 400 || !data.text) throw new Error('No data');
             return JSON.parse(data.text);
         }
-        function fetchJson(url) {
-            if (memJson[url]) return Promise.resolve(memJson[url]);
-            if (inflight[url]) return inflight[url];
-            inflight[url] = fetchJsonNet(url, 0).then(function (data) {
+        function fetchJson(url, force) {
+            var key = (force ? '1:' : '0:') + url;
+            if (!force && memJson[url]) return Promise.resolve(memJson[url]);
+            if (inflight[key]) return inflight[key];
+            inflight[key] = fetchJsonNet(url, 0, force ? '0' : '43200').then(function (data) {
                 memJson[url] = data;
-                delete inflight[url];
+                delete inflight[key];
                 return data;
             }, function (err) {
-                delete inflight[url];
+                delete inflight[key];
                 throw err;
             });
-            return inflight[url];
+            return inflight[key];
         }
         function parseYahoo(payload) {
             var result = payload.chart && payload.chart.result && payload.chart.result[0];
@@ -506,6 +525,16 @@
             writeStore(all);
             liveQuote[symbol] = entry.quote;
         }
+        function dropOtherIntervals(symbol, keepIv) {
+            var all = readStore();
+            Object.keys(INTERVALS).forEach(function (iv) {
+                if (iv === keepIv) return;
+                var key = cacheKey(symbol, iv);
+                delete seriesCache[key];
+                delete all[key];
+            });
+            writeStore(all);
+        }
         function cachedBars(symbol, iv) {
             var key = cacheKey(symbol, iv);
             var hit = seriesCache[key];
@@ -520,24 +549,45 @@
             liveQuote[symbol] = hit.quote;
             return hit.bars;
         }
-        async function ensureSeries(symbol, iv) {
-            var have = cachedBars(symbol, iv);
+        async function ensureSeries(symbol, iv, force) {
+            var have = force ? null : cachedBars(symbol, iv);
             if (!have) {
                 try {
                     var spec = INTERVALS[iv];
                     var yahoo = contractSpecs[symbol].yahoo;
                     var url = 'https://query1.finance.yahoo.com/v8/finance/chart/' + encodeURIComponent(yahoo) + '?interval=' + spec.yahoo + '&range=' + spec.range + '&includePrePost=false';
-                    var pack = parseYahoo(await fetchJson(url));
+                    var pack = parseYahoo(await fetchJson(url, force));
                     remember(symbol, iv, pack);
+                    if (force) dropOtherIntervals(symbol, iv);
                     have = pack.bars;
                 } catch (e) {
-                    have = null;
+                    have = force ? cachedBars(symbol, iv) : null;
                 }
             }
             if (selectedSymbol() === symbol && interval === iv) {
                 if (!pricesTouched && getQuote(symbol)) applyLastPrice('both');
                 else updateDisplay();
                 bindChart(have || []);
+            }
+        }
+        function setRefreshBusy(on) {
+            var btn = document.getElementById('refreshPrices');
+            if (btn) btn.classList.toggle('busy', on);
+        }
+        async function refreshAllPrices() {
+            if (refreshing) return;
+            refreshing = true;
+            setRefreshBusy(true);
+            var symbols = Object.keys(contractSpecs);
+            try {
+                for (var i = 0; i < symbols.length; i++) {
+                    await ensureSeries(symbols[i], interval, true);
+                    if (selectedSymbol() !== symbols[i]) updateDisplay();
+                }
+            } finally {
+                refreshing = false;
+                setRefreshBusy(false);
+                updateDisplay();
             }
         }
 
@@ -943,6 +993,7 @@
             updateDisplay();
         }
         document.getElementById('clearTrade').addEventListener('click', clearTrade);
+        document.getElementById('refreshPrices').addEventListener('click', refreshAllPrices);
         document.getElementById('useAsEntry').addEventListener('click', function () { applyLastPrice('entry'); });
         document.getElementById('useAsExit').addEventListener('click', function () { applyLastPrice('exit'); });
         document.getElementById('pickClose').addEventListener('click', function () {
