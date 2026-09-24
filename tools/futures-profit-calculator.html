@@ -34,6 +34,14 @@
         .home { display: inline-block; margin: 8px 0 18px; color: #c5cad1; text-decoration: none; font-size: 0.88rem; }
         .home:hover { color: #fff; }
         .kicker { margin: 0; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: #9aa1ab; }
+        .list-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 8px; }
+        .refresh {
+            border: 0; background: #c6f135; color: #111; font-weight: 700;
+            border-radius: 999px; padding: 8px 12px; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .refresh svg { width: 16px; height: 16px; }
+        .refresh.busy svg { animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(-360deg); } }
         .ticker {
             display: flex; align-items: center; justify-content: space-between; gap: 12px;
             width: 100%; text-align: left; background: none; border: 0;
@@ -95,6 +103,11 @@
             border: 0; background: #171b20; color: #d5d8de; border-radius: 10px; padding: 11px 12px;
         }
         .uses button:disabled { color: #6b7280; cursor: default; }
+        #clearTrade {
+            width: 100%; border: 0; background: #171b20; color: #d5d8de;
+            border-radius: 10px; padding: 11px 12px; font-weight: 650;
+        }
+        #clearTrade:hover { color: #fff; background: #23272e; }
         .chart-toolbar { display: flex; justify-content: space-between; gap: 12px; align-items: flex-end; margin-top: 18px; }
         .chart-note { margin: 4px 0 0; color: #9aa1ab; font-size: 0.82rem; }
         .pick {
@@ -150,7 +163,10 @@
         <aside>
             <h1 class="brand">Futures P&L</h1>
             <a class="home" href="../">← Home</a>
-            <p class="kicker">Contracts</p>
+            <div class="list-head">
+                <p class="kicker">Contracts</p>
+                <button class="refresh" type="button" id="refreshPrices"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 12a8 8 0 1 1-2.2-5.5"/><path d="M20 4v5h-5"/></svg> Refresh</button>
+            </div>
             <div id="contractList"></div>
         </aside>
         <main>
@@ -224,6 +240,9 @@
                                 <button type="button" id="useAsExit" disabled>Use as exit</button>
         </div>
             </div>
+                        <div class="wide">
+                            <button type="button" id="clearTrade">Clear</button>
+                        </div>
                 </div>
                     <div class="stats">
                         <div class="stat"><p>Net P&L</p><strong id="netProfit">$0.00</strong></div>
@@ -236,7 +255,7 @@
                     <p class="summary" id="tradeSummary"></p>
                     <details class="method">
                         <summary>Method</summary>
-                        <p>P&L is the point difference times the contract multiplier times the number of contracts. Commission is $1 per contract per side, $2 round trip. Entry and exit are the lines on the chart. Prices in the list are a delayed weekday snapshot. Candles come from Yahoo and are kept for 12 hours so reloading does not ask again. This is a calculator, not a live quote or a trade signal.</p>
+                        <p>P&L is the point difference times the contract multiplier times the number of contracts. Commission is $1 per contract per side, $2 round trip. Entry and exit are the lines on the chart. Prices in the list are a delayed weekday snapshot until you refresh. Candles come from Yahoo and are kept for 12 hours so reloading does not ask again. Refresh asks for a new price on every contract and a new chart. This is a calculator, not a live quote or a trade signal.</p>
                     </details>
                 </div>
                 </div>
@@ -275,6 +294,7 @@
         var chartDraw = function () {};
         var memJson = {};
         var inflight = {};
+        var refreshing = false;
 
         function priceDecimals(tickSize) {
             if (!tickSize || tickSize >= 1) return 0;
@@ -319,20 +339,34 @@
             if (which === 'exit' || which === 'both') setPriceInput('exitPrice', symbol, quote.price);
             updateDisplay();
         }
+        function readPrice(id) {
+            var raw = String(document.getElementById(id).value).trim();
+            if (!raw) return null;
+            var n = parseFloat(raw);
+            return isFinite(n) ? n : null;
+        }
         function calculateProfit() {
             var symbol = selectedSymbol();
             var contracts = parseFloat(document.getElementById('contracts').value) || 0;
-            var entryPrice = parseFloat(document.getElementById('entryPrice').value) || 0;
-            var exitPrice = parseFloat(document.getElementById('exitPrice').value) || 0;
+            var entryPrice = readPrice('entryPrice');
+            var exitPrice = readPrice('exitPrice');
             var spec = contractSpecs[symbol];
             if (!spec) return null;
+            if (entryPrice == null || exitPrice == null || !(contracts > 0)) {
+                return { ready: false, grossProfit: 0, netProfit: 0, totalCommission: 0, ticks: 0, netProfitPerContract: 0, pointDifference: 0, entryPrice: entryPrice, exitPrice: exitPrice };
+            }
             var pointDifference = currentPosition === 'long' ? exitPrice - entryPrice : entryPrice - exitPrice;
             var grossProfit = pointDifference * spec.multiplier * contracts;
             var totalCommission = contracts * 2;
             var netProfit = grossProfit - totalCommission;
             var ticks = Math.abs(pointDifference / spec.tickSize);
             var netProfitPerContract = pointDifference * spec.multiplier - 2;
-            return { grossProfit: grossProfit, netProfit: netProfit, totalCommission: totalCommission, ticks: ticks, netProfitPerContract: netProfitPerContract, pointDifference: pointDifference, entryPrice: entryPrice, exitPrice: exitPrice };
+            return { ready: true, grossProfit: grossProfit, netProfit: netProfit, totalCommission: totalCommission, ticks: ticks, netProfitPerContract: netProfitPerContract, pointDifference: pointDifference, entryPrice: entryPrice, exitPrice: exitPrice };
+        }
+        function paintBlank(id) {
+            var el = document.getElementById(id);
+            el.textContent = '—';
+            el.className = '';
         }
         function paintStat(id, value, positive) {
             var el = document.getElementById(id);
@@ -345,16 +379,21 @@
             var symbol = selectedSymbol();
             var spec = contractSpecs[symbol];
             document.getElementById('specLine').textContent = 'Multiplier $' + spec.multiplier + ' · tick $' + spec.tickValue.toFixed(2);
-            paintStat('netProfit', result.netProfit, result.netProfit >= 0);
-            paintStat('grossProfit', result.grossProfit, result.grossProfit >= 0);
-            paintStat('netProfitPerContract', result.netProfitPerContract, result.netProfitPerContract >= 0);
-            paintStat('totalCommission', -result.totalCommission, false);
-            var pointEl = document.getElementById('pointDifference');
-            pointEl.textContent = (result.pointDifference >= 0 ? '+' : '') + result.pointDifference.toFixed(2);
-            pointEl.className = result.pointDifference >= 0 ? 'up' : 'down';
-            document.getElementById('ticks').textContent = result.ticks.toFixed(0);
-            var contracts = document.getElementById('contracts').value;
-            document.getElementById('tradeSummary').textContent = currentPosition.toUpperCase() + ' ' + contracts + ' ' + symbol + '  ' + document.getElementById('entryPrice').value + ' → ' + document.getElementById('exitPrice').value;
+            if (!result.ready) {
+                ['netProfit', 'grossProfit', 'netProfitPerContract', 'totalCommission', 'pointDifference', 'ticks'].forEach(paintBlank);
+                document.getElementById('tradeSummary').textContent = 'Enter an entry and an exit.';
+            } else {
+                paintStat('netProfit', result.netProfit, result.netProfit >= 0);
+                paintStat('grossProfit', result.grossProfit, result.grossProfit >= 0);
+                paintStat('netProfitPerContract', result.netProfitPerContract, result.netProfitPerContract >= 0);
+                paintStat('totalCommission', -result.totalCommission, false);
+                var pointEl = document.getElementById('pointDifference');
+                pointEl.textContent = (result.pointDifference >= 0 ? '+' : '') + result.pointDifference.toFixed(2);
+                pointEl.className = result.pointDifference >= 0 ? 'up' : 'down';
+                document.getElementById('ticks').textContent = result.ticks.toFixed(0);
+                var contracts = document.getElementById('contracts').value;
+                document.getElementById('tradeSummary').textContent = currentPosition.toUpperCase() + ' ' + contracts + ' ' + symbol + '  ' + document.getElementById('entryPrice').value + ' → ' + document.getElementById('exitPrice').value;
+            }
             var quote = getQuote(symbol);
             var pxEl = document.getElementById('lastPx');
             var chgEl = document.getElementById('lastChg');
@@ -416,14 +455,20 @@
             try { localStorage.setItem('futures-chart-v1', JSON.stringify(data)); }
             catch (e) {}
         }
-        async function fetchJsonNet(url, attempt) {
+        async function fetchJsonNet(url, attempt, tolerance) {
+            var fresh = tolerance === '0';
             var res = await fetch('https://r.jina.ai/' + url, {
-                headers: { 'Accept': 'application/json', 'X-Return-Format': 'text', 'X-Cache-Tolerance': '43200' }
+                cache: fresh ? 'no-store' : 'default',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Return-Format': 'text',
+                    'X-Cache-Tolerance': tolerance || '43200'
+                }
             });
             if (!res.ok) {
                 if (attempt < 2 && (res.status === 429 || res.status >= 500)) {
                     await new Promise(function (r) { setTimeout(r, 800 * (attempt + 1)); });
-                    return fetchJsonNet(url, attempt + 1);
+                    return fetchJsonNet(url, attempt + 1, tolerance);
                 }
                 throw new Error('Feed unavailable');
             }
@@ -432,18 +477,19 @@
             if (data.httpStatus >= 400 || !data.text) throw new Error('No data');
             return JSON.parse(data.text);
         }
-        function fetchJson(url) {
-            if (memJson[url]) return Promise.resolve(memJson[url]);
-            if (inflight[url]) return inflight[url];
-            inflight[url] = fetchJsonNet(url, 0).then(function (data) {
+        function fetchJson(url, force) {
+            var key = (force ? '1:' : '0:') + url;
+            if (!force && memJson[url]) return Promise.resolve(memJson[url]);
+            if (inflight[key]) return inflight[key];
+            inflight[key] = fetchJsonNet(url, 0, force ? '0' : '43200').then(function (data) {
                 memJson[url] = data;
-                delete inflight[url];
+                delete inflight[key];
                 return data;
             }, function (err) {
-                delete inflight[url];
+                delete inflight[key];
                 throw err;
             });
-            return inflight[url];
+            return inflight[key];
         }
         function parseYahoo(payload) {
             var result = payload.chart && payload.chart.result && payload.chart.result[0];
@@ -479,6 +525,16 @@
             writeStore(all);
             liveQuote[symbol] = entry.quote;
         }
+        function dropOtherIntervals(symbol, keepIv) {
+            var all = readStore();
+            Object.keys(INTERVALS).forEach(function (iv) {
+                if (iv === keepIv) return;
+                var key = cacheKey(symbol, iv);
+                delete seriesCache[key];
+                delete all[key];
+            });
+            writeStore(all);
+        }
         function cachedBars(symbol, iv) {
             var key = cacheKey(symbol, iv);
             var hit = seriesCache[key];
@@ -493,24 +549,45 @@
             liveQuote[symbol] = hit.quote;
             return hit.bars;
         }
-        async function ensureSeries(symbol, iv) {
-            var have = cachedBars(symbol, iv);
+        async function ensureSeries(symbol, iv, force) {
+            var have = force ? null : cachedBars(symbol, iv);
             if (!have) {
                 try {
                     var spec = INTERVALS[iv];
                     var yahoo = contractSpecs[symbol].yahoo;
                     var url = 'https://query1.finance.yahoo.com/v8/finance/chart/' + encodeURIComponent(yahoo) + '?interval=' + spec.yahoo + '&range=' + spec.range + '&includePrePost=false';
-                    var pack = parseYahoo(await fetchJson(url));
+                    var pack = parseYahoo(await fetchJson(url, force));
                     remember(symbol, iv, pack);
+                    if (force) dropOtherIntervals(symbol, iv);
                     have = pack.bars;
                 } catch (e) {
-                    have = null;
+                    have = force ? cachedBars(symbol, iv) : null;
                 }
             }
             if (selectedSymbol() === symbol && interval === iv) {
                 if (!pricesTouched && getQuote(symbol)) applyLastPrice('both');
                 else updateDisplay();
                 bindChart(have || []);
+            }
+        }
+        function setRefreshBusy(on) {
+            var btn = document.getElementById('refreshPrices');
+            if (btn) btn.classList.toggle('busy', on);
+        }
+        async function refreshAllPrices() {
+            if (refreshing) return;
+            refreshing = true;
+            setRefreshBusy(true);
+            var symbols = Object.keys(contractSpecs);
+            try {
+                for (var i = 0; i < symbols.length; i++) {
+                    await ensureSeries(symbols[i], interval, true);
+                    if (selectedSymbol() !== symbols[i]) updateDisplay();
+                }
+            } finally {
+                refreshing = false;
+                setRefreshBusy(false);
+                updateDisplay();
             }
         }
 
@@ -594,7 +671,7 @@
                 function near(p) {
                     return isFinite(p) && p > 0 && Math.abs(p - anchor) / anchor < 0.25;
                 }
-                if (result && !(chart.priceManual && chart.priceMax > chart.priceMin)) {
+                if (result && result.ready && !(chart.priceManual && chart.priceMax > chart.priceMin)) {
                     if (near(result.entryPrice)) {
                         min = Math.min(min, result.entryPrice);
                         max = Math.max(max, result.entryPrice);
@@ -628,7 +705,7 @@
                     ctx.stroke();
                     ctx.fillText(pxText(price), right + 8, yy);
                 }
-                if (result) {
+                if (result && result.ready) {
                     var profit = result.netProfit >= 0;
                     var ye = y(result.entryPrice);
                     var yx = y(result.exitPrice);
@@ -657,7 +734,7 @@
                         ctx.globalAlpha = 1;
                     }
                 }
-                if (result) {
+                if (result && result.ready) {
                     var entryLabel = 'Entry ' + pxText(result.entryPrice);
                     var exitLabel = 'Exit ' + pxText(result.exitPrice);
                     var stacked = Math.abs(y(result.entryPrice) - y(result.exitPrice)) < 16;
@@ -902,6 +979,21 @@
                 updateDisplay();
             });
         });
+        function clearTrade() {
+            document.getElementById('contracts').value = '1';
+            document.getElementById('entryPrice').value = '';
+            document.getElementById('exitPrice').value = '';
+            document.querySelectorAll('.sides button').forEach(function (b) {
+                b.classList.toggle('on', b.dataset.position === 'long');
+            });
+            currentPosition = 'long';
+            pricesTouched = true;
+            pick.next = null;
+            document.getElementById('pick').hidden = true;
+            updateDisplay();
+        }
+        document.getElementById('clearTrade').addEventListener('click', clearTrade);
+        document.getElementById('refreshPrices').addEventListener('click', refreshAllPrices);
         document.getElementById('useAsEntry').addEventListener('click', function () { applyLastPrice('entry'); });
         document.getElementById('useAsExit').addEventListener('click', function () { applyLastPrice('exit'); });
         document.getElementById('pickClose').addEventListener('click', function () {
