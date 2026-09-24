@@ -95,6 +95,11 @@
             border: 0; background: #171b20; color: #d5d8de; border-radius: 10px; padding: 11px 12px;
         }
         .uses button:disabled { color: #6b7280; cursor: default; }
+        #clearTrade {
+            width: 100%; border: 0; background: #171b20; color: #d5d8de;
+            border-radius: 10px; padding: 11px 12px; font-weight: 650;
+        }
+        #clearTrade:hover { color: #fff; background: #23272e; }
         .chart-toolbar { display: flex; justify-content: space-between; gap: 12px; align-items: flex-end; margin-top: 18px; }
         .chart-note { margin: 4px 0 0; color: #9aa1ab; font-size: 0.82rem; }
         .pick {
@@ -224,6 +229,9 @@
                                 <button type="button" id="useAsExit" disabled>Use as exit</button>
         </div>
             </div>
+                        <div class="wide">
+                            <button type="button" id="clearTrade">Clear</button>
+                        </div>
                 </div>
                     <div class="stats">
                         <div class="stat"><p>Net P&L</p><strong id="netProfit">$0.00</strong></div>
@@ -319,20 +327,34 @@
             if (which === 'exit' || which === 'both') setPriceInput('exitPrice', symbol, quote.price);
             updateDisplay();
         }
+        function readPrice(id) {
+            var raw = String(document.getElementById(id).value).trim();
+            if (!raw) return null;
+            var n = parseFloat(raw);
+            return isFinite(n) ? n : null;
+        }
         function calculateProfit() {
             var symbol = selectedSymbol();
             var contracts = parseFloat(document.getElementById('contracts').value) || 0;
-            var entryPrice = parseFloat(document.getElementById('entryPrice').value) || 0;
-            var exitPrice = parseFloat(document.getElementById('exitPrice').value) || 0;
+            var entryPrice = readPrice('entryPrice');
+            var exitPrice = readPrice('exitPrice');
             var spec = contractSpecs[symbol];
             if (!spec) return null;
+            if (entryPrice == null || exitPrice == null || !(contracts > 0)) {
+                return { ready: false, grossProfit: 0, netProfit: 0, totalCommission: 0, ticks: 0, netProfitPerContract: 0, pointDifference: 0, entryPrice: entryPrice, exitPrice: exitPrice };
+            }
             var pointDifference = currentPosition === 'long' ? exitPrice - entryPrice : entryPrice - exitPrice;
             var grossProfit = pointDifference * spec.multiplier * contracts;
             var totalCommission = contracts * 2;
             var netProfit = grossProfit - totalCommission;
             var ticks = Math.abs(pointDifference / spec.tickSize);
             var netProfitPerContract = pointDifference * spec.multiplier - 2;
-            return { grossProfit: grossProfit, netProfit: netProfit, totalCommission: totalCommission, ticks: ticks, netProfitPerContract: netProfitPerContract, pointDifference: pointDifference, entryPrice: entryPrice, exitPrice: exitPrice };
+            return { ready: true, grossProfit: grossProfit, netProfit: netProfit, totalCommission: totalCommission, ticks: ticks, netProfitPerContract: netProfitPerContract, pointDifference: pointDifference, entryPrice: entryPrice, exitPrice: exitPrice };
+        }
+        function paintBlank(id) {
+            var el = document.getElementById(id);
+            el.textContent = '—';
+            el.className = '';
         }
         function paintStat(id, value, positive) {
             var el = document.getElementById(id);
@@ -345,16 +367,21 @@
             var symbol = selectedSymbol();
             var spec = contractSpecs[symbol];
             document.getElementById('specLine').textContent = 'Multiplier $' + spec.multiplier + ' · tick $' + spec.tickValue.toFixed(2);
-            paintStat('netProfit', result.netProfit, result.netProfit >= 0);
-            paintStat('grossProfit', result.grossProfit, result.grossProfit >= 0);
-            paintStat('netProfitPerContract', result.netProfitPerContract, result.netProfitPerContract >= 0);
-            paintStat('totalCommission', -result.totalCommission, false);
-            var pointEl = document.getElementById('pointDifference');
-            pointEl.textContent = (result.pointDifference >= 0 ? '+' : '') + result.pointDifference.toFixed(2);
-            pointEl.className = result.pointDifference >= 0 ? 'up' : 'down';
-            document.getElementById('ticks').textContent = result.ticks.toFixed(0);
-            var contracts = document.getElementById('contracts').value;
-            document.getElementById('tradeSummary').textContent = currentPosition.toUpperCase() + ' ' + contracts + ' ' + symbol + '  ' + document.getElementById('entryPrice').value + ' → ' + document.getElementById('exitPrice').value;
+            if (!result.ready) {
+                ['netProfit', 'grossProfit', 'netProfitPerContract', 'totalCommission', 'pointDifference', 'ticks'].forEach(paintBlank);
+                document.getElementById('tradeSummary').textContent = 'Enter an entry and an exit.';
+            } else {
+                paintStat('netProfit', result.netProfit, result.netProfit >= 0);
+                paintStat('grossProfit', result.grossProfit, result.grossProfit >= 0);
+                paintStat('netProfitPerContract', result.netProfitPerContract, result.netProfitPerContract >= 0);
+                paintStat('totalCommission', -result.totalCommission, false);
+                var pointEl = document.getElementById('pointDifference');
+                pointEl.textContent = (result.pointDifference >= 0 ? '+' : '') + result.pointDifference.toFixed(2);
+                pointEl.className = result.pointDifference >= 0 ? 'up' : 'down';
+                document.getElementById('ticks').textContent = result.ticks.toFixed(0);
+                var contracts = document.getElementById('contracts').value;
+                document.getElementById('tradeSummary').textContent = currentPosition.toUpperCase() + ' ' + contracts + ' ' + symbol + '  ' + document.getElementById('entryPrice').value + ' → ' + document.getElementById('exitPrice').value;
+            }
             var quote = getQuote(symbol);
             var pxEl = document.getElementById('lastPx');
             var chgEl = document.getElementById('lastChg');
@@ -594,7 +621,7 @@
                 function near(p) {
                     return isFinite(p) && p > 0 && Math.abs(p - anchor) / anchor < 0.25;
                 }
-                if (result && !(chart.priceManual && chart.priceMax > chart.priceMin)) {
+                if (result && result.ready && !(chart.priceManual && chart.priceMax > chart.priceMin)) {
                     if (near(result.entryPrice)) {
                         min = Math.min(min, result.entryPrice);
                         max = Math.max(max, result.entryPrice);
@@ -628,7 +655,7 @@
                     ctx.stroke();
                     ctx.fillText(pxText(price), right + 8, yy);
                 }
-                if (result) {
+                if (result && result.ready) {
                     var profit = result.netProfit >= 0;
                     var ye = y(result.entryPrice);
                     var yx = y(result.exitPrice);
@@ -657,7 +684,7 @@
                         ctx.globalAlpha = 1;
                     }
                 }
-                if (result) {
+                if (result && result.ready) {
                     var entryLabel = 'Entry ' + pxText(result.entryPrice);
                     var exitLabel = 'Exit ' + pxText(result.exitPrice);
                     var stacked = Math.abs(y(result.entryPrice) - y(result.exitPrice)) < 16;
@@ -902,6 +929,20 @@
                 updateDisplay();
             });
         });
+        function clearTrade() {
+            document.getElementById('contracts').value = '1';
+            document.getElementById('entryPrice').value = '';
+            document.getElementById('exitPrice').value = '';
+            document.querySelectorAll('.sides button').forEach(function (b) {
+                b.classList.toggle('on', b.dataset.position === 'long');
+            });
+            currentPosition = 'long';
+            pricesTouched = true;
+            pick.next = null;
+            document.getElementById('pick').hidden = true;
+            updateDisplay();
+        }
+        document.getElementById('clearTrade').addEventListener('click', clearTrade);
         document.getElementById('useAsEntry').addEventListener('click', function () { applyLastPrice('entry'); });
         document.getElementById('useAsExit').addEventListener('click', function () { applyLastPrice('exit'); });
         document.getElementById('pickClose').addEventListener('click', function () {
