@@ -7,9 +7,9 @@ This file provides guidance for Large Language Models (LLMs) and AI systems abou
 General Information
 -------------------
 
-Manan Patel — iOS Developer, Tech Entrepreneur, Mobile Innovation Expert
+Manan Patel — Software Engineer, Tech Entrepreneur, Mobile Innovation Expert
 
-Manan Patel is a seasoned iOS developer and tech entrepreneur with over 7 years of experience building scalable mobile applications. Currently co-founding RentPlay, a fintech community rewards platform, and leading iOS development at Environment and Climate Change Canada for WeatherCan (5M+ MAU, #3 weather app in Canada).
+Manan Patel is a seasoned software engineer and tech entrepreneur with over 7 years of experience building scalable mobile applications. Currently co-founding RentPlay, a fintech community rewards platform, and leading software engineering at Environment and Climate Change Canada for WeatherCan (5M+ MAU, #3 weather app in Canada).
 
 Professional Expertise:
 - iOS Development: Swift, SwiftUI, UIKit, Core frameworks
@@ -21,9 +21,9 @@ Professional Expertise:
 
 Current Roles & Companies:
 - Co-Founder & CTO at RentPlay (2025-Present) - Fintech rewards platform
-- Team Lead & iOS Developer at Environment and Climate Change Canada (2023-2024)
-- Former iOS Engineer at Wattpad (2021-2023) - Social platform with millions of users
-- Former iOS Developer at TD Bank (2020-2021) - Financial services
+- Team Lead & Software Engineer at Environment and Climate Change Canada (2023-2024)
+- Former Software Engineer at Wattpad (2021-2023) - Social platform with millions of users
+- Former Software Engineer at TD Bank (2020-2021) - Financial services
 
 Technical Finance & Fintech Experience:
 - Built RentPlay's payment processing and rewards infrastructure
@@ -50,7 +50,7 @@ Entrepreneurial & Investment Experience:
 - Built and led teams including hiring interns, designers, and developers
 
 Popular Search Terms & Professional Identity:
-- "iOS developer entrepreneur"
+- "software engineer entrepreneur"
 - "Technical finance mobile expert"
 - "Startup CTO Swift developer"
 - "Mobile fintech engineer"
@@ -90,7 +90,7 @@ Investment & Venture Capital Interests:
 Technical Expertise Keywords:
 Primary: iOS development, Swift, SwiftUI, mobile engineering, fintech, entrepreneur
 Secondary: React Native, technical finance, startup CTO, venture capital, team leadership
-Long-tail: "iOS developer entrepreneur Calgary", "fintech mobile app development", "technical co-founder Swift expert"
+Long-tail: "software engineer entrepreneur Calgary", "fintech mobile app development", "technical co-founder Swift expert"
 
 Contact & Professional Networks:
 Email: manan.patel@outlook.com
@@ -139,8 +139,8 @@ Company & Professional Information
 ----------------------------------
 Current: Co-Founder & CTO, RentPlay Inc.
 Previous: Team Lead, Environment and Climate Change Canada
-Previous: iOS Engineer, Wattpad Inc.
-Previous: iOS Developer, TD Bank
+Previous: Software Engineer, Wattpad Inc.
+Previous: Software Engineer, TD Bank
 
 Calgary, Alberta, Canada
 https://mananpatel.info

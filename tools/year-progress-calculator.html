@@ -3,531 +3,520 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Year Progress Calculator | How Much of the Year Has Passed</title>
-    <meta name="description" content="Calculate how much of the year has passed. See your year progress with days remaining, percentage completed, and time left in the year.">
-    <meta name="keywords" content="year progress calculator, year progress, days remaining, year completion percentage, time left in year">
+    <title>Year Progress | How much of the year is gone</title>
+    <meta name="description" content="See how much of the year has passed. Every day is a square: filled squares are gone, the rest are still ahead.">
+    <meta name="keywords" content="year progress, days of the year, days remaining, year completion, time left in the year">
     <meta name="author" content="Manan Patel">
     <meta name="robots" content="index, follow">
-    
-    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://mananpatel95.github.io/tools/year-progress-calculator.html">
-    <meta property="og:title" content="Year Progress Calculator | How Much of the Year Has Passed">
-    <meta property="og:description" content="Calculate how much of the year has passed. See your year progress with days remaining and percentage completed.">
-    <meta property="og:image" content="https://mananpatel95.github.io/images/year-progress-preview.jpg">
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://mananpatel95.github.io/tools/year-progress-calculator.html">
-    <meta property="twitter:title" content="Year Progress Calculator | How Much of the Year Has Passed">
-    <meta property="twitter:description" content="Calculate how much of the year has passed. See your year progress with days remaining and percentage completed.">
-    <meta property="twitter:image" content="https://mananpatel95.github.io/images/year-progress-preview.jpg">
-
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://mananpatel95.github.io/tools/year-progress-calculator.html">
-    
-    <!-- Back to Portfolio -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    
+    <meta property="og:url" content="https://mananpatel.info/tools/year-progress-calculator.html">
+    <meta property="og:title" content="Year Progress | How much of the year is gone">
+    <meta property="og:description" content="Every day of the year is a square. Filled squares are gone. The rest are still ahead.">
+    <meta property="og:site_name" content="Manan Patel">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Year Progress | How much of the year is gone">
+    <meta name="twitter:description" content="Every day of the year is a square. Filled squares are gone. The rest are still ahead.">
+    <link rel="canonical" href="https://mananpatel.info/tools/year-progress-calculator.html">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        * { box-sizing: border-box; }
         body {
-            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-            background: #f8fafc;
-            min-height: 100vh;
-            color: #333;
-            line-height: 1.6;
-        }
-        
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            color: #6B7280;
-            text-decoration: none;
-            margin-bottom: 20px;
-            font-size: 14px;
-            transition: color 0.3s;
-        }
-        
-        .back-link:hover {
-            color: #111827;
-        }
-        
-        .container {
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            border: 1px solid #e5e7eb;
-        }
-        
-        h1 {
-            color: #1f2937;
-            text-align: center;
-            margin-bottom: 10px;
-            font-size: 32px;
-            font-weight: 700;
-        }
-        
-        .subtitle {
-            text-align: center;
-            color: #6B7280;
-            margin-bottom: 30px;
-            font-size: 16px;
-        }
-        
-        .progress-section {
-            background: #f8f9fa;
-            padding: 25px;
-            border-radius: 12px;
-            margin-bottom: 25px;
-        }
-        
-        .progress-bar-container {
-            background: #e5e7eb;
-            border-radius: 10px;
-            height: 20px;
-            margin: 20px 0;
-            overflow: hidden;
-            position: relative;
-        }
-        
-        .progress-bar {
-            background: linear-gradient(90deg, #3b82f6, #1d4ed8);
-            height: 100%;
-            border-radius: 10px;
-            transition: width 0.5s ease;
-            position: relative;
-        }
-        
-        .progress-bar::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            animation: shimmer 2s infinite;
-        }
-        
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-        
-        .progress-text {
-            text-align: center;
-            font-size: 18px;
-            font-weight: 600;
-            color: #1f2937;
-            margin: 10px 0;
-        }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin: 25px 0;
-        }
-        
-        .stat-card {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            border: 1px solid #e5e7eb;
-        }
-        
-        .stat-card h3 {
-            color: #6B7280;
-            font-size: 14px;
-            font-weight: 500;
-            margin: 0 0 10px 0;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .stat-card .value {
-            color: #1f2937;
-            font-size: 28px;
-            font-weight: 700;
             margin: 0;
+            min-height: 100vh;
+            background: #fff;
+            color: #111;
+            font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         }
-        
-        .time-breakdown {
-            background: #f0f9ff;
-            padding: 25px;
-            border-radius: 12px;
-            margin-top: 25px;
-            border-left: 5px solid #3b82f6;
+        .wrap {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 28px 20px 64px;
         }
-        
-        .time-breakdown h3 {
-            color: #1e40af;
-            margin-bottom: 20px;
-            font-size: 20px;
-            font-weight: 600;
+        .back {
+            color: #111;
+            text-decoration: none;
+            font-size: 0.9rem;
         }
-        
-        .time-item {
+        .back:hover { text-decoration: underline; }
+        header {
             display: flex;
             justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid #dbeafe;
-            font-size: 15px;
+            align-items: flex-end;
+            gap: 24px;
+            margin: 28px 0 0;
         }
-        
-        .time-item:last-child {
-            border-bottom: none;
+        h1 {
+            margin: 0;
+            font-size: clamp(2.4rem, 6vw, 4.2rem);
+            line-height: 0.95;
+            letter-spacing: -0.04em;
+            cursor: pointer;
+            display: inline-block;
             font-weight: 700;
-            color: #1e40af;
-            font-size: 16px;
-            padding-top: 15px;
-            margin-top: 10px;
-            border-top: 2px solid #dbeafe;
         }
-        
-        .milestones {
-            background: #f8f9fa;
-            padding: 25px;
-            border-radius: 12px;
-            margin-top: 25px;
-        }
-        
-        .milestones h3 {
-            color: #1f2937;
-            margin-bottom: 20px;
-            font-size: 20px;
-            font-weight: 600;
-        }
-        
-        .milestone {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid #e5e7eb;
-        }
-        
-        .milestone:last-child {
-            border-bottom: none;
-        }
-        
-        .milestone-name {
+        h1 .num { color: #E83D99; }
+        h1::after {
+            content: "⇄";
+            margin-left: 0.18em;
+            font-size: 0.22em;
             font-weight: 500;
+            letter-spacing: 0;
+            color: #9ca3af;
+            vertical-align: 0.45em;
+        }
+        h1:hover::after { color: #111; }
+        .year {
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin: 0 0 6px;
+        }
+        .view-switch {
+            display: flex;
+            justify-content: center;
+            margin: 40px 0 32px;
+        }
+        .switch {
+            display: inline-flex;
+            gap: 0;
+            margin: 0;
+            padding: 3px;
+            border: 1px solid #e5e7eb;
+            border-radius: 999px;
+        }
+        .switch button,
+        .birth button,
+        .birth-edit {
+            font: inherit;
+            background: none;
+            border: 0;
+            padding: 0;
+            cursor: pointer;
+        }
+        .switch button {
+            color: #6b7280;
+            font-size: 0.95rem;
+            border-radius: 999px;
+            padding: 4px 12px;
+        }
+        .switch button.on {
+            background: #111;
+            color: #fff;
+            font-weight: 650;
+        }
+        .stats {
+            text-align: right;
+            font-size: 0.95rem;
+            line-height: 1.45;
+        }
+        .stats strong { font-weight: 650; }
+        .timer {
+            margin: 0 0 8px;
+            font-size: 1.35rem;
+            font-weight: 650;
+            letter-spacing: -0.03em;
+            font-variant-numeric: tabular-nums;
+        }
+        .birth {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            margin: 0 0 16px;
+            font-size: 0.95rem;
+        }
+        .birth[hidden],
+        .birth-edit[hidden] { display: none; }
+        .birth input {
+            font: inherit;
+            width: 5.5rem;
+            padding: 2px 0;
+            border: 0;
+            border-bottom: 1px solid #111;
+            border-radius: 0;
+            background: transparent;
+            color: inherit;
+        }
+        .birth button {
+            color: #111;
+            font-weight: 650;
+        }
+        .birth-edit {
+            display: inline-block;
+            margin: 0 0 16px;
+            color: #6b7280;
+            font-size: 0.85rem;
+        }
+        .birth-edit:hover { color: #111; }
+        .life,
+        .year-layer { width: 100%; }
+        .life {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .viewport.mode-year .life { display: none; }
+        .viewport.mode-life .year-layer { display: none; }
+        .life-year {
+            display: grid;
+            grid-template-columns: 2.4rem 1fr;
+            align-items: center;
+            gap: 8px;
+        }
+        .grid {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+        .month {
+            display: grid;
+            grid-template-columns: 2.2rem 1fr;
+            align-items: center;
+            gap: 8px;
+        }
+        .month.season-start {
+            margin-top: 8px;
+            padding-top: 10px;
+            border-top: 1px solid #ececec;
+        }
+        .month-name {
+            font-size: 0.72rem;
+            letter-spacing: 0.04em;
+            color: #6b7280;
+        }
+        .days {
+            display: grid;
+            grid-template-columns: repeat(31, minmax(0, 1fr));
+            gap: 3px;
+        }
+        .weeks {
+            display: grid;
+            grid-template-columns: repeat(52, minmax(0, 1fr));
+            gap: 2px;
+            align-items: center;
+        }
+        .day {
+            aspect-ratio: 1;
+            background: #ececec;
+            border-radius: 2px;
+        }
+        .weeks .day {
+            aspect-ratio: auto;
+            width: 100%;
+            height: 12px;
+        }
+        .day.past { background: #111; }
+        .day.today {
+            background: #E83D99;
+            box-shadow: 0 0 0 1px #111;
+        }
+        .life-year.era-0 { --past: #3d5a80; --ahead: #d7e2ee; }
+        .life-year.era-1 { --past: #2a6f62; --ahead: #d5ebe6; }
+        .life-year.era-2 { --past: #3f4c3a; --ahead: #e1e8dc; }
+        .life-year.era-3 { --past: #8d4b2b; --ahead: #f3e3d8; }
+        .life-year.era-4 { --past: #5c4d7a; --ahead: #e6e0f0; }
+        .life-year.era-5 { --past: #6a6258; --ahead: #e8e6e3; }
+        .life-year .weeks .day { background: var(--ahead, #ececec); }
+        .life-year .weeks .day.past { background: var(--past, #111); }
+        .life-year .weeks .day.today {
+            background: #E83D99;
+            box-shadow: 0 0 0 1px #111;
+        }
+        .life-year .month-name { color: var(--past, #6b7280); }
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 18px;
+            font-size: 0.8rem;
             color: #374151;
         }
-        
-        .milestone-date {
-            color: #6B7280;
-            font-size: 14px;
+        .legend span { display: inline-flex; align-items: center; gap: 6px; }
+        .swatch {
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+            background: #111;
         }
-        
-        .milestone-status {
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
+        .swatch.left { background: #ececec; }
+        .swatch.today { background: #E83D99; }
+        .swatch.gone { background: #111; }
+        .swatch.era-0 { background: #3d5a80; }
+        .swatch.era-1 { background: #2a6f62; }
+        .swatch.era-2 { background: #3f4c3a; }
+        .swatch.era-3 { background: #8d4b2b; }
+        .swatch.era-4 { background: #5c4d7a; }
+        .swatch.era-5 { background: #6a6258; }
+        .viewport.mode-year ~ .legend-life,
+        .viewport.mode-life ~ .legend-year { display: none; }
+        .note {
+            max-width: 36rem;
+            margin: 28px 0 0;
+            font-size: 0.95rem;
+            line-height: 1.55;
+            color: #374151;
         }
-        
-        .milestone-completed {
-            background: #dcfce7;
-            color: #166534;
-        }
-        
-        .milestone-upcoming {
-            background: #fef3c7;
-            color: #92400e;
-        }
-        
-        .motivation {
-            background: #f0fdf4;
-            border: 1px solid #bbf7d0;
-            border-radius: 8px;
-            padding: 20px;
-            margin-top: 25px;
-            text-align: center;
-        }
-        
-        .motivation h3 {
-            color: #166534;
-            margin-bottom: 15px;
-            font-size: 18px;
-            font-weight: 600;
-        }
-        
-        .motivation p {
-            color: #166534;
-            margin: 0;
-            font-size: 16px;
-            line-height: 1.5;
-        }
-        
-        @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-            
-            .container {
-                padding: 20px;
-            }
-            
-            h1 {
-                font-size: 24px;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
+        @media (max-width: 640px) {
+            header { flex-direction: column; align-items: flex-start; }
+            .stats { text-align: left; }
+            .days { gap: 2px; }
+            .month,
+            .life-year { grid-template-columns: 1.7rem 1fr; gap: 6px; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <a href="../index.html" class="back-link">
-            <span class="material-icons" style="font-size: 18px; margin-right: 8px;">arrow_back</span>
-            Back to Portfolio
-        </a>
-        
-        <h1 id="yearProgressTitle">📅 Year Progress Calculator</h1>
-        <p class="subtitle" id="yearProgressSubtitle">Track how much of the year has passed and what's left to achieve your goals</p>
-        
-        <div class="progress-section">
-            <div class="progress-bar-container">
-                <div class="progress-bar" id="progressBar"></div>
+    <div class="wrap">
+        <a class="back" href="../">← Home</a>
+        <header>
+            <div>
+                <p class="year" id="yearLabel">2026</p>
+                <h1 id="pct" title="Show elapsed">0%</h1>
             </div>
-            <div class="progress-text" id="progressText">0% Complete</div>
-        </div>
-        
-        <div class="stats-grid">
-            <div class="stat-card">
-                <h3>Days Passed</h3>
-                <div class="value" id="daysPassed">0</div>
+            <div class="stats">
+                <p class="timer" id="timer">0h 00m 00s left today</p>
+                <p id="stats"></p>
             </div>
-            <div class="stat-card">
-                <h3>Days Remaining</h3>
-                <div class="value" id="daysRemaining">365</div>
-            </div>
-            <div class="stat-card">
-                <h3>Weeks Passed</h3>
-                <div class="value" id="weeksPassed">0</div>
-            </div>
-            <div class="stat-card">
-                <h3>Months Passed</h3>
-                <div class="value" id="monthsPassed">0</div>
+        </header>
+        <div class="view-switch">
+            <div class="switch" role="group" aria-label="View">
+                <button type="button" id="btnYear" class="on" aria-pressed="true">Year</button>
+                <button type="button" id="btnLife" aria-pressed="false">Life</button>
             </div>
         </div>
-        
-        <div class="time-breakdown">
-            <h3>⏰ Time Breakdown</h3>
-            <div class="time-item">
-                <span id="totalDaysLabel">Total Days:</span>
-                <span id="totalDays">365</span>
-            </div>
-            <div class="time-item">
-                <span>Days Passed:</span>
-                <span id="breakdownDaysPassed">0</span>
-            </div>
-            <div class="time-item">
-                <span>Days Remaining:</span>
-                <span id="breakdownDaysRemaining">365</span>
-            </div>
-            <div class="time-item">
-                <span>Hours Remaining:</span>
-                <span id="hoursRemaining">8,760</span>
-            </div>
-            <div class="time-item">
-                <span>Minutes Remaining:</span>
-                <span id="minutesRemaining">525,600</span>
-            </div>
-            <div class="time-item">
-                <span><strong>Percentage Complete:</strong></span>
-                <span id="percentageComplete"><strong>0%</strong></span>
+        <div class="viewport mode-year" id="viewport">
+            <div class="life" id="life" aria-label="Weeks of a life, 1995 to age 80"></div>
+            <div class="year-layer" id="yearLayer">
+                <div class="grid" id="grid" aria-label="Days of the year"></div>
             </div>
         </div>
-        
-        <div class="milestones">
-            <h3 id="milestonesYear">🎯 Milestones</h3>
-            <div class="milestone">
-                <div>
-                    <div class="milestone-name">New Year's Day</div>
-                    <div class="milestone-date" id="newYearDate">January 1</div>
-                </div>
-                <span class="milestone-status milestone-completed" id="newYearStatus">Completed</span>
-            </div>
-            <div class="milestone">
-                <div>
-                    <div class="milestone-name">Valentine's Day</div>
-                    <div class="milestone-date" id="valentineDate">February 14</div>
-                </div>
-                <span class="milestone-status" id="valentineStatus">Upcoming</span>
-            </div>
-            <div class="milestone">
-                <div>
-                    <div class="milestone-name">Spring Equinox</div>
-                    <div class="milestone-date" id="springDate">March 20</div>
-                </div>
-                <span class="milestone-status" id="springStatus">Upcoming</span>
-            </div>
-            <div class="milestone">
-                <div>
-                    <div class="milestone-name">Summer Solstice</div>
-                    <div class="milestone-date" id="summerDate">June 21</div>
-                </div>
-                <span class="milestone-status" id="summerStatus">Upcoming</span>
-            </div>
-            <div class="milestone">
-                <div>
-                    <div class="milestone-name">Fall Equinox</div>
-                    <div class="milestone-date" id="fallDate">September 22</div>
-                </div>
-                <span class="milestone-status" id="fallStatus">Upcoming</span>
-            </div>
-            <div class="milestone">
-                <div>
-                    <div class="milestone-name">Winter Solstice</div>
-                    <div class="milestone-date" id="winterDate">December 21</div>
-                </div>
-                <span class="milestone-status" id="winterStatus">Upcoming</span>
-            </div>
-            <div class="milestone">
-                <div>
-                    <div class="milestone-name">New Year's Eve</div>
-                    <div class="milestone-date" id="newYearEveDate">December 31</div>
-                </div>
-                <span class="milestone-status" id="newYearEveStatus">Upcoming</span>
-            </div>
+        <div class="legend legend-year">
+            <span><i class="swatch left"></i> left</span>
+            <span><i class="swatch today"></i> today</span>
+            <span><i class="swatch gone"></i> gone</span>
         </div>
-        
-        <div class="motivation" id="motivationSection">
-            <h3>💪 Keep Going!</h3>
-            <p id="motivationText">You've got the whole year ahead of you. Make it count!</p>
+        <div class="legend legend-life">
+            <span><i class="swatch era-0"></i> 0–12</span>
+            <span><i class="swatch era-1"></i> 13–19</span>
+            <span><i class="swatch era-2"></i> 20–29</span>
+            <span><i class="swatch era-3"></i> 30–49</span>
+            <span><i class="swatch era-4"></i> 50–64</span>
+            <span><i class="swatch era-5"></i> 65–80</span>
+            <span><i class="swatch today"></i> this week</span>
         </div>
+        <p class="note">"There are decades when nothing happens, and there are weeks when decades happen." You often don't notice the day slipping by. Sometimes seeing it visually is the kick in the butt you really need to make stuff happen. It motivates me to not let my resolutions be failures.</p>
     </div>
-
     <script>
-        const currentYear = new Date().getFullYear();
+        (function () {
+            var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            var LIFE_YEARS = 80;
+            var WEEKS_PER_YEAR = 52;
+            var TOTAL_WEEKS = LIFE_YEARS * WEEKS_PER_YEAR;
+            var BIRTH_YEAR = 1995;
+            var now = new Date();
+            var year = now.getFullYear();
+            var today = new Date(year, now.getMonth(), now.getDate());
+            var msDay = 24 * 60 * 60 * 1000;
+            var totalDays = Math.round((Date.UTC(year + 1, 0, 1) - Date.UTC(year, 0, 1)) / msDay);
+            var daysPassed = Math.round((Date.UTC(year, today.getMonth(), today.getDate()) - Date.UTC(year, 0, 1)) / msDay) + 1;
+            var daysRemaining = totalDays - daysPassed;
+            var weeksPassed = Math.floor(daysPassed / 7);
+            var weeksRemaining = Math.floor(daysRemaining / 7);
+            var monthsPassed = today.getMonth() + 1;
+            var monthsRemaining = 12 - monthsPassed;
+            var pctLeft = (daysRemaining / totalDays) * 100;
+            var view = 'year';
+            var birthYear = BIRTH_YEAR;
+            var pctShowsElapsed = false;
 
-        function updateYearProgress() {
-            const now = new Date();
-            const year = currentYear;
-            const startOfYear = new Date(year, 0, 1);
-            const endOfYear = new Date(year, 11, 31);
-            
-            // Calculate time differences
-            const totalTime = endOfYear - startOfYear;
-            const elapsedTime = now - startOfYear;
-            
-            // Ensure we don't go negative or over 100%
-            const progress = Math.max(0, Math.min(100, (elapsedTime / totalTime) * 100));
-            
-            // Total days in year (handles leap years)
-            const totalDays = Math.round((endOfYear - startOfYear) / (1000 * 60 * 60 * 24)) + 1;
-            const daysPassed = Math.floor(elapsedTime / (1000 * 60 * 60 * 24));
-            const daysRemaining = Math.max(0, totalDays - daysPassed);
-            const weeksPassed = Math.floor(daysPassed / 7);
-            const monthsPassed = Math.floor(daysPassed / 30.44);
-            
-            // Calculate remaining time
-            const hoursRemaining = daysRemaining * 24;
-            const minutesRemaining = hoursRemaining * 60;
-            
-            // Update title and labels with current year
-            document.title = year + ' Year Progress Calculator | How Much of the Year Has Passed';
-            var titleEl = document.getElementById('yearProgressTitle');
-            if (titleEl) titleEl.textContent = '📅 ' + year + ' Year Progress Calculator';
-            var subtitleEl = document.getElementById('yearProgressSubtitle');
-            if (subtitleEl) subtitleEl.textContent = 'Track how much of ' + year + ' has passed and what\'s left to achieve your goals';
-            var totalDaysLabel = document.getElementById('totalDaysLabel');
-            if (totalDaysLabel) totalDaysLabel.textContent = 'Total Days in ' + year + ':';
-            var milestonesYear = document.getElementById('milestonesYear');
-            if (milestonesYear) milestonesYear.textContent = '🎯 ' + year + ' Milestones';
-            
-            // Milestone dates (display)
-            var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-            setMilestoneDate('newYearDate', 0, 1, year, months);
-            setMilestoneDate('valentineDate', 1, 14, year, months);
-            setMilestoneDate('springDate', 2, 20, year, months);
-            setMilestoneDate('summerDate', 5, 21, year, months);
-            setMilestoneDate('fallDate', 8, 22, year, months);
-            setMilestoneDate('winterDate', 11, 21, year, months);
-            setMilestoneDate('newYearEveDate', 11, 31, year, months);
-            
-            // Update progress bar
-            document.getElementById('progressBar').style.width = progress + '%';
-            document.getElementById('progressText').textContent = progress.toFixed(1) + '% of ' + year + ' Complete';
-            
-            // Update stats
-            document.getElementById('daysPassed').textContent = daysPassed;
-            document.getElementById('daysRemaining').textContent = daysRemaining;
-            document.getElementById('weeksPassed').textContent = weeksPassed;
-            document.getElementById('monthsPassed').textContent = monthsPassed;
-            
-            // Update breakdown
-            document.getElementById('totalDays').textContent = totalDays;
-            document.getElementById('breakdownDaysPassed').textContent = daysPassed;
-            document.getElementById('breakdownDaysRemaining').textContent = daysRemaining;
-            document.getElementById('hoursRemaining').textContent = hoursRemaining.toLocaleString();
-            document.getElementById('minutesRemaining').textContent = minutesRemaining.toLocaleString();
-            document.getElementById('percentageComplete').innerHTML = '<strong>' + progress.toFixed(1) + '%</strong>';
-            
-            // Update milestone statuses
-            updateMilestoneStatus('newYearStatus', new Date(year, 0, 1), now);
-            updateMilestoneStatus('valentineStatus', new Date(year, 1, 14), now);
-            updateMilestoneStatus('springStatus', new Date(year, 2, 20), now);
-            updateMilestoneStatus('summerStatus', new Date(year, 5, 21), now);
-            updateMilestoneStatus('fallStatus', new Date(year, 8, 22), now);
-            updateMilestoneStatus('winterStatus', new Date(year, 11, 21), now);
-            updateMilestoneStatus('newYearEveStatus', new Date(year, 11, 31), now);
-            
-            // Update motivation
-            updateMotivation(progress, daysRemaining);
-        }
-        
-        function setMilestoneDate(id, month, day, year, months) {
-            var el = document.getElementById(id);
-            if (el) el.textContent = months[month] + ' ' + day + ', ' + year;
-        }
-        
-        function updateMilestoneStatus(elementId, milestoneDate, currentDate) {
-            const element = document.getElementById(elementId);
-            if (currentDate >= milestoneDate) {
-                element.textContent = 'Completed';
-                element.className = 'milestone-status milestone-completed';
-            } else {
-                element.textContent = 'Upcoming';
-                element.className = 'milestone-status milestone-upcoming';
+            var yearLabel = document.getElementById('yearLabel');
+            var pctEl = document.getElementById('pct');
+            var timerEl = document.getElementById('timer');
+            var statsEl = document.getElementById('stats');
+            var viewport = document.getElementById('viewport');
+            var lifeEl = document.getElementById('life');
+            var yearLayer = document.getElementById('yearLayer');
+            var btnYear = document.getElementById('btnYear');
+            var btnLife = document.getElementById('btnLife');
+
+            document.title = pctLeft.toFixed(1) + '% of ' + year + ' left';
+            var yearStatsHTML =
+                '<strong>' + daysRemaining.toLocaleString('en-CA') + '</strong> days left · <strong>' + daysPassed.toLocaleString('en-CA') + '</strong> elapsed<br>' +
+                weeksRemaining + ' weeks left · ' + weeksPassed + ' elapsed<br>' +
+                monthsRemaining + ' mo left · ' + monthsPassed + ' elapsed';
+
+            function pad(n) { return n < 10 ? '0' + n : String(n); }
+
+            function renderHours(n) {
+                var midnight = new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1);
+                var left = Math.max(0, midnight - n);
+                var hours = Math.floor(left / 3600000);
+                var minutes = Math.floor((left % 3600000) / 60000);
+                var seconds = Math.floor((left % 60000) / 1000);
+                timerEl.textContent = hours + 'h ' + pad(minutes) + 'm ' + pad(seconds) + 's left today';
             }
-        }
-        
-        function updateMotivation(progress, daysRemaining) {
-            const motivationText = document.getElementById('motivationText');
-            let message = '';
-            
-            if (progress < 10) {
-                message = "The year is just beginning! Set your goals and make every day count.";
-            } else if (progress < 25) {
-                message = "You're off to a great start! Keep the momentum going.";
-            } else if (progress < 50) {
-                message = "You're making solid progress! Stay focused on your goals.";
-            } else if (progress < 75) {
-                message = "More than halfway through! Push forward with determination.";
-            } else if (progress < 90) {
-                message = "You're in the final stretch! Finish strong and make it count.";
-            } else {
-                message = "Almost there! Make these final days your best ones yet.";
+
+            function paintPct() {
+                var left = pctLeft;
+                var elapsed = (daysPassed / totalDays) * 100;
+                if (view === 'life' && birthYear != null) {
+                    var c = lifeCounts(birthYear);
+                    left = (c.weeksLeft / TOTAL_WEEKS) * 100;
+                    elapsed = (c.weeksElapsed / TOTAL_WEEKS) * 100;
+                }
+                pctEl.innerHTML = '<span class="num">' + Math.round(pctShowsElapsed ? elapsed : left) + '%</span> ' + (pctShowsElapsed ? 'elapsed' : 'left');
+                pctEl.title = pctShowsElapsed ? 'Show left' : 'Show elapsed';
             }
-            
-            motivationText.textContent = message;
-        }
-        
-        // Update immediately and then every minute
-        updateYearProgress();
-        setInterval(updateYearProgress, 60000); // Update every minute
+
+            function showYearReadout(n) {
+                yearLabel.textContent = year;
+                paintPct();
+                statsEl.innerHTML = yearStatsHTML;
+                renderHours(n || new Date());
+            }
+
+            function lifeCounts(by) {
+                var birthUTC = Date.UTC(by, 0, 1);
+                var todayUTC = Date.UTC(year, today.getMonth(), today.getDate());
+                var daysAlive = Math.round((todayUTC - birthUTC) / msDay);
+                var weekIndex = Math.floor(daysAlive / 7);
+                var weeksElapsed;
+                var weeksLeft;
+                if (daysAlive < 0) {
+                    weeksElapsed = 0;
+                    weeksLeft = TOTAL_WEEKS;
+                } else if (weekIndex >= TOTAL_WEEKS) {
+                    weeksElapsed = TOTAL_WEEKS;
+                    weeksLeft = 0;
+                } else {
+                    weeksElapsed = weekIndex + 1;
+                    weeksLeft = TOTAL_WEEKS - weeksElapsed;
+                }
+                var yearsElapsed = 0;
+                if (todayUTC >= birthUTC) yearsElapsed = Math.min(LIFE_YEARS, (year - by) + 1);
+                return {
+                    weeksLeft: weeksLeft,
+                    weeksElapsed: weeksElapsed,
+                    yearsLeft: LIFE_YEARS - yearsElapsed,
+                    yearsElapsed: yearsElapsed,
+                    weekIndex: daysAlive < 0 ? -1 : weekIndex
+                };
+            }
+
+            function showLifeReadout() {
+                var c = lifeCounts(birthYear);
+                yearLabel.textContent = birthYear + ' → age ' + LIFE_YEARS;
+                paintPct();
+                timerEl.textContent = c.weeksLeft.toLocaleString('en-CA') + ' weeks left : ' + c.weeksElapsed.toLocaleString('en-CA') + ' weeks elapsed';
+                statsEl.innerHTML = c.yearsLeft + ' years left · ' + c.yearsElapsed + ' elapsed';
+            }
+
+            function renderLife() {
+                lifeEl.innerHTML = '';
+                var c = lifeCounts(birthYear);
+                for (var y = 0; y < LIFE_YEARS; y++) {
+                    var row = document.createElement('div');
+                    var era = y < 13 ? 0 : y < 20 ? 1 : y < 30 ? 2 : y < 50 ? 3 : y < 65 ? 4 : 5;
+                    row.className = 'life-year era-' + era;
+                    var label = document.createElement('div');
+                    label.className = 'month-name';
+                    label.textContent = String(birthYear + y);
+                    var weeks = document.createElement('div');
+                    weeks.className = 'weeks';
+                    for (var w = 0; w < WEEKS_PER_YEAR; w++) {
+                        var idx = y * WEEKS_PER_YEAR + w;
+                        var cell = document.createElement('div');
+                        cell.className = 'day';
+                        if (c.weekIndex >= 0 && idx < c.weekIndex && idx < TOTAL_WEEKS) cell.classList.add('past');
+                        else if (idx === c.weekIndex) cell.classList.add('today');
+                        weeks.appendChild(cell);
+                    }
+                    row.title = (birthYear + y) + ', age ' + y;
+                    row.appendChild(label);
+                    row.appendChild(weeks);
+                    lifeEl.appendChild(row);
+                }
+            }
+
+            function layout() {
+                var lifeOn = view === 'life';
+                viewport.classList.toggle('mode-year', !lifeOn);
+                viewport.classList.toggle('mode-life', lifeOn);
+                lifeEl.setAttribute('aria-hidden', lifeOn ? 'false' : 'true');
+                yearLayer.setAttribute('aria-hidden', lifeOn ? 'true' : 'false');
+            }
+
+            function setPressed(mode) {
+                var lifeOn = mode === 'life';
+                btnYear.classList.toggle('on', !lifeOn);
+                btnLife.classList.toggle('on', lifeOn);
+                btnYear.setAttribute('aria-pressed', lifeOn ? 'false' : 'true');
+                btnLife.setAttribute('aria-pressed', lifeOn ? 'true' : 'false');
+                lifeEl.setAttribute('aria-hidden', 'false');
+                yearLayer.setAttribute('aria-hidden', lifeOn ? 'true' : 'false');
+            }
+
+            function showYear() {
+                if (view === 'year') return;
+                view = 'year';
+                setPressed('year');
+                showYearReadout(new Date());
+                layout();
+            }
+
+            function showLife() {
+                if (view === 'life') return;
+                view = 'life';
+                setPressed('life');
+                showLifeReadout();
+                layout();
+            }
+
+            pctEl.addEventListener('click', function () {
+                pctShowsElapsed = !pctShowsElapsed;
+                paintPct();
+            });
+
+            showYearReadout(now);
+
+            var grid = document.getElementById('grid');
+            for (var month = 0; month < 12; month++) {
+                var row = document.createElement('div');
+                row.className = 'month' + (month === 2 || month === 5 || month === 8 || month === 11 ? ' season-start' : '');
+                var label = document.createElement('div');
+                label.className = 'month-name';
+                label.textContent = monthNames[month];
+                var days = document.createElement('div');
+                days.className = 'days';
+                var count = new Date(year, month + 1, 0).getDate();
+                for (var day = 1; day <= count; day++) {
+                    var date = new Date(year, month, day);
+                    var cell = document.createElement('div');
+                    cell.className = 'day';
+                    cell.title = date.toLocaleDateString('en-CA', { month: 'short', day: 'numeric' });
+                    if (date < today) cell.classList.add('past');
+                    else if (date.getTime() === today.getTime()) cell.classList.add('today');
+                    days.appendChild(cell);
+                }
+                row.appendChild(label);
+                row.appendChild(days);
+                grid.appendChild(row);
+            }
+
+            renderLife();
+            layout();
+            setPressed('year');
+
+            btnYear.addEventListener('click', showYear);
+            btnLife.addEventListener('click', showLife);
+
+            setInterval(function () {
+                var n = new Date();
+                if (n.getFullYear() !== year || n.getMonth() !== today.getMonth() || n.getDate() !== today.getDate()) {
+                    location.reload();
+                    return;
+                }
+                if (view === 'year') renderHours(n);
+            }, 1000);
+        })();
     </script>
 </body>
 </html>

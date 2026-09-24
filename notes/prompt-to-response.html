@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Prompt to Response, what actually happens? And whats in the AI cake? | Manan Patel</title>
+    <meta name="description" content="Notes from AI Summer School at Platform Calgary, July 2026: Prompt to Response and Problems to Solve."/>
+    <link rel="canonical" href="https://mananpatel.info/notes/prompt-to-response.html"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
+    <style>
+        body {
+            margin: 0;
+            background: #07080c;
+            color: #f4f4f5;
+            font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+        .back {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 2;
+            color: #f4f4f5;
+            text-decoration: none;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            background: rgba(7, 8, 12, 0.72);
+            padding: 0.35rem 0.7rem;
+            font-size: 0.85rem;
+        }
+        .back:hover { text-decoration: underline; }
+        .deck {
+            line-height: 0;
+            font-size: 0;
+        }
+        .title-slide {
+            width: min(1100px, 100%);
+            margin: 0 auto;
+            box-sizing: border-box;
+            text-align: center;
+            padding: 4.5rem 1.25rem 1.5rem;
+        }
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.4rem);
+            line-height: 1.15;
+            font-weight: 700;
+            margin: 0 0 1rem;
+        }
+        .meta {
+            margin: 0;
+            color: #a1a1aa;
+            font-size: 1.05rem;
+        }
+        .deck img {
+            width: min(1100px, 100%);
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <a class="back" href="../#writing">← Back</a>
+    <section class="slide title-slide">
+        <h1>Prompt to Response, what actually happens? And whats in the AI cake?</h1>
+        <p class="meta">AI Summer School: Prompt to Response &amp; Problems to Solve<br>Platform Calgary · July 2026</p>
+    </section>
+    <div class="deck">
+        <img src="../images/notes/prompt-to-response/01-two-seconds.png" alt="A dinner question answered in two seconds"/>
+        <img src="../images/notes/prompt-to-response/02-trip-and-front-door.png" alt="The trip to the data center and the API gateway"/>
+        <img src="../images/notes/prompt-to-response/03-what-your-question-crossed.png" alt="What the question crossed on the way"/>
+        <img src="../images/notes/prompt-to-response/04-tokenize.png" alt="The question turned into tokens"/>
+        <img src="../images/notes/prompt-to-response/05-prefill.png" alt="Prefill, when the model reads the whole prompt"/>
+        <img src="../images/notes/prompt-to-response/06-decode.png" alt="Decode, one token at a time"/>
+        <img src="../images/notes/prompt-to-response/07-batching.png" alt="Batching many questions on one chip"/>
+        <img src="../images/notes/prompt-to-response/08-factory.png" alt="The factory in layers, from user to power"/>
+        <img src="../images/notes/prompt-to-response/09-where-the-money-goes.png" alt="Where the AI build-out money goes"/>
+        <img src="../images/notes/prompt-to-response/10-scale.png" alt="Progress that looked like scale"/>
+        <img src="../images/notes/prompt-to-response/11-deepseek.png" alt="DeepSeek R1 and a different question"/>
+        <img src="../images/notes/prompt-to-response/12-learn-from-deepseek.png" alt="What we can learn from DeepSeek"/>
+        <img src="../images/notes/prompt-to-response/13-language-end-goal.png" alt="Language is no longer the end goal"/>
+        <img src="../images/notes/prompt-to-response/14-old-and-new-frame.png" alt="From manipulating language to language as an interface"/>
+        <img src="../images/notes/prompt-to-response/15-useful-reasoning.png" alt="Cheaper, controllable, useful reasoning"/>
+        <img src="../images/notes/prompt-to-response/16-why-now.png" alt="Why this shift is happening now"/>
+        <img src="../images/notes/prompt-to-response/17-trajectory.png" alt="Prompt, model, answer replaced by a trajectory"/>
+        <img src="../images/notes/prompt-to-response/18-where-it-breaks.png" alt="What we already do, and where each one breaks"/>
+        <img src="../images/notes/prompt-to-response/19-six-questions.png" alt="Six questions those approaches cannot answer yet"/>
+        <img src="../images/notes/prompt-to-response/20-bottlenecks.png" alt="Bottlenecks, and where open research can help"/>
+    </div>
+</body>
+</html>

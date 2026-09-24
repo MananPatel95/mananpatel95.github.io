@@ -3,492 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stripe Fee Calculator - 100% Free, Multiple Currencies</title>
-    <meta name="description" content="Calculate Stripe processing fees for any amount and currency. Free calculator with detailed breakdowns for domestic and international transactions.">
-    <meta name="keywords" content="stripe fee calculator, stripe processing fees, payment processing calculator, stripe costs">
+    <title>Stripe Fee Calculator</title>
+    <meta name="description" content="Estimate Stripe card fees by country and card type, and see the amount you keep.">
     <meta name="author" content="Manan Patel">
-    
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://mananpatel95.github.io/tools/stripe-fee-calculator.html">
-    <meta property="og:title" content="Stripe Fee Calculator - 100% Free, Multiple Currencies">
-    <meta property="og:description" content="Calculate Stripe processing fees for any amount and currency. Free calculator with detailed breakdowns.">
-    <meta property="og:image" content="https://mananpatel95.github.io/images/calculator-preview.jpg">
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://mananpatel95.github.io/tools/stripe-fee-calculator.html">
-    <meta property="twitter:title" content="Stripe Fee Calculator - 100% Free, Multiple Currencies">
-    <meta property="twitter:description" content="Calculate Stripe processing fees for any amount and currency. Free calculator with detailed breakdowns.">
-    <meta property="twitter:image" content="https://mananpatel95.github.io/images/calculator-preview.jpg">
-
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://mananpatel95.github.io/tools/stripe-fee-calculator.html">
-    
-    <!-- Back to Portfolio -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    
+    <link rel="canonical" href="https://mananpatel.info/tools/stripe-fee-calculator.html">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap" rel="stylesheet">
     <style>
+        * { box-sizing: border-box; }
+        html, body { margin: 0; background: #f6f4ef; color: #1c1917; }
         body {
-            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-            background: #f8fafc;
-            min-height: 100vh;
-            color: #333;
-            line-height: 1.6;
+            font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-variant-numeric: tabular-nums;
+            line-height: 1.45;
         }
-        
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            color: #6B7280;
-            text-decoration: none;
-            margin-bottom: 20px;
-            font-size: 14px;
-            transition: color 0.3s;
-        }
-        
-        .back-link:hover {
-            color: #111827;
-        }
-        
-        .container {
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            border: 1px solid #e5e7eb;
-        }
-        
+        button, input, select { font: inherit; color: inherit; }
+        button { cursor: pointer; }
+        a { color: inherit; }
+        .page { max-width: 720px; margin: 0 auto; padding: 28px 24px 64px; }
+        .home { color: #57534e; text-decoration: none; font-size: 0.92rem; }
+        .home:hover { color: #1c1917; }
         h1 {
-            color: #1f2937;
-            text-align: center;
-            margin-bottom: 10px;
-            font-size: 32px;
-            font-weight: 700;
+            margin: 28px 0 6px;
+            font-family: "Source Serif 4", Georgia, serif;
+            font-weight: 500;
+            font-size: 2.4rem;
+            letter-spacing: -0.03em;
         }
-        
-        .subtitle {
-            text-align: center;
-            color: #6B7280;
-            margin-bottom: 30px;
-            font-size: 16px;
+        .lede { margin: 0; color: #57534e; max-width: 38rem; }
+        .modes { display: flex; gap: 18px; margin-top: 28px; }
+        .modes button {
+            background: none; border: 0; border-bottom: 1px solid transparent;
+            padding: 0 0 4px; color: #78716c;
         }
-        
-        .disclaimer {
-            background: #f0f9ff;
-            border: 1px solid #bfdbfe;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 25px;
-            color: #1e40af;
-            font-size: 14px;
-            text-align: center;
+        .modes button.on { color: #1c1917; border-bottom-color: #1c1917; }
+        .inputs {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr 1fr;
+            gap: 22px;
+            margin-top: 22px;
+            padding-bottom: 22px;
+            border-bottom: 1px solid #e7e2d8;
         }
-        
-        .input-section {
-            background: #f8f9fa;
-            padding: 25px;
-            border-radius: 10px;
-            margin-bottom: 25px;
-        }
-        
-        .input-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #374151;
-            font-size: 14px;
-        }
-        
+        label { display: block; margin-bottom: 6px; color: #78716c; font-size: 0.78rem; }
         input, select {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s, box-shadow 0.3s;
-            font-family: 'Inter', sans-serif;
-        }
-        
-        input:focus, select:focus {
+            background: transparent;
+            border: 0;
+            border-bottom: 1px solid #1c1917;
+            border-radius: 0;
+            padding: 8px 0;
             outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
-        
-        .results {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-top: 25px;
+        .figure { margin-top: 28px; }
+        .figure p { margin: 0; color: #78716c; font-size: 0.84rem; }
+        .figure strong {
+            display: block;
+            margin-top: 4px;
+            font-family: "Source Serif 4", Georgia, serif;
+            font-weight: 500;
+            font-size: 3.4rem;
+            letter-spacing: -0.03em;
+            line-height: 1;
         }
-        
-        .result-card {
-            background: #1f2937;
-            color: white;
-            padding: 25px;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(31, 41, 55, 0.2);
-            border: 1px solid #374151;
-        }
-        
-        .result-card h3 {
-            margin: 0 0 15px 0;
-            font-size: 18px;
-            font-weight: 600;
-        }
-        
-        .result-card .amount {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-        
-        .breakdown {
-            background: #f8f9fa;
-            padding: 25px;
-            border-radius: 12px;
-            margin-top: 25px;
-        }
-        
-        .breakdown h3 {
-            color: #1f2937;
-            margin-bottom: 20px;
-            font-size: 20px;
-            font-weight: 600;
-        }
-        
-        .breakdown-item {
+        .rows { margin-top: 22px; }
+        .row {
             display: flex;
             justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid #e5e7eb;
-            font-size: 15px;
+            gap: 16px;
+            padding: 11px 0;
+            border-top: 1px solid #e7e2d8;
         }
-        
-        .breakdown-item:last-child {
-            border-bottom: none;
-            font-weight: 700;
-            color: #1f2937;
-            font-size: 16px;
-            padding-top: 15px;
-            margin-top: 10px;
-            border-top: 2px solid #e5e7eb;
-        }
-        
-        .how-to {
-            background: #f0f9ff;
-            padding: 25px;
-            border-radius: 12px;
-            margin-top: 25px;
-            border-left: 5px solid #3b82f6;
-        }
-        
-        .how-to h3 {
-            color: #1e40af;
-            margin-bottom: 20px;
-            font-size: 20px;
+        .row span:first-child { color: #57534e; }
+        .bar { display: flex; height: 6px; margin-top: 18px; background: #e7e2d8; }
+        .bar i { display: block; background: #1c1917; }
+        .bar b { display: block; background: #c4b8a5; }
+        h2 {
+            margin: 48px 0 12px;
+            font-size: 0.78rem;
             font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #78716c;
         }
-        
-        .how-to ol {
-            margin: 10px 0;
-            padding-left: 20px;
-        }
-        
-        .how-to li {
-            margin-bottom: 10px;
-            line-height: 1.6;
-            color: #1e40af;
-        }
-        
-        .faq {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 20px;
-            margin-top: 25px;
-        }
-        
-        .faq h3 {
-            color: #1f2937;
-            margin-bottom: 15px;
-            font-size: 18px;
-            font-weight: 600;
-        }
-        
-        .faq h4 {
-            color: #374151;
-            margin: 20px 0 10px 0;
-            font-size: 16px;
-            font-weight: 600;
-        }
-        
-        .faq p {
-            margin: 10px 0;
-            color: #1f2937;
-            line-height: 1.6;
-        }
-        
-        .country-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
-        
-        .country-item {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid #e5e7eb;
-        }
-        
-        .country-item strong {
-            color: #1f2937;
-            font-size: 14px;
-        }
-        
-        .country-item p {
-            margin: 5px 0;
-            color: #6b7280;
-            font-size: 13px;
-        }
-        
-        .warning {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            border-radius: 8px;
-            padding: 20px;
-            margin-top: 25px;
-            color: #856404;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-        
-        @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-            
-            .container {
-                padding: 20px;
-            }
-            
-            h1 {
-                font-size: 24px;
-            }
-            
-            .results {
-                grid-template-columns: 1fr;
-            }
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        th, td { text-align: right; padding: 9px 8px; border-bottom: 1px solid #e7e2d8; }
+        th:first-child, td:first-child, th:nth-child(2), td:nth-child(2) { text-align: left; }
+        th { color: #78716c; font-weight: 500; font-size: 0.75rem; }
+        .note { margin: 22px 0 0; color: #57534e; font-size: 0.88rem; }
+        .note a { color: #1c1917; }
+        @media (max-width: 700px) {
+            .inputs { grid-template-columns: 1fr; }
+            .figure strong { font-size: 2.6rem; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <a href="../index.html" class="back-link">
-            <span class="material-icons" style="font-size: 18px; margin-right: 8px;">arrow_back</span>
-            Back to Portfolio
-        </a>
-        
-        <h1>💸 Stripe Fee Calculator</h1>
-        <p class="subtitle">100% Free, multiple currencies supported.</p>
-        
-        <div class="disclaimer">
-            <strong>💸 Quickly find out how much you're paying Stripe for your transactions.</strong> Just enter an amount and get a detailed breakdown of the fees.<br>
-            <em>This website is not affiliated with Stripe.</em>
+    <div class="page">
+        <a class="home" href="../">← Home</a>
+        <h1>Stripe fees</h1>
+        <p class="lede">Standard online card rates by country. The figure is what remains after the percentage and the fixed fee.</p>
+        <div class="modes">
+            <button type="button" class="on" data-mode="charge">Amount charged</button>
+            <button type="button" data-mode="receive">Amount to keep</button>
         </div>
-        
-        <div class="input-section">
-            <h3 style="margin-top: 0; color: #1f2937;">Enter an amount and select the options below</h3>
-            
-            <div class="input-group">
-                <label for="amount">Transaction amount</label>
-                <input type="number" id="amount" value="1000" min="0" step="0.01" placeholder="Enter amount">
+        <div class="inputs">
+            <div>
+                <label for="amount" id="amountLabel">Amount charged</label>
+                <input type="number" id="amount" value="1000" min="0" step="0.01">
             </div>
-            
-            <div class="input-group">
+            <div>
                 <label for="country">Country</label>
                 <select id="country">
-                    <option value="US">🇺🇸 United States (USD)</option>
-                    <option value="CA">🇨🇦 Canada (CAD)</option>
-                    <option value="GB">🇬🇧 United Kingdom (GBP)</option>
-                    <option value="AU">🇦🇺 Australia (AUD)</option>
-                    <option value="DE">🇩🇪 Germany (EUR)</option>
-                    <option value="FR">🇫🇷 France (EUR)</option>
-                    <option value="AT">🇦🇹 Austria (EUR)</option>
-                    <option value="IE">🇮🇪 Ireland (EUR)</option>
-                    <option value="NL">🇳🇱 Netherlands (EUR)</option>
-                    <option value="PT">🇵🇹 Portugal (EUR)</option>
-                    <option value="ES">🇪🇸 Spain (EUR)</option>
-                    <option value="HK">🇭🇰 Hong Kong (HKD)</option>
-                    <option value="SG">🇸🇬 Singapore (SGD)</option>
-                    <option value="NZ">🇳🇿 New Zealand (NZD)</option>
-                    <option value="IN">🇮🇳 India (INR)</option>
+                    <option value="US">United States · USD</option>
+                    <option value="CA">Canada · CAD</option>
+                    <option value="GB">United Kingdom · GBP</option>
+                    <option value="AU">Australia · AUD</option>
+                    <option value="AT">Austria · EUR</option>
+                    <option value="FR">France · EUR</option>
+                    <option value="DE">Germany · EUR</option>
+                    <option value="IE">Ireland · EUR</option>
+                    <option value="NL">Netherlands · EUR</option>
+                    <option value="PT">Portugal · EUR</option>
+                    <option value="ES">Spain · EUR</option>
+                    <option value="HK">Hong Kong · HKD</option>
+                    <option value="IN">India · INR</option>
+                    <option value="NZ">New Zealand · NZD</option>
+                    <option value="SG">Singapore · SGD</option>
                 </select>
             </div>
-            
-            <div class="input-group">
-                <label for="cardType">Card Type</label>
+            <div>
+                <label for="cardType">Card</label>
                 <select id="cardType">
-                    <option value="domestic">Domestic Card</option>
-                    <option value="international">International Card</option>
-                    <option value="manual">Manually Entered Card</option>
+                    <option value="domestic">Domestic</option>
+                    <option value="international">International</option>
+                    <option value="manual">Entered manually</option>
                 </select>
             </div>
         </div>
-        
-        <div class="results">
-            <div class="result-card">
-                <h3>Stripe Fee</h3>
-                <div class="amount" id="stripeFee">-$29.30</div>
-                <small>Processing fee</small>
-            </div>
-            
-            <div class="result-card">
-                <h3>Total Fees</h3>
-                <div class="amount" id="totalFees">-$29.30</div>
-                <small id="feePercentage">(2.93%)</small>
-            </div>
-            
-            <div class="result-card">
-                <h3>You Will Receive</h3>
-                <div class="amount" id="netAmount">$970.70</div>
-                <small>After fees</small>
-            </div>
+        <div class="figure">
+            <p id="figureLabel">You keep</p>
+            <strong id="netAmount">$970.70</strong>
         </div>
-        
-        <div class="breakdown">
-            <h3>Fee Details</h3>
-            <div class="breakdown-item">
-                <span id="feeDescription">Domestic Stripe fee (2.9% + $0.30)</span>
-                <span id="breakdownFee">-$29.30</span>
-            </div>
-            <div class="breakdown-item">
-                <span><strong>Total fees</strong></span>
-                <span id="breakdownTotal"><strong>-$29.30 (2.93%)</strong></span>
-            </div>
-            <div class="breakdown-item">
-                <span><strong>You will receive</strong></span>
-                <span id="breakdownNet"><strong>$970.70</strong></span>
-            </div>
+        <div class="bar" aria-hidden="true"><i id="keepBar"></i><b id="feeBar"></b></div>
+        <div class="rows">
+            <div class="row"><span>Fee</span><span id="stripeFee">$29.30</span></div>
+            <div class="row"><span>Rate</span><span id="feeDescription">2.9% + $0.30</span></div>
+            <div class="row"><span>Effective</span><span id="feePercentage">2.93%</span></div>
+            <div class="row"><span id="otherLabel">Amount charged</span><span id="chargeAmount">$1,000.00</span></div>
         </div>
-        
-        <div class="how-to">
-            <h3>How to calculate Stripe fees?</h3>
-            <ol>
-                <li><strong>Enter an amount</strong><br>Enter the amount you want to calculate the fees for.</li>
-                <li><strong>Customize settings</strong><br>Select the option you want to calculate the fees for.</li>
-                <li><strong>See fees</strong><br>See how much you're paying Stripe for your transactions.</li>
-            </ol>
-        </div>
-        
-        <div class="faq">
-            <h3>Frequently Asked Questions</h3>
-            
-            <h4>What is Stripe?</h4>
-            <p>Stripe is a payment processing platform that allows businesses to accept online payments. It provides APIs and tools for developers to integrate payment processing into their applications.</p>
-            
-            <h4>How are Stripe fees calculated?</h4>
-            <p>Stripe charges a percentage fee plus a fixed fee per transaction. The exact rates depend on your country, currency, and the type of transaction (domestic vs international cards, etc.).</p>
-            
-            <h4>Can I use this calculator for multiple currencies?</h4>
-            <p>Yes! This calculator supports multiple currencies and countries. Simply select your country from the dropdown to see the appropriate fee structure.</p>
-            
-            <h4>How much are Stripe processing fees?</h4>
-            <p>Stripe processing fees are a percentage of the transaction amount. The exact amount depends on the currency, country, and the type of transaction (e.g., card, bank transfer, etc.) as well as any additional services (ex: currency conversion).</p>
-            
-            <p>Here's a quick overview of the processing fees for card transactions in different currencies:</p>
-            
-            <div class="country-grid">
-                <div class="country-item">
-                    <strong>🇦🇹 Austria</strong>
-                    <p>Domestic: 1.5% + €0.25<br>International: 3.25% + €0.25</p>
-                </div>
-                <div class="country-item">
-                    <strong>🇦🇺 Australia</strong>
-                    <p>Domestic: 1.7% + $0.30<br>International: 3.5% + $0.30</p>
-                </div>
-                <div class="country-item">
-                    <strong>🇨🇦 Canada</strong>
-                    <p>Domestic: 2.9% + $0.30<br>International: 3.7% + $0.30</p>
-                </div>
-                <div class="country-item">
-                    <strong>🇩🇪 Germany</strong>
-                    <p>Domestic: 1.5% + €0.25<br>International: 3.25% + €0.25</p>
-                </div>
-                <div class="country-item">
-                    <strong>🇫🇷 France</strong>
-                    <p>Domestic: 1.5% + €0.25<br>International: 3.25% + €0.25</p>
-                </div>
-                <div class="country-item">
-                    <strong>🇬🇧 United Kingdom</strong>
-                    <p>Domestic: 1.5% + £0.20<br>International: 3.25% + £0.20</p>
-                </div>
-                <div class="country-item">
-                    <strong>🇭🇰 Hong Kong</strong>
-                    <p>Domestic: 3.4% + $2.35<br>International: 3.9% + $2.35</p>
-                </div>
-                <div class="country-item">
-                    <strong>🇮🇪 Ireland</strong>
-                    <p>Domestic: 1.5% + €0.25<br>International: 3.25% + €0.25</p>
-                </div>
-                <div class="country-item">
-                    <strong>🇮🇳 India</strong>
-                    <p>Domestic: 2% + ₹0.00<br>International: 3% + ₹0.00</p>
-                </div>
-                <div class="country-item">
-                    <strong>🇳🇱 Netherlands</strong>
-                    <p>Domestic: 1.5% + €0.25<br>International: 3.25% + €0.25</p>
-                </div>
-                <div class="country-item">
-                    <strong>🇳🇿 New Zealand</strong>
-                    <p>Domestic: 2.7% + $0.30<br>International: 3.7% + $0.30</p>
-                </div>
-                <div class="country-item">
-                    <strong>🇵🇹 Portugal</strong>
-                    <p>Domestic: 1.5% + €0.25<br>International: 3.25% + €0.25</p>
-                </div>
-                <div class="country-item">
-                    <strong>🇸🇬 Singapore</strong>
-                    <p>Domestic: 3.4% + $0.50<br>International: 3.9% + $0.50</p>
-                </div>
-                <div class="country-item">
-                    <strong>🇪🇸 Spain</strong>
-                    <p>Domestic: 1.5% + €0.25<br>International: 3.25% + €0.25</p>
-                </div>
-                <div class="country-item">
-                    <strong>🇺🇸 United States</strong>
-                    <p>Domestic: 2.9% + $0.30<br>International: 4.4% + $0.30</p>
-                </div>
-            </div>
-            
-            <p>Check <a href="https://stripe.com/pricing" target="_blank" rel="noopener">Stripe's pricing page</a> for the detailed list.</p>
-        </div>
-        
-        <div class="warning">
-            <strong>⚠️ Important Disclaimer:</strong><br>
-            This calculator is for informational purposes only and provides estimates based on publicly available Stripe pricing information. Actual fees may vary based on your specific Stripe account, volume discounts, and other factors. Always refer to your Stripe dashboard or contact Stripe support for accurate fee information for your account.
-        </div>
-        
-        <div style="text-align: center; margin-top: 30px; color: #6b7280; font-size: 14px;">
-            Made with ☕️ by <a href="../index.html" style="color: #3b82f6; text-decoration: none;">Manan</a>
-        </div>
+        <h2>Published rates</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Country</th>
+                    <th>Currency</th>
+                    <th>Domestic</th>
+                    <th>International</th>
+                    <th>Manual</th>
+                </tr>
+            </thead>
+            <tbody id="rateTable"></tbody>
+        </table>
+        <p class="note">These are Stripe’s published standard rates, not a quote for a specific account. Volume pricing, currency conversion, and other products change the fee. This site is not affiliated with Stripe. <a href="https://stripe.com/pricing" target="_blank" rel="noopener">Stripe pricing</a>.</p>
     </div>
-
     <script>
-        // Stripe fee data based on https://stripe.com/pricing
-        const stripeFees = {
+        var stripeFees = {
             US: { domestic: { rate: 0.029, fixed: 0.30 }, international: { rate: 0.044, fixed: 0.30 }, manual: { rate: 0.034, fixed: 0.30 } },
             CA: { domestic: { rate: 0.029, fixed: 0.30 }, international: { rate: 0.037, fixed: 0.30 }, manual: { rate: 0.034, fixed: 0.30 } },
             GB: { domestic: { rate: 0.015, fixed: 0.20 }, international: { rate: 0.0325, fixed: 0.20 }, manual: { rate: 0.024, fixed: 0.20 } },
@@ -505,72 +184,84 @@
             NZ: { domestic: { rate: 0.027, fixed: 0.30 }, international: { rate: 0.037, fixed: 0.30 }, manual: { rate: 0.034, fixed: 0.30 } },
             IN: { domestic: { rate: 0.02, fixed: 0.00 }, international: { rate: 0.03, fixed: 0.00 }, manual: { rate: 0.025, fixed: 0.00 } }
         };
-        
-        const currencies = {
+        var currencies = {
             US: 'USD', CA: 'CAD', GB: 'GBP', AU: 'AUD', DE: 'EUR', FR: 'EUR', AT: 'EUR', IE: 'EUR', NL: 'EUR', PT: 'EUR', ES: 'EUR', HK: 'HKD', SG: 'SGD', NZ: 'NZD', IN: 'INR'
         };
-        
-        const currencySymbols = {
+        var currencySymbols = {
             USD: '$', CAD: '$', GBP: '£', AUD: '$', EUR: '€', HKD: '$', SGD: '$', NZD: '$', INR: '₹'
         };
-        
-        function formatCurrency(amount, currency) {
-            const symbol = currencySymbols[currency] || '$';
-            return symbol + Math.abs(amount).toFixed(2);
+        var countryNames = {
+            US: 'United States', CA: 'Canada', GB: 'United Kingdom', AU: 'Australia', AT: 'Austria', FR: 'France', DE: 'Germany', IE: 'Ireland', NL: 'Netherlands', PT: 'Portugal', ES: 'Spain', HK: 'Hong Kong', IN: 'India', NZ: 'New Zealand', SG: 'Singapore'
+        };
+        var mode = 'charge';
+
+        function money(amount, currency) {
+            var symbol = currencySymbols[currency] || '$';
+            return symbol + Math.abs(amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         }
-        
+        function rateText(fees, currency) {
+            var symbol = currencySymbols[currency] || '$';
+            var pct = String(Math.round(fees.rate * 10000) / 100);
+            return pct + '% + ' + symbol + fees.fixed.toFixed(2);
+        }
         function updateCalculations() {
-            const amount = parseFloat(document.getElementById('amount').value) || 0;
-            const country = document.getElementById('country').value;
-            const cardType = document.getElementById('cardType').value;
-            
-            if (amount <= 0) {
-                document.getElementById('stripeFee').textContent = '$0.00';
-                document.getElementById('totalFees').textContent = '$0.00';
-                document.getElementById('netAmount').textContent = '$0.00';
-                document.getElementById('breakdownFee').textContent = '$0.00';
-                document.getElementById('breakdownTotal').textContent = '$0.00';
-                document.getElementById('breakdownNet').textContent = '$0.00';
-                document.getElementById('feePercentage').textContent = '(0%)';
-                document.getElementById('feeDescription').textContent = 'No fee calculated';
-                return;
+            var entered = parseFloat(document.getElementById('amount').value) || 0;
+            var country = document.getElementById('country').value;
+            var cardType = document.getElementById('cardType').value;
+            var fees = stripeFees[country][cardType];
+            var currency = currencies[country];
+            var charged = entered;
+            var feeAmount = 0;
+            var netAmount = 0;
+            if (entered > 0 && fees.rate < 1) {
+                if (mode === 'receive') {
+                    charged = (entered + fees.fixed) / (1 - fees.rate);
+                    netAmount = entered;
+                    feeAmount = charged - netAmount;
+                } else {
+                    feeAmount = (entered * fees.rate) + fees.fixed;
+                    netAmount = entered - feeAmount;
+                }
             }
-            
-            const fees = stripeFees[country][cardType];
-            const currency = currencies[country];
-            const symbol = currencySymbols[currency];
-            
-            const feeAmount = (amount * fees.rate) + fees.fixed;
-            const netAmount = amount - feeAmount;
-            const feePercentage = (feeAmount / amount) * 100;
-            
-            // Update main results
-            document.getElementById('stripeFee').textContent = '-' + formatCurrency(feeAmount, currency);
-            document.getElementById('totalFees').textContent = '-' + formatCurrency(feeAmount, currency);
-            document.getElementById('netAmount').textContent = formatCurrency(netAmount, currency);
-            document.getElementById('feePercentage').textContent = '(' + feePercentage.toFixed(2) + '%)';
-            
-            // Update breakdown
-            document.getElementById('breakdownFee').textContent = '-' + formatCurrency(feeAmount, currency);
-            document.getElementById('breakdownTotal').textContent = '-' + formatCurrency(feeAmount, currency) + ' (' + feePercentage.toFixed(2) + '%)';
-            document.getElementById('breakdownNet').textContent = formatCurrency(netAmount, currency);
-            
-            // Update fee description
-            const cardTypeNames = {
-                domestic: 'Domestic',
-                international: 'International',
-                manual: 'Manually Entered'
-            };
-            document.getElementById('feeDescription').textContent = 
-                cardTypeNames[cardType] + ' Stripe fee (' + (fees.rate * 100).toFixed(1) + '% + ' + symbol + fees.fixed.toFixed(2) + ')';
+            var effective = charged ? (feeAmount / charged) * 100 : 0;
+            document.getElementById('figureLabel').textContent = mode === 'receive' ? 'Amount to charge' : 'You keep';
+            document.getElementById('netAmount').textContent = money(mode === 'receive' ? charged : netAmount, currency);
+            document.getElementById('stripeFee').textContent = money(feeAmount, currency);
+            document.getElementById('feeDescription').textContent = rateText(fees, currency);
+            document.getElementById('feePercentage').textContent = effective.toFixed(2) + '%';
+            document.getElementById('otherLabel').textContent = mode === 'receive' ? 'You keep' : 'Amount charged';
+            document.getElementById('chargeAmount').textContent = money(mode === 'receive' ? netAmount : charged, currency);
+            var feeShare = charged ? Math.min(100, Math.max(0, (feeAmount / charged) * 100)) : 0;
+            document.getElementById('keepBar').style.width = (100 - feeShare) + '%';
+            document.getElementById('feeBar').style.width = feeShare + '%';
         }
-        
-        // Event listeners
+        function renderTable() {
+            var codes = Object.keys(countryNames).sort(function (a, b) {
+                return countryNames[a].localeCompare(countryNames[b]);
+            });
+            document.getElementById('rateTable').innerHTML = codes.map(function (code) {
+                var fees = stripeFees[code];
+                var currency = currencies[code];
+                return '<tr><td>' + countryNames[code] + '</td><td>' + currency + '</td><td>' +
+                    rateText(fees.domestic, currency) + '</td><td>' +
+                    rateText(fees.international, currency) + '</td><td>' +
+                    rateText(fees.manual, currency) + '</td></tr>';
+            }).join('');
+        }
+        document.querySelectorAll('.modes button').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                mode = btn.getAttribute('data-mode');
+                document.querySelectorAll('.modes button').forEach(function (b) {
+                    b.classList.toggle('on', b === btn);
+                });
+                document.getElementById('amountLabel').textContent = mode === 'receive' ? 'Amount to keep' : 'Amount charged';
+                updateCalculations();
+            });
+        });
         document.getElementById('amount').addEventListener('input', updateCalculations);
         document.getElementById('country').addEventListener('change', updateCalculations);
         document.getElementById('cardType').addEventListener('change', updateCalculations);
-        
-        // Initial calculation
+        renderTable();
         updateCalculations();
     </script>
 </body>
