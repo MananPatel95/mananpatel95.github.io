@@ -70,6 +70,7 @@
         }
         .t-sym { font-weight: 750; font-size: 1.02rem; }
         .t-sub { margin-top: 3px; color: #9aa1ab; font-size: 0.82rem; }
+        .t-times { margin-top: 2px; color: #6f7680; font-size: 0.72rem; line-height: 1.35; }
         .t-quote { text-align: right; }
         .t-px { font-weight: 650; }
         .up { color: #b6ef3c; }
@@ -264,9 +265,21 @@
                 return dt.getUTCFullYear() + "-" + m + "-" + d;
             }
             function formatWhen(date) {
-                var day = date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
-                var time = date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
-                return day + " at " + time;
+                var zone = "America/New_York";
+                var day = date.toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: zone });
+                var time = date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZone: zone, timeZoneName: "short" });
+                return day + ", " + time;
+            }
+            function parseNasdaqAsOf(text) {
+                var m = String(text || "").match(/AS OF\s+([A-Za-z]{3})\s+(\d{1,2}),\s+(\d{4})\s+(\d{1,2}):(\d{2})\s*(AM|PM)\s+ET/i);
+                if (!m) return null;
+                var months = { jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5, jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11 };
+                var month = months[m[1].toLowerCase()];
+                if (month == null) return null;
+                var hour = Number(m[4]) % 12;
+                if (m[6].toUpperCase() === "PM") hour += 12;
+                var iso = m[3] + "-" + String(month + 1).padStart(2, "0") + "-" + String(Number(m[2])).padStart(2, "0") + "T" + String(hour).padStart(2, "0") + ":" + m[5] + ":00";
+                return zonedTime(iso, "America/New_York");
             }
             function zonedTime(iso, timeZone) {
                 var bits = iso.split("T");
@@ -458,18 +471,20 @@
                     };
                 });
             }
-            async function fetchJsonNet(url, attempt) {
+            async function fetchJsonNet(url, attempt, tolerance) {
+                var fresh = tolerance === "0";
                 var res = await fetch("https://r.jina.ai/" + url, {
+                    cache: fresh ? "no-store" : "default",
                     headers: {
                         "Accept": "application/json",
                         "X-Return-Format": "text",
-                        "X-Cache-Tolerance": "43200"
+                        "X-Cache-Tolerance": tolerance || "43200"
                     }
                 });
                 if (!res.ok) {
                     if (attempt < 2 && (res.status === 429 || res.status >= 500)) {
                         await new Promise(function (r) { setTimeout(r, 800 * (attempt + 1)); });
-                        return fetchJsonNet(url, attempt + 1);
+                        return fetchJsonNet(url, attempt + 1, tolerance);
                     }
                     throw new Error("Feed unavailable");
                 }
@@ -478,18 +493,19 @@
                 if (data.httpStatus >= 400 || !data.text) throw new Error("No data");
                 return JSON.parse(data.text);
             }
-            function fetchJson(url) {
-                if (memJson[url]) return Promise.resolve(memJson[url]);
-                if (inflight[url]) return inflight[url];
-                inflight[url] = fetchJsonNet(url, 0).then(function (data) {
+            function fetchJson(url, force) {
+                var key = (force ? "1:" : "0:") + url;
+                if (!force && memJson[url]) return Promise.resolve(memJson[url]);
+                if (inflight[key]) return inflight[key];
+                inflight[key] = fetchJsonNet(url, 0, force ? "0" : "43200").then(function (data) {
                     memJson[url] = data;
-                    delete inflight[url];
+                    delete inflight[key];
                     return data;
                 }, function (err) {
-                    delete inflight[url];
+                    delete inflight[key];
                     throw err;
                 });
-                return inflight[url];
+                return inflight[key];
             }
             function yahooUrl(symbol, spec) {
                 var sym = symbol.replace(/\./g, "-");
@@ -522,10 +538,10 @@
                 var from = nyToday();
                 return "https://api.nasdaq.com/api/quote/" + encodeURIComponent(symbol) + "/option-chain?assetclass=" + asset + "&limit=6000&fromdate=" + from + "&todate=" + addDaysISO(from, 92) + "&excode=oprac&callput=callput&money=all&type=all";
             }
-            async function fetchChain(symbol, asset) {
-                var payload = await fetchJson(nasdaqUrl(symbol, asset));
+            async function fetchChain(symbol, asset, force) {
+                var payload = await fetchJson(nasdaqUrl(symbol, asset), force);
                 var total = payload.data && payload.data.totalRecord;
-                if (!total) payload = await fetchJson(nasdaqUrl(symbol, asset === "etf" ? "stocks" : "etf"));
+                if (!total) payload = await fetchJson(nasdaqUrl(symbol, asset === "etf" ? "stocks" : "etf"), force);
                 if (!payload.data || !payload.data.table) throw new Error("No chain");
                 return payload;
             }
@@ -588,7 +604,7 @@
                     spot: spot,
                     changePct: quote.changePct,
                     priceTime: quote.priceTime,
-                    gexTime: quote.priceTime,
+                    gexTime: parseNasdaqAsOf(payload.data && payload.data.lastTrade) || new Date(),
                     nonzero: nonzero,
                     expiries: Object.keys(byExpiry).sort(),
                     byExpiry: byExpiry,
@@ -612,8 +628,9 @@
                 };
                 return true;
             }
-            async function loadSymbol(symbol) {
-                if (recall(symbol) && isFresh(symbol)) {
+            async function loadSymbol(symbol, opts) {
+                var force = !!(opts && opts.force);
+                if (!force && recall(symbol) && isFresh(symbol)) {
                     var cached = state.cache[symbol];
                     if (!cached.series || !cached.series[state.interval]) await ensureSeries(symbol, state.interval);
                     return;
@@ -628,7 +645,7 @@
                 render({ keepSide: true, keepMain: true });
                 var spec = intervalById(state.interval);
                 try {
-                    var quote = parseYahoo(await fetchJson(yahooUrl(symbol, spec)));
+                    var quote = parseYahoo(await fetchJson(yahooUrl(symbol, spec), force));
                     var series = Object.assign({}, (state.cache[symbol] && state.cache[symbol].series) || {});
                     series[spec.id] = quote.bars;
                     var partial = {
@@ -636,7 +653,7 @@
                         spot: quote.spot,
                         changePct: quote.changePct,
                         priceTime: quote.priceTime,
-                        gexTime: quote.priceTime,
+                        gexTime: prev && prev.snapshot ? prev.snapshot.gexTime : null,
                         nonzero: 0,
                         expiries: [],
                         byExpiry: {},
@@ -646,7 +663,7 @@
                     state.cache[symbol] = { status: "loading", snapshot: partial, series: series, quote: quote, chainError: false };
                     render({ keepSide: true, keepMain: true });
                     try {
-                        var chain = await fetchChain(symbol, quote.asset);
+                        var chain = await fetchChain(symbol, quote.asset, force);
                         var item = state.cache[symbol];
                         if (!item) return;
                         item.snapshot = buildSnapshot(chain, quote);
@@ -702,15 +719,18 @@
                 }
                 return Promise.all(workers);
             }
-            async function refreshAll() {
+            async function refreshAll(force) {
                 if (state.refreshing) return;
-                var needed = state.symbols.filter(function (symbol) { return !isFresh(symbol); });
+                var needed = force ? state.symbols.slice() : state.symbols.filter(function (symbol) { return !isFresh(symbol); });
                 if (!needed.length) return;
                 state.refreshing = true;
                 render({ keepSide: true, keepMain: true });
-                await pool(needed, 1, loadSymbol);
-                state.refreshing = false;
-                render({ keepSide: true, keepMain: true });
+                try {
+                    await pool(needed, 1, function (symbol) { return loadSymbol(symbol, { force: !!force }); });
+                } finally {
+                    state.refreshing = false;
+                    render({ keepSide: true, keepMain: true });
+                }
             }
 
             function render(opts) {
@@ -732,15 +752,23 @@
                         var s = item.snapshot;
                         if (s.pending) sub = "Loading gamma";
                         else if (item.chainError) sub = "Gamma unavailable";
-                        else sub = "GEX " + formatGex(aggregate(s, null).net) + (s.gexTime ? " · " + formatWhen(s.gexTime) : "");
+                        else sub = "GEX " + formatGex(aggregate(s, null).net);
                         px = formatPx(s.spot);
                         chg = formatPct(s.changePct);
                         cls = Number(s.changePct) >= 0 ? "up" : "down";
                     } else if (item && item.status === "error") {
                         sub = "Couldn't load this ticker";
                     }
+                    var times = "";
+                    if (item && item.snapshot && item.snapshot.spot) {
+                        var bits = [];
+                        if (item.snapshot.priceTime) bits.push("Stock " + formatWhen(item.snapshot.priceTime));
+                        if (item.snapshot.pending) bits.push("Gamma loading");
+                        else if (item.snapshot.gexTime) bits.push("Gamma " + formatWhen(item.snapshot.gexTime));
+                        times = bits.join(" · ");
+                    }
                     var on = symbol === state.selected ? " on" : "";
-                    return '<div class="ticker' + on + '"><button class="ticker-open" type="button" data-act="open" data-sym="' + esc(symbol) + '"><div><div class="t-sym">' + esc(symbol) + '</div><div class="t-sub">' + esc(sub) + '</div></div><div class="t-quote"><div class="t-px">' + esc(px) + '</div><div class="t-chg ' + cls + '">' + esc(chg) + '</div></div></button><button class="remove" type="button" data-act="remove" data-sym="' + esc(symbol) + '" aria-label="Remove ' + esc(symbol) + '">×</button></div>';
+                    return '<div class="ticker' + on + '"><button class="ticker-open" type="button" data-act="open" data-sym="' + esc(symbol) + '"><div><div class="t-sym">' + esc(symbol) + '</div><div class="t-sub">' + esc(sub) + '</div>' + (times ? '<div class="t-times">' + esc(times) + '</div>' : '') + '</div><div class="t-quote"><div class="t-px">' + esc(px) + '</div><div class="t-chg ' + cls + '">' + esc(chg) + '</div></div></button><button class="remove" type="button" data-act="remove" data-sym="' + esc(symbol) + '" aria-label="Remove ' + esc(symbol) + '">×</button></div>';
                 }).join("");
                 var add = state.symbols.length < MAX
                     ? '<form class="add" id="addForm"><input id="addInput" maxlength="10" placeholder="Add ticker" autocapitalize="characters" aria-label="Ticker"><button type="submit">Add</button></form>'
@@ -777,7 +805,8 @@
                 var depths = DEPTHS.map(function (n) {
                     return '<button type="button" data-act="depth" data-n="' + n + '" class="' + (state.depth === n ? "on" : "") + '">' + n + '</button>';
                 }).join("");
-                var priceWhen = snapshot.priceTime ? formatWhen(snapshot.priceTime) : "the latest print";
+                var stockWhen = snapshot.priceTime ? formatWhen(snapshot.priceTime) : "unavailable";
+                var gexWhen = snapshot.pending ? "loading" : (snapshot.gexTime ? formatWhen(snapshot.gexTime) : "unavailable");
                 var cls = Number(snapshot.changePct) >= 0 ? "up" : "down";
                 var netCls = view.net >= 0 ? "up" : "down";
                 var gammaNote = snapshot.pending ? "Loading the option chain…" : (item.chainError ? "The option chain didn't load." : "Gamma from the Nasdaq chain. Open interest is the prior daily print.");
@@ -794,7 +823,8 @@
                     '<div class="stage"><div class="col">' +
                     '<p class="kicker">Selected</p>' +
                     '<div class="head"><div><div class="sym">' + esc(snapshot.symbol || symbol) + '</div></div><div class="quote"><div class="px">' + formatPx(snapshot.spot) + '</div><div class="chg ' + cls + '">' + formatPct(snapshot.changePct) + '</div></div></div>' +
-                    '<p class="meta">As of ' + esc(priceWhen) + ' · Yahoo prices · ' + esc(gammaNote) + '</p>' +
+                    '<p class="meta">Stock data ' + esc(stockWhen) + ' · GEX data ' + esc(gexWhen) + '</p>' +
+                    '<p class="meta">Yahoo prices · ' + esc(gammaNote) + '</p>' +
                     '<div class="chart-toolbar"><div><h2>Price</h2><p class="chart-note">Drag to pan · drag the price scale up or down · double-click resets</p></div><div class="intervals">' + intervals + '</div></div>' +
                     '<div class="chart-box"><div class="chart-legend" id="chartLegend"></div><canvas id="candles"></canvas></div>' +
                     '<div class="stats"><div class="stat"><p>Net gamma</p><strong class="' + netCls + '">' + netText + '</strong></div><div class="stat"><p>Call wall</p><strong>' + callText + '</strong></div><div class="stat"><p>Put wall</p><strong>' + putText + '</strong></div></div>' +
@@ -802,7 +832,7 @@
                     '<div class="controls"><div class="expiry"><p class="control-label">Expiry window</p><button class="expiry-btn" type="button" data-act="menu">' + esc(expLabel) + ' ▾</button><div class="menu" id="expMenu" hidden>' + menu + '</div></div><div><p class="control-label">Strike depth</p><div class="depths">' + depths + '</div></div></div>' +
                     gammaHtml(snapshot, view) +
                     '<div class="legend"><span><i class="sw"></i> Positive gamma</span><span><i class="sw neg"></i> Negative gamma</span><span><i class="sw spot"></i> Nearest spot strike</span></div>' +
-                    '<details class="method"><summary>Method &amp; limitations</summary><p>Dollar gamma per 1% move = gamma × open interest × 100 × spot<sup>2</sup> × 0.01. Calls are positive and puts are negative. Gamma is Black–Scholes from the bid/ask mid, with a 4% rate and a 1.2% dividend yield on ETFs. Prices come from Yahoo and the chain comes from Nasdaq. Open interest is still the prior daily print. Each ticker is kept for 12 hours in this browser and on the shared fetch cache, so reloading does not ask for the chain again. This is a structure map, not a trade signal.</p><p>' + esc(contractLine) + '</p></details>' +
+                    '<details class="method"><summary>Method &amp; limitations</summary><p>Dollar gamma per 1% move = gamma × open interest × 100 × spot<sup>2</sup> × 0.01. Calls are positive and puts are negative. Gamma is Black–Scholes from the bid/ask mid, with a 4% rate and a 1.2% dividend yield on ETFs. Prices come from Yahoo and the chain comes from Nasdaq. Stock time is Yahoo’s last print. GEX time is the as-of time on the Nasdaq chain. Open interest is still the prior daily print. Opening the page reuses data for 12 hours. Refresh all asks for a new price and a new chain. This is a structure map, not a trade signal.</p><p>' + esc(contractLine) + '</p></details>' +
                     '</div></div>';
                 var bars = (item.series && item.series[state.interval]) || [];
                 requestAnimationFrame(function () { bindChart(bars, view.callWall, view.putWall); });
@@ -1145,7 +1175,7 @@
                 var el = e.target.closest("[data-act]");
                 if (!el) return;
                 var act = el.getAttribute("data-act");
-                if (act === "refresh") refreshAll();
+                if (act === "refresh") refreshAll(true);
                 if (act === "open") {
                     state.selected = el.getAttribute("data-sym");
                     state.expiry = null;
