@@ -153,6 +153,55 @@
         .travel-gallery-header {
           margin-bottom: 1rem;
         }
+        .travel-feed {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+          gap: 0.75rem;
+          align-items: start;
+        }
+        .travel-card {
+          position: relative;
+          display: block;
+          width: 100%;
+          aspect-ratio: 9 / 16;
+          padding: 0;
+          border: none;
+          border-radius: 0.75rem;
+          overflow: hidden;
+          background: #000;
+          cursor: pointer;
+          text-align: left;
+        }
+        .travel-card-media {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center;
+          display: block;
+          background: #000;
+        }
+        .travel-card-meta {
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 0.15rem;
+          padding: 3rem 0.9rem 0.85rem;
+          background: linear-gradient(transparent, rgba(0,0,0,0.78));
+          color: #fff;
+          pointer-events: none;
+        }
+        .travel-card-title {
+          font-size: 1rem;
+          font-weight: 700;
+          line-height: 1.2;
+        }
+        .travel-card-date {
+          font-size: 0.8rem;
+          opacity: 0.9;
+        }
         .travel-stamps-scroll {
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -318,7 +367,7 @@
         }
         .travel-modal-media {
           max-width: 100%;
-          max-height: calc(100vh - 120px);
+          max-height: calc(100vh - 200px);
           width: auto;
           height: auto;
           object-fit: contain;
@@ -367,6 +416,53 @@
         .travel-modal-fullscreen-btn:hover {
           background: #fff;
           color: #111;
+        }
+        .travel-stamp-count {
+          position: absolute;
+          bottom: 6px;
+          left: 6px;
+          padding: 2px 6px;
+          background: rgba(0,0,0,0.55);
+          color: #fff;
+          font-size: 0.6875rem;
+          font-weight: 600;
+          border-radius: 6px;
+          z-index: 2;
+          line-height: 1.4;
+        }
+        .travel-modal-nav {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 2.5rem;
+          height: 2.5rem;
+          border: none;
+          background: rgba(255,255,255,0.15);
+          color: #fff;
+          border-radius: 0.5rem;
+          cursor: pointer;
+          font-size: 1.75rem;
+          line-height: 1;
+          display: none;
+          align-items: center;
+          justify-content: center;
+          z-index: 10;
+        }
+        .travel-modal-nav.visible {
+          display: flex;
+        }
+        .travel-modal-nav:hover {
+          background: rgba(255,255,255,0.25);
+        }
+        .travel-modal-nav.prev { left: 1rem; }
+        .travel-modal-nav.next { right: 1rem; }
+        .travel-modal-caption {
+          margin-top: 0.75rem;
+          color: #fff;
+          font-size: 0.875rem;
+          text-align: center;
+          position: relative;
+          z-index: 11;
         }
 
         .site-shell {
@@ -495,6 +591,8 @@
         }
         .writing-card {
           border: 1px solid #000;
+          border-radius: 0.75rem;
+          background-clip: padding-box;
           padding: 1rem;
           min-height: 150px;
           display: flex;
@@ -543,6 +641,7 @@
           color: #000;
           padding: 0.35rem 0.75rem;
           font-size: 0.9rem;
+          border-radius: 0.5rem;
           cursor: pointer;
         }
         .dark .back-to-main {
@@ -609,8 +708,8 @@
 <nav class="site-nav" id="siteNav" aria-label="Sections">
 <a href="#start" data-section="start">main</a>
 <a href="#projects" data-section="projects">projects</a>
-<a href="#teams" data-section="teams" data-page="true">teams I've worked with</a>
 <a href="#tools" data-section="tools">tools</a>
+<a href="#teams" data-section="teams" data-page="true">teams I've worked with</a>
 <a href="#writing" data-section="writing" data-page="true">writing</a>
 <a href="#travel" data-section="travel" data-page="true">travel</a>
 </nav>
@@ -655,6 +754,8 @@
 <div id="travelModal" class="travel-modal-overlay">
   <div class="travel-modal-content">
     <button type="button" class="travel-modal-close" id="travelModalClose" aria-label="Close">&times;</button>
+    <button type="button" class="travel-modal-nav prev" id="travelModalPrev" aria-label="Previous photo">‹</button>
+    <button type="button" class="travel-modal-nav next" id="travelModalNext" aria-label="Next photo">›</button>
     <div id="travelModalMediaWrap"></div>
     <div class="travel-modal-actions">
       <button type="button" id="travelModalFullScreenBtn" class="travel-modal-fullscreen-btn">Close</button>
@@ -841,347 +942,161 @@
     <div class="travel-gallery-header">
         <h2 class="text-xl font-bold text-text-light dark:text-text-dark">Where I've been</h2>
     </div>
-    <div class="travel-stamps-scroll" id="travelStampsScroll">
-        <div class="travel-stamp-link block rounded-lg border border-border-light dark:border-border-dark overflow-hidden hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" data-trip-href="travel/mexico-city-may2026.html" data-travel-media="images/travel_pictures/mexico_city-may2026.jpg" data-media-type="image">
-            <div class="travel-stamp-flip-wrapper">
-                <div class="travel-stamp-inner">
-                    <div class="travel-stamp-front travel-stamp-card">
-                        <img class="travel-stamp-img" src="images/travel_stamps/mexico_city-may2026.png" alt="Mexico City"/>
-                    </div>
-                    <div class="travel-stamp-back">
-                        <img class="travel-stamp-back-img" src="images/travel_pictures/mexico_city-may2026.jpg" alt="Mexico City"/>
-                        <button type="button" class="travel-stamp-fullscreen-btn" aria-label="Full screen">⛶</button>
-                    </div>
-                </div>
-            </div>
-            <div class="p-3">
-                <div class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">Mexico City, Mexico</div>
-                <div class="text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">May 2026</div>
-            </div>
-        </div>
-        <div class="travel-stamp-link block rounded-lg border border-border-light dark:border-border-dark overflow-hidden hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" data-trip-href="travel/toronto-dec2025.html" data-travel-media="images/travel_pictures/toronto_dec2025.MOV" data-media-type="video">
-            <div class="travel-stamp-flip-wrapper">
-                <div class="travel-stamp-inner">
-                    <div class="travel-stamp-front travel-stamp-card">
-                        <img class="travel-stamp-img" src="images/travel_stamps/toronto_dec2025.png" alt="Toronto"/>
-                    </div>
-                    <div class="travel-stamp-back">
-                        <video class="travel-stamp-back-video" src="images/travel_pictures/toronto_dec2025.MOV" muted loop playsinline preload="metadata" aria-label="Toronto"></video>
-                        <button type="button" class="travel-stamp-fullscreen-btn" aria-label="Full screen">⛶</button>
-                    </div>
-                </div>
-            </div>
-            <div class="p-3">
-                <div class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">Toronto, Canada</div>
-                <div class="text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">December 2025</div>
-            </div>
-        </div>
-        <div class="travel-stamp-link block rounded-lg border border-border-light dark:border-border-dark overflow-hidden hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" data-trip-href="travel/tofino-aug2025.html" data-travel-media="images/travel_pictures/tofino_aug2025.mov" data-media-type="video">
-            <div class="travel-stamp-flip-wrapper">
-                <div class="travel-stamp-inner">
-                    <div class="travel-stamp-front travel-stamp-card">
-                        <img class="travel-stamp-img" src="images/travel_stamps/tofino_aug2025.png" alt="Tofino"/>
-                    </div>
-                    <div class="travel-stamp-back">
-                        <video class="travel-stamp-back-video" src="images/travel_pictures/tofino_aug2025.mov" muted loop playsinline preload="metadata" aria-label="Tofino"></video>
-                        <button type="button" class="travel-stamp-fullscreen-btn" aria-label="Full screen">⛶</button>
-                    </div>
-                </div>
-            </div>
-            <div class="p-3">
-                <div class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">Tofino, Canada</div>
-                <div class="text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">August 2025</div>
-            </div>
-        </div>
-        <div class="travel-stamp-link block rounded-lg border border-border-light dark:border-border-dark overflow-hidden hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" data-trip-href="travel/sunrise-manor-nevada-apr2025.html" data-travel-media="images/travel_pictures/nevada_apr2025.mov" data-media-type="video">
-            <div class="travel-stamp-flip-wrapper">
-                <div class="travel-stamp-inner">
-                    <div class="travel-stamp-front travel-stamp-card">
-                        <img class="travel-stamp-img" src="images/travel_stamps/sunrise_manor_nevada_apr2025.png" alt="Sunrise Manor"/>
-                    </div>
-                    <div class="travel-stamp-back">
-                        <video class="travel-stamp-back-video" src="images/travel_pictures/nevada_apr2025.mov" muted loop playsinline preload="metadata" aria-label="Sunrise Manor"></video>
-                        <button type="button" class="travel-stamp-fullscreen-btn" aria-label="Full screen">⛶</button>
-                    </div>
-                </div>
-            </div>
-            <div class="p-3">
-                <div class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">Sunrise Manor, Nevada</div>
-                <div class="text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">April 2025</div>
-            </div>
-        </div>
-        <div class="travel-stamp-link block rounded-lg border border-border-light dark:border-border-dark overflow-hidden hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" data-trip-href="travel/australia-jan2025.html" data-travel-media="images/travel_pictures/sydneyAus_jan2025.MOV" data-media-type="video">
-            <div class="travel-stamp-flip-wrapper">
-                <div class="travel-stamp-inner">
-                    <div class="travel-stamp-front travel-stamp-card">
-                        <img class="travel-stamp-img" src="images/travel_stamps/australia_jan2025.jpg" alt="Australia"/>
-                    </div>
-                    <div class="travel-stamp-back">
-                        <video class="travel-stamp-back-video" src="images/travel_pictures/sydneyAus_jan2025.MOV" muted loop playsinline preload="metadata" aria-label="Australia"></video>
-                        <button type="button" class="travel-stamp-fullscreen-btn" aria-label="Full screen">⛶</button>
-                    </div>
-                </div>
-            </div>
-            <div class="p-3">
-                <div class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">Sydney, Australia</div>
-                <div class="text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">January 2025</div>
-            </div>
-        </div>
-        <div class="travel-stamp-link block rounded-lg border border-border-light dark:border-border-dark overflow-hidden hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" data-trip-href="travel/chicago-sep2024.html" data-travel-media="images/travel_pictures/chicago_sep2024.mov" data-media-type="video">
-            <div class="travel-stamp-flip-wrapper">
-                <div class="travel-stamp-inner">
-                    <div class="travel-stamp-front travel-stamp-card">
-                        <img class="travel-stamp-img" src="images/travel_stamps/chicago_sep2024.png" alt="Chicago"/>
-                    </div>
-                    <div class="travel-stamp-back">
-                        <video class="travel-stamp-back-video" src="images/travel_pictures/chicago_sep2024.mov" muted loop playsinline preload="metadata" aria-label="Chicago"></video>
-                        <button type="button" class="travel-stamp-fullscreen-btn" aria-label="Full screen">⛶</button>
-                    </div>
-                </div>
-            </div>
-            <div class="p-3">
-                <div class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">Chicago, Illinois</div>
-                <div class="text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">September 2024</div>
-            </div>
-        </div>
-        <div class="travel-stamp-link block rounded-lg border border-border-light dark:border-border-dark overflow-hidden hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" data-trip-href="travel/japan-apr2024.html" data-travel-media="images/travel_pictures/japan_apr2024.mov" data-media-type="video">
-            <div class="travel-stamp-flip-wrapper">
-                <div class="travel-stamp-inner">
-                    <div class="travel-stamp-front travel-stamp-card">
-                        <img class="travel-stamp-img" src="images/travel_stamps/japan_apr2024.png" alt="Japan"/>
-                    </div>
-                    <div class="travel-stamp-back">
-                        <video class="travel-stamp-back-video" src="images/travel_pictures/japan_apr2024.mov" muted loop playsinline preload="metadata" aria-label="Japan"></video>
-                        <button type="button" class="travel-stamp-fullscreen-btn" aria-label="Full screen">⛶</button>
-                    </div>
-                </div>
-            </div>
-            <div class="p-3">
-                <div class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">Japan</div>
-                <div class="text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">April 2024</div>
-            </div>
-        </div>
-        <div class="travel-stamp-link block rounded-lg border border-border-light dark:border-border-dark overflow-hidden hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" data-trip-href="travel/alajuela-costa-rica-dec2023.html" data-travel-media="images/travel_pictures/costa_rica_dec2023.MOV" data-media-type="video">
-            <div class="travel-stamp-flip-wrapper">
-                <div class="travel-stamp-inner">
-                    <div class="travel-stamp-front travel-stamp-card">
-                        <img class="travel-stamp-img" src="images/travel_stamps/alajuela_costa_rica_dec2023.png" alt="Alajuela"/>
-                    </div>
-                    <div class="travel-stamp-back">
-                        <video class="travel-stamp-back-video" src="images/travel_pictures/costa_rica_dec2023.MOV" muted loop playsinline preload="metadata" aria-label="Costa Rica"></video>
-                        <button type="button" class="travel-stamp-fullscreen-btn" aria-label="Full screen">⛶</button>
-                    </div>
-                </div>
-            </div>
-            <div class="p-3">
-                <div class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">Costa Rica</div>
-                <div class="text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">Dec 2023</div>
-            </div>
-        </div>
-        <div class="travel-stamp-link block rounded-lg border border-border-light dark:border-border-dark overflow-hidden hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" data-trip-href="travel/calgary-may2022.html" data-travel-media="images/travel_pictures/calgary_may2023.MOV" data-media-type="video">
-            <div class="travel-stamp-flip-wrapper">
-                <div class="travel-stamp-inner">
-                    <div class="travel-stamp-front travel-stamp-card">
-                        <img class="travel-stamp-img" src="images/travel_stamps/calgary_may2022.png" alt="Calgary"/>
-                    </div>
-                    <div class="travel-stamp-back">
-                        <video class="travel-stamp-back-video" src="images/travel_pictures/calgary_may2023.MOV" muted loop playsinline preload="metadata" aria-label="Calgary"></video>
-                        <button type="button" class="travel-stamp-fullscreen-btn" aria-label="Full screen">⛶</button>
-                    </div>
-                </div>
-            </div>
-            <div class="p-3">
-                <div class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">Calgary, Canada</div>
-                <div class="text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">May 2023</div>
-            </div>
-        </div>
-        <div class="travel-stamp-link block rounded-lg border border-border-light dark:border-border-dark overflow-hidden hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" data-trip-href="travel/banff-may2022.html" data-travel-media="images/travel_pictures/banff_may2023.MOV" data-media-type="video">
-            <div class="travel-stamp-flip-wrapper">
-                <div class="travel-stamp-inner">
-                    <div class="travel-stamp-front travel-stamp-card">
-                        <img class="travel-stamp-img" src="images/travel_stamps/banff_may2022.png" alt="Banff"/>
-                    </div>
-                    <div class="travel-stamp-back">
-                        <video class="travel-stamp-back-video" src="images/travel_pictures/banff_may2023.MOV" muted loop playsinline preload="metadata" aria-label="Banff"></video>
-                        <button type="button" class="travel-stamp-fullscreen-btn" aria-label="Full screen">⛶</button>
-                    </div>
-                </div>
-            </div>
-            <div class="p-3">
-                <div class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">Banff, Canada</div>
-                <div class="text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">May 2023</div>
-            </div>
-        </div>
-        <div class="travel-stamp-link block rounded-lg border border-border-light dark:border-border-dark overflow-hidden hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" data-trip-href="travel/washington-jan2023.html" data-travel-media="images/travel_pictures/washington_jan2023.MOV" data-media-type="video">
-            <div class="travel-stamp-flip-wrapper">
-                <div class="travel-stamp-inner">
-                    <div class="travel-stamp-front travel-stamp-card">
-                        <img class="travel-stamp-img" src="images/travel_stamps/washington_dc_jan2023.png" alt="Washington"/>
-                    </div>
-                    <div class="travel-stamp-back">
-                        <video class="travel-stamp-back-video" src="images/travel_pictures/washington_jan2023.MOV" muted loop playsinline preload="metadata" aria-label="Washington"></video>
-                        <button type="button" class="travel-stamp-fullscreen-btn" aria-label="Full screen">⛶</button>
-                    </div>
-                </div>
-            </div>
-            <div class="p-3">
-                <div class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">Washington, D.C.</div>
-                <div class="text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">January 2023</div>
-            </div>
-        </div>
-        <div class="travel-stamp-link block rounded-lg border border-border-light dark:border-border-dark overflow-hidden hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" data-trip-href="travel/quebec-dec2022.html" data-travel-media="images/travel_pictures/quebec_dec2022.MOV" data-media-type="video">
-            <div class="travel-stamp-flip-wrapper">
-                <div class="travel-stamp-inner">
-                    <div class="travel-stamp-front travel-stamp-card">
-                        <img class="travel-stamp-img" src="images/travel_stamps/quebec_dec2022.png" alt="Quebec"/>
-                    </div>
-                    <div class="travel-stamp-back">
-                        <video class="travel-stamp-back-video" src="images/travel_pictures/quebec_dec2022.MOV" muted loop playsinline preload="metadata" aria-label="Quebec"></video>
-                        <button type="button" class="travel-stamp-fullscreen-btn" aria-label="Full screen">⛶</button>
-                    </div>
-                </div>
-            </div>
-            <div class="p-3">
-                <div class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">Quebec, Canada</div>
-                <div class="text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">December 2022</div>
-            </div>
-        </div>
-        <div class="travel-stamp-link block rounded-lg border border-border-light dark:border-border-dark overflow-hidden hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" data-trip-href="travel/muskoka-oct2022.html" data-travel-media="images/travel_pictures/muskoka_oct2022.MOV" data-media-type="video">
-            <div class="travel-stamp-flip-wrapper">
-                <div class="travel-stamp-inner">
-                    <div class="travel-stamp-front travel-stamp-card">
-                        <img class="travel-stamp-img" src="images/travel_stamps/muskoka_oct2022.png" alt="Muskoka"/>
-                    </div>
-                    <div class="travel-stamp-back">
-                        <video class="travel-stamp-back-video" src="images/travel_pictures/muskoka_oct2022.MOV" muted loop playsinline preload="metadata" aria-label="Muskoka"></video>
-                        <button type="button" class="travel-stamp-fullscreen-btn" aria-label="Full screen">⛶</button>
-                    </div>
-                </div>
-            </div>
-            <div class="p-3">
-                <div class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">Muskoka, Canada</div>
-                <div class="text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">October 2022</div>
-            </div>
-        </div>
-        <div class="travel-stamp-link block rounded-lg border border-border-light dark:border-border-dark overflow-hidden hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" data-trip-href="travel/florence-italy-june2022.html" data-travel-media="images/travel_pictures/florence_june2022.MOV" data-media-type="video">
-            <div class="travel-stamp-flip-wrapper">
-                <div class="travel-stamp-inner">
-                    <div class="travel-stamp-front travel-stamp-card">
-                        <img class="travel-stamp-img" src="images/travel_stamps/florence_italy_june2022.png" alt="Florence"/>
-                    </div>
-                    <div class="travel-stamp-back">
-                        <video class="travel-stamp-back-video" src="images/travel_pictures/florence_june2022.MOV" muted loop playsinline preload="metadata" aria-label="Florence"></video>
-                        <button type="button" class="travel-stamp-fullscreen-btn" aria-label="Full screen">⛶</button>
-                    </div>
-                </div>
-            </div>
-            <div class="p-3">
-                <div class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">Florence, Italy</div>
-                <div class="text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">June 2022</div>
-            </div>
-        </div>
-        <div class="travel-stamp-link block rounded-lg border border-border-light dark:border-border-dark overflow-hidden hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" data-trip-href="travel/italy-june2022.html" data-travel-media="images/travel_pictures/rome_june2022.MOV" data-media-type="video">
-            <div class="travel-stamp-flip-wrapper">
-                <div class="travel-stamp-inner">
-                    <div class="travel-stamp-front travel-stamp-card">
-                        <img class="travel-stamp-img" src="images/travel_stamps/italy_june2022.png" alt="Italy"/>
-                    </div>
-                    <div class="travel-stamp-back">
-                        <video class="travel-stamp-back-video" src="images/travel_pictures/rome_june2022.MOV" muted loop playsinline preload="metadata" aria-label="Italy"></video>
-                        <button type="button" class="travel-stamp-fullscreen-btn" aria-label="Full screen">⛶</button>
-                    </div>
-                </div>
-            </div>
-            <div class="p-3">
-                <div class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">Italy</div>
-                <div class="text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">June 2022</div>
-            </div>
-        </div>
-        <div class="travel-stamp-link block rounded-lg border border-border-light dark:border-border-dark overflow-hidden hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" data-trip-href="travel/nice-france-jun2022.html" data-travel-media="images/travel_pictures/nice_june2022.mp4" data-media-type="video">
-            <div class="travel-stamp-flip-wrapper">
-                <div class="travel-stamp-inner">
-                    <div class="travel-stamp-front travel-stamp-card">
-                        <img class="travel-stamp-img" src="images/travel_stamps/nice_france_jun2022.png" alt="Nice"/>
-                    </div>
-                    <div class="travel-stamp-back">
-                        <video class="travel-stamp-back-video" src="images/travel_pictures/nice_june2022.mp4" muted loop playsinline preload="metadata" aria-label="Nice"></video>
-                        <button type="button" class="travel-stamp-fullscreen-btn" aria-label="Full screen">⛶</button>
-                    </div>
-                </div>
-            </div>
-            <div class="p-3">
-                <div class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">Nice, France</div>
-                <div class="text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">June 2022</div>
-            </div>
-        </div>
-        <div class="travel-stamp-link block rounded-lg border border-border-light dark:border-border-dark overflow-hidden hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" data-trip-href="travel/guatemala-dec2021.html" data-travel-media="images/travel_pictures/guatemala_dec2021.jpg" data-media-type="image">
-            <div class="travel-stamp-flip-wrapper">
-                <div class="travel-stamp-inner">
-                    <div class="travel-stamp-front travel-stamp-card">
-                        <img class="travel-stamp-img" src="images/travel_stamps/guatemala_dec2021.png" alt="Guatemala"/>
-                    </div>
-                    <div class="travel-stamp-back">
-                        <img class="travel-stamp-back-img" src="images/travel_pictures/guatemala_dec2021.jpg" alt="Guatemala"/>
-                        <button type="button" class="travel-stamp-fullscreen-btn" aria-label="Full screen">⛶</button>
-                    </div>
-                </div>
-            </div>
-            <div class="p-3">
-                <div class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">Guatemala</div>
-                <div class="text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">December 2021</div>
-            </div>
-        </div>
-        <div class="travel-stamp-link block rounded-lg border border-border-light dark:border-border-dark overflow-hidden hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" data-trip-href="travel/mass-oct2021.html" data-travel-media="images/travel_pictures/mass_oct2021.jpg" data-media-type="image">
-            <div class="travel-stamp-flip-wrapper">
-                <div class="travel-stamp-inner">
-                    <div class="travel-stamp-front travel-stamp-card">
-                        <img class="travel-stamp-img" src="images/travel_stamps/mass_oct2021.png" alt="Massachusetts"/>
-                    </div>
-                    <div class="travel-stamp-back">
-                        <img class="travel-stamp-back-img" src="images/travel_pictures/mass_oct2021.jpg" alt="Massachusetts"/>
-                        <button type="button" class="travel-stamp-fullscreen-btn" aria-label="Full screen">⛶</button>
-                    </div>
-                </div>
-            </div>
-            <div class="p-3">
-                <div class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">Massachusetts</div>
-                <div class="text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">October 2021</div>
-            </div>
-        </div>
-        <div class="travel-stamp-link block rounded-lg border border-border-light dark:border-border-dark overflow-hidden hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" data-trip-href="travel/joshua-tree-july2018.html" data-travel-media="images/travel_pictures/joshuaTree_july2018.jpg" data-media-type="image">
-            <div class="travel-stamp-flip-wrapper">
-                <div class="travel-stamp-inner">
-                    <div class="travel-stamp-front travel-stamp-card">
-                        <img class="travel-stamp-img" src="images/travel_stamps/joshuaTree_july2018.png" alt="Joshua Tree"/>
-                    </div>
-                    <div class="travel-stamp-back">
-                        <img class="travel-stamp-back-img" src="images/travel_pictures/joshuaTree_july2018.jpg" alt="Joshua Tree"/>
-                        <button type="button" class="travel-stamp-fullscreen-btn" aria-label="Full screen">⛶</button>
-                    </div>
-                </div>
-            </div>
-            <div class="p-3">
-                <div class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">Joshua Tree, California</div>
-                <div class="text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">July 2018</div>
-            </div>
-        </div>
-        <div class="travel-stamp-link block rounded-lg border border-border-light dark:border-border-dark overflow-hidden hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" data-trip-href="travel/la-july2018.html" data-travel-media="images/travel_pictures/la_july2018.jpg" data-media-type="image">
-            <div class="travel-stamp-flip-wrapper">
-                <div class="travel-stamp-inner">
-                    <div class="travel-stamp-front travel-stamp-card">
-                        <img class="travel-stamp-img" src="images/travel_stamps/la_july2018.png" alt="Los Angeles"/>
-                    </div>
-                    <div class="travel-stamp-back">
-                        <img class="travel-stamp-back-img" src="images/travel_pictures/la_july2018.jpg" alt="Los Angeles"/>
-                        <button type="button" class="travel-stamp-fullscreen-btn" aria-label="Full screen">⛶</button>
-                    </div>
-                </div>
-            </div>
-            <div class="p-3">
-                <div class="font-semibold text-sm text-text-light dark:text-text-dark mb-1">Los Angeles, California</div>
-                <div class="text-xs text-secondary-text-light dark:text-secondary-text-dark secondary-text">July 2018</div>
-            </div>
-        </div>
+    <div class="travel-feed" id="travelStampsScroll">
+        <button type="button" class="travel-card" data-travel-media="images/travel_pictures/mexico_city/downtown.MOV" data-media-type="video" data-travel-gallery="images/travel_pictures/mexico_city/downtown.MOV,images/travel_pictures/mexico_city-may2026.jpg,images/travel_pictures/mexico_city/frida-kahlo.jpg,images/travel_pictures/mexico_city/biking.MOV,images/travel_pictures/mexico_city/chapultepec.jpg,images/travel_pictures/mexico_city/vasconcelos.jpg" data-travel-captions="Palacio de Bellas Artes,Teotihuacan,Museo Frida Kahlo,Angel of Independence,Chapultepec Castle,Biblioteca Vasconcelos">
+            <video class="travel-card-media" src="images/travel_pictures/mexico_city/downtown.MOV" muted loop playsinline preload="metadata" aria-label="Mexico City, Mexico"></video>
+            <span class="travel-card-meta">
+                <span class="travel-card-title">Mexico City, Mexico</span>
+                <span class="travel-card-date">May 2026</span>
+            </span>
+        </button>
+        <button type="button" class="travel-card" data-travel-media="images/travel_pictures/toronto_dec2025.MOV" data-media-type="video">
+            <video class="travel-card-media" src="images/travel_pictures/toronto_dec2025.MOV" muted loop playsinline preload="metadata" aria-label="Toronto, Canada"></video>
+            <span class="travel-card-meta">
+                <span class="travel-card-title">Toronto, Canada</span>
+                <span class="travel-card-date">December 2025</span>
+            </span>
+        </button>
+        <button type="button" class="travel-card" data-travel-media="images/travel_pictures/tofino_aug2025.mov" data-media-type="video">
+            <video class="travel-card-media" src="images/travel_pictures/tofino_aug2025.mov" muted loop playsinline preload="metadata" aria-label="Tofino, Canada"></video>
+            <span class="travel-card-meta">
+                <span class="travel-card-title">Tofino, Canada</span>
+                <span class="travel-card-date">August 2025</span>
+            </span>
+        </button>
+        <button type="button" class="travel-card" data-travel-media="images/travel_pictures/las-vegas-may-2025/IMG_5184.MOV" data-media-type="video">
+            <video class="travel-card-media" src="images/travel_pictures/las-vegas-may-2025/IMG_5184.MOV" muted loop playsinline preload="metadata" aria-label="Las Vegas"></video>
+            <span class="travel-card-meta">
+                <span class="travel-card-title">Las Vegas</span>
+                <span class="travel-card-date">May 2025</span>
+            </span>
+        </button>
+        <button type="button" class="travel-card" data-travel-media="images/travel_pictures/utah-zion-may-2025/IMG_5051.MOV" data-media-type="video" data-travel-gallery="images/travel_pictures/utah-zion-may-2025/IMG_5051.MOV,images/travel_pictures/utah-zion-may-2025/IMG_5010.mov" data-travel-captions="Zion Canyon,Zion overlook">
+            <video class="travel-card-media" src="images/travel_pictures/utah-zion-may-2025/IMG_5051.MOV" muted loop playsinline preload="metadata" aria-label="Zion, Utah"></video>
+            <span class="travel-card-meta">
+                <span class="travel-card-title">Zion, Utah</span>
+                <span class="travel-card-date">May 2025</span>
+            </span>
+        </button>
+        <button type="button" class="travel-card" data-travel-media="images/travel_pictures/nevada_apr2025.mov" data-media-type="video">
+            <video class="travel-card-media" src="images/travel_pictures/nevada_apr2025.mov" muted loop playsinline preload="metadata" aria-label="Red Rocks Las Vegas"></video>
+            <span class="travel-card-meta">
+                <span class="travel-card-title">Red Rocks Las Vegas</span>
+                <span class="travel-card-date">April 2025</span>
+            </span>
+        </button>
+        <button type="button" class="travel-card" data-travel-media="images/travel_pictures/sydneyAus_jan2025.MOV" data-media-type="video">
+            <video class="travel-card-media" src="images/travel_pictures/sydneyAus_jan2025.MOV" muted loop playsinline preload="metadata" aria-label="Sydney, Australia"></video>
+            <span class="travel-card-meta">
+                <span class="travel-card-title">Sydney, Australia</span>
+                <span class="travel-card-date">January 2025</span>
+            </span>
+        </button>
+        <button type="button" class="travel-card" data-travel-media="images/travel_pictures/chicago_sep2024.mov" data-media-type="video">
+            <video class="travel-card-media" src="images/travel_pictures/chicago_sep2024.mov" muted loop playsinline preload="metadata" aria-label="Chicago, Illinois"></video>
+            <span class="travel-card-meta">
+                <span class="travel-card-title">Chicago, Illinois</span>
+                <span class="travel-card-date">September 2024</span>
+            </span>
+        </button>
+        <button type="button" class="travel-card" data-travel-media="images/travel_pictures/japan_apr2024.mov" data-media-type="video">
+            <video class="travel-card-media" src="images/travel_pictures/japan_apr2024.mov" muted loop playsinline preload="metadata" aria-label="Japan"></video>
+            <span class="travel-card-meta">
+                <span class="travel-card-title">Japan</span>
+                <span class="travel-card-date">April 2024</span>
+            </span>
+        </button>
+        <button type="button" class="travel-card" data-travel-media="images/travel_pictures/costa_rica_dec2023.MOV" data-media-type="video">
+            <video class="travel-card-media" src="images/travel_pictures/costa_rica_dec2023.MOV" muted loop playsinline preload="metadata" aria-label="Costa Rica"></video>
+            <span class="travel-card-meta">
+                <span class="travel-card-title">Costa Rica</span>
+                <span class="travel-card-date">December 2023</span>
+            </span>
+        </button>
+        <button type="button" class="travel-card" data-travel-media="images/travel_pictures/calgary_may2023.MOV" data-media-type="video">
+            <video class="travel-card-media" src="images/travel_pictures/calgary_may2023.MOV" muted loop playsinline preload="metadata" aria-label="Calgary, Canada"></video>
+            <span class="travel-card-meta">
+                <span class="travel-card-title">Calgary, Canada</span>
+                <span class="travel-card-date">May 2023</span>
+            </span>
+        </button>
+        <button type="button" class="travel-card" data-travel-media="images/travel_pictures/banff_may2023.MOV" data-media-type="video">
+            <video class="travel-card-media" src="images/travel_pictures/banff_may2023.MOV" muted loop playsinline preload="metadata" aria-label="Banff, Canada"></video>
+            <span class="travel-card-meta">
+                <span class="travel-card-title">Banff, Canada</span>
+                <span class="travel-card-date">May 2023</span>
+            </span>
+        </button>
+        <button type="button" class="travel-card" data-travel-media="images/travel_pictures/washington_jan2023.MOV" data-media-type="video">
+            <video class="travel-card-media" src="images/travel_pictures/washington_jan2023.MOV" muted loop playsinline preload="metadata" aria-label="Washington, D.C."></video>
+            <span class="travel-card-meta">
+                <span class="travel-card-title">Washington, D.C.</span>
+                <span class="travel-card-date">January 2023</span>
+            </span>
+        </button>
+        <button type="button" class="travel-card" data-travel-media="images/travel_pictures/quebec_dec2022.MOV" data-media-type="video">
+            <video class="travel-card-media" src="images/travel_pictures/quebec_dec2022.MOV" muted loop playsinline preload="metadata" aria-label="Quebec, Canada"></video>
+            <span class="travel-card-meta">
+                <span class="travel-card-title">Quebec, Canada</span>
+                <span class="travel-card-date">December 2022</span>
+            </span>
+        </button>
+        <button type="button" class="travel-card" data-travel-media="images/travel_pictures/muskoka_oct2022.MOV" data-media-type="video">
+            <video class="travel-card-media" src="images/travel_pictures/muskoka_oct2022.MOV" muted loop playsinline preload="metadata" aria-label="Muskoka, Canada"></video>
+            <span class="travel-card-meta">
+                <span class="travel-card-title">Muskoka, Canada</span>
+                <span class="travel-card-date">October 2022</span>
+            </span>
+        </button>
+        <button type="button" class="travel-card" data-travel-media="images/travel_pictures/florence_june2022.MOV" data-media-type="video">
+            <video class="travel-card-media" src="images/travel_pictures/florence_june2022.MOV" muted loop playsinline preload="metadata" aria-label="Florence, Italy"></video>
+            <span class="travel-card-meta">
+                <span class="travel-card-title">Florence, Italy</span>
+                <span class="travel-card-date">June 2022</span>
+            </span>
+        </button>
+        <button type="button" class="travel-card" data-travel-media="images/travel_pictures/rome_june2022.MOV" data-media-type="video">
+            <video class="travel-card-media" src="images/travel_pictures/rome_june2022.MOV" muted loop playsinline preload="metadata" aria-label="Italy"></video>
+            <span class="travel-card-meta">
+                <span class="travel-card-title">Italy</span>
+                <span class="travel-card-date">June 2022</span>
+            </span>
+        </button>
+        <button type="button" class="travel-card" data-travel-media="images/travel_pictures/nice_june2022.mp4" data-media-type="video">
+            <video class="travel-card-media" src="images/travel_pictures/nice_june2022.mp4" muted loop playsinline preload="metadata" aria-label="Nice, France"></video>
+            <span class="travel-card-meta">
+                <span class="travel-card-title">Nice, France</span>
+                <span class="travel-card-date">June 2022</span>
+            </span>
+        </button>
+        <button type="button" class="travel-card" data-travel-media="images/travel_pictures/guatemala/volcano_sunrise.mp4" data-media-type="video" data-travel-gallery="images/travel_pictures/guatemala/volcano_sunrise.mp4,images/travel_pictures/guatemala/antigua.jpg,images/travel_pictures/guatemala/tikal.jpg,images/travel_pictures/guatemala/temple-i.jpg,images/travel_pictures/guatemala/flores-rope-swing.mov" data-travel-captions="Volcán de Fuego,Antigua,Tikal,Tikal Temple I,Flores">
+            <video class="travel-card-media" src="images/travel_pictures/guatemala/volcano_sunrise.mp4" muted loop playsinline preload="metadata" aria-label="Guatemala"></video>
+            <span class="travel-card-meta">
+                <span class="travel-card-title">Guatemala</span>
+                <span class="travel-card-date">December 2021</span>
+            </span>
+        </button>
+        <button type="button" class="travel-card" data-travel-media="images/travel_pictures/san_francisco/san_francisco_aug_2018.mp4" data-media-type="video">
+            <video class="travel-card-media" src="images/travel_pictures/san_francisco/san_francisco_aug_2018.mp4" muted loop playsinline preload="metadata" aria-label="San Francisco, California"></video>
+            <span class="travel-card-meta">
+                <span class="travel-card-title">San Francisco, California</span>
+                <span class="travel-card-date">August 2018</span>
+            </span>
+        </button>
+        <button type="button" class="travel-card" data-travel-media="images/travel_pictures/los_angles_2018/venice_skatepark.mp4" data-media-type="video" data-travel-gallery="images/travel_pictures/los_angles_2018/venice_skatepark.mp4,images/travel_pictures/los_angles_2018/muscle-beach.jpg,images/travel_pictures/los_angles_2018/comedy.jpg,images/travel_pictures/los_angles_2018/getty.mp4,images/travel_pictures/los_angles_2018/rooftop.mp4" data-travel-captions="Venice skatepark,Muscle Beach,Comedy show,The Getty,Rooftop">
+            <video class="travel-card-media" src="images/travel_pictures/los_angles_2018/venice_skatepark.mp4" muted loop playsinline preload="metadata" aria-label="Los Angeles, California"></video>
+            <span class="travel-card-meta">
+                <span class="travel-card-title">Los Angeles, California</span>
+                <span class="travel-card-date">July 2018</span>
+            </span>
+        </button>
+        <button type="button" class="travel-card" data-travel-media="images/travel_pictures/joshua_tree/j-trees.mp4" data-media-type="video" data-travel-gallery="images/travel_pictures/joshua_tree/j-trees.mp4,images/travel_pictures/joshua_tree/20180729_183202.jpg,images/travel_pictures/joshua_tree/flat-tire.mp4" data-travel-captions="Joshua trees,Joshua Tree,Flat tire">
+            <video class="travel-card-media" src="images/travel_pictures/joshua_tree/j-trees.mp4" muted loop playsinline preload="metadata" aria-label="Joshua Tree, California"></video>
+            <span class="travel-card-meta">
+                <span class="travel-card-title">Joshua Tree, California</span>
+                <span class="travel-card-date">July 2018</span>
+            </span>
+        </button>
     </div>
 </section>
 <button type="button" class="back-to-main">← Back to main page</button>
@@ -1294,14 +1209,80 @@
     const mediaWrap = document.getElementById('travelModalMediaWrap');
     const fullScreenBtn = document.getElementById('travelModalFullScreenBtn');
     const closeBtn = document.getElementById('travelModalClose');
+    const prevBtn = document.getElementById('travelModalPrev');
+    const nextBtn = document.getElementById('travelModalNext');
     if (!scrollEl || !modal || !mediaWrap || !fullScreenBtn) return;
+
+    var gallery = [];
+    var galleryCaptions = [];
+    var galleryIndex = 0;
+
+    function setGalleryNavVisible(show) {
+        if (prevBtn) prevBtn.classList.toggle('visible', show);
+        if (nextBtn) nextBtn.classList.toggle('visible', show);
+    }
+
+    function isVideoSrc(src) {
+        return /\.(mov|mp4|webm|m4v)$/i.test(src);
+    }
+
+    function showGalleryImage() {
+        var src = gallery[galleryIndex];
+        var caption = galleryCaptions[galleryIndex] || '';
+        var existing = mediaWrap.querySelector('video');
+        if (existing) existing.pause();
+        mediaWrap.innerHTML = '';
+        if (isVideoSrc(src)) {
+            var video = document.createElement('video');
+            video.className = 'travel-modal-media';
+            video.src = src;
+            video.muted = true;
+            video.loop = true;
+            video.playsInline = true;
+            video.autoplay = true;
+            video.controls = true;
+            video.setAttribute('aria-label', caption);
+            video.play().catch(function() {});
+            mediaWrap.appendChild(video);
+        } else {
+            var img = document.createElement('img');
+            img.className = 'travel-modal-media';
+            img.src = src;
+            img.alt = caption;
+            mediaWrap.appendChild(img);
+        }
+        if (caption) {
+            var cap = document.createElement('div');
+            cap.className = 'travel-modal-caption';
+            cap.textContent = caption + (gallery.length > 1 ? '  ·  ' + (galleryIndex + 1) + ' / ' + gallery.length : '');
+            mediaWrap.appendChild(cap);
+        }
+    }
+
+    function stepGallery(delta) {
+        if (gallery.length < 2) return;
+        galleryIndex = (galleryIndex + delta + gallery.length) % gallery.length;
+        showGalleryImage();
+    }
 
     function openTravelModal(card) {
         var mediaSrc = card.getAttribute('data-travel-media');
         var mediaType = card.getAttribute('data-media-type') || 'image';
-        if (!mediaSrc) return;
+        var galleryAttr = card.getAttribute('data-travel-gallery');
+        var captionAttr = card.getAttribute('data-travel-captions') || '';
+        if (!mediaSrc && !galleryAttr) return;
+        gallery = [];
+        galleryCaptions = [];
+        galleryIndex = 0;
         mediaWrap.innerHTML = '';
-        if (mediaType === 'video') {
+        setGalleryNavVisible(false);
+        if (galleryAttr) {
+            gallery = galleryAttr.split(',').map(function(s) { return s.trim(); }).filter(Boolean);
+            galleryCaptions = captionAttr.split(',').map(function(s) { return s.trim(); });
+            if (!gallery.length && mediaSrc) gallery = [mediaSrc];
+            showGalleryImage();
+            setGalleryNavVisible(gallery.length > 1);
+        } else if (mediaType === 'video' || isVideoSrc(mediaSrc)) {
             var video = document.createElement('video');
             video.className = 'travel-modal-media';
             video.src = mediaSrc;
@@ -1330,44 +1311,57 @@
         }
         modal.classList.remove('active');
         document.body.style.overflow = '';
+        syncFeedVideos();
+    }
+
+    function syncFeedVideos() {
+        var modalOpen = modal.classList.contains('active');
+        scrollEl.querySelectorAll('video').forEach(function(video) {
+            var visible = video.getBoundingClientRect().top < window.innerHeight && video.getBoundingClientRect().bottom > 0;
+            if (!modalOpen && visible) video.play().catch(function() {});
+            else video.pause();
+        });
+    }
+
+    if ('IntersectionObserver' in window) {
+        var feedObserver = new IntersectionObserver(function(entries) {
+            var modalOpen = modal.classList.contains('active');
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting && !modalOpen) entry.target.play().catch(function() {});
+                else entry.target.pause();
+            });
+        }, { threshold: 0.45 });
+        scrollEl.querySelectorAll('video').forEach(function(video) {
+            feedObserver.observe(video);
+        });
     }
 
     scrollEl.addEventListener('click', function(e) {
-        var card = e.target.closest('.travel-stamp-link');
+        var card = e.target.closest('.travel-card');
         if (!card) return;
-
-        // Full Screen button on the back: open modal only
-        if (e.target.closest('.travel-stamp-fullscreen-btn')) {
-            e.preventDefault();
-            e.stopPropagation();
-            openTravelModal(card);
-            return;
-        }
-
-        // Click on flip area: toggle flip and play/pause back video
-        var wrapper = e.target.closest('.travel-stamp-flip-wrapper');
-        if (!wrapper) return;
-        e.preventDefault();
-        var inner = wrapper.querySelector('.travel-stamp-inner');
-        var backVideo = wrapper.querySelector('.travel-stamp-back-video');
-        if (!inner) return;
-        inner.classList.toggle('flipped');
-        if (backVideo) {
-            if (inner.classList.contains('flipped')) {
-                backVideo.play().catch(function() {});
-            } else {
-                backVideo.pause();
-            }
-        }
+        openTravelModal(card);
+        syncFeedVideos();
     });
 
     if (closeBtn) closeBtn.addEventListener('click', closeTravelModal);
     fullScreenBtn.addEventListener('click', closeTravelModal);
+    if (prevBtn) prevBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        stepGallery(-1);
+    });
+    if (nextBtn) nextBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        stepGallery(1);
+    });
     modal.addEventListener('click', function(e) {
-        if (e.target === modal) closeTravelModal();
+        if (e.target.closest('.travel-modal-media, .travel-modal-nav, .travel-modal-close, .travel-modal-fullscreen-btn, .travel-modal-caption')) return;
+        closeTravelModal();
     });
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && modal.classList.contains('active')) closeTravelModal();
+        if (!modal.classList.contains('active')) return;
+        if (e.key === 'Escape') closeTravelModal();
+        else if (e.key === 'ArrowLeft') stepGallery(-1);
+        else if (e.key === 'ArrowRight') stepGallery(1);
     });
 })();
 
