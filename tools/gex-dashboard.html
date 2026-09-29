@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GEX Dashboard | Gamma exposure by ticker</title>
-    <meta name="description" content="Watchlist of gamma exposure. Refresh delayed CBOE data, then open a ticker for call and put walls and net gamma by strike.">
+    <meta name="description" content="Watchlist of gamma exposure with a strike-by-strike column view. Refresh delayed CBOE data, then open a ticker for call and put walls and net gamma by strike.">
     <meta name="author" content="Manan Patel">
     <meta name="robots" content="index, follow">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://mananpatel.info/tools/gex-dashboard.html">
     <meta property="og:title" content="GEX Dashboard">
-    <meta property="og:description" content="Gamma exposure, call and put walls, and net gamma by strike. Delayed CBOE data.">
+    <meta property="og:description" content="Gamma exposure, call and put walls, and a strike-by-strike column view. Delayed CBOE data.">
     <meta property="og:site_name" content="Manan Patel">
     <link rel="canonical" href="https://mananpatel.info/tools/gex-dashboard.html">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -81,6 +81,16 @@
             padding: 6px; border-radius: 6px;
         }
         .remove:hover { color: #fff; background: #23272e; }
+        .ticker-actions { display: flex; flex-direction: column; align-items: center; }
+        .columns-btn {
+            background: none; border: 0; color: #c6f135; font-size: 0.68rem; font-weight: 750;
+            letter-spacing: 0.02em; padding: 4px 2px; text-decoration: underline; text-underline-offset: 2px;
+        }
+        .columns-btn:hover { color: #fff; }
+        .notice {
+            margin: 12px 0 0; padding: 9px 11px; border-radius: 8px;
+            background: #171b20; color: #d5d8de; font-size: 0.82rem; line-height: 1.4;
+        }
         .add { display: flex; gap: 8px; margin-top: 16px; }
         .add input {
             flex: 1; background: #15181d; border: 1px solid #2a2f36; border-radius: 10px;
@@ -182,12 +192,86 @@
         .method summary { cursor: pointer; font-weight: 700; padding: 14px 0; }
         .method p { margin: 0 0 12px; color: #b7bdc6; line-height: 1.5; font-size: 0.92rem; }
         .err { color: #ff8d8d; font-size: 0.82rem; margin-top: 8px; }
+        .ladder-overlay {
+            position: fixed; inset: 0; z-index: 20; display: flex; justify-content: flex-end;
+            background: rgba(2, 4, 8, 0.72);
+        }
+        .ladder-drawer {
+            width: min(760px, 100%); height: 100dvh; min-width: 0; display: flex; flex-direction: column;
+            overflow: hidden; background: #101125; color: #f2f3ff; box-shadow: -18px 0 50px rgba(0, 0, 0, 0.5);
+        }
+        .ladder-titlebar {
+            flex: 0 0 auto; min-height: 66px; display: flex; align-items: center; justify-content: space-between;
+            gap: 12px; padding: max(12px, env(safe-area-inset-top)) 14px 10px; border-bottom: 1px solid #303250;
+        }
+        .ladder-titlebar h2 { margin: 2px 0 0; font-size: 1.25rem; letter-spacing: -0.02em; }
+        .ladder-kicker { margin: 0; color: #8f94b1; font-size: 0.68rem; font-weight: 750; letter-spacing: 0.14em; }
+        .ladder-close {
+            width: 42px; height: 42px; flex: 0 0 auto; border: 1px solid #3a3d60; border-radius: 7px;
+            background: #191b35; color: #fff; font-size: 1.7rem; line-height: 1;
+        }
+        .ladder-empty {
+            min-height: 200px; display: flex; align-items: center; justify-content: center;
+            color: #a6aac2; text-align: center; padding: 24px;
+        }
+        .expiry-tabs {
+            flex: 0 0 auto; max-height: 94px; display: flex; flex-wrap: wrap; gap: 5px; overflow-y: auto;
+            padding: 8px 12px; border-bottom: 1px solid #303250;
+        }
+        .expiry-tabs button {
+            min-width: 58px; min-height: 36px; display: flex; align-items: baseline; justify-content: center; gap: 4px;
+            border: 1px solid #353858; border-radius: 5px; background: #17182d; color: #9da2bd; padding: 5px 7px;
+        }
+        .expiry-tabs button.on { border-color: #5ae5b4; background: #243c42; color: #eafff8; }
+        .expiry-tabs button b { font-size: 0.72rem; }
+        .expiry-tabs button span { font-size: 0.62rem; }
+        .ladder-panel { min-height: 0; display: flex; flex: 1 1 auto; flex-direction: column; }
+        .ladder-meta {
+            flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+            padding: 9px 12px; border-bottom: 1px solid #303250; color: #8f94b1;
+            font-size: 0.68rem; font-variant-numeric: tabular-nums;
+        }
+        .ladder-meta > div { display: flex; flex-wrap: wrap; gap: 7px 12px; }
+        .ladder-meta > div:last-child { justify-content: flex-end; color: #55dda8; }
+        .ladder-meta b { color: #f3f4ff; font-weight: 700; }
+        .ladder-scroll { min-height: 0; flex: 1 1 auto; overflow-y: auto; overscroll-behavior: contain; }
+        .ladder-grid { position: relative; min-width: 286px; font-size: 0.68rem; font-variant-numeric: tabular-nums; }
+        .ladder-columns, .ladder-row { display: grid; grid-template-columns: 62px repeat(4, minmax(54px, 1fr)); }
+        .ladder-columns {
+            position: sticky; top: 0; z-index: 2; height: 28px; align-items: center; background: #121329;
+            border-bottom: 1px solid #3a3d60; color: #969bb7; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.04em;
+        }
+        .ladder-columns span { padding: 0 6px; text-align: right; }
+        .ladder-columns span:first-child { text-align: left; }
+        .ladder-row { height: 26px; }
+        .ladder-row > span {
+            min-width: 0; display: flex; align-items: center; justify-content: flex-end; padding: 0 6px;
+            border-right: 1px solid #2f3150; border-bottom: 1px solid #272943; overflow: hidden; white-space: nowrap;
+        }
+        .ladder-row > span:last-child { border-right: 0; }
+        .ladder-strike {
+            position: relative; justify-content: flex-start; gap: 3px; background: #1a1b35; color: #d9dbee;
+        }
+        .ladder-strike i { color: #fff; font-style: normal; }
+        .spot-marker {
+            position: absolute; z-index: 3; left: 0; right: 0; height: 0; border-top: 2px solid #fff;
+            pointer-events: none;
+        }
+        .spot-marker span {
+            position: absolute; left: 0; top: -10px; padding: 1px 4px 1px 2px; background: #fff; color: #101125;
+            font-weight: 800; font-size: 0.62rem; line-height: 16px;
+        }
+        .ladder-footnote {
+            flex: 0 0 auto; padding: 7px 12px calc(7px + env(safe-area-inset-bottom));
+            border-top: 1px solid #303250; color: #858aa8; font-size: 0.62rem; text-align: right;
+        }
     </style>
 </head>
 <body>
     <div class="app" id="app">
         <aside id="side"></aside>
         <section id="main"></section>
+        <div id="ladder"></div>
     </div>
     <script>
         (function () {
@@ -195,7 +279,7 @@
             var MAX = 20;
             var DEPTHS = [11, 21, 34, 61, 121];
             var KEY = "gex-watchlist";
-            var STORE = "gex-feed-v1";
+            var STORE = "gex-feed-v2";
             var DATA_TTL = 12 * 60 * 60 * 1000;
             var ERROR_TTL = 30 * 60 * 1000;
             var memJson = {};
@@ -207,7 +291,10 @@
                 expiry: null,
                 depth: 61,
                 interval: "5m",
-                refreshing: false
+                refreshing: false,
+                ladder: null,
+                ladderExpiry: "",
+                notice: ""
             };
             var INTERVALS = [
                 { id: "5m", label: "5m", yahoo: "5m", range: "5d", window: 78 },
@@ -297,35 +384,9 @@
                 return new Date(utc - (shown - utc));
             }
             function aggregate(snapshot, expiry) {
-                var names = expiry ? [expiry] : snapshot.expiries;
-                var lo = snapshot.spot * 0.8;
-                var hi = snapshot.spot * 1.2;
-                var strikes = new Map();
-                var net = 0;
-                var count = 0;
-                names.forEach(function (name) {
-                    var bucket = snapshot.byExpiry[name];
-                    if (!bucket) return;
-                    count += bucket.count;
-                    bucket.strikes.forEach(function (row, strike) {
-                        if (strike < lo || strike > hi) return;
-                        net += row.net;
-                        var acc = strikes.get(strike);
-                        if (!acc) {
-                            acc = { call: 0, put: 0, net: 0 };
-                            strikes.set(strike, acc);
-                        }
-                        acc.call += row.call;
-                        acc.put += row.put;
-                        acc.net += row.net;
-                    });
-                });
-                var callWall = null, putWall = null, callMax = 0, putMax = 0;
-                strikes.forEach(function (row, strike) {
-                    if (row.call > callMax) { callMax = row.call; callWall = strike; }
-                    if (row.put > putMax) { putMax = row.put; putWall = strike; }
-                });
-                return { net: net, strikes: strikes, callWall: callWall, putWall: putWall, count: expiry ? (snapshot.byExpiry[expiry] ? snapshot.byExpiry[expiry].count : 0) : snapshot.nonzero };
+                var profile = expiry ? (snapshot.byExpiry && snapshot.byExpiry[expiry]) : snapshot.combined;
+                if (!profile || !profile.strikes) return { net: 0, strikes: new Map(), callWall: null, putWall: null, count: 0 };
+                return profile;
             }
             function intervalById(id) {
                 for (var i = 0; i < INTERVALS.length; i++) if (INTERVALS[i].id === id) return INTERVALS[i];
@@ -333,52 +394,6 @@
             }
             function nyToday() {
                 return new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
-            }
-            function money(s) {
-                if (s == null) return null;
-                var t = String(s).replace(/[$,\s]/g, "");
-                if (!t || t === "--") return null;
-                var n = parseFloat(t);
-                return n === n ? n : null;
-            }
-            function normPdf(x) { return Math.exp(-0.5 * x * x) / Math.sqrt(2 * Math.PI); }
-            function normCdf(x) {
-                var ax = Math.abs(x);
-                var t = 1 / (1 + 0.2316419 * ax);
-                var d = 0.3989422804 * Math.exp(-ax * ax / 2);
-                var p = d * t * (0.319381530 + t * (-0.356563782 + t * (1.781477937 + t * (-1.821255978 + t * 1.330274429))));
-                return x >= 0 ? 1 - p : p;
-            }
-            function bsPrice(isCall, S, K, T, r, q, sigma) {
-                var vol = sigma * Math.sqrt(T);
-                var d1 = (Math.log(S / K) + (r - q + 0.5 * sigma * sigma) * T) / vol;
-                var d2 = d1 - vol;
-                var dfq = Math.exp(-q * T);
-                var dfr = Math.exp(-r * T);
-                if (isCall) return S * dfq * normCdf(d1) - K * dfr * normCdf(d2);
-                return K * dfr * normCdf(-d2) - S * dfq * normCdf(-d1);
-            }
-            function impliedVol(isCall, S, K, T, r, q, price) {
-                var intrinsic = isCall ? Math.max(S - K, 0) : Math.max(K - S, 0);
-                if (!(price > intrinsic + 0.01)) return null;
-                var sigma = 0.25;
-                for (var i = 0; i < 18; i++) {
-                    var vol = sigma * Math.sqrt(T);
-                    var d1 = (Math.log(S / K) + (r - q + 0.5 * sigma * sigma) * T) / vol;
-                    var diff = bsPrice(isCall, S, K, T, r, q, sigma) - price;
-                    var vega = S * Math.exp(-q * T) * normPdf(d1) * Math.sqrt(T);
-                    if (Math.abs(diff) < 0.015) return sigma;
-                    if (vega < 1e-5) break;
-                    sigma -= diff / vega;
-                    if (sigma < 0.02) sigma = 0.02;
-                    if (sigma > 4) sigma = 4;
-                }
-                return sigma > 0.02 && sigma < 4 ? sigma : null;
-            }
-            function contractGamma(S, K, T, r, q, sigma) {
-                var vol = sigma * Math.sqrt(T);
-                var d1 = (Math.log(S / K) + (r - q + 0.5 * sigma * sigma) * T) / vol;
-                return Math.exp(-q * T) * normPdf(d1) / (S * sigma * Math.sqrt(T));
             }
             function readStore() {
                 try { return JSON.parse(localStorage.getItem(STORE)) || {}; }
@@ -395,53 +410,79 @@
                     try { localStorage.setItem(STORE, JSON.stringify(slim)); } catch (err) {}
                 }
             }
+            function packProfile(profile) {
+                if (!profile || !profile.strikes) return null;
+                return {
+                    count: profile.count,
+                    net: profile.net,
+                    callWall: profile.callWall,
+                    putWall: profile.putWall,
+                    strikes: Array.from(profile.strikes.entries())
+                };
+            }
+            function unpackProfile(profile) {
+                if (!profile) return { count: 0, net: 0, callWall: null, putWall: null, strikes: new Map() };
+                return {
+                    count: profile.count || 0,
+                    net: profile.net || 0,
+                    callWall: profile.callWall == null ? null : profile.callWall,
+                    putWall: profile.putWall == null ? null : profile.putWall,
+                    strikes: new Map(profile.strikes || [])
+                };
+            }
+            function packExpiryMap(byExpiry) {
+                var out = {};
+                Object.keys(byExpiry || {}).forEach(function (exp) { out[exp] = packProfile(byExpiry[exp]); });
+                return out;
+            }
+            function unpackExpiryMap(byExpiry) {
+                var out = {};
+                Object.keys(byExpiry || {}).forEach(function (exp) { out[exp] = unpackProfile(byExpiry[exp]); });
+                return out;
+            }
             function packSnapshot(s) {
                 if (!s) return null;
-                var byExpiry = {};
-                Object.keys(s.byExpiry || {}).forEach(function (exp) {
-                    var bucket = s.byExpiry[exp];
-                    byExpiry[exp] = { count: bucket.count, strikes: Array.from(bucket.strikes.entries()) };
-                });
                 return {
                     symbol: s.symbol,
                     spot: s.spot,
+                    gexSpot: s.gexSpot,
                     changePct: s.changePct,
                     priceTime: s.priceTime ? s.priceTime.getTime() : null,
                     gexTime: s.gexTime ? s.gexTime.getTime() : null,
+                    priceSource: s.priceSource || "",
                     nonzero: s.nonzero,
                     expiries: s.expiries,
-                    byExpiry: byExpiry,
+                    byExpiry: packExpiryMap(s.byExpiry),
+                    combined: packProfile(s.combined),
                     pending: false,
                     chainError: !!s.chainError,
-                    div: s.div
+                    optionsStale: !!s.optionsStale
                 };
             }
             function unpackSnapshot(s) {
                 if (!s) return null;
-                var byExpiry = {};
-                Object.keys(s.byExpiry || {}).forEach(function (exp) {
-                    var bucket = s.byExpiry[exp];
-                    byExpiry[exp] = { count: bucket.count, strikes: new Map(bucket.strikes || []) };
-                });
                 return {
                     symbol: s.symbol,
                     spot: s.spot,
+                    gexSpot: s.gexSpot,
                     changePct: s.changePct,
                     priceTime: s.priceTime ? new Date(s.priceTime) : null,
                     gexTime: s.gexTime ? new Date(s.gexTime) : null,
-                    nonzero: s.nonzero,
+                    priceSource: s.priceSource || "",
+                    nonzero: s.nonzero || 0,
                     expiries: s.expiries || [],
-                    byExpiry: byExpiry,
+                    byExpiry: unpackExpiryMap(s.byExpiry),
+                    combined: unpackProfile(s.combined),
                     pending: false,
                     chainError: !!s.chainError,
-                    div: s.div
+                    optionsStale: !!s.optionsStale
                 };
             }
             function isFresh(symbol) {
                 var item = state.cache[symbol];
                 if (!item || !item.savedAt || !item.snapshot || item.snapshot.pending) return false;
-                var ttl = item.chainError ? ERROR_TTL : DATA_TTL;
-                return Date.now() - item.savedAt < ttl;
+                if (item.chainError || item.snapshot.chainError || item.snapshot.optionsStale) return false;
+                return Date.now() - item.savedAt < DATA_TTL;
             }
             function persistSymbol(symbol) {
                 var item = state.cache[symbol];
@@ -460,8 +501,7 @@
                 state.symbols.forEach(function (symbol) {
                     var entry = all[symbol];
                     if (!entry || !entry.savedAt || !entry.snapshot) return;
-                    var ttl = entry.chainError ? ERROR_TTL : DATA_TTL;
-                    if (Date.now() - entry.savedAt >= ttl) return;
+                    if (Date.now() - entry.savedAt >= DATA_TTL) return;
                     state.cache[symbol] = {
                         status: "ready",
                         snapshot: unpackSnapshot(entry.snapshot),
@@ -494,10 +534,11 @@
                 return JSON.parse(data.text);
             }
             function fetchJson(url, force) {
-                var key = (force ? "1:" : "0:") + url;
+                var key = url;
                 if (!force && memJson[url]) return Promise.resolve(memJson[url]);
                 if (inflight[key]) return inflight[key];
-                inflight[key] = fetchJsonNet(url, 0, force ? "0" : "43200").then(function (data) {
+                var requestUrl = url + (url.indexOf("?") === -1 ? "?" : "&") + "_cb=" + Date.now();
+                inflight[key] = fetchJsonNet(requestUrl, 0, "0").then(function (data) {
                     memJson[url] = data;
                     delete inflight[key];
                     return data;
@@ -534,83 +575,145 @@
                     asset: meta.instrumentType === "ETF" ? "etf" : "stocks"
                 };
             }
-            function nasdaqUrl(symbol, asset) {
-                var from = nyToday();
-                return "https://api.nasdaq.com/api/quote/" + encodeURIComponent(symbol) + "/option-chain?assetclass=" + asset + "&limit=6000&fromdate=" + from + "&todate=" + addDaysISO(from, 92) + "&excode=oprac&callput=callput&money=all&type=all";
+            var INDEX_SYMBOLS = { SPX: 1, NDX: 1, RUT: 1, VIX: 1, DJX: 1, OEX: 1, XSP: 1 };
+            function cboeUrl(symbol) {
+                var endpoint = INDEX_SYMBOLS[symbol] ? "_" + symbol : symbol;
+                return "https://cdn.cboe.com/api/global/delayed_quotes/options/" + encodeURIComponent(endpoint) + ".json";
             }
-            async function fetchChain(symbol, asset, force) {
-                var payload = await fetchJson(nasdaqUrl(symbol, asset), force);
-                var total = payload.data && payload.data.totalRecord;
-                if (!total) payload = await fetchJson(nasdaqUrl(symbol, asset === "etf" ? "stocks" : "etf"), force);
-                if (!payload.data || !payload.data.table) throw new Error("No chain");
-                return payload;
+            function quoteUrl(symbol) {
+                var sym = symbol.replace(/\./g, "-");
+                return "https://query1.finance.yahoo.com/v8/finance/chart/" + encodeURIComponent(sym) + "?interval=1m&range=1d&includePrePost=false";
             }
-            function buildSnapshot(payload, quote) {
-                var spot = quote.spot;
-                var q = quote.asset === "etf" ? 0.012 : 0;
-                var r = 0.04;
-                var start = nyToday();
-                var end = addDaysISO(start, 92);
-                var byExpiry = {};
-                var nonzero = 0;
-                var tCache = {};
-                function yearFrac(expiry) {
-                    if (tCache[expiry] != null) return tCache[expiry];
-                    var close = zonedTime(expiry + "T16:00:00", "America/New_York");
-                    tCache[expiry] = (close.getTime() - Date.now()) / (365.25 * 24 * 3600 * 1000);
-                    return tCache[expiry];
+            function parseContract(option) {
+                var match = String(option || "").match(/^([A-Z0-9.]+?)(\d{6})([CP])(\d{8})$/);
+                if (!match) return null;
+                var strike = Number(match[4]) / 1000;
+                if (!(strike > 0)) return null;
+                var code = match[2];
+                return {
+                    expiry: "20" + code.slice(0, 2) + "-" + code.slice(2, 4) + "-" + code.slice(4, 6),
+                    side: match[3],
+                    strike: strike
+                };
+            }
+            function parseCboeTime(text) {
+                if (!text) return null;
+                var normalized = String(text).indexOf("T") === -1 ? String(text).replace(" ", "T") : String(text);
+                var zoned = /(?:Z|[+-]\d{2}:?\d{2})$/i.test(normalized);
+                var date = new Date(zoned ? normalized : normalized + "Z");
+                return isNaN(date.getTime()) ? null : date;
+            }
+            function parseQuote(payload) {
+                var result = payload.chart && payload.chart.result && payload.chart.result[0];
+                var meta = result && result.meta;
+                var price = meta && Number(meta.regularMarketPrice);
+                if (!meta || !(price > 0)) throw new Error("No quote");
+                var prev = Number(meta.chartPreviousClose);
+                if (!(prev > 0)) prev = Number(meta.previousClose);
+                return {
+                    symbol: meta.symbol,
+                    spot: price,
+                    changePct: prev > 0 ? ((price - prev) / prev) * 100 : 0,
+                    priceTime: meta.regularMarketTime ? new Date(meta.regularMarketTime * 1000) : null
+                };
+            }
+            function addStrike(target, strike, side, exposure, oi) {
+                var current = target.get(strike) || { call: 0, put: 0, callOi: 0, putOi: 0 };
+                if (side === "C") {
+                    current.call += exposure;
+                    current.callOi += oi;
+                } else {
+                    current.put -= exposure;
+                    current.putOi += oi;
                 }
-                ((payload.data.table && payload.data.table.rows) || []).forEach(function (row) {
-                    var strike = money(row.strike);
-                    var occ = String(row.drillDownURL || "").match(/(\d{6})[cp]\d{8}/i);
-                    if (!occ || strike == null) return;
-                    var yymmdd = occ[1];
-                    var expiry = "20" + yymmdd.slice(0, 2) + "-" + yymmdd.slice(2, 4) + "-" + yymmdd.slice(4, 6);
-                    if (expiry < start || expiry > end) return;
-                    var rawT = yearFrac(expiry);
-                    if (!(rawT > 0)) return;
-                    var T = Math.max(rawT, 1 / (365.25 * 24));
-                    ["C", "P"].forEach(function (right) {
-                        var prefix = right === "C" ? "c_" : "p_";
-                        var oi = money(row[prefix + "Openinterest"]);
-                        if (!(oi > 0)) return;
-                        var bid = money(row[prefix + "Bid"]);
-                        var ask = money(row[prefix + "Ask"]);
-                        var last = money(row[prefix + "Last"]);
-                        var px = bid > 0 && ask > 0 ? (bid + ask) / 2 : (last > 0 ? last : (ask > 0 ? ask : bid));
-                        if (!(px > 0)) return;
-                        var sigma = impliedVol(right === "C", spot, strike, T, r, q, px);
-                        if (!sigma) return;
-                        var gamma = contractGamma(spot, strike, T, r, q, sigma);
-                        if (!(gamma > 0)) return;
-                        nonzero += 1;
-                        var signed = gamma * oi * 100 * spot * spot * 0.01;
-                        if (right === "P") signed = -signed;
-                        if (!byExpiry[expiry]) byExpiry[expiry] = { count: 0, strikes: new Map() };
-                        var bucket = byExpiry[expiry];
-                        bucket.count += 1;
-                        var acc = bucket.strikes.get(strike);
-                        if (!acc) {
-                            acc = { call: 0, put: 0, net: 0 };
-                            bucket.strikes.set(strike, acc);
-                        }
-                        acc.net += signed;
-                        if (right === "C") acc.call += Math.abs(signed);
-                        else acc.put += Math.abs(signed);
-                    });
+                target.set(strike, current);
+            }
+            function profileFromMap(source, spot, contracts) {
+                var callWall = null, putWall = null, callMax = 0, putMin = 0, net = 0;
+                var strikes = new Map();
+                var lo = spot * 0.8, hi = spot * 1.2;
+                source.forEach(function (values, strike) {
+                    var call = values.call, put = values.put, rowNet = call + put;
+                    net += rowNet;
+                    if (call > callMax) { callMax = call; callWall = strike; }
+                    if (put < putMin) { putMin = put; putWall = strike; }
+                    if (strike >= lo && strike <= hi) {
+                        strikes.set(strike, {
+                            call: call, put: put, net: rowNet,
+                            callOi: Math.round(values.callOi), putOi: Math.round(values.putOi)
+                        });
+                    }
                 });
                 return {
-                    symbol: quote.symbol,
-                    spot: spot,
-                    changePct: quote.changePct,
-                    priceTime: quote.priceTime,
-                    gexTime: parseNasdaqAsOf(payload.data && payload.data.lastTrade) || new Date(),
+                    count: contracts,
+                    net: net,
+                    callWall: callMax > 0 ? callWall : null,
+                    putWall: putMin < 0 ? putWall : null,
+                    strikes: strikes
+                };
+            }
+            function applyQuote(snapshot, quote) {
+                if (!snapshot || !quote) return snapshot;
+                snapshot.spot = quote.spot;
+                snapshot.changePct = quote.changePct;
+                snapshot.priceTime = quote.priceTime;
+                snapshot.priceSource = "Yahoo";
+                if (quote.symbol) snapshot.symbol = quote.symbol;
+                return snapshot;
+            }
+            function buildFromCboe(root, quote) {
+                var data = root && root.data;
+                var options = data && data.options;
+                var gexSpot = data && Number(data.current_price);
+                var gexTime = parseCboeTime(root && root.timestamp);
+                if (!data || !options || !(gexSpot > 0) || !gexTime) throw new Error("No chain");
+                var start = nyToday();
+                var end = addDaysISO(start, 92);
+                var byExpiry = new Map();
+                var combined = new Map();
+                var nonzero = 0;
+                options.forEach(function (row) {
+                    var parsed = parseContract(row.option);
+                    var gamma = Number(row.gamma);
+                    var oi = Number(row.open_interest);
+                    if (!parsed || !(gamma > 0) || !(oi > 0)) return;
+                    if (parsed.expiry < start || parsed.expiry > end) return;
+                    var exposure = gamma * oi * 100 * gexSpot * gexSpot * 0.01;
+                    if (!(exposure > 0)) return;
+                    var bucket = byExpiry.get(parsed.expiry);
+                    if (!bucket) {
+                        bucket = { map: new Map(), count: 0 };
+                        byExpiry.set(parsed.expiry, bucket);
+                    }
+                    addStrike(bucket.map, parsed.strike, parsed.side, exposure, oi);
+                    bucket.count += 1;
+                    addStrike(combined, parsed.strike, parsed.side, exposure, oi);
+                    nonzero += 1;
+                });
+                if (!nonzero) throw new Error("No gamma");
+                var expiries = Array.from(byExpiry.keys()).sort();
+                var packed = {};
+                expiries.forEach(function (exp) {
+                    var bucket = byExpiry.get(exp);
+                    packed[exp] = profileFromMap(bucket.map, gexSpot, bucket.count);
+                });
+                var display = quote && quote.spot > 0 ? quote : null;
+                var cboePct = Number(data.price_change_percent);
+                return {
+                    symbol: (display && display.symbol) || data.symbol,
+                    spot: display ? display.spot : gexSpot,
+                    gexSpot: gexSpot,
+                    changePct: display ? display.changePct : (isFinite(cboePct) ? cboePct : 0),
+                    priceTime: display && display.priceTime ? display.priceTime : gexTime,
+                    gexTime: gexTime,
+                    priceSource: display ? "Yahoo" : "CBOE",
                     nonzero: nonzero,
-                    expiries: Object.keys(byExpiry).sort(),
-                    byExpiry: byExpiry,
+                    expiries: expiries,
+                    byExpiry: packed,
+                    combined: profileFromMap(combined, gexSpot, nonzero),
                     pending: false,
                     chainError: false,
-                    div: q
+                    optionsStale: false
                 };
             }
             function recall(symbol) {
@@ -633,64 +736,99 @@
                 if (!force && recall(symbol) && isFresh(symbol)) {
                     var cached = state.cache[symbol];
                     if (!cached.series || !cached.series[state.interval]) await ensureSeries(symbol, state.interval);
-                    return;
+                    return { symbol: symbol, quoteOk: true, optionsOk: true, skipped: true };
                 }
                 var prev = state.cache[symbol];
+                var prevSnap = prev && prev.snapshot && prev.snapshot.combined && !prev.snapshot.pending ? prev.snapshot : null;
                 state.cache[symbol] = {
                     status: "loading",
-                    snapshot: prev && prev.snapshot,
+                    snapshot: prevSnap,
                     series: (prev && prev.series) || {},
-                    chainError: prev && prev.chainError
+                    chainError: !!(prev && prev.chainError),
+                    refreshing: true,
+                    savedAt: prev && prev.savedAt
                 };
                 render({ keepSide: true, keepMain: true });
                 var spec = intervalById(state.interval);
+                var quoteOk = false, optionsOk = false, quote = null;
                 try {
-                    var quote = parseYahoo(await fetchJson(yahooUrl(symbol, spec), force));
-                    var series = Object.assign({}, (state.cache[symbol] && state.cache[symbol].series) || {});
-                    series[spec.id] = quote.bars;
-                    var partial = {
-                        symbol: quote.symbol || symbol,
-                        spot: quote.spot,
-                        changePct: quote.changePct,
-                        priceTime: quote.priceTime,
-                        gexTime: prev && prev.snapshot ? prev.snapshot.gexTime : null,
-                        nonzero: 0,
-                        expiries: [],
-                        byExpiry: {},
-                        pending: true,
-                        chainError: false
-                    };
-                    state.cache[symbol] = { status: "loading", snapshot: partial, series: series, quote: quote, chainError: false };
-                    render({ keepSide: true, keepMain: true });
-                    try {
-                        var chain = await fetchChain(symbol, quote.asset, force);
-                        var item = state.cache[symbol];
-                        if (!item) return;
-                        item.snapshot = buildSnapshot(chain, quote);
-                        item.snapshot.symbol = quote.symbol || symbol;
+                    var results = await Promise.allSettled([
+                        fetchJson(quoteUrl(symbol), force).then(parseQuote),
+                        fetchJson(cboeUrl(symbol), force),
+                        fetchJson(yahooUrl(symbol, spec), force).then(parseYahoo)
+                    ]);
+                    if (results[0].status === "fulfilled") {
+                        quote = results[0].value;
+                        quoteOk = true;
+                    }
+                    var item = state.cache[symbol] || { series: {}, snapshot: prevSnap };
+                    if (results[2].status === "fulfilled") {
+                        item.series = Object.assign({}, item.series);
+                        item.series[spec.id] = results[2].value.bars;
+                    }
+                    var snapshot = null;
+                    if (results[1].status === "fulfilled") {
+                        try {
+                            snapshot = buildFromCboe(results[1].value, quote);
+                            optionsOk = true;
+                        } catch (err) {}
+                    }
+                    if (!snapshot && prevSnap && prevSnap.combined && prevSnap.nonzero) {
+                        snapshot = prevSnap;
+                        snapshot.optionsStale = true;
+                        snapshot.chainError = false;
+                        snapshot.pending = false;
+                        if (quote) applyQuote(snapshot, quote);
+                    }
+                    if (snapshot) {
+                        item.snapshot = snapshot;
                         item.status = "ready";
+                        item.chainError = !!snapshot.chainError;
+                        item.refreshing = false;
                         item.savedAt = Date.now();
-                        item.chainError = false;
+                        state.cache[symbol] = item;
                         persistSymbol(symbol);
-                    } catch (err) {
-                        var failed = state.cache[symbol];
-                        if (!failed) return;
-                        failed.status = "ready";
-                        failed.chainError = true;
-                        failed.savedAt = Date.now();
-                        failed.snapshot.pending = false;
-                        failed.snapshot.chainError = true;
+                    } else if (quote) {
+                        item.snapshot = {
+                            symbol: quote.symbol || symbol,
+                            spot: quote.spot,
+                            gexSpot: null,
+                            changePct: quote.changePct,
+                            priceTime: quote.priceTime,
+                            gexTime: null,
+                            priceSource: "Yahoo",
+                            nonzero: 0,
+                            expiries: [],
+                            byExpiry: {},
+                            combined: { count: 0, net: 0, callWall: null, putWall: null, strikes: new Map() },
+                            pending: false,
+                            chainError: true,
+                            optionsStale: false
+                        };
+                        item.status = "ready";
+                        item.chainError = true;
+                        item.refreshing = false;
+                        item.savedAt = Date.now();
+                        state.cache[symbol] = item;
                         persistSymbol(symbol);
+                    } else if (item.snapshot) {
+                        item.status = "ready";
+                        item.refreshing = false;
+                        state.cache[symbol] = item;
+                    } else {
+                        state.cache[symbol] = { status: "error", series: item.series || {}, refreshing: false };
                     }
                 } catch (e) {
-                    var keep = state.cache[symbol];
-                    if (keep && keep.snapshot && keep.series && keep.series[spec.id]) {
-                        keep.status = "ready";
+                    var failed = state.cache[symbol];
+                    if (failed && failed.snapshot) {
+                        failed.refreshing = false;
+                        failed.status = "ready";
                     } else {
-                        state.cache[symbol] = { status: "error", series: {} };
+                        state.cache[symbol] = { status: "error", series: {}, refreshing: false };
                     }
                 }
                 render({ keepSide: true, keepMain: true });
+                return { symbol: symbol, quoteOk: quoteOk, optionsOk: optionsOk };
             }
             async function ensureSeries(symbol, interval) {
                 var item = state.cache[symbol];
@@ -722,37 +860,63 @@
             async function refreshAll(force) {
                 if (state.refreshing) return;
                 var needed = force ? state.symbols.slice() : state.symbols.filter(function (symbol) { return !isFresh(symbol); });
-                if (!needed.length) return;
+                if (!needed.length) {
+                    if (force) state.notice = "There are no tickers to refresh.";
+                    render({ keepSide: true, keepMain: true });
+                    return;
+                }
                 state.refreshing = true;
+                if (force) state.notice = "";
                 render({ keepSide: true, keepMain: true });
+                var results = [];
                 try {
-                    await pool(needed, 1, function (symbol) { return loadSymbol(symbol, { force: !!force }); });
+                    await pool(needed, 1, async function (symbol) {
+                        var result = await loadSymbol(symbol, { force: !!force });
+                        if (result && !result.skipped) results.push(result);
+                    });
                 } finally {
                     state.refreshing = false;
+                    if (force) {
+                        var total = results.length;
+                        var optionsUpdated = results.filter(function (row) { return row.optionsOk; }).length;
+                        var quotesUpdated = results.filter(function (row) { return row.quoteOk; }).length;
+                        var tickerWord = total === 1 ? "ticker" : "tickers";
+                        state.notice = total === 0
+                            ? "There are no tickers to refresh."
+                            : (optionsUpdated === total && quotesUpdated === total
+                                ? "Updated prices and GEX for " + total + " " + tickerWord + "."
+                                : "Refresh finished: GEX updated for " + optionsUpdated + " of " + total + "; prices updated for " + quotesUpdated + " of " + total + ". Last good GEX was kept where the chain was unavailable.");
+                    }
                     render({ keepSide: true, keepMain: true });
                 }
             }
-
             function render(opts) {
                 var sideY = side.scrollTop;
                 var mainY = main.scrollTop;
+                var ladderScroll = document.querySelector("#ladder .ladder-scroll");
+                var ladderY = ladderScroll ? ladderScroll.scrollTop : 0;
                 renderSide();
                 renderMain();
+                renderLadder();
                 if (opts && opts.keepSide) side.scrollTop = sideY;
                 if (opts && opts.keepMain) main.scrollTop = mainY;
+                var nextScroll = document.querySelector("#ladder .ladder-scroll");
+                if (nextScroll) nextScroll.scrollTop = ladderY;
+                document.body.style.overflow = state.ladder ? "hidden" : "";
             }
             function renderSide() {
                 var rows = state.symbols.map(function (symbol) {
                     var item = state.cache[symbol];
-                    var sub = "Loading";
+                    var sub = item && item.refreshing ? "Refreshing" : "Loading";
                     var px = "—";
                     var chg = "";
                     var cls = "muted";
                     if (item && item.snapshot && item.snapshot.spot) {
                         var s = item.snapshot;
-                        if (s.pending) sub = "Loading gamma";
-                        else if (item.chainError) sub = "Gamma unavailable";
-                        else sub = "GEX " + formatGex(aggregate(s, null).net);
+                        if (item.refreshing && !(s.combined && s.nonzero)) sub = "Refreshing";
+                        else if (s.pending) sub = "Loading gamma";
+                        else if (item.chainError || s.chainError || !(s.combined && s.nonzero)) sub = "Gamma unavailable";
+                        else sub = "GEX " + formatGex(aggregate(s, null).net) + (s.optionsStale ? " · retained" : "");
                         px = formatPx(s.spot);
                         chg = formatPct(s.changePct);
                         cls = Number(s.changePct) >= 0 ? "up" : "down";
@@ -762,18 +926,19 @@
                     var times = "";
                     if (item && item.snapshot && item.snapshot.spot) {
                         var bits = [];
-                        if (item.snapshot.priceTime) bits.push("Stock " + formatWhen(item.snapshot.priceTime));
-                        if (item.snapshot.pending) bits.push("Gamma loading");
-                        else if (item.snapshot.gexTime) bits.push("Gamma " + formatWhen(item.snapshot.gexTime));
+                        if (item.snapshot.priceTime) bits.push((item.snapshot.priceSource === "CBOE" ? "CBOE " : "Stock ") + formatWhen(item.snapshot.priceTime));
+                        if (item.snapshot.gexTime) bits.push("Gamma " + formatWhen(item.snapshot.gexTime));
+                        else if (item.refreshing) bits.push("Gamma loading");
                         times = bits.join(" · ");
                     }
                     var on = symbol === state.selected ? " on" : "";
-                    return '<div class="ticker' + on + '"><button class="ticker-open" type="button" data-act="open" data-sym="' + esc(symbol) + '"><div><div class="t-sym">' + esc(symbol) + '</div><div class="t-sub">' + esc(sub) + '</div>' + (times ? '<div class="t-times">' + esc(times) + '</div>' : '') + '</div><div class="t-quote"><div class="t-px">' + esc(px) + '</div><div class="t-chg ' + cls + '">' + esc(chg) + '</div></div></button><button class="remove" type="button" data-act="remove" data-sym="' + esc(symbol) + '" aria-label="Remove ' + esc(symbol) + '">×</button></div>';
+                    return '<div class="ticker' + on + '"><button class="ticker-open" type="button" data-act="open" data-sym="' + esc(symbol) + '"><div><div class="t-sym">' + esc(symbol) + '</div><div class="t-sub">' + esc(sub) + '</div>' + (times ? '<div class="t-times">' + esc(times) + '</div>' : '') + '</div><div class="t-quote"><div class="t-px">' + esc(px) + '</div><div class="t-chg ' + cls + '">' + esc(chg) + '</div></div></button><div class="ticker-actions"><button class="columns-btn" type="button" data-act="ladder" data-sym="' + esc(symbol) + '">Columns</button><button class="remove" type="button" data-act="remove" data-sym="' + esc(symbol) + '" aria-label="Remove ' + esc(symbol) + '">×</button></div></div>';
                 }).join("");
                 var add = state.symbols.length < MAX
                     ? '<form class="add" id="addForm"><input id="addInput" maxlength="10" placeholder="Add ticker" autocapitalize="characters" aria-label="Ticker"><button type="submit">Add</button></form>'
                     : "";
-                side.innerHTML = '<h1 class="brand">GEX Dashboard</h1><a class="home" href="../">← Home</a><div class="wl-head"><div><p class="kicker">Watchlist</p><p class="count">' + state.symbols.length + ' of ' + MAX + ' tickers</p></div><button class="refresh' + (state.refreshing ? " busy" : "") + '" type="button" data-act="refresh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 12a8 8 0 1 1-2.2-5.5"/><path d="M20 4v5h-5"/></svg> Refresh all</button></div>' + rows + add;
+                var notice = state.notice ? '<p class="notice" role="status">' + esc(state.notice) + '</p>' : "";
+                side.innerHTML = '<h1 class="brand">GEX Dashboard</h1><a class="home" href="../">← Home</a><div class="wl-head"><div><p class="kicker">Watchlist</p><p class="count">' + state.symbols.length + ' of ' + MAX + ' tickers</p></div><button class="refresh' + (state.refreshing ? " busy" : "") + '" type="button" data-act="refresh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 12a8 8 0 1 1-2.2-5.5"/><path d="M20 4v5h-5"/></svg> Refresh all</button></div>' + notice + rows + add;
             }
             function renderMain() {
                 var symbol = state.selected;
@@ -788,6 +953,13 @@
                     return;
                 }
                 renderDetail();
+            }
+            function itemRefreshing(snapshot) {
+                var item = state.cache[state.selected];
+                return !!(item && item.refreshing && snapshot && item.snapshot === snapshot);
+            }
+            function hasGamma(snapshot) {
+                return !!(snapshot && snapshot.combined && snapshot.nonzero && !snapshot.chainError);
             }
             function renderDetail() {
                 var symbol = state.selected;
@@ -806,16 +978,26 @@
                     return '<button type="button" data-act="depth" data-n="' + n + '" class="' + (state.depth === n ? "on" : "") + '">' + n + '</button>';
                 }).join("");
                 var stockWhen = snapshot.priceTime ? formatWhen(snapshot.priceTime) : "unavailable";
-                var gexWhen = snapshot.pending ? "loading" : (snapshot.gexTime ? formatWhen(snapshot.gexTime) : "unavailable");
+                var gexWhen = snapshot.gexTime ? formatWhen(snapshot.gexTime) : "unavailable";
                 var cls = Number(snapshot.changePct) >= 0 ? "up" : "down";
                 var netCls = view.net >= 0 ? "up" : "down";
-                var gammaNote = snapshot.pending ? "Loading the option chain…" : (item.chainError ? "The option chain didn't load." : "Gamma from the Nasdaq chain. Open interest is the prior daily print.");
-                var contractLine = state.expiry
-                    ? view.count.toLocaleString("en-US") + " nonzero contracts contributed to the " + state.expiry + " expiry."
-                    : snapshot.nonzero.toLocaleString("en-US") + " nonzero contracts contributed to this 92-day snapshot.";
-                var netText = snapshot.pending || item.chainError ? "—" : formatGex(view.net);
-                var callText = snapshot.pending || item.chainError ? "—" : formatStrike(view.callWall);
-                var putText = snapshot.pending || item.chainError ? "—" : formatStrike(view.putWall);
+                var gammaReady = hasGamma(snapshot);
+                var gammaNote = item.refreshing
+                    ? "Refreshing the price and the option chain…"
+                    : (!gammaReady
+                        ? "The option chain didn't load."
+                        : (snapshot.optionsStale
+                            ? "Last good GEX kept. The chain did not refresh."
+                            : "Gamma from CBOE delayed quotes, using that chain's spot. Open interest is the prior daily print."));
+                var priceLabel = snapshot.priceSource === "CBOE" ? "CBOE price " : "Stock data ";
+                var contractLine = !gammaReady
+                    ? ""
+                    : (state.expiry
+                        ? view.count.toLocaleString("en-US") + " nonzero contracts contributed to the " + state.expiry + " expiry."
+                        : snapshot.nonzero.toLocaleString("en-US") + " nonzero contracts contributed to this 92-day snapshot.");
+                var netText = gammaReady ? formatGex(view.net) : "—";
+                var callText = gammaReady ? formatStrike(view.callWall) : "—";
+                var putText = gammaReady ? formatStrike(view.putWall) : "—";
                 var intervals = INTERVALS.map(function (spec) {
                     return '<button type="button" data-act="interval" data-iv="' + spec.id + '" class="' + (state.interval === spec.id ? "on" : "") + '">' + spec.label + '</button>';
                 }).join("");
@@ -823,26 +1005,26 @@
                     '<div class="stage"><div class="col">' +
                     '<p class="kicker">Selected</p>' +
                     '<div class="head"><div><div class="sym">' + esc(snapshot.symbol || symbol) + '</div></div><div class="quote"><div class="px">' + formatPx(snapshot.spot) + '</div><div class="chg ' + cls + '">' + formatPct(snapshot.changePct) + '</div></div></div>' +
-                    '<p class="meta">Stock data ' + esc(stockWhen) + ' · GEX data ' + esc(gexWhen) + '</p>' +
+                    '<p class="meta">' + priceLabel + esc(stockWhen) + ' · GEX data ' + esc(gexWhen) + '</p>' +
                     '<p class="meta">Yahoo prices · ' + esc(gammaNote) + '</p>' +
                     '<div class="chart-toolbar"><div><h2>Price</h2><p class="chart-note">Drag to pan · drag the price scale up or down · double-click resets</p></div><div class="intervals">' + intervals + '</div></div>' +
                     '<div class="chart-box"><div class="chart-legend" id="chartLegend"></div><canvas id="candles"></canvas></div>' +
                     '<div class="stats"><div class="stat"><p>Net gamma</p><strong class="' + netCls + '">' + netText + '</strong></div><div class="stat"><p>Call wall</p><strong>' + callText + '</strong></div><div class="stat"><p>Put wall</p><strong>' + putText + '</strong></div></div>' +
                     '</div><div class="col">' +
-                    '<div class="controls"><div class="expiry"><p class="control-label">Expiry window</p><button class="expiry-btn" type="button" data-act="menu">' + esc(expLabel) + ' ▾</button><div class="menu" id="expMenu" hidden>' + menu + '</div></div><div><p class="control-label">Strike depth</p><div class="depths">' + depths + '</div></div></div>' +
+                    '<div class="controls"><div class="expiry"><p class="control-label">Expiry window</p><button class="expiry-btn" type="button" data-act="menu">' + esc(expLabel) + ' ▾</button><div class="menu" id="expMenu" hidden>' + menu + '</div></div><div><p class="control-label">Strike depth</p><div class="depths">' + depths + '</div></div><button class="columns-btn" type="button" data-act="ladder" data-sym="' + esc(symbol) + '">Columns</button></div>' +
                     gammaHtml(snapshot, view) +
                     '<div class="legend"><span><i class="sw"></i> Positive gamma</span><span><i class="sw neg"></i> Negative gamma</span><span><i class="sw spot"></i> Nearest spot strike</span></div>' +
-                    '<details class="method"><summary>Method &amp; limitations</summary><p>Dollar gamma per 1% move = gamma × open interest × 100 × spot<sup>2</sup> × 0.01. Calls are positive and puts are negative. Gamma is Black–Scholes from the bid/ask mid, with a 4% rate and a 1.2% dividend yield on ETFs. Prices come from Yahoo and the chain comes from Nasdaq. Stock time is Yahoo’s last print. GEX time is the as-of time on the Nasdaq chain. Open interest is still the prior daily print. Opening the page reuses data for 12 hours. Refresh all asks for a new price and a new chain. This is a structure map, not a trade signal.</p><p>' + esc(contractLine) + '</p></details>' +
+                    '<details class="method"><summary>Method &amp; limitations</summary><p>Dollar gamma per 1% move = gamma × open interest × 100 × chain spot<sup>2</sup> × 0.01. Calls are positive and puts are negative. Gamma and open interest come from CBOE delayed quotes. Net gamma and the walls use every strike in the 92-day window. The chart and column view show strikes within ±20% of that chain spot. The price on screen is the Yahoo quote, so it can differ from the delayed chain. Stock time is Yahoo’s last print. GEX time is the CBOE chain timestamp. Opening the page reuses data for 12 hours. Refresh all asks for a new price and a new chain, and keeps the last good GEX if the chain does not come back. This is a structure map, not a trade signal.</p><p>' + esc(contractLine) + '</p></details>' +
                     '</div></div>';
                 var bars = (item.series && item.series[state.interval]) || [];
                 requestAnimationFrame(function () { bindChart(bars, view.callWall, view.putWall); });
             }
             function gammaHtml(snapshot, view) {
-                if (snapshot.pending) return '<p class="chart-note">Loading gamma…</p>';
-                if (snapshot.chainError) return '<p class="err">Gamma feed unavailable.</p>';
+                if (!hasGamma(snapshot)) return '<p class="chart-note">' + (itemRefreshing(snapshot) ? "Loading gamma…" : "Gamma feed unavailable.") + '</p>';
                 var strikes = Array.from(view.strikes.keys());
                 var universe = strikes.length;
-                strikes.sort(function (a, b) { return Math.abs(a - snapshot.spot) - Math.abs(b - snapshot.spot); });
+                var anchor = snapshot.spot || snapshot.gexSpot;
+                strikes.sort(function (a, b) { return Math.abs(a - anchor) - Math.abs(b - anchor); });
                 var shown = strikes.slice(0, state.depth);
                 shown.sort(function (a, b) { return b - a; });
                 var maxAbs = 0;
@@ -850,7 +1032,7 @@
                 var nearest = shown[0];
                 var best = Infinity;
                 shown.forEach(function (k) {
-                    var d = Math.abs(k - snapshot.spot);
+                    var d = Math.abs(k - anchor);
                     if (d < best) { best = d; nearest = k; }
                 });
                 var rows = shown.map(function (k) {
@@ -863,7 +1045,128 @@
                     var bar = row.net === 0 ? "" : '<i class="bar ' + (row.net > 0 ? "pos" : "neg") + '" style="width:' + width.toFixed(2) + '%"></i>';
                     return '<div class="gex-row' + cls + '"><div class="ylab">' + formatStrike(k) + '</div><div class="track"><i class="zero"></i>' + bar + '</div></div>';
                 }).join("");
-                return '<div class="chart-head"><div><h2>Net gamma by strike — ' + esc(snapshot.symbol) + '</h2><p class="chart-note">' + shown.length + ' of ' + universe + ' strikes within ±20% of spot</p></div><div class="unit">$M per 1% move</div></div><div class="gex-scroll"><div class="gex-chart">' + rows + '</div><div class="axis"><span>' + formatGex(-maxAbs) + '</span><span>$0</span><span>' + formatGex(maxAbs) + '</span></div></div>';
+                return '<div class="chart-head"><div><h2>Net gamma by strike — ' + esc(snapshot.symbol) + '</h2><p class="chart-note">' + shown.length + ' of ' + universe + ' strikes within ±20% of the chain spot</p></div><div class="unit">$M per 1% move</div></div><div class="gex-scroll"><div class="gex-chart">' + rows + '</div><div class="axis"><span>' + formatGex(-maxAbs) + '</span><span>$0</span><span>' + formatGex(maxAbs) + '</span></div></div>';
+            }
+            function expiryDte(expiry, sourceDate) {
+                var sourceKey = new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit" }).format(sourceDate || new Date());
+                var sourceDay = Date.parse(sourceKey + "T12:00:00Z");
+                var expiryDay = Date.parse(expiry + "T12:00:00Z");
+                return Math.max(0, Math.round((expiryDay - sourceDay) / 86400000));
+            }
+            function shortExpiry(expiry) {
+                var parts = expiry.split("-").map(Number);
+                return new Date(Date.UTC(parts[0], parts[1] - 1, parts[2], 12)).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
+            }
+            function formatEasternClock(date) {
+                return new Intl.DateTimeFormat("en-US", {
+                    timeZone: "America/New_York", hourCycle: "h23",
+                    hour: "2-digit", minute: "2-digit", second: "2-digit"
+                }).format(date) + " ET";
+            }
+            function formatAge(date) {
+                var seconds = Math.max(0, Math.floor((Date.now() - date.getTime()) / 1000));
+                var hours = Math.floor(seconds / 3600);
+                var minutes = Math.floor((seconds % 3600) / 60);
+                return "age " + hours + ":" + String(minutes).padStart(2, "0");
+            }
+            function compactGamma(dollars) {
+                var millions = dollars / 1e6;
+                var absolute = Math.abs(millions);
+                if (absolute < 0.005) return "0M";
+                var sign = millions < 0 ? "−" : "";
+                var body;
+                if (absolute >= 1000) {
+                    var billions = absolute / 1000;
+                    body = (billions >= 10 ? billions.toFixed(1) : billions.toFixed(2)) + "B";
+                } else if (absolute >= 100) body = absolute.toFixed(0) + "M";
+                else if (absolute >= 10) body = absolute.toFixed(1).replace(/\.0$/, "") + "M";
+                else body = (absolute.toFixed(2).replace(/0+$/, "").replace(/\.$/, "") || "0") + "M";
+                return sign + body;
+            }
+            function signedCell(value, limit) {
+                var intensity = limit > 0 ? Math.min(1, Math.abs(value) / limit) : 0;
+                if (intensity < 0.015) return "background:#181a34;color:#707690";
+                if (value < 0) {
+                    var hue = 224 + intensity * 54;
+                    var light = 25 + intensity * 8;
+                    return "background:hsl(" + hue.toFixed(0) + " 62% " + light.toFixed(0) + "%);color:#f7f4ff";
+                }
+                var huePos = 164 - intensity * 105;
+                var lightPos = 34 + intensity * 22;
+                return "background:hsl(" + huePos.toFixed(0) + " 68% " + lightPos.toFixed(0) + "%);color:" + (intensity > 0.52 ? "#07120c" : "#f3fff8");
+            }
+            function absoluteCell(value, limit) {
+                var intensity = limit > 0 ? Math.min(1, value / limit) : 0;
+                var hue = 272 - intensity * 239;
+                var light = 14 + intensity * 45;
+                return "background:hsl(" + hue.toFixed(0) + " 64% " + light.toFixed(0) + "%);color:" + (intensity > 0.74 ? "#11140c" : "#fff8ff");
+            }
+            function renderLadder() {
+                var host = document.getElementById("ladder");
+                if (!host) return;
+                if (!state.ladder) { host.innerHTML = ""; return; }
+                var symbol = state.ladder;
+                var item = state.cache[symbol];
+                var snapshot = item && item.snapshot;
+                var ready = snapshot && hasGamma(snapshot);
+                if (ready && state.ladderExpiry && snapshot.expiries.indexOf(state.ladderExpiry) === -1) state.ladderExpiry = "";
+                if (ready && !state.ladderExpiry) state.ladderExpiry = snapshot.expiries[0] || "";
+                var profile = ready ? aggregate(snapshot, state.ladderExpiry) : null;
+                var body;
+                if (!ready) {
+                    body = '<div class="ladder-empty">' + (item && item.refreshing ? "Loading " + esc(symbol) + " gamma…" : "No column view yet for " + esc(symbol) + ".") + '</div>';
+                } else if (!profile || !profile.strikes || !profile.strikes.size) {
+                    body = '<div class="ladder-empty">No strikes in this expiry.</div>';
+                } else {
+                    var rows = Array.from(profile.strikes.entries()).map(function (entry) {
+                        return Object.assign({ strike: Number(entry[0]) }, entry[1]);
+                    }).sort(function (a, b) { return b.strike - a.strike; });
+                    var signedLimit = 0, absoluteLimit = 0, callOi = 0, putOi = 0, king = null, kingAbs = -1;
+                    rows.forEach(function (row) {
+                        var absolute = Math.abs(row.call) + Math.abs(row.put);
+                        signedLimit = Math.max(signedLimit, Math.abs(row.net), Math.abs(row.call), Math.abs(row.put));
+                        absoluteLimit = Math.max(absoluteLimit, absolute);
+                        callOi += row.callOi || 0;
+                        putOi += row.putOi || 0;
+                        if (absolute > kingAbs) { king = row; kingAbs = absolute; }
+                    });
+                    var oiTotal = callOi + putOi;
+                    var signedOi = oiTotal > 0 ? ((callOi - putOi) / oiTotal) * 100 : 0;
+                    var spot = snapshot.spot || snapshot.gexSpot;
+                    var marker = null;
+                    if (spot != null && rows.length) {
+                        if (spot >= rows[0].strike) marker = 0;
+                        else if (spot <= rows[rows.length - 1].strike) marker = rows.length - 1;
+                        else {
+                            for (var i = 0; i < rows.length - 1; i++) {
+                                var upper = rows[i], lower = rows[i + 1];
+                                if (spot > upper.strike || spot < lower.strike) continue;
+                                var span = upper.strike - lower.strike;
+                                marker = i + (span > 0 ? (upper.strike - spot) / span : 0);
+                                break;
+                            }
+                        }
+                    }
+                    var tabs = snapshot.expiries.map(function (exp) {
+                        var on = exp === state.ladderExpiry ? " on" : "";
+                        return '<button type="button" data-act="ladder-exp" data-exp="' + exp + '" class="' + on + '"><b>' + expiryDte(exp, snapshot.gexTime) + 'DTE</b><span>' + shortExpiry(exp) + '</span></button>';
+                    }).join("");
+                    var gridRows = rows.map(function (row) {
+                        var absolute = Math.abs(row.call) + Math.abs(row.put);
+                        var star = king && row.strike === king.strike ? '<i aria-label="Largest absolute gamma">★</i>' : "";
+                        return '<div class="ladder-row"><span class="ladder-strike">' + star + formatStrike(row.strike) + '</span>' +
+                            '<span style="' + signedCell(row.net, signedLimit) + '" title="' + esc(formatGex(row.net)) + '">' + compactGamma(row.net) + '</span>' +
+                            '<span style="' + signedCell(row.call, signedLimit) + '" title="' + esc(formatGex(row.call)) + '">' + compactGamma(row.call) + '</span>' +
+                            '<span style="' + signedCell(row.put, signedLimit) + '" title="' + esc(formatGex(row.put)) + '">' + compactGamma(row.put) + '</span>' +
+                            '<span style="' + absoluteCell(absolute, absoluteLimit) + '" title="' + esc(formatGex(absolute)) + '">' + compactGamma(absolute) + '</span></div>';
+                    }).join("");
+                    var markerHtml = marker == null ? "" : '<div class="spot-marker" style="top:' + (28 + 13 + marker * 26) + 'px"><span>▷ ' + formatStrike(spot) + '</span></div>';
+                    body = '<div class="expiry-tabs" role="tablist">' + tabs + '</div>' +
+                        '<section class="ladder-panel"><div class="ladder-meta"><div><b>net ' + formatGex(profile.net) + '</b><span>king ' + formatStrike(king && king.strike) + '</span><span>' + signedOi.toFixed(0) + '% OI signed</span></div><div><time>' + formatEasternClock(snapshot.gexTime) + '</time><span id="ladderAge">' + formatAge(snapshot.gexTime) + '</span></div></div>' +
+                        '<div class="ladder-scroll"><div class="ladder-grid" style="height:' + (28 + rows.length * 26) + 'px"><div class="ladder-columns" aria-hidden="true"><span>Strike</span><span>Total γ</span><span>Call γ</span><span>Put γ</span><span>|γ|</span></div>' +
+                        gridRows + markerHtml + '</div></div><div class="ladder-footnote">$M gamma per 1% move · calls signed positive · puts signed negative</div></section>';
+                }
+                host.innerHTML = '<div class="ladder-overlay" id="ladderOverlay" data-act="ladder-close"><aside class="ladder-drawer" role="dialog" aria-modal="true" aria-label="' + esc(symbol) + ' gamma columns"><div class="ladder-titlebar"><div><p class="ladder-kicker">STRIKE DETAIL</p><h2>' + esc(symbol) + ' gamma columns</h2></div><button type="button" class="ladder-close" data-act="ladder-close" aria-label="Close column view">×</button></div>' + body + '</aside></div>';
             }
             function formatVol(n) {
                 var a = Math.abs(n || 0);
@@ -1181,11 +1484,30 @@
                     state.expiry = null;
                     render({ keepSide: true });
                 }
+                if (act === "ladder") {
+                    state.selected = el.getAttribute("data-sym");
+                    state.ladder = state.selected;
+                    state.ladderExpiry = "";
+                    render({ keepSide: true, keepMain: true });
+                    var ladderItem = state.cache[state.ladder];
+                    if (!ladderItem || !ladderItem.snapshot || !hasGamma(ladderItem.snapshot)) loadSymbol(state.ladder);
+                }
+                if (act === "ladder-close") {
+                    var overlay = document.getElementById("ladderOverlay");
+                    if (el === overlay && e.target !== overlay) return;
+                    state.ladder = null;
+                    render({ keepSide: true, keepMain: true });
+                }
+                if (act === "ladder-exp") {
+                    state.ladderExpiry = el.getAttribute("data-exp") || "";
+                    renderLadder();
+                }
                 if (act === "remove") {
                     var symRemove = el.getAttribute("data-sym");
                     var removedCurrent = state.selected === symRemove;
                     state.symbols = state.symbols.filter(function (s) { return s !== symRemove; });
                     delete state.cache[symRemove];
+                    if (state.ladder === symRemove) state.ladder = null;
                     if (removedCurrent) state.selected = state.symbols[0] || null;
                     saveSymbols();
                     render({ keepSide: true, keepMain: !removedCurrent });
@@ -1226,6 +1548,17 @@
                 if (!e.target.closest(".expiry")) menu.hidden = true;
             });
             window.addEventListener("resize", function () { chartDraw(); });
+            document.addEventListener("keydown", function (e) {
+                if (e.key === "Escape" && state.ladder) {
+                    state.ladder = null;
+                    render({ keepSide: true, keepMain: true });
+                }
+            });
+            setInterval(function () {
+                var age = document.getElementById("ladderAge");
+                var item = state.ladder && state.cache[state.ladder];
+                if (age && item && item.snapshot && item.snapshot.gexTime) age.textContent = formatAge(item.snapshot.gexTime);
+            }, 30000);
 
             hydrate();
             render();
