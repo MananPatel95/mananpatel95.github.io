@@ -167,21 +167,33 @@
         .chart-note { margin: 4px 0 0; color: #9aa1ab; font-size: 0.82rem; }
         .unit { color: #9aa1ab; font-size: 0.78rem; white-space: nowrap; }
         .gex-chart { margin-top: 0; }
-        .gex-row { display: grid; grid-template-columns: 42px 1fr; align-items: center; height: 18px; }
+        .gex-row { position: relative; display: grid; grid-template-columns: 42px 1fr; align-items: center; height: 18px; }
         .ylab { color: #8b919a; font-size: 0.72rem; }
         .track { position: relative; height: 14px; }
         .zero { position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: #3a414b; }
         .bar { position: absolute; top: 3px; height: 8px; }
         .bar.pos { left: 50%; background: #c6f135; }
         .bar.neg { right: 50%; background: #ff6b6b; }
-        .gex-row.wall-call .track::after,
-        .gex-row.wall-put .track::after,
         .gex-row.spot .track::before {
             content: ""; position: absolute; left: 0; right: 0; top: 50%;
+            border-top: 1px solid #f5c518; z-index: 1;
         }
-        .gex-row.wall-call .track::after { border-top: 1px dashed #c6f135; }
-        .gex-row.wall-put .track::after { border-top: 1px dashed #ff6b6b; }
-        .gex-row.spot .track::before { border-top: 1px solid #f5c518; z-index: 1; }
+        .wall-mark {
+            position: absolute; left: 0; right: 0; top: 50%; height: 2px; margin-top: -1px;
+            z-index: 2; pointer-events: none;
+        }
+        .wall-mark.call { background: repeating-linear-gradient(90deg, #c6f135 0 7px, transparent 7px 11px); }
+        .wall-mark.put { background: repeating-linear-gradient(90deg, #ff6b6b 0 7px, transparent 7px 11px); }
+        .gex-row.wall-call.wall-put .wall-mark.call { top: calc(50% - 2px); }
+        .gex-row.wall-call.wall-put .wall-mark.put { top: calc(50% + 2px); }
+        .wall-tip {
+            display: none; position: absolute; z-index: 5; left: 48px; bottom: calc(100% + 2px);
+            padding: 5px 8px; border-radius: 8px; background: #111418; color: #f4f6f8;
+            border: 1px solid #3a414b; font-size: 0.72rem; line-height: 1.35; white-space: nowrap;
+            pointer-events: none; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+        }
+        .gex-row:hover .wall-tip { display: block; }
+        .gex-chart .gex-row:first-child .wall-tip { bottom: auto; top: calc(100% + 2px); }
         .axis { display: flex; justify-content: space-between; color: #8b919a; font-size: 0.75rem; margin: 6px 0 0 42px; }
         .legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 16px; color: #c5cad1; font-size: 0.82rem; }
         .legend span { display: inline-flex; align-items: center; gap: 6px; }
@@ -1017,7 +1029,7 @@
                     '<details class="method"><summary>Method &amp; limitations</summary><p>Dollar gamma per 1% move = gamma × open interest × 100 × chain spot<sup>2</sup> × 0.01. Calls are positive and puts are negative. Gamma and open interest come from CBOE delayed quotes. Net gamma and the walls use every strike in the 92-day window. The chart and column view show strikes within ±20% of that chain spot. The price on screen is the Yahoo quote, so it can differ from the delayed chain. Stock time is Yahoo’s last print. GEX time is the CBOE chain timestamp. Opening the page reuses data for 12 hours. Refresh all asks for a new price and a new chain, and keeps the last good GEX if the chain does not come back. This is a structure map, not a trade signal.</p><p>' + esc(contractLine) + '</p></details>' +
                     '</div></div>';
                 var bars = (item.series && item.series[state.interval]) || [];
-                requestAnimationFrame(function () { bindChart(bars, view.callWall, view.putWall); });
+                requestAnimationFrame(function () { bindChart(bars, view.callWall, view.putWall, view.strikes); });
             }
             function gammaHtml(snapshot, view) {
                 if (!hasGamma(snapshot)) return '<p class="chart-note">' + (itemRefreshing(snapshot) ? "Loading gamma…" : "Gamma feed unavailable.") + '</p>';
@@ -1035,15 +1047,36 @@
                     var d = Math.abs(k - anchor);
                     if (d < best) { best = d; nearest = k; }
                 });
+                function sameStrike(a, b) {
+                    return a != null && b != null && Number(a) === Number(b);
+                }
+                function wallPhrase(kind, strike) {
+                    var row = view.strikes.get(strike);
+                    var value = row ? (kind === "call" ? row.call : row.put) : null;
+                    var text = (kind === "call" ? "Call wall" : "Put wall") + " " + formatStrike(strike);
+                    if (value != null && isFinite(value)) text += " · " + formatGex(value);
+                    return text;
+                }
                 var rows = shown.map(function (k) {
                     var row = view.strikes.get(k);
                     var cls = "";
-                    if (k === view.callWall) cls += " wall-call";
-                    if (k === view.putWall) cls += " wall-put";
+                    var marks = "";
+                    var tips = [];
+                    if (sameStrike(k, view.callWall)) {
+                        cls += " wall-call";
+                        marks += '<i class="wall-mark call"></i>';
+                        tips.push(wallPhrase("call", k));
+                    }
+                    if (sameStrike(k, view.putWall)) {
+                        cls += " wall-put";
+                        marks += '<i class="wall-mark put"></i>';
+                        tips.push(wallPhrase("put", k));
+                    }
                     if (k === nearest) cls += " spot";
                     var width = maxAbs ? (Math.abs(row.net) / maxAbs) * 50 : 0;
                     var bar = row.net === 0 ? "" : '<i class="bar ' + (row.net > 0 ? "pos" : "neg") + '" style="width:' + width.toFixed(2) + '%"></i>';
-                    return '<div class="gex-row' + cls + '"><div class="ylab">' + formatStrike(k) + '</div><div class="track"><i class="zero"></i>' + bar + '</div></div>';
+                    var tip = tips.length ? '<span class="wall-tip">' + esc(tips.join(" · ")) + '</span>' : "";
+                    return '<div class="gex-row' + cls + '">' + tip + '<div class="ylab">' + formatStrike(k) + '</div><div class="track"><i class="zero"></i>' + bar + marks + '</div></div>';
                 }).join("");
                 return '<div class="chart-head"><div><h2>Net gamma by strike — ' + esc(snapshot.symbol) + '</h2><p class="chart-note">' + shown.length + ' of ' + universe + ' strikes within ±20% of the chain spot</p></div><div class="unit">$M per 1% move</div></div><div class="gex-scroll"><div class="gex-chart">' + rows + '</div><div class="axis"><span>' + formatGex(-maxAbs) + '</span><span>$0</span><span>' + formatGex(maxAbs) + '</span></div></div>';
             }
@@ -1192,7 +1225,7 @@
                 var span = Math.min(n + 5, intervalById(state.interval).window + 5);
                 return { start: Math.max(0, n + 5 - span), end: n + 5 };
             }
-            function bindChart(bars, callWall, putWall) {
+            function bindChart(bars, callWall, putWall, strikeMap) {
                 var canvas = document.getElementById("candles");
                 var legend = document.getElementById("chartLegend");
                 chartDraw = function () {};
@@ -1206,6 +1239,7 @@
                     chart.priceManual = false;
                 }
                 var hover = null;
+                var pointer = null;
                 var drag = null;
                 var geom = { left: 8, right: 0, top: 28, bottom: 0, min: 0, max: 1 };
                 function clampView() {
@@ -1237,6 +1271,14 @@
                         max = Math.max(max, c.h);
                         maxVol = Math.max(maxVol, c.v || 0);
                     });
+                    var anchor = vis[vis.length - 1].c;
+                    function nearPrice(p) {
+                        return p != null && isFinite(p) && anchor > 0 && Math.abs(p - anchor) / anchor < 0.25;
+                    }
+                    if (!(chart.priceManual && chart.priceMax > chart.priceMin)) {
+                        if (nearPrice(callWall)) { min = Math.min(min, callWall); max = Math.max(max, callWall); }
+                        if (nearPrice(putWall)) { min = Math.min(min, putWall); max = Math.max(max, putWall); }
+                    }
                     var pad = (max - min) * 0.08 || 1;
                     if (!(chart.priceManual && chart.priceMax > chart.priceMin)) {
                         min -= pad;
@@ -1261,23 +1303,6 @@
                         ctx.stroke();
                         ctx.fillText(price.toFixed(price >= 1000 ? 0 : 2), right + 8, yy);
                     }
-                    function wall(price, color, label) {
-                        if (price == null || price < min || price > max) return;
-                        var yy = y(price);
-                        ctx.save();
-                        ctx.strokeStyle = color;
-                        ctx.setLineDash([4, 3]);
-                        ctx.beginPath();
-                        ctx.moveTo(left, yy);
-                        ctx.lineTo(right, yy);
-                        ctx.stroke();
-                        ctx.setLineDash([]);
-                        ctx.fillStyle = color;
-                        ctx.fillText(label, left + 4, yy - 8);
-                        ctx.restore();
-                    }
-                    wall(callWall, "#c6f135", "Call " + formatStrike(callWall));
-                    wall(putWall, "#ff6b6b", "Put " + formatStrike(putWall));
                     var slot = (right - left) / (chart.end - chart.start);
                     var body = Math.max(1, slot * 0.62);
                     for (var n = Math.floor(chart.start); n < Math.min(bars.length, Math.ceil(chart.end)); n++) {
@@ -1300,6 +1325,62 @@
                             ctx.fillRect(x - body / 2, h - axis - vh, body, vh);
                             ctx.globalAlpha = 1;
                         }
+                    }
+                    function gammaAt(strike, side) {
+                        if (!strikeMap || strike == null) return null;
+                        var row = strikeMap.get(strike);
+                        if (!row) row = strikeMap.get(Number(strike));
+                        if (!row) return null;
+                        var value = side === "call" ? row.call : row.put;
+                        return isFinite(value) ? value : null;
+                    }
+                    var walls = [];
+                    function addWall(price, color, name, side) {
+                        if (price == null || !isFinite(price) || price < min || price > max) return;
+                        var gamma = gammaAt(price, side);
+                        walls.push({
+                            price: price,
+                            y: y(price),
+                            color: color,
+                            name: name,
+                            label: name + " " + formatStrike(price),
+                            gammaText: gamma == null ? "" : " · " + formatGex(gamma)
+                        });
+                    }
+                    addWall(callWall, "#c6f135", "Call wall", "call");
+                    addWall(putWall, "#ff6b6b", "Put wall", "put");
+                    walls.sort(function (a, b) { return a.y - b.y; });
+                    var labelYs = [];
+                    walls.forEach(function (w) {
+                        ctx.save();
+                        ctx.strokeStyle = w.color;
+                        ctx.lineWidth = 1.25;
+                        ctx.setLineDash([5, 4]);
+                        ctx.beginPath();
+                        ctx.moveTo(left, w.y);
+                        ctx.lineTo(right, w.y);
+                        ctx.stroke();
+                        ctx.setLineDash([]);
+                        var labelY = w.y <= 52 ? w.y + 12 : w.y - 10;
+                        labelYs.forEach(function (used) {
+                            if (Math.abs(labelY - used) < 14) labelY = used + 14;
+                        });
+                        if (labelY > bottom - 8) labelY = Math.max(52, w.y - 10);
+                        labelYs.push(labelY);
+                        w.labelY = labelY;
+                        if (labelY > 64) {
+                            var labelW = ctx.measureText(w.label).width;
+                            ctx.fillStyle = w.color;
+                            ctx.fillText(w.label, Math.max(left + 6, right - labelW - 8), labelY);
+                        }
+                        ctx.restore();
+                    });
+                    var hot = null;
+                    if (pointer && pointer.x >= left && pointer.x <= right && pointer.y >= top && pointer.y <= bottom) {
+                        walls.forEach(function (w) {
+                            var dy = Math.abs(pointer.y - w.y);
+                            if (dy <= 8 && (!hot || dy < hot.dy)) hot = { dy: dy, wall: w };
+                        });
                     }
                     var last = bars[bars.length - 1];
                     var lastY = y(last.c);
@@ -1342,6 +1423,9 @@
                             '<span>L <b>' + bar.l.toFixed(2) + '</b></span>' +
                             '<span>C <b class="' + (upBar ? "up" : "down") + '">' + bar.c.toFixed(2) + '</b></span>' +
                             '<span>Vol <b>' + formatVol(bar.v) + '</b></span>';
+                        if (hot) {
+                            legend.innerHTML += '<span style="color:' + hot.wall.color + '"><b>' + hot.wall.label + '</b>' + hot.wall.gammaText + '</span>';
+                        }
                     }
                     if (hover != null && hover >= Math.floor(chart.start) && hover < chart.end) {
                         var hx = xAt(hover);
@@ -1360,6 +1444,24 @@
                         ctx.fillStyle = "#111";
                         ctx.textBaseline = "middle";
                         ctx.fillText(bars[hover].c.toFixed(2), right + 4, hy);
+                    }
+                    if (hot) {
+                        var tip = hot.wall.label + hot.wall.gammaText;
+                        ctx.font = "11px Inter, sans-serif";
+                        ctx.textBaseline = "middle";
+                        var tw = ctx.measureText(tip).width + 16;
+                        var tx = Math.min(Math.max(pointer.x + 12, left + 4), right - tw - 4);
+                        var ty = hot.wall.y + 10;
+                        if (ty + 22 > bottom - 4) ty = hot.wall.y - 28;
+                        ctx.fillStyle = "#111418";
+                        ctx.strokeStyle = hot.wall.color;
+                        ctx.lineWidth = 1;
+                        ctx.setLineDash([]);
+                        ctx.fillRect(tx, ty, tw, 22);
+                        ctx.strokeRect(tx, ty, tw, 22);
+                        ctx.fillStyle = "#f4f6f8";
+                        ctx.fillText(tip, tx + 8, ty + 11);
+                        canvas.style.cursor = "pointer";
                     }
                 }
                 function indexAt(clientX) {
@@ -1432,6 +1534,7 @@
                 };
                 canvas.onpointermove = function (e) {
                     var pt = localPoint(e);
+                    pointer = pt;
                     hover = onPriceScale(pt) ? null : indexAt(e.clientX);
                     canvas.style.cursor = onPriceScale(pt) || (drag && drag.kind === "scale") ? "ns-resize" : "crosshair";
                     if (drag && drag.kind === "scale") {
@@ -1457,6 +1560,7 @@
                 canvas.onpointerleave = function () {
                     if (drag) return;
                     hover = null;
+                    pointer = null;
                     canvas.style.cursor = "crosshair";
                     draw();
                 };
