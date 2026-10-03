@@ -153,11 +153,198 @@
         .travel-gallery-header {
           margin-bottom: 1rem;
         }
+        .travel-subheader {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 0.75rem 1.25rem;
+          margin-top: 0.4rem;
+        }
+        .travel-subheader p {
+          margin: 0;
+          flex: 1;
+          min-width: 12rem;
+          font-size: 0.9rem;
+          line-height: 1.45;
+          color: #6B7280;
+        }
+        .dark .travel-subheader p {
+          color: #9CA3AF;
+        }
+        .travel-view-switch {
+          display: inline-flex;
+          flex-shrink: 0;
+          border: 1px solid #000;
+          border-radius: 999px;
+          overflow: hidden;
+        }
+        .dark .travel-view-switch {
+          border-color: #9CA3AF;
+        }
+        .travel-view-switch button {
+          appearance: none;
+          border: 0;
+          background: transparent;
+          color: inherit;
+          font: inherit;
+          font-size: 0.8rem;
+          font-weight: 600;
+          padding: 0.4rem 0.8rem;
+          cursor: pointer;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.28rem;
+        }
+        .travel-view-switch button .material-icons {
+          font-size: 1rem;
+        }
+        .travel-view-switch button.is-active {
+          background: #111;
+          color: #fff;
+        }
+        .dark .travel-view-switch button.is-active {
+          background: #E5E7EB;
+          color: #111;
+        }
         .travel-feed {
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
           gap: 0.75rem;
           align-items: start;
+        }
+        .travel-feed[hidden] {
+          display: none !important;
+        }
+        .travel-globe {
+          position: relative;
+          height: min(72vh, 680px);
+          min-height: 440px;
+          border: 1px solid #000;
+          border-radius: 0.75rem;
+          overflow: hidden;
+          background: #c5e8fb;
+        }
+        .travel-globe[hidden] {
+          display: none !important;
+        }
+        .dark .travel-globe {
+          border-color: #9CA3AF;
+        }
+        .travel-globe-stage {
+          width: 100%;
+          height: 100%;
+        }
+        .travel-globe-status {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 1.5rem;
+          text-align: center;
+          color: #1f4b73;
+          font-size: 0.9rem;
+          pointer-events: none;
+        }
+        .travel-globe-status[hidden] {
+          display: none !important;
+        }
+        .travel-globe-hint {
+          position: absolute;
+          left: 0.75rem;
+          bottom: 0.75rem;
+          margin: 0;
+          color: rgba(17, 55, 90, 0.72);
+          font-size: 0.75rem;
+          pointer-events: none;
+        }
+        .travel-globe-legend {
+          position: absolute;
+          right: 0.75rem;
+          bottom: 0.75rem;
+          z-index: 3;
+          width: max-content;
+          max-width: min(220px, 46%);
+          max-height: 58%;
+          overflow: auto;
+          padding: 0.65rem 0.75rem 0.7rem;
+          border-radius: 0.65rem;
+          background: rgba(255, 255, 255, 0.94);
+          color: #111827;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+        }
+        .travel-globe-legend-title {
+          margin: 0 0 0.35rem;
+          font-size: 0.72rem;
+          font-weight: 700;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+        }
+        .travel-globe-legend-key,
+        .travel-globe-legend-list {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+        }
+        .travel-globe-legend-key {
+          margin-bottom: 0.45rem;
+          padding-bottom: 0.4rem;
+          border-bottom: 1px solid #E5E7EB;
+        }
+        .travel-globe-legend-key li,
+        .travel-globe-legend-list li {
+          display: flex;
+          align-items: center;
+          gap: 0.4rem;
+          font-size: 0.75rem;
+          line-height: 1.35;
+          padding: 0.12rem 0;
+        }
+        .travel-globe-swatch {
+          width: 0.75rem;
+          height: 0.75rem;
+          border-radius: 0.15rem;
+          background: rgba(232, 61, 153, 0.72);
+          border: 1px solid #E83D99;
+          flex-shrink: 0;
+        }
+        .travel-globe-legend-mark,
+        .travel-globe-pin-mark {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 0.95rem;
+          height: 0.95rem;
+          border-radius: 50%;
+          background: #fff;
+          color: #E83D99;
+          border: 1.5px solid #E83D99;
+          font-size: 0.65rem;
+          font-weight: 800;
+          line-height: 1;
+          flex-shrink: 0;
+        }
+        .travel-globe-pin {
+          pointer-events: none;
+        }
+        .travel-globe-pin-mark {
+          width: 1.35rem;
+          height: 1.35rem;
+          font-size: 0.8rem;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+        }
+        @media (max-width: 520px) {
+          .travel-subheader {
+            flex-direction: column;
+            align-items: stretch;
+          }
+          .travel-view-switch {
+            align-self: flex-end;
+          }
+          .travel-globe {
+            height: 70vh;
+            min-height: 380px;
+          }
         }
         .travel-card {
           position: relative;
@@ -941,6 +1128,13 @@
 <section class="mb-8 pt-2" id="travel-gallery">
     <div class="travel-gallery-header">
         <h2 class="text-xl font-bold text-text-light dark:text-text-dark">Where I've been</h2>
+        <div class="travel-subheader">
+            <p>Trying to see every corner of the world. Here's where I've been so far.</p>
+            <div class="travel-view-switch" role="group" aria-label="Travel view">
+                <button type="button" id="travelViewFeed" class="is-active" aria-pressed="true"><span class="material-icons" aria-hidden="true">grid_view</span>Feed</button>
+                <button type="button" id="travelViewGlobe" aria-pressed="false"><span class="material-icons" aria-hidden="true">public</span>Globe</button>
+            </div>
+        </div>
     </div>
     <div class="travel-feed" id="travelStampsScroll">
         <button type="button" class="travel-card" data-travel-media="images/travel_pictures/mexico_city/downtown.MOV" data-media-type="video" data-travel-gallery="images/travel_pictures/mexico_city/downtown.MOV,images/travel_pictures/mexico_city-may2026.jpg,images/travel_pictures/mexico_city/frida-kahlo.jpg,images/travel_pictures/mexico_city/biking.MOV,images/travel_pictures/mexico_city/chapultepec.jpg,images/travel_pictures/mexico_city/vasconcelos.jpg" data-travel-captions="Palacio de Bellas Artes,Teotihuacan,Museo Frida Kahlo,Angel of Independence,Chapultepec Castle,Biblioteca Vasconcelos">
@@ -1097,6 +1291,19 @@
                 <span class="travel-card-date">July 2018</span>
             </span>
         </button>
+    </div>
+    <div class="travel-globe" id="travelGlobe" hidden>
+        <div class="travel-globe-stage" id="travelGlobeStage" role="img" aria-label="3D globe with the countries I have visited checked off"></div>
+        <p class="travel-globe-status" id="travelGlobeStatus" hidden>Loading globe…</p>
+        <p class="travel-globe-hint">Drag to spin · scroll to zoom</p>
+        <aside class="travel-globe-legend" aria-label="Legend">
+            <p class="travel-globe-legend-title">Legend</p>
+            <ul class="travel-globe-legend-key">
+                <li><span class="travel-globe-swatch" aria-hidden="true"></span> Country visited</li>
+                <li><span class="travel-globe-legend-mark" aria-hidden="true">✓</span> Checked off</li>
+            </ul>
+            <ul class="travel-globe-legend-list" id="travelGlobeLegend"></ul>
+        </aside>
     </div>
 </section>
 <button type="button" class="back-to-main">← Back to main page</button>
@@ -1362,6 +1569,211 @@
         if (e.key === 'Escape') closeTravelModal();
         else if (e.key === 'ArrowLeft') stepGallery(-1);
         else if (e.key === 'ArrowRight') stepGallery(1);
+    });
+})();
+
+// Travel globe: cartoon topographic view of countries checked off in the feed
+(function() {
+    var VISITED = [
+        { name: 'Australia', admin: 'Australia', lat: -25.3, lng: 133.8 },
+        { name: 'Canada', admin: 'Canada', lat: 56.1, lng: -106.3 },
+        { name: 'Costa Rica', admin: 'Costa Rica', lat: 9.93, lng: -84.09 },
+        { name: 'France', admin: 'France', lat: 46.23, lng: 2.21 },
+        { name: 'Guatemala', admin: 'Guatemala', lat: 15.78, lng: -90.23 },
+        { name: 'India', admin: 'India', lat: 22.0, lng: 79.0 },
+        { name: 'Italy', admin: 'Italy', lat: 42.5, lng: 12.5 },
+        { name: 'Japan', admin: 'Japan', lat: 36.2, lng: 138.25 },
+        { name: 'Mexico', admin: 'Mexico', lat: 23.63, lng: -102.55 },
+        { name: 'Monaco', admin: 'Monaco', lat: 43.738, lng: 7.424 },
+        { name: 'United States', admin: 'United States of America', lat: 39.83, lng: -98.58 }
+    ];
+    var feedBtn = document.getElementById('travelViewFeed');
+    var globeBtn = document.getElementById('travelViewGlobe');
+    var feed = document.getElementById('travelStampsScroll');
+    var globeWrap = document.getElementById('travelGlobe');
+    var stage = document.getElementById('travelGlobeStage');
+    var statusEl = document.getElementById('travelGlobeStatus');
+    var legend = document.getElementById('travelGlobeLegend');
+    if (!feedBtn || !globeBtn || !feed || !globeWrap || !stage || !legend) return;
+
+    legend.innerHTML = VISITED.map(function(country) {
+        return '<li><span class="travel-globe-legend-mark" aria-hidden="true">✓</span> ' + country.name + '</li>';
+    }).join('');
+
+    var globe = null;
+    var loading = false;
+    var hoverPoly = null;
+
+    function sizeGlobe() {
+        if (!globe) return;
+        var width = stage.clientWidth;
+        var height = stage.clientHeight;
+        if (width < 2 || height < 2) return;
+        globe.width(width);
+        globe.height(height);
+    }
+
+    function syncFeedPlayback(showFeed) {
+        feed.querySelectorAll('video').forEach(function(video) {
+            if (!showFeed) {
+                video.pause();
+                return;
+            }
+            var rect = video.getBoundingClientRect();
+            var visible = rect.width > 0 && rect.top < window.innerHeight && rect.bottom > 0;
+            if (visible) video.play().catch(function() {});
+            else video.pause();
+        });
+    }
+
+    function paintCountries(features) {
+        function capColor(d) {
+            return d === hoverPoly ? 'rgba(232, 61, 153, 0.82)' : 'rgba(232, 61, 153, 0.52)';
+        }
+        globe
+            .polygonsData(features)
+            .polygonCapColor(capColor)
+            .polygonSideColor(function() { return 'rgba(232, 61, 153, 0.2)'; })
+            .polygonStrokeColor(function() { return 'rgba(255, 255, 255, 0.9)'; })
+            .polygonAltitude(0.01)
+            .polygonLabel(function(d) {
+                var admin = d.properties && d.properties.ADMIN;
+                var match = VISITED.filter(function(country) { return country.admin === admin; })[0];
+                return '✓ ' + (match ? match.name : admin);
+            })
+            .onPolygonHover(function(d) {
+                hoverPoly = d || null;
+                globe.polygonCapColor(capColor);
+            });
+    }
+
+    function buildGlobe() {
+        if (typeof Globe !== 'function') {
+            loading = false;
+            statusEl.hidden = false;
+            statusEl.textContent = 'The globe could not load. Switch back to the feed to see the trips.';
+            return;
+        }
+        statusEl.hidden = true;
+        globe = Globe()
+            .width(Math.max(stage.clientWidth, 320))
+            .height(Math.max(stage.clientHeight, 380))
+            .backgroundColor('#c5e8fb')
+            .globeImageUrl('images/travel-globe-topo.jpg')
+            .bumpImageUrl('https://unpkg.com/three-globe@2.45.3/example/img/earth-topology.png')
+            .showAtmosphere(true)
+            .atmosphereColor('#ffffff')
+            .atmosphereAltitude(0.16)
+            .htmlElementsData(VISITED)
+            .htmlAltitude(0.012)
+            .htmlElement(function(country) {
+                var el = document.createElement('div');
+                el.className = 'travel-globe-pin';
+                el.title = country.name;
+                el.innerHTML = '<span class="travel-globe-pin-mark" aria-hidden="true">✓</span>';
+                return el;
+            })
+            (stage);
+
+        var material = globe.globeMaterial && globe.globeMaterial();
+        if (material) material.bumpScale = 2.5;
+
+        var controls = globe.controls();
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 0.4;
+        controls.enablePan = false;
+        controls.addEventListener('start', function() {
+            controls.autoRotate = false;
+        });
+        globe.pointOfView({ lat: 24, lng: -40, altitude: 2.4 });
+
+        fetch('https://cdn.jsdelivr.net/gh/vasturiano/globe.gl@v2.46.2/example/datasets/ne_110m_admin_0_countries.geojson')
+            .then(function(res) { return res.json(); })
+            .then(function(geo) {
+                var admins = {};
+                VISITED.forEach(function(country) { admins[country.admin] = true; });
+                var features = (geo.features || []).filter(function(feature) {
+                    return feature.properties && admins[feature.properties.ADMIN];
+                });
+                if (!features.some(function(feature) { return feature.properties.ADMIN === 'Monaco'; })) {
+                    features.push({
+                        type: 'Feature',
+                        properties: { ADMIN: 'Monaco' },
+                        geometry: {
+                            type: 'Polygon',
+                            coordinates: [[
+                                [7.438672, 43.750439],
+                                [7.377734, 43.731738],
+                                [7.380078, 43.753223],
+                                [7.39502, 43.765332],
+                                [7.414453, 43.770898],
+                                [7.436914, 43.761475],
+                                [7.438672, 43.750439]
+                            ]]
+                        }
+                    });
+                }
+                if (features.length) paintCountries(features);
+            })
+            .catch(function() {});
+
+        if (window.ResizeObserver) {
+            new ResizeObserver(function() { sizeGlobe(); }).observe(globeWrap);
+        } else {
+            window.addEventListener('resize', sizeGlobe);
+        }
+        loading = false;
+        requestAnimationFrame(sizeGlobe);
+    }
+
+    function ensureGlobe() {
+        if (globe) {
+            if (globe.resumeAnimation) globe.resumeAnimation();
+            sizeGlobe();
+            return;
+        }
+        if (loading) return;
+        loading = true;
+        statusEl.hidden = false;
+        statusEl.textContent = 'Loading globe…';
+        var script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/globe.gl@2.46.2/dist/globe.gl.min.js';
+        script.onload = buildGlobe;
+        script.onerror = function() {
+            loading = false;
+            statusEl.hidden = false;
+            statusEl.textContent = 'The globe could not load. Switch back to the feed to see the trips.';
+        };
+        document.head.appendChild(script);
+    }
+
+    function setView(view) {
+        var isGlobe = view === 'globe';
+        feed.hidden = isGlobe;
+        globeWrap.hidden = !isGlobe;
+        feedBtn.classList.toggle('is-active', !isGlobe);
+        globeBtn.classList.toggle('is-active', isGlobe);
+        feedBtn.setAttribute('aria-pressed', String(!isGlobe));
+        globeBtn.setAttribute('aria-pressed', String(isGlobe));
+        syncFeedPlayback(!isGlobe);
+        if (isGlobe) ensureGlobe();
+        else if (globe && globe.pauseAnimation) globe.pauseAnimation();
+    }
+
+    feedBtn.addEventListener('click', function() { setView('feed'); });
+    globeBtn.addEventListener('click', function() { setView('globe'); });
+
+    window.addEventListener('hashchange', function() {
+        setTimeout(function() {
+            if (!globe) return;
+            var onGlobe = window.location.hash === '#travel' && !globeWrap.hidden;
+            if (onGlobe) {
+                if (globe.resumeAnimation) globe.resumeAnimation();
+                sizeGlobe();
+            } else if (globe.pauseAnimation) {
+                globe.pauseAnimation();
+            }
+        }, 0);
     });
 })();
 
