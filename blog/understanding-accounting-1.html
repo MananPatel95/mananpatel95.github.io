@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding Accounting 1 - Language and disclosure | Manan Patel</title>
+    <meta name="description" content="The building blocks of accounting: what accounting is, how it differs from bookkeeping, what GAAP means, and what public and private companies must disclose.">
+    <meta name="keywords" content="Manan Patel, accounting, bookkeeping, GAAP, IFRS, ASPE, public company disclosure, private companies">
+    <meta name="author" content="Manan Patel">
+    <link rel="canonical" href="https://mananpatel.info/blog/understanding-accounting-1.html">
+
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://mananpatel.info/blog/understanding-accounting-1.html">
+    <meta property="og:title" content="Understanding Accounting 1 - Language and disclosure | Manan Patel">
+    <meta property="og:description" content="Accounting versus bookkeeping, GAAP, and what public and private companies actually have to show.">
+    <meta property="og:site_name" content="Manan Patel">
+    <meta property="article:published_time" content="2026-09-27">
+    <meta property="article:author" content="https://mananpatel.info/#manan-patel">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://mananpatel.info/blog/understanding-accounting-1.html">
+    <meta name="twitter:title" content="Understanding Accounting 1 - Language and disclosure | Manan Patel">
+    <meta name="twitter:description" content="Accounting versus bookkeeping, GAAP, and what public and private companies actually have to show.">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "BlogPosting",
+          "headline": "Understanding Accounting 1 - Language and disclosure",
+          "description": "The building blocks of accounting: what accounting is, how it differs from bookkeeping, what GAAP means, and what public and private companies must disclose.",
+          "url": "https://mananpatel.info/blog/understanding-accounting-1.html",
+          "datePublished": "2026-09-27",
+          "dateModified": "2026-09-27",
+          "author": { "@id": "https://mananpatel.info/#manan-patel" },
+          "publisher": { "@id": "https://mananpatel.info/#manan-patel" },
+          "mainEntityOfPage": { "@type": "WebPage", "@id": "https://mananpatel.info/blog/understanding-accounting-1.html" }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://mananpatel.info/" },
+            { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://mananpatel.info/blog/" },
+            { "@type": "ListItem", "position": 3, "name": "Understanding Accounting 1 - Language and disclosure", "item": "https://mananpatel.info/blog/understanding-accounting-1.html" }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'text-light': '#1f2937',
+                        'text-dark': '#f9fafb',
+                        'secondary-text-light': '#6b7280',
+                        'secondary-text-dark': '#9ca3af',
+                        'border-light': '#e5e7eb',
+                        'border-dark': '#374151',
+                        'bg-light': '#ffffff',
+                        'bg-dark': '#111827'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .blog-content {
+            line-height: 1.7;
+        }
+        .blog-content h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: inherit;
+        }
+        .blog-content h3 {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: inherit;
+        }
+        .blog-content p {
+            margin-bottom: 1rem;
+        }
+        .blog-content ul, .blog-content ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .blog-content li {
+            margin-bottom: 0.5rem;
+        }
+        .blog-content a {
+            color: #2563eb;
+            text-decoration: underline;
+        }
+        .dark .blog-content a {
+            color: #60a5fa;
+        }
+        .blog-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0 0 1.25rem;
+            font-size: 0.95rem;
+        }
+        .blog-content th,
+        .blog-content td {
+            text-align: left;
+            vertical-align: top;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 0.6rem 0.75rem 0.6rem 0;
+        }
+        .dark .blog-content th,
+        .dark .blog-content td {
+            border-bottom-color: #374151;
+        }
+        .blog-content th {
+            font-size: 0.8rem;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+        }
+        .blog-content .table-wrap {
+            overflow-x: auto;
+            margin: 0 0 1.25rem;
+        }
+        .blog-content .table-wrap table {
+            margin: 0;
+        }
+        .blog-content td,
+        .blog-content th {
+            overflow-wrap: break-word;
+        }
+        .worked {
+            border-left: 3px solid #059669;
+            padding: 0.15rem 0 0.15rem 1rem;
+            margin: 0 0 1.25rem;
+        }
+        .entry {
+            font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
+            font-size: 0.92rem;
+            line-height: 1.55;
+            background: #f3f4f6;
+            padding: 0.85rem 1rem;
+            margin: 0 0 1rem;
+            white-space: pre-wrap;
+            overflow-x: auto;
+            max-width: 100%;
+        }
+        .dark .entry {
+            background: #1f2937;
+        }
+        .series { font-size: 0.9rem; margin: 0 0 1.5rem; color: #6b7280; }
+        .dark .series { color: #9ca3af; }
+        .series a { color: #2563eb; }
+        .dark .series a { color: #60a5fa; }
+    </style>
+</head>
+<body class="bg-bg-light dark:bg-bg-dark text-text-light dark:text-text-dark transition-colors">
+    <div class="min-h-screen">
+        <header class="border-b border-border-light dark:border-border-dark">
+            <div class="max-w-4xl mx-auto px-4 py-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <a href="../" class="text-xl font-bold text-text-light dark:text-text-dark hover:opacity-80 transition-opacity">Manan Patel</a>
+                        <p class="text-xs text-secondary-text-light dark:text-secondary-text-dark mt-0.5">Tinkering and Sharing</p>
+                    </div>
+                    <div class="flex items-center gap-3 flex-wrap">
+                        <a href="../#writing" class="text-sm text-secondary-text-light dark:text-secondary-text-dark hover:text-text-light dark:hover:text-text-dark transition-colors">← Back to Writing</a>
+                        <a href="../" class="text-sm text-secondary-text-light dark:text-secondary-text-dark hover:text-text-light dark:hover:text-text-dark transition-colors">Home</a>
+                        <a class="w-8 h-8 border border-border-light dark:border-border-dark rounded flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" href="https://x.com/mananthekid" target="_blank" rel="noopener" aria-label="X">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+                        </a>
+                        <a class="w-8 h-8 border border-border-light dark:border-border-dark rounded flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" href="https://www.linkedin.com/in/mananpatel123/" target="_blank" rel="noopener" aria-label="LinkedIn">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z"></path></svg>
+                        </a>
+                        <a class="w-8 h-8 border border-border-light dark:border-border-dark rounded flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" href="https://github.com/MananPatel95" target="_blank" rel="noopener" aria-label="GitHub">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path clip-rule="evenodd" fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.285 2.866 7.92 6.737 9.208.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.942.359.308.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z"></path></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <article class="max-w-4xl mx-auto px-4 py-8">
+            <header class="mb-8">
+                <div class="flex items-center gap-2 mb-4 flex-wrap">
+                    <span class="px-2 py-1 bg-emerald-100 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200 text-xs font-medium rounded">Finance</span>
+                    <span class="text-secondary-text-light dark:text-secondary-text-dark text-sm">Sep 27, 2026</span>
+                    <span class="text-secondary-text-light dark:text-secondary-text-dark text-sm">•</span>
+                    <span class="text-secondary-text-light dark:text-secondary-text-dark text-sm">28 min read</span>
+                </div>
+                <h1 class="text-3xl font-bold text-text-light dark:text-text-dark mb-4">Understanding Accounting 1 - Language and disclosure</h1>
+                <p class="text-lg text-secondary-text-light dark:text-secondary-text-dark">
+                    The language before the numbers. What accounting is, how bookkeeping fits inside it, which rulebook a company is using, and what a public company must publish that a private company can keep to itself.
+                </p>
+            </header>
+
+            <div class="blog-content prose prose-lg max-w-none">
+                <p class="series">Series: 1. Language and disclosure · <a href="understanding-accounting-2.html">2. The equation</a> · <a href="understanding-accounting-3.html">3. The statements</a></p>
+                <h2>What you should be able to do</h2>
+                <ul>
+                    <li>Define accounting, and separate it from bookkeeping, management accounting, and tax.</li>
+                    <li>Walk one month of activity through cash basis and accrual basis and explain why the two profits differ.</li>
+                    <li>Use the core terms as decisions: entity, recognition, measurement, disclosure, accrual, materiality, going concern, estimate versus policy versus error.</li>
+                    <li>Name the rulebook a public company in Canada uses versus one in the United States, and give one transaction that the two books record differently.</li>
+                    <li>Open a public-company filing and know which document answers which question.</li>
+                    <li>Explain what a private company still has to keep, who is allowed to see it, and what level of assurance the report actually gives.</li>
+                </ul>
+                <p>This note stops before the full accounting equation and before building the three statements. It does not stop before the judgments those statements depend on. If you cannot say which month a dollar belongs to, and which document a stranger is allowed to read, the statements in the later notes are just formatted paper.</p>
+
+                <h2>Why a rulebook exists at all</h2>
+                <p>Managers prepare the report that outsiders use to judge the managers. That is the tension under the whole system. The people who want the bonus, the next round, or the loan are the people who choose the estimates. A rulebook, an independent auditor, and a public filing exist because the preparer and the user are not the same person, and they do not want the same number.</p>
+                <p>Accounting identifies, measures, records, and communicates the economic events of an entity to people who have to make a decision about resources. External financial reporting has a narrow objective: information about the reporting entity that is useful to existing and potential investors, lenders, and other creditors when they decide whether to provide resources. Employees, customers, and regulators read the same package. They are not the audience the standards are written for.</p>
+                <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Decision</th>
+                            <th>What they actually hunt for</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Equity investor</td>
+                            <td>Buy, hold, sell, or refuse the round.</td>
+                            <td>Earnings power, how much of the profit is cash, and what sits ahead of them in line.</td>
+                        </tr>
+                        <tr>
+                            <td>Lender</td>
+                            <td>Extend credit, price it, or call it.</td>
+                            <td>Cash, collateral, and whether a covenant is about to break.</td>
+                        </tr>
+                        <tr>
+                            <td>Supplier</td>
+                            <td>Ship on terms, or demand cash.</td>
+                            <td>Near-term ability to pay. Last year's profit is a weak answer to that.</td>
+                        </tr>
+                        <tr>
+                            <td>Customer or employee</td>
+                            <td>Rely on the firm still being here.</td>
+                            <td>Going concern, not the earnings-per-share headline.</td>
+                        </tr>
+                        <tr>
+                            <td>Regulator</td>
+                            <td>Was the required package filed, on time, under the named rules.</td>
+                            <td>The filing itself. A regulator is not trying to pick a stock.</td>
+                        </tr>
+                        <tr>
+                            <td>Management</td>
+                            <td>Run the business, and also survive the reading of the report they prepared.</td>
+                            <td>Both the internal books and the version the contract forces them to publish.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+                <p>Information is useful when it is relevant and faithfully represented. Relevance means it can change a decision: it helps predict, or it confirms what the user already thought. Faithful representation means the depiction is complete, neutral, and free from error. Free from error does not mean the number is exact. A bad-debt estimate is faithful when the method is described and the bias is not pointed at a bonus target. Neutrality includes prudence, which is caution when the outcome is uncertain. Prudence is not a standing order to understate profit.</p>
+                <p>Four qualities make useful information more useful. Comparability lets you line this company up against another, and this year up against last year. Verifiability means a second knowledgeable person can reach a similar number from the same evidence. Timeliness means the report arrives while the decision is still open. Understandability means a user who is willing to read the notes can follow it. None of these four can rescue a number that is irrelevant or biased.</p>
+                <p>Cost is the constraint on all of it. A disclosure that costs more than any decision it would change is not required just because it would be interesting. That is why a public company publishes a standard package and not its general ledger.</p>
+
+                <h2>Accounting is a reporting system</h2>
+                <p>Financial accounting is the external product: general purpose financial statements, and the notes that make those statements readable. Management already has the internal books. General purpose means one set for outsiders who cannot order a custom report.</p>
+                <p>A bank can demand a special package under a loan agreement: a borrowing base, a debt-service ratio, monthly cash. The tax authority gets a return under the tax act. Those are special purpose reports. Same events, different rules, different audience. The statements you download for a public company are general purpose. If you are holding a lender package or a tax return, you are not holding the financial statements, even when the revenue line looks familiar.</p>
+                <p>Three products come out of one set of books, and people mix them up constantly.</p>
+                <ul>
+                    <li><strong>Financial accounting</strong> is the external report under a named framework. This series.</li>
+                    <li><strong>Management accounting</strong> is internal: budgets, job costs, dashboards, the number a founder uses on Monday morning. No public rulebook. It can be cash, accrual, or a spreadsheet that would horrify an auditor, as long as the operator knows which one it is.</li>
+                    <li><strong>Tax</strong> is a third clock. The CRA and the IRS decide when income is taxed. Taxable income is not accounting profit. A deferred tax balance exists because those two clocks book the same machine, or the same loss, in different years. Do not read a T2 or a Form 1120 as if it were the financial statements.</li>
+                </ul>
+                <p>The reporting entity is separate from its owners. Draw the boundary before you record anything. If the founder pays a personal car lease from the company bank account, the company did not incur a business expense. The company distributed cash to the owner. Leave it in travel and meals and you have overstated expenses and understated what the owner took out. A parent and its subsidiaries can be one entity in the consolidated statements and three entities in their own legal books. Consolidation is the drawing of that boundary. You read the consolidated set when you want the group a shareholder actually owns, and the standalone set when a lender has a claim on one legal entity only.</p>
+                <p>The report is also two different objects that share a page. A stock is a balance at a date: cash on December 31. A flow is activity across a period: cash collected during the year. A year of profit is not a snapshot, and a snapshot is not a year of profit. Later notes hang the statements on that split. Mixing them is how a reader says "they have $2 million of profit, so they have $2 million." They might. They also might have profit and an empty bank account, because the customers have not paid.</p>
+
+                <h2>Bookkeeping is the recording step</h2>
+                <p>Bookkeeping is the systematic recording of transactions. Invoices, bills, payroll, loan draws, share issuances. The output is the journals and the ledger. The books. Accounting includes that work and then does the part a ledger cannot do on its own: decide whether an event is recognized, choose the measurement, classify it, adjust it at period end, summarize it into statements, disclose what the lines leave out, and interpret the result.</p>
+                <p>The cycle is the same every period. Skip a step and the statements look finished while the month is still open.</p>
+                <ol>
+                    <li>Identify the event. A signed idea is not an event. A delivered project is.</li>
+                    <li>Decide whether it is recognized in this period, and measure it.</li>
+                    <li>Record it in the journal. That entry is bookkeeping.</li>
+                    <li>Post the journal to the accounts in the ledger.</li>
+                    <li>Make the period-end adjustments. This is where accrual accounting actually happens.</li>
+                    <li>Prepare the statements from the adjusted ledger.</li>
+                    <li>Close the period so next month's activity does not keep adding to this month's profit.</li>
+                    <li>Disclose the policies, the estimates, and the items that never became a line.</li>
+                </ol>
+                <p>Double entry means every recorded event has at least two effects, and the amounts balance. Debit is the left side of the entry. Credit is the right side. The words are not "good" and "bad," and they are not "up" and "down." Which side increases an account depends on what kind of account it is. That map is the accounting equation: assets equal liabilities plus equity. The rule in front of you now is simpler. An entry that does not balance is not an entry.</p>
+                <p>A customer is invoiced $100,000 for work already delivered, with cash due in January.</p>
+                <pre class="entry">Debit  Accounts receivable   100,000
+Credit Revenue               100,000</pre>
+                <p>January, when the cash arrives:</p>
+                <pre class="entry">Debit  Cash                   100,000
+Credit Accounts receivable    100,000</pre>
+                <p>Revenue was recorded in December. January's cash does not create January revenue. Record it again and the sale has been counted twice. The second entry only swaps one claim (the customer owes you) for another (cash in the bank). Profit does not move.</p>
+                <p>The entries a book of original entry will miss are the ones with no new invoice and no bank line. Those are the adjustments, and they are the difference between a printout of the bank account and a set of financial statements.</p>
+                <ul>
+                    <li><strong>Accrued expense.</strong> Wages earned through December 31, paid on January 5. December consumed the labor. January only moves the cash.</li>
+                    <li><strong>Deferred expense.</strong> Insurance paid up front for a year. Cash left in month one. The expense belongs one twelfth at a time. The unexpired portion sits on the balance sheet until it is used.</li>
+                    <li><strong>Accrued revenue.</strong> Work delivered, invoice still unsent or still unpaid. The earning is done.</li>
+                    <li><strong>Deferred revenue.</strong> Cash collected before the work is done. You have the money and you still owe the performance. Calling that revenue reports profit for a job you have not started.</li>
+                    <li><strong>Estimates with no source document.</strong> How much of the receivables will never be collected. How many years a machine will run. Nobody sends an invoice for those. Someone still has to book them, or profit is a fantasy of perfect collection and infinite equipment.</li>
+                </ul>
+                <p>Every accountant depends on bookkeeping. Bookkeeping alone is not accounting. A clean ledger under the wrong policy is a clean record of the wrong number.</p>
+
+                <h2>One month, two profits</h2>
+                <p>Same company, same December, two bases. This is a small consulting firm. Watch which dollars move profit and which dollars only move cash.</p>
+                <div class="worked">
+                    <p>Completed work is billed at $100,000. The customer pays in January.</p>
+                    <p>A different customer pays a $20,000 deposit in December for work that will be done in January.</p>
+                    <p>December rent of $8,000 is paid in December.</p>
+                    <p>On December 1 the firm pays $12,000 for an insurance policy covering December through next November.</p>
+                    <p>Wages of $6,000 are earned in the last week of December and paid on January 5.</p>
+                </div>
+                <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Cash basis</th>
+                            <th>Accrual basis</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>What counts as the "in" number</td>
+                            <td>$20,000 collected. The deposit. The $100,000 invoice has not hit the bank, so it does not exist here.</td>
+                            <td>$100,000 earned. The deposit is not revenue. The work has not been done.</td>
+                        </tr>
+                        <tr>
+                            <td>What counts as the "out" number</td>
+                            <td>$20,000 paid. Rent of $8,000 plus the entire $12,000 insurance policy. Unpaid wages are invisible.</td>
+                            <td>$15,000. Rent of $8,000, one month of insurance ($1,000), and the $6,000 of wages already earned.</td>
+                        </tr>
+                        <tr>
+                            <td>December profit</td>
+                            <td>$0</td>
+                            <td>$85,000</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+                <p>Nothing in the business changed between the two columns. The cash column timed every dollar by the bank. The accrual column timed every dollar by the economics. External reporting uses accrual. A founder who manages from the bank app is managing the cash column, which is a real and necessary thing, and it is not profit.</p>
+                <p>Book the deposit as revenue on top of the accrual column and December profit becomes $105,000. You just reported $20,000 for work you will do next month. If January then books it again, the engagement has been counted twice and nobody stole anything. The calendar did.</p>
+                <p>The leftovers are why a balance sheet has to exist. After the accrual column, four things are true and none of them is this month's profit: the customer still owes $100,000, the insurer still owes eleven months of coverage, the employees are owed $6,000, and one customer is owed $20,000 of work. Those are assets and liabilities. Accrual accounting creates them. Cash accounting pretends they are not there.</p>
+
+                <h2>The words that everything else uses</h2>
+                <p>Learn these before the statements. Each one is a decision, not a label.</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Term</th>
+                            <th>Meaning</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Reporting entity</td>
+                            <td>The business the statements describe. Draw the boundary first. A parent and its subsidiaries can be one entity for the consolidated statements, and separate entities in their own books.</td>
+                        </tr>
+                        <tr>
+                            <td>Transaction</td>
+                            <td>An economic event that changes the entity's resources or the claims on those resources, and that can be measured in money. A signed idea is not a transaction. A purchase is.</td>
+                        </tr>
+                        <tr>
+                            <td>Recognition</td>
+                            <td>Recording an item in the body of the statements. Mentioning it in a conversation is not recognition. If it is not in the statements, it has not been recognized.</td>
+                        </tr>
+                        <tr>
+                            <td>Measurement</td>
+                            <td>The amount you attach once you recognize the item. Historical cost is what you paid. Fair value is what you could sell it for, or settle it for, today. The rulebook tells you which one applies. You do not get to pick the flattering one.</td>
+                        </tr>
+                        <tr>
+                            <td>Disclosure</td>
+                            <td>Information a user needs that a line item cannot carry by itself. Policies, breakdowns, commitments, contingencies. The notes are part of the statements.</td>
+                        </tr>
+                        <tr>
+                            <td>Accrual basis</td>
+                            <td>Recognize the event when it happens, not when cash moves. Earn revenue when you deliver. Incur an expense when you consume the benefit. Cash basis waits for the bank account. External reporting uses accrual.</td>
+                        </tr>
+                        <tr>
+                            <td>Reporting period</td>
+                            <td>The slice of time the statements cover. A fiscal year can end in any month. Compare company to company only after you know which twelve months you are looking at.</td>
+                        </tr>
+                        <tr>
+                            <td>Materiality</td>
+                            <td>An omission or misstatement is material if it could change a user's decision. Immaterial items do not drive the accounting. Material is judged in context. $50,000 can be noise in one company and the whole story in another.</td>
+                        </tr>
+                        <tr>
+                            <td>Going concern</td>
+                            <td>Assume the entity will continue long enough to realize its assets and settle its obligations in the ordinary course. Doubt about that assumption is disclosed. The basis of preparation changes when liquidation is imminent, not merely when the doubt is serious.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>The table is the vocabulary. The sections under it are the decisions those words force. Disclosure is the one that does not get its own section, because it is the residue of the others: if an item is not recognized, or the measurement hides a risk, the note still has to carry what a user needs. A recognized number with a silent note is incomplete. A long note does not put an unrecognized item into the total.</p>
+                <h3>Recognition</h3>
+                <p>Recognition means the item is in the body of the statements, measured, and included in the totals. A sentence in a board meeting is not recognition. A footnote can be required and still mean the item is not recognized. The test is whether the depiction gives users relevant information and a faithful representation, and whether the item is one of the elements the framework defines. Low odds do not automatically keep something out, and high odds do not automatically put it in.</p>
+                <p>A lawsuit is the clean example, and the two public rulebooks do not draw the line in the same place. Under US GAAP a loss contingency is recognized when the loss is probable, which the standard defines as likely, and the amount can be reasonably estimated. Under IFRS a provision is recognized when there is a present obligation, an outflow is more likely than not, and the amount can be estimated reliably. More likely than not is a lower bar than likely. The same case can be a liability in an IFRS set of statements and only a paragraph in the notes under US GAAP. Until you know which book you are in, "they disclosed a lawsuit" tells you nothing about whether the number is in the total.</p>
+
+                <h3>Measurement</h3>
+                <p>Measurement is the amount you attach after you have decided to recognize the item. The framework tells you which base. You do not pick the flattering one.</p>
+                <p>Historical cost is what you paid, sometimes reduced later for use or for a loss of value. The firm bought land ten years ago for $1 million. The land would sell today for $3 million. Under historical cost the statements still say $1 million. The $2 million is economically real and absent from the accounts until a sale, an impairment model, or a fair-value standard brings it in. A reader who treats book value as "what the company is worth" is asking a question these statements only partly answer. Market value of the shares is a different measurement, made by a market, not by the accountant.</p>
+                <p>Fair value is an exit price: what you could sell the item for, or transfer the obligation for, in an orderly transaction on the measurement date. Some financial instruments are remeasured this way every period, and the swing hits profit or a separate bucket of comprehensive income. The later notes deal with where that swing lands. Here, the point is that two items on one balance sheet can be measured on two different clocks, and adding them into one total does not make the clocks the same.</p>
+
+                <h3>Materiality</h3>
+                <p>An omission or misstatement is material when it could change a user's decision. It is judged for this entity, in this context. A $40,000 error can swing a loan decision at a shop with $500,000 of revenue. The same $40,000 inside a company with $8 billion of revenue changes nothing a reasonable investor would do.</p>
+                <p>Practice uses a quantitative starting point, often a percentage of profit, revenue, or assets, and then overrides it. Some items are material because of what they are, even when the dollar amount is small: a related-party payment, a breach of a debt covenant, a fraud, a number that turns a profit into a loss. "Below the threshold" is not a defense for those. Materiality is also why the standards do not require a public company to account for the coffee machine with the same ceremony as the plant.</p>
+
+                <h3>Going concern</h3>
+                <p>The statements assume the entity will continue long enough to realize its assets and settle its obligations in the ordinary course. You do not mark the trucks down to auction values while the company is a going concern. Management has to make that assessment. The window is about twelve months, and the start of the window is one of the places the frameworks differ: IFRS looks forward from the end of the reporting period, and US GAAP looks forward from the date the statements are issued. A company that files late is not looking at the same twelve months under the two books.</p>
+                <p>Substantial doubt, or a material uncertainty, does not by itself flip the company onto a liquidation basis. The statements can still be prepared as a going concern. The doubt is disclosed either way. If management's plans do not remove it, the auditor adds a paragraph that points at the disclosure. If the plans do remove it, the disclosure can stand without that paragraph. The basis of preparation changes when liquidation is imminent and the ordinary course is no longer a serious description. Assets are then measured at what a wind-down would fetch, and the labels change. Reading a going-concern balance sheet for a company the auditor has flagged is allowed. Pretending the flag is boilerplate is how people hold the shares into a restructuring.</p>
+
+                <h3>Estimate, policy, and error</h3>
+                <p>Three kinds of change show up in real filings, and they do not get the same treatment. Mix them up and you will think a restatement is a tweak, or a tweak is a restatement.</p>
+                <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>What changed</th>
+                            <th>Example</th>
+                            <th>How the past is treated</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Accounting estimate</td>
+                            <td>A machine's useful life is revised from 10 years to 6, because the maintenance history says so.</td>
+                            <td>Prospective. This year and the future use the new life. Last year's depreciation stays last year's depreciation. You learned something. You did not discover that last year was wrong.</td>
+                        </tr>
+                        <tr>
+                            <td>Accounting policy</td>
+                            <td>A new standard requires a different way to recognize revenue, or the company adopts a policy the framework allows and that gives more relevant information.</td>
+                            <td>Usually retrospective. Prior periods are recast as if the new policy had always been used, so the comparison is not a change in ruler. The note tells you the size of the recast.</td>
+                        </tr>
+                        <tr>
+                            <td>Error</td>
+                            <td>Revenue was recognized last year on a contract that had not been delivered. The books were wrong when they were issued.</td>
+                            <td>Restatement. The prior-period numbers change, the filing says they changed, and you do not compare this year's press release to the old year's press release without checking which version of last year you are holding.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+                <p>A change in estimate that is inseparable from a change in policy, such as a new depreciation method that is really a new view of the pattern of use, is treated as a change in estimate. When a filing says "revision of prior periods," stop and read whether they found an error or adopted a standard. Those are different events.</p>
+
+                <h2>GAAP is the rulebook, and there is more than one</h2>
+                <p>GAAP means Generally Accepted Accounting Principles. It is the body of recognition, measurement, presentation, and disclosure rules a company follows so two readers of the same events can compare the numbers. Without a rulebook, profit is whatever management prefers to call profit.</p>
+                <p>People say "GAAP" and often mean US GAAP. In practice you must name the framework. The letters on the cover of the statements are the first thing you read.</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Framework</th>
+                            <th>Who sets it</th>
+                            <th>Who uses it</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>US GAAP</td>
+                            <td>FASB, in the Accounting Standards Codification. The SEC looks to FASB for public-company standards.</td>
+                            <td>US domestic public companies. Many US private companies, when a lender or investor requires it.</td>
+                        </tr>
+                        <tr>
+                            <td>IFRS</td>
+                            <td>IASB.</td>
+                            <td>Public companies in most of the world, including Canada. Canadian publicly accountable enterprises report under IFRS.</td>
+                        </tr>
+                        <tr>
+                            <td>ASPE</td>
+                            <td>CPA Canada, in Part II of the Handbook.</td>
+                            <td>Canadian private enterprises, unless they elect IFRS.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>IFRS is the more principles-based of the two public frameworks. US GAAP is the more rules-based. Principles still have rules, and rules still require judgment. The practical difference is that the same economics can be a different number, on purpose, under the two books. Comparing an IFRS issuer to a US GAAP issuer as if "profit" were one word is a comparison of two rulers.</p>
+                <p>Inventory is the example you can see from the rule alone. In a period of rising prices, the newest units cost more than the oldest units. US GAAP allows last-in, first-out: cost of goods sold takes the newer, higher costs, profit falls, and the inventory left on the balance sheet stays at the older, cheaper costs. The US tax system has a conformity rule around this. If you want LIFO for the tax return, you also use it in the financial statements, so the accounting choice and the tax choice are tied. IFRS prohibits LIFO. A Canadian public company and a US public company can sell the same units, from the same rising price list, and report different profits. Neither one made an error.</p>
+                <p>Development spending is the second split. IFRS expenses research as incurred, and capitalizes development once the project clears a set of tests: technical feasibility, the intention and the resources to finish, probable future benefits, and a cost that can be measured. US GAAP expenses most research and development as incurred. One company shows an asset. The other shows an expense. The engineers did the same work.</p>
+                <p>The lawsuit threshold from the recognition section is the third. Learn one of these cold before you memorize a list of standards. The point of naming the framework is that the label on the cover changes the math.</p>
+                <p>Writing a standard and enforcing it are different jobs. FASB writes US GAAP, in the Accounting Standards Codification, and the SEC looks to FASB for the standards public companies apply. The SEC enforces the filing. The PCAOB oversees the auditors of those companies. The IASB writes IFRS. In Canada, publicly accountable enterprises apply IFRS from Part I of the CPA Canada Handbook. The Canadian Securities Administrators, through the provincial commissions, enforce the disclosure of reporting issuers. CPAB oversees the audit firms that sign public-company opinions. A private company has no securities regulator in that loop. Its constraint is the shareholder, the lender, the tax authority, and whatever the contract says.</p>
+
+                <h3>Three different meanings of "public"</h3>
+                <p>People say public company and mean three tests that are not the same test. A firm can fail one and pass another.</p>
+                <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Test</th>
+                            <th>What it decides</th>
+                            <th>The trigger</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Publicly accountable enterprise</td>
+                            <td>Which accounting framework. In Canada, IFRS.</td>
+                            <td>Debt or equity instruments outstanding, or about to be issued, that trade in a public market. Also, holding assets in a fiduciary capacity for a broad group of outsiders as a primary business: a bank, an insurer, a dealer. A private company with a bank loan is not a publicly accountable enterprise merely because a bank is the lender. The loan has to be a traded instrument, or the company has to be in that fiduciary business.</td>
+                        </tr>
+                        <tr>
+                            <td>Reporting issuer</td>
+                            <td>Whether securities law requires a public filing on SEDAR+.</td>
+                            <td>A prospectus was filed and receipted, the securities are listed, or the company is otherwise caught by provincial securities law. This is the disclosure test. It usually travels with the accounting test, and it is still a different statute.</td>
+                        </tr>
+                        <tr>
+                            <td>Distributing corporation</td>
+                            <td>Whether corporate law will let the shareholders skip an auditor.</td>
+                            <td>Under the Canada Business Corporations Act, a distributing corporation is, in short, a reporting issuer or a corporation that has filed a prospectus. It cannot casually dispense with an audit. A non-distributing corporation often can, if every shareholder agrees.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+                <p>The United States splits the same idea by statute instead of by those three labels. The Securities Act of 1933 covers the offer itself: you register the sale, or you use an exemption. The Securities Exchange Act of 1934 covers life after the sale. Ongoing 10-K, 10-Q, and 8-K reporting applies to companies that registered a class of securities under section 12, typically because they list or because they crossed a shareholder threshold, and to companies that have an ongoing duty under section 15(d) because they recently had a registered offering. "We raised money" is not the test. "We registered, or we listed" is the test. A US startup that sells shares under an exemption can be widely held and still be private for filing purposes.</p>
+
+                <h2>What a public company has to lay out</h2>
+                <p>A public company sells securities to people who do not sit inside the business. Those people cannot walk into the office and ask for the ledger. The law replaces that access with a standard package, filed on a timetable, in a public database. In the United States that database is EDGAR. In Canada it is SEDAR+.</p>
+                <p>The financial statements inside the package are a complete set. Under both IFRS and US GAAP you should expect all of the following, plus the notes:</p>
+                <ul>
+                    <li>A balance sheet. A statement of financial position. Resources and claims at a date.</li>
+                    <li>An income statement. Performance over the period. Profit or loss.</li>
+                    <li>A statement of comprehensive income, combined with the income statement or presented after it.</li>
+                    <li>A statement of cash flows. How cash actually moved.</li>
+                    <li>A statement of changes in equity. How the owners' residual claim changed.</li>
+                </ul>
+                <p>The notes are not an appendix. Accounting policies, the breakdown of each line, commitments, and contingencies live there. The policy note is usually the first note, and it is the ruler for everything after it. A number without its note is an unfinished sentence. The statements arrive as a set, with notes, or they are not a set. A filing that is missing one of them is not complete.</p>
+                <p>Around the statements sits the narrative. Management's discussion and analysis says why the numbers moved, where liquidity stands, and which known trends can change the next period. MD&amp;A is management's document. It is not audited the way the statements are. Read it for the explanation, and check the explanation against the statements. Risk factors are lawyers writing a catalogue of what could go wrong. The useful ones are specific to this company. The useless ones could be pasted into any filing in the industry. Executive pay is generally not in the financial statements at all. In the United States it is in the proxy statement, and Part III of the 10-K often points there instead of repeating it. In Canada it is in the management information circular. If you stop at the income statement, you have not seen what the people who prepared it are paid.</p>
+
+                <h3>Read the package in this order</h3>
+                <ol>
+                    <li><strong>The auditor's report,</strong> which sits in front of the statements. A clean opinion is unmodified, also called unqualified in US usage. It says the statements are fairly presented under the named framework. It is not a recommendation to buy the shares, and it is not an opinion that the company will survive. If the opinion is qualified ("except for"), adverse ("do not fairly present"), or a disclaimer ("we could not obtain evidence"), stop. The totals are not what you think they are. An emphasis-of-matter paragraph, often going concern or a major policy change, means the opinion is still clean and the auditor is grabbing your collar. Read the paragraph before you read the earnings headline.</li>
+                    <li><strong>Critical audit matters, or key audit matters.</strong> For most US issuers the report includes critical audit matters under PCAOB standards: the accounts that were especially subjective or complex. Emerging growth companies are exempt. Canadian listed-entity audits include key audit matters under CAS 701. These are not a list of errors. They are the estimates the auditor spent the budget on. Revenue recognition, reserves, impairments, tax. That is your map of where the judgment sits.</li>
+                    <li><strong>The accounting-policy note.</strong> Framework, revenue, what they capitalize, what they expense.</li>
+                    <li><strong>The primary statements,</strong> then the note that belongs to any line you intend to use.</li>
+                    <li><strong>MD&amp;A, especially the liquidity section.</strong> Profit without a description of cash, debt maturities, and covenants is half a story.</li>
+                </ol>
+                <p>A review is not an audit, and the sentence in the report is the tell. An audit report says, in substance, that in the auditor's opinion the statements present fairly. A review report says the accountant is not aware of any material modification that should be made. That is negative assurance, from inquiry and analysis, not from testing evidence. Quarterly US statements are reviewed. Annual statements are audited. Canadian interims are not audited. If someone describes a reviewed quarter as "the auditors signed off," they have upgraded the work.</p>
+
+                <h3>United States, domestic issuer</h3>
+                <p>The annual filing is Form 10-K. The pieces a reader actually uses:</p>
+                <ul>
+                    <li><strong>Item 1, Business.</strong> What the company sells, to whom, and how it is organized.</li>
+                    <li><strong>Item 1A, Risk factors.</strong> The catalogue. Hunt for the ones that name a customer, a regulation, or a covenant.</li>
+                    <li><strong>Item 7, MD&amp;A.</strong> Results, liquidity, capital resources, critical accounting estimates.</li>
+                    <li><strong>Item 8, Financial statements.</strong> The audit report, the statements, and the notes. This is the accounting.</li>
+                    <li><strong>Item 9A, Controls and procedures.</strong> Management's report on disclosure controls and, for issuers that are in scope, on internal control over financial reporting. Accelerated and large accelerated filers also have the auditor attest to internal control. An emerging growth company, for a limited period after it goes public, has scaled disclosure and does not have that auditor attestation. A weakness disclosed here means the process that produced Item 8 is not the process the company wishes it had. It is not, by itself, a statement that the numbers are wrong.</li>
+                </ul>
+                <p>The deadline depends on public float, measured at the end of the second quarter. A large accelerated filer, public float of $700 million or more, files the 10-K within 60 days of year end. An accelerated filer, $75 million or more and under $700 million, has 75 days. A non-accelerated filer has 90 days. Form 10-Q covers the first three quarters: 40 days for large accelerated and accelerated filers, 45 days for everyone else. The fourth quarter is not its own 10-Q. It is inside the 10-K.</p>
+                <p>Form 8-K is the current report, generally due four business days after a triggering event. The items that move a model before the next quarter are results of operations (the earnings release), entry into or termination of a material agreement, completion of an acquisition, a change of auditor, and the departure or appointment of directors and certain officers. The earnings release often arrives furnished on an 8-K weeks before the 10-Q. It is not the 10-Q. Numbers in the release can be non-GAAP, and the reconciliation back to the GAAP number is the part worth reading.</p>
+                <p>The glossy annual report mailed to shareholders is not the 10-K, though many companies wrap one around the other. The chief executive and chief financial officer certify the 10-K and the 10-Q under Sarbanes-Oxley. The certification is about disclosure controls and about the report not being misleading. It is a personal statement by the two officers. It is still not an audit.</p>
+
+                <h3>Canada, reporting issuer</h3>
+                <p>National Instrument 51-102 is the ongoing-disclosure rule. The package:</p>
+                <ul>
+                    <li><strong>Annual financial statements,</strong> audited, and an <strong>annual MD&amp;A</strong>, filed on the same clock.</li>
+                    <li><strong>Interim financial statements</strong> and an <strong>interim MD&amp;A</strong>, normally each quarter. Interims are not audited.</li>
+                    <li><strong>Annual information form</strong> for non-venture issuers. The business, the risk factors, and the structure, in one document. A typical TSX Venture issuer does not file one. "Public" does not mean "files an AIF."</li>
+                    <li><strong>Material change report.</strong> A news release forthwith when a material change occurs, and a report filed within 10 days. This is the Canadian counterpart to the idea of an 8-K. The test is "material change," which is its own defined term, not a vibe.</li>
+                    <li><strong>Management information circular</strong> for the shareholder meeting, which is where executive compensation lives.</li>
+                </ul>
+                <p>Deadlines split on whether the issuer is a venture issuer. A non-venture issuer files annual financial statements and MD&amp;A within 90 days of year end, and interim statements and MD&amp;A within 45 days of the quarter. A venture issuer has 120 days and 60 days. The AIF, where it is required, is on the 90-day clock. The chief executive and chief financial officer certify the filings under National Instrument 52-109. Non-venture issuers also certify internal control over financial reporting. Venture issuers file a reduced certificate and do not make that internal-control conclusion.</p>
+                <p>A Canadian company listed in the United States may also be an SEC filer. A foreign private issuer can usually file IFRS statements on Form 20-F instead of a 10-K, and the timetable is not the domestic 60/75/90 split. Always read the cover. The exchange logo does not tell you the framework, the form, or the deadline.</p>
+
+                <h2>What a private company keeps</h2>
+                <p>Private does not mean "no books." It means the books are not filed for the public.</p>
+                <p>The company still has to keep adequate accounting records. Shareholders are entitled to financial statements, and those statements are placed before them. In Canada that obligation comes from corporate law, not from securities law. An audit of a private company can often be waived if every shareholder agrees. Nothing in that process lands on SEDAR+ or EDGAR.</p>
+                <p>The users who do see the numbers are the people with a contractual or legal right to them.</p>
+                <ul>
+                    <li><strong>Owners.</strong> They already control the entity, so the public-disclosure bargain does not apply.</li>
+                    <li><strong>Lenders.</strong> A credit agreement specifies the package, the frequency, and the covenants. Miss the covenant and the loan, not a securities commission, is the problem.</li>
+                    <li><strong>Investors.</strong> Information rights live in the shareholders' agreement or a side letter. The investor negotiated them. A stranger did not.</li>
+                    <li><strong>The tax authority.</strong> A corporate tax return, with its own rules.</li>
+                    <li><strong>A buyer,</strong> if the company is being sold. That package is built for the deal.</li>
+                </ul>
+                <p>Framework choice is wider than it is for a public company. A Canadian private enterprise uses ASPE, Part II of the Handbook, unless it elects IFRS. It elects IFRS when a parent consolidates under IFRS, or when it expects to list and does not want a conversion project the year it files a prospectus. ASPE is a real GAAP. It is not a draft of IFRS. Four differences change the reading:</p>
+                <ul>
+                    <li>There is no other comprehensive income. A gain a public company parks outside profit can sit inside profit under ASPE. Comparing the two "profit" lines is comparing different buckets.</li>
+                    <li>Earnings per share is not required. Segment reporting of the public-company kind is not required.</li>
+                    <li>Income taxes are a policy choice. The company can use the taxes-payable method, which stays close to the tax return, or the future-income-taxes method. IFRS requires the deferred-tax approach. A private company with no deferred tax balance may be silent because of the choice, not because it has no temporary differences.</li>
+                    <li>Some related-party transactions are measured at the carrying amount already on the books, rather than at a fresh exchange price. Read that note before you treat a private company's related-party expense as comparable to a public company's.</li>
+                </ul>
+                <p>A US private company has no single mandatory framework. US GAAP is common once a bank or an institutional investor is in the picture, sometimes with the alternatives the Private Company Council allows inside GAAP. Other companies report on the income-tax basis or the cash basis. Those are special-purpose frameworks. The first note has to name the framework. If it does not, you do not know what the numbers mean, and you should not build a ratio on them.</p>
+                <p>Assurance comes in levels. The sentence on the accountant's letter is the level. Do not infer it from the thickness of the package.</p>
+                <ul>
+                    <li><strong>Compilation.</strong> The accountant assembles the numbers from management's information. In Canada, under the compilation standard, the report says the accountant has not audited or reviewed the statements and does not express an assurance conclusion. No one has tested whether the cash exists. The old name, notice to reader, means the same absence of assurance.</li>
+                    <li><strong>Review.</strong> Limited assurance. Inquiry and analysis. The report says, in substance, that nothing has come to the accountant's attention that the statements are materially misstated. A lot can fail to come to someone's attention.</li>
+                    <li><strong>Audit.</strong> Reasonable assurance, which is high and still not absolute. The report says that in the auditor's opinion the statements present fairly under the stated framework. Evidence was tested. Fraud can still get through. Reasonable is the word the profession will stand behind, and it is not "certain."</li>
+                </ul>
+                <p>Early on, a compilation can be enough for the shareholders. A lender, a priced financing, or a buyer usually asks for more, often a review and later an audit, and often specifies the framework in the same clause. The trigger is the user. There is no public filing deadline forcing the upgrade. There is a covenant, or a closing condition, or a unanimous-shareholder resolution that is about to be impossible because a new investor will not sign the waiver.</p>
+                <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Private Canadian company</th>
+                            <th>TSX-listed company</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Framework</td>
+                            <td>ASPE, unless it elects IFRS.</td>
+                            <td>IFRS. It is a publicly accountable enterprise.</td>
+                        </tr>
+                        <tr>
+                            <td>Who can read the statements</td>
+                            <td>Shareholders, and anyone a contract names.</td>
+                            <td>Anyone. SEDAR+.</td>
+                        </tr>
+                        <tr>
+                            <td>Annual assurance</td>
+                            <td>Audit often waived. Compilation or review until a user demands more.</td>
+                            <td>Audit required. The opinion is part of the filing.</td>
+                        </tr>
+                        <tr>
+                            <td>Narrative</td>
+                            <td>Whatever the board or the bank asks for. No public MD&amp;A.</td>
+                            <td>MD&amp;A on the same clock as the statements. Non-venture issuers also file an AIF. Pay is in the circular.</td>
+                        </tr>
+                        <tr>
+                            <td>Clock</td>
+                            <td>Statements before the shareholders. The bank's dates are whatever the credit agreement says.</td>
+                            <td>90 days for a non-venture issuer, 120 for a venture issuer, for the annual statements. Interims at 45 and 60.</td>
+                        </tr>
+                        <tr>
+                            <td>The December invoice from the worked example</td>
+                            <td>Still December revenue if the work was delivered and the company is on accrual. The receivable may never be published.</td>
+                            <td>Still December revenue. Now it needs a revenue policy, a receivable note, an MD&amp;A explanation, an audit, and a certification.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+                <p>A TSX-listed company and a private Calgary company can hold the same cash and sell the same product. Only the listed company must put audited statements, notes, and an MD&amp;A where a stranger can download them. Secrecy is the point of staying private. The cost of going public is that the report becomes a public good, on a clock, under a named framework, with an opinion in front of it.</p>
+
+                <h2>What to hold</h2>
+                <p>An entity has economic events. Bookkeeping records them. Accounting decides recognition, measurement, and disclosure under a named framework. Public companies publish a standard package because outsiders price the securities. Private companies keep books for owners, lenders, investors, and the tax authority, and they do not publish that package.</p>
+                <p>Every recorded transaction keeps one equation in balance: assets equal liabilities plus equity. Debt and bonds are claims, so they sit with liabilities. The balance sheet, the income statement, and the cash flow statement are three views of that same equation.</p>
+                <p class="series"><a href="understanding-accounting-2.html">The equation →</a></p>
+            </div>
+
+            <footer class="mt-12 pt-8 border-t border-border-light dark:border-border-dark">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div class="flex items-center gap-4 flex-wrap">
+                        <span class="text-sm text-secondary-text-light dark:text-secondary-text-dark">Tags:</span>
+                        <div class="flex gap-2 flex-wrap">
+                            <span class="px-2 py-1 bg-emerald-100 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200 text-xs font-medium rounded">Finance</span>
+                            <span class="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-xs font-medium rounded">Accounting</span>
+                            <span class="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-xs font-medium rounded">GAAP</span>
+                        </div>
+                    </div>
+                    <div class="text-sm text-secondary-text-light dark:text-secondary-text-dark">
+                        Published Sep 27, 2026
+                    </div>
+                </div>
+            </footer>
+        </article>
+
+        <footer class="border-t border-border-light dark:border-border-dark mt-12">
+            <div class="max-w-4xl mx-auto px-4 py-8">
+                <div class="text-center text-secondary-text-light dark:text-secondary-text-dark text-sm">
+                    <p>&copy; 2026 Manan Patel. All rights reserved.</p>
+                    <p class="mt-2">
+                        <a href="/" class="hover:text-text-light dark:hover:text-text-dark transition-colors">Home</a>
+                        <span class="mx-2">•</span>
+                        <a href="./" class="hover:text-text-light dark:hover:text-text-dark transition-colors">Blog</a>
+                    </p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const toggleDarkMode = () => {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('darkMode', document.documentElement.classList.contains('dark'));
+        };
+
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+</body>
+</html>

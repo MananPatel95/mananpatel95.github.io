@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding Accounting 3 - The three statements | Manan Patel</title>
+    <meta name="description" content="The three statements as views of one equation, then seed through IPO as transactions that hit those statements.">
+    <meta name="keywords" content="Manan Patel, balance sheet, income statement, cash flow statement, seed, Series A, IPO, accounting">
+    <meta name="author" content="Manan Patel">
+    <link rel="canonical" href="https://mananpatel.info/blog/understanding-accounting-3.html">
+
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://mananpatel.info/blog/understanding-accounting-3.html">
+    <meta property="og:title" content="Understanding Accounting 3 - The three statements | Manan Patel">
+    <meta property="og:description" content="Balance sheet, income statement, cash flow, then the funding rounds as entries, not folklore.">
+    <meta property="og:site_name" content="Manan Patel">
+    <meta property="article:published_time" content="2026-10-11">
+    <meta property="article:author" content="https://mananpatel.info/#manan-patel">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://mananpatel.info/blog/understanding-accounting-3.html">
+    <meta name="twitter:title" content="Understanding Accounting 3 - The three statements | Manan Patel">
+    <meta name="twitter:description" content="Balance sheet, income statement, cash flow, then the funding rounds as entries, not folklore.">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "BlogPosting",
+          "headline": "Understanding Accounting 3 - The three statements",
+          "description": "The three statements as views of one equation, then seed through IPO as transactions that hit those statements.",
+          "url": "https://mananpatel.info/blog/understanding-accounting-3.html",
+          "datePublished": "2026-10-11",
+          "dateModified": "2026-10-11",
+          "author": { "@id": "https://mananpatel.info/#manan-patel" },
+          "publisher": { "@id": "https://mananpatel.info/#manan-patel" },
+          "mainEntityOfPage": { "@type": "WebPage", "@id": "https://mananpatel.info/blog/understanding-accounting-3.html" }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://mananpatel.info/" },
+            { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://mananpatel.info/blog/" },
+            { "@type": "ListItem", "position": 3, "name": "Understanding Accounting 3 - The three statements", "item": "https://mananpatel.info/blog/understanding-accounting-3.html" }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'text-light': '#1f2937',
+                        'text-dark': '#f9fafb',
+                        'secondary-text-light': '#6b7280',
+                        'secondary-text-dark': '#9ca3af',
+                        'border-light': '#e5e7eb',
+                        'border-dark': '#374151',
+                        'bg-light': '#ffffff',
+                        'bg-dark': '#111827'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .blog-content { line-height: 1.7; }
+        .blog-content h2 { font-size: 1.5rem; font-weight: bold; margin-top: 2rem; margin-bottom: 1rem; }
+        .blog-content h3 { font-size: 1.25rem; font-weight: bold; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+        .blog-content p { margin-bottom: 1rem; }
+        .blog-content ul, .blog-content ol { margin-left: 1.5rem; margin-bottom: 1rem; }
+        .blog-content li { margin-bottom: 0.5rem; }
+        .blog-content a { color: #2563eb; text-decoration: underline; }
+        .dark .blog-content a { color: #60a5fa; }
+        .blog-content table { width: 100%; border-collapse: collapse; margin: 0 0 1.25rem; font-size: 0.95rem; }
+        .blog-content th, .blog-content td {
+            text-align: left; vertical-align: top; border-bottom: 1px solid #e5e7eb;
+            padding: 0.6rem 0.75rem 0.6rem 0; overflow-wrap: break-word;
+        }
+        .dark .blog-content th, .dark .blog-content td { border-bottom-color: #374151; }
+        .blog-content th { font-size: 0.8rem; letter-spacing: 0.02em; text-transform: uppercase; }
+        .blog-content .table-wrap { overflow-x: auto; margin: 0 0 1.25rem; }
+        .blog-content .table-wrap table { margin: 0; }
+        .worked { border-left: 3px solid #059669; padding: 0.15rem 0 0.15rem 1rem; margin: 0 0 1.25rem; }
+        .entry {
+            font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
+            font-size: 0.92rem; line-height: 1.55; background: #f3f4f6;
+            padding: 0.85rem 1rem; margin: 0 0 1rem; white-space: pre-wrap;
+            overflow-x: auto; max-width: 100%;
+        }
+        .dark .entry { background: #1f2937; }
+        .series { font-size: 0.9rem; margin: 0 0 1.5rem; color: #6b7280; }
+        .dark .series { color: #9ca3af; }
+        .series a { color: #2563eb; }
+        .dark .series a { color: #60a5fa; }
+    </style>
+</head>
+<body class="bg-bg-light dark:bg-bg-dark text-text-light dark:text-text-dark transition-colors">
+    <div class="min-h-screen">
+        <header class="border-b border-border-light dark:border-border-dark">
+            <div class="max-w-4xl mx-auto px-4 py-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <a href="../" class="text-xl font-bold text-text-light dark:text-text-dark hover:opacity-80 transition-opacity">Manan Patel</a>
+                        <p class="text-xs text-secondary-text-light dark:text-secondary-text-dark mt-0.5">Tinkering and Sharing</p>
+                    </div>
+                    <div class="flex items-center gap-3 flex-wrap">
+                        <a href="../#writing" class="text-sm text-secondary-text-light dark:text-secondary-text-dark hover:text-text-light dark:hover:text-text-dark transition-colors">← Back to Writing</a>
+                        <a href="../" class="text-sm text-secondary-text-light dark:text-secondary-text-dark hover:text-text-light dark:hover:text-text-dark transition-colors">Home</a>
+                        <a class="w-8 h-8 border border-border-light dark:border-border-dark rounded flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" href="https://x.com/mananthekid" target="_blank" rel="noopener" aria-label="X">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+                        </a>
+                        <a class="w-8 h-8 border border-border-light dark:border-border-dark rounded flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" href="https://www.linkedin.com/in/mananpatel123/" target="_blank" rel="noopener" aria-label="LinkedIn">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z"></path></svg>
+                        </a>
+                        <a class="w-8 h-8 border border-border-light dark:border-border-dark rounded flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" href="https://github.com/MananPatel95" target="_blank" rel="noopener" aria-label="GitHub">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path clip-rule="evenodd" fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.285 2.866 7.92 6.737 9.208.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.942.359.308.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z"></path></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <article class="max-w-4xl mx-auto px-4 py-8">
+            <header class="mb-8">
+                <div class="flex items-center gap-2 mb-4 flex-wrap">
+                    <span class="px-2 py-1 bg-emerald-100 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200 text-xs font-medium rounded">Finance</span>
+                    <span class="text-secondary-text-light dark:text-secondary-text-dark text-sm">Oct 11, 2026</span>
+                    <span class="text-secondary-text-light dark:text-secondary-text-dark text-sm">•</span>
+                    <span class="text-secondary-text-light dark:text-secondary-text-dark text-sm">22 min read</span>
+                </div>
+                <h1 class="text-3xl font-bold text-text-light dark:text-text-dark mb-4">Understanding Accounting 3 - The three statements</h1>
+                <p class="text-lg text-secondary-text-light dark:text-secondary-text-dark">
+                    Three presentations of one equation: a stock at a date, a flow of profit, and a flow of cash. Then the funding rounds, as entries, once those three exist.
+                </p>
+            </header>
+
+            <div class="blog-content prose prose-lg max-w-none">
+                <p class="series">Series: <a href="understanding-accounting-1.html">1. Language and disclosure</a> · <a href="understanding-accounting-2.html">2. The equation</a> · 3. The statements</p>
+
+                <h2>What you should be able to do</h2>
+                <ul>
+                    <li>State what each of the three primary statements is for, and what question it cannot answer.</li>
+                    <li>Articulate the statements: opening equity plus profit minus distributions equals closing equity, and opening cash plus the three cash-flow sections equals closing cash.</li>
+                    <li>Prepare a classified balance sheet, a single-step income statement, and both a direct and an indirect cash flow statement for the December firm, then roll the same firm through January.</li>
+                    <li>Explain why December can show $85,000 of profit and $0 of operating cash, and why January can reverse the picture.</li>
+                    <li>Classify a cash flow as operating, investing, or financing under IFRS and under US GAAP when the two books split, especially interest and dividends.</li>
+                    <li>Book a founder issuance, a convertible note, a priced preferred round, and a primary IPO, and say which statement each one moves. Dilution is not an expense.</li>
+                </ul>
+                <p>The balance sheet, the income statement, and the cash flow statement are three cameras pointed at the same piles. A funding round is a transaction you can place once you can read the cameras.</p>
+
+                <h2>Three cameras, one identity</h2>
+                <p><strong>Balance sheet.</strong> A <strong>stock</strong>. It answers: what resources and what claims exist at the close of business on this date.</p>
+                <p>This is the consulting firm at the close of December 31. The owner put in $50,000 at the end of November. During December the firm delivered $100,000 of work that has not been collected, took a $20,000 deposit for January work, paid rent and a year of insurance, and owes a week of wages.</p>
+                <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Balance sheet as at December 31</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Cash</td>
+                            <td>50,000</td>
+                        </tr>
+                        <tr>
+                            <td>Accounts receivable</td>
+                            <td>100,000</td>
+                        </tr>
+                        <tr>
+                            <td>Prepaid insurance</td>
+                            <td>11,000</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Total assets</strong></td>
+                            <td><strong>161,000</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Wages payable</td>
+                            <td>6,000</td>
+                        </tr>
+                        <tr>
+                            <td>Deferred revenue</td>
+                            <td>20,000</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Total liabilities</strong></td>
+                            <td><strong>26,000</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Share capital</td>
+                            <td>50,000</td>
+                        </tr>
+                        <tr>
+                            <td>Retained earnings</td>
+                            <td>85,000</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Total equity</strong></td>
+                            <td><strong>135,000</strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Liabilities + equity</strong></td>
+                            <td><strong>161,000</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+                <p>The statement is a date, not a period. Each line is what exists when December ends.</p>
+                <p><strong>Assets, 161,000.</strong> Resources the firm controls.</p>
+                <ul>
+                    <li><strong>Cash, 50,000.</strong> What is in the bank. It is the same $50,000 the owner contributed. December's profit did not add a dollar of cash.</li>
+                    <li><strong>Accounts receivable, 100,000.</strong> The customer owes this for work already delivered. It is an asset because the firm has a right to collect it. It is not cash until it is collected.</li>
+                    <li><strong>Prepaid insurance, 11,000.</strong> Coverage already paid for and not yet used. Eleven months remain. It is an asset because the insurer still owes the firm those months. One month was used in December, so that $1,000 is no longer here.</li>
+                </ul>
+                <p><strong>Liabilities, 26,000.</strong> Present obligations to transfer a resource.</p>
+                <ul>
+                    <li><strong>Wages payable, 6,000.</strong> Employees already earned this. The firm will pay cash in January. The obligation exists now, so it is a liability now.</li>
+                    <li><strong>Deferred revenue, 20,000.</strong> A customer already paid. The work is still owed. Cash went up, and so did a liability. That deposit is not profit and it is not equity.</li>
+                </ul>
+                <p><strong>Equity, 135,000.</strong> What remains after the liabilities. Assets 161,000 minus liabilities 26,000. It is not a pile of cash, and it is not what a buyer would pay for the firm.</p>
+                <ul>
+                    <li><strong>Share capital, 50,000.</strong> What the owner contributed. Contributed capital does not come from operations.</li>
+                    <li><strong>Retained earnings, 85,000.</strong> Profit earned in December and not paid out. Earned capital. The firm can show 85,000 here and still have the same 50,000 in the bank, because the profit is sitting in the receivable and the prepaid, net of the two liabilities.</li>
+                </ul>
+                <p>The last line is the check. Liabilities 26,000 plus equity 135,000 equals assets 161,000. If those two totals differ, a line is missing or an amount was entered once.</p>
+                <p><strong>Income statement.</strong> A <strong>flow</strong>. It answers: how the residual claim changed this period from operations, meaning from revenue and expense, not from owner contributions or distributions.</p>
+                <p>Same firm, the month of December. The heading is a period, not a date. These amounts happened during the month. They are not a list of what the firm holds at the end.</p>
+                <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Income statement, month ended December 31</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Revenue</td>
+                            <td>100,000</td>
+                        </tr>
+                        <tr>
+                            <td>Rent expense</td>
+                            <td>(8,000)</td>
+                        </tr>
+                        <tr>
+                            <td>Insurance expense</td>
+                            <td>(1,000)</td>
+                        </tr>
+                        <tr>
+                            <td>Wage expense</td>
+                            <td>(6,000)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Profit</strong></td>
+                            <td><strong>85,000</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+                <p><strong>Revenue, 100,000.</strong> Work delivered in December. The customer has not paid, and the amount still belongs here, because the earning happened this month. The $20,000 deposit is absent. That cash was collected for January's work, so it is a liability on the balance sheet, not revenue on this statement.</p>
+                <p><strong>Expenses, 15,000.</strong> Resources consumed in December.</p>
+                <ul>
+                    <li><strong>Rent, 8,000.</strong> December's occupancy. Paid in December, and used in December.</li>
+                    <li><strong>Insurance, 1,000.</strong> One month of the $12,000 policy. The other $11,000 is still the prepaid asset. Paying $12,000 did not make $12,000 of expense.</li>
+                    <li><strong>Wages, 6,000.</strong> Labor already earned by the employees. Unpaid at month end, so the balance sheet shows wages payable. The expense is December's because the work was December's.</li>
+                </ul>
+                <p><strong>Profit, 85,000.</strong> Revenue minus expenses. This is the amount that lands in retained earnings. It is not cash collected. The owner's $50,000 contribution does not appear here at all. Contributions and distributions are not operations, so they never become a line of profit.</p>
+                <p><strong>Cash flow statement.</strong> Also a <strong>flow</strong>. It answers: how the cash line on the balance sheet moved, grouped by why the cash moved.</p>
+
+                <h2>The balance sheet is the equation at a date</h2>
+                <p>Statement of financial position is the IFRS name. Balance sheet is the habit. Either way it is Assets = Liabilities + Equity, usually classified, as at the close of the reporting date. Comparative figures are the rule, not a courtesy. You read this year against last year, same framework, same policies, or you read a change in ruler.</p>
+                <p>Order is a convention with a purpose. IFRS does not require a single order. A current-first presentation, common in North America, puts liquidity at the top. A non-current-first presentation, common in some IFRS filings, puts the operating capacity first. Neither order changes the totals. Banks and insurers often skip the current split because the operating cycle is the book. When you see an unclassified statement, ask whether the entity is a financial institution before you invent a current ratio.</p>
+                <p>The heading has to carry the date, not the year. "Balance sheet, 2026" names a year. "As at December 31, 2026" names a stock. Mix a stock heading with a flow column and you will add profit to cash without noticing.</p>
+                <p>What the balance sheet cannot do: tell you what the equity is worth, tell you whether the cash will still be there on January 15, or list the things that failed recognition. A skilled workforce, an internally generated brand, and an unperformed contract can all be economically real and still absent. A clean balance sheet is a complete list of recognized elements. It is not a complete list of economic things.</p>
+
+                <h2>The income statement is the change in the residual from operations</h2>
+                <p>Revenue is an increase in assets or a decrease in liabilities that results from the ordinary activities of delivering goods or services, other than contributions from owners. Expense is the opposite. Profit is the difference for the period. That is all. The presentation is a grouping exercise so a user can see the mix.</p>
+                <p>A single-step statement dumps all revenues, dumps all expenses, and subtracts. A multi-step statement inserts gross profit, operating profit, and then finance costs and tax. Public companies almost always multi-step, because a lender and an equity analyst do not want the cost of borrowed money sitting inside the same puddle as rent. IFRS requires a profit or loss, and it requires that finance costs be identifiable. It does not require the exact US heading "operating income." Do not hunt for a word. Hunt for the subtotal that matches the question you are asking, and read whether unusual items have been parked above or below it.</p>
+                <p>Revenue is recognized when control transfers. IFRS 15 and ASC 606 are one five-step model: identify the contract, identify the performance obligations, determine the transaction price, allocate it, recognize when (or as) each obligation is satisfied. The December invoice was satisfied in December. The December deposit was not. Recognizing cash as revenue skips the last step. Refusing to recognize an unpaid invoice skips it the other way.</p>
+                <p>Expenses follow the matching idea only as far as the asset definition allows. If a cost creates a resource that meets the asset test, it is capitalized and then consumed. If it does not, it is an expense when incurred. Research usually fails. A machine usually passes. Prepaid insurance passed, then was consumed. There is no separate "matching principle" that overrides the framework. Matching is a consequence of recognizing assets and then derecognizing them as they are used.</p>
+                <p>Earnings per share is a presentation of profit for companies that have publicly traded ordinary shares, or that are in the process of issuing them. Basic EPS is profit attributable to ordinary shareholders divided by the weighted-average ordinary shares outstanding. Diluted EPS pretends the dilutive convertibles and options were converted. A private company under ASPE does not have to present EPS. Do not invent it for a shop with twelve shares and a shareholders' agreement.</p>
+                <p>What the income statement cannot do: tell you whether the profit is cash, tell you whether it will recur, or tell you the quality of the estimates that produced it. Accrual profit is a claim about performance. The cash flow statement is the check. The notes are the quality report.</p>
+
+                <h2>The cash flow statement is the change in the cash line</h2>
+                <p>Three sections, and the names are the classification, not a vibe.</p>
+                <ul>
+                    <li><strong>Operating.</strong> The cash generated or consumed by the revenue-producing activities, and by the working-capital accounts that those activities create. Collections from customers. Payments to suppliers and employees. Under the indirect method you start at profit and undo the accruals.</li>
+                    <li><strong>Investing.</strong> Cash to acquire, and from dispose of, long-term assets and most investments. Buying the computer. Selling a bond you held as an investment. Lending money to a third party. Collecting that principal. Interest received can sit here or in operating, depending on the book. The purchase of the asset is investing even if you paid with a card that you will pay next month; then the later payment is a working-capital movement, and you have to present the non-cash investing separately. Do not hide a financed purchase inside operating by only looking at the bank.</li>
+                    <li><strong>Financing.</strong> Cash from owners and lenders, and cash returned to them as owners and lenders. Share issuance. Loan draws. Loan principal repayments. Dividends paid. Interest paid is the classification that depends on the framework.</li>
+                </ul>
+                <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>IFRS</th>
+                            <th>US GAAP</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Interest paid</td>
+                            <td>Operating or financing, chosen as a policy, applied consistently.</td>
+                            <td>Operating.</td>
+                        </tr>
+                        <tr>
+                            <td>Interest received</td>
+                            <td>Operating or investing.</td>
+                            <td>Operating.</td>
+                        </tr>
+                        <tr>
+                            <td>Dividends paid</td>
+                            <td>Operating or financing.</td>
+                            <td>Financing.</td>
+                        </tr>
+                        <tr>
+                            <td>Dividends received</td>
+                            <td>Operating or investing.</td>
+                            <td>Operating.</td>
+                        </tr>
+                        <tr>
+                            <td>Income taxes paid</td>
+                            <td>Operating, unless you can specifically identify a tax with an investing or financing item.</td>
+                            <td>Operating.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+                <p>A firm that reports under IFRS and elects to put interest paid in financing will show stronger operating cash flow than the same firm under US GAAP. The cash left the same account. The camera moved. Always read the policy, and do not compare OCF across the two books without putting interest back in the same place.</p>
+                <p>Non-cash investing and financing do not appear in the three totals. Converting a note into shares, acquiring a machine by assuming a loan, a stock dividend. Disclose them. If you only add the three sections, you will miss the change in capital structure that never touched the bank.</p>
+
+                <h3>Indirect and direct are the same operating total</h3>
+                <p>Direct method: list the operating cash receipts and payments. Cash from customers. Cash paid to suppliers. Cash paid to employees. IFRS and US GAAP both accept it. Almost nobody uses it in a public filing, because the ledger is not built that way.</p>
+                <p>Indirect method: start at profit, add back non-cash expenses, subtract non-cash revenues, and undo the changes in operating working capital.</p>
+                <pre class="entry">Profit
++  Non-cash expenses (depreciation, amortization, stock-based pay)
+−  Non-cash gains, + non-cash losses
+−  Increase in operating receivables and prepaids
++  Decrease in operating receivables and prepaids
++  Increase in operating payables and deferred revenue
+−  Decrease in operating payables and deferred revenue
+=  Operating cash flow</pre>
+                <p>The signs are the whole skill. An increase in receivables means profit included revenue that has not become cash, so you subtract. An increase in deferred revenue means cash arrived that profit has not yet included, so you add. "Subtract every increase" is wrong for payables. An increase in payables is cash you have not yet paid, so you add. Derive the sign from the equation each time.</p>
+                <p>US GAAP requires a reconciliation from profit to operating cash flow even if you present the direct method. IFRS encourages the direct method and does not require that extra reconciliation if you already present direct. In practice you will see the indirect method. The worked month below is indirect, with the direct total beside it.</p>
+
+                <h2>How the three stay tied together</h2>
+                <p>The three statements describe one firm. They articulate. If they do not, a statement is missing, a line is misclassified, or the arithmetic failed.</p>
+                <pre class="entry">Closing equity  =  Opening equity
+                 +  Profit (and OCI, if the framework has it)
+                 −  Distributions
+                 +  New owner contributions
+
+Closing cash    =  Opening cash
+                 +  Operating cash flow
+                 +  Investing cash flow
+                 +  Financing cash flow</pre>
+                <p>Profit is a piece of the equity rollforward. It is not a piece of the cash rollforward. On the December balance sheet, retained earnings are 85,000 and cash is still 50,000. Treating the income statement as the cash the firm made skips that difference.</p>
+                <p>A complete set also includes comprehensive income, the statement of changes in equity, and the notes. The three statements here are the ones that change a decision first. Other comprehensive income is gains and losses the framework will not put through profit. If there is no OCI, profit and comprehensive income are the same number. ASPE has no OCI.</p>
+
+                <h2>December, all three cameras</h2>
+                <p>Opening cash and share capital are $50,000. December profit is $85,000. Closing cash is $50,000. Closing equity is $135,000.</p>
+
+                <h3>Income statement, month ended December 31</h3>
+                <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Revenue</td>
+                            <td>100,000</td>
+                        </tr>
+                        <tr>
+                            <td>Rent expense</td>
+                            <td>(8,000)</td>
+                        </tr>
+                        <tr>
+                            <td>Insurance expense</td>
+                            <td>(1,000)</td>
+                        </tr>
+                        <tr>
+                            <td>Wage expense</td>
+                            <td>(6,000)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Profit</strong></td>
+                            <td><strong>85,000</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+                <p>No tax in the example, so that the articulation stays visible. In a real set, tax expense is an accrual too. Taxes paid sit on the cash flow statement, usually in operating, and the two amounts match only by accident.</p>
+
+                <h3>Balance sheet, as at December 31</h3>
+                <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Dec 31</th>
+                            <th>Nov 30</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Cash</td>
+                            <td>50,000</td>
+                            <td>50,000</td>
+                        </tr>
+                        <tr>
+                            <td>Accounts receivable</td>
+                            <td>100,000</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td>Prepaid insurance</td>
+                            <td>11,000</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Current assets</strong></td>
+                            <td><strong>161,000</strong></td>
+                            <td><strong>50,000</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Wages payable</td>
+                            <td>6,000</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td>Deferred revenue</td>
+                            <td>20,000</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Current liabilities</strong></td>
+                            <td><strong>26,000</strong></td>
+                            <td><strong>—</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Share capital</td>
+                            <td>50,000</td>
+                            <td>50,000</td>
+                        </tr>
+                        <tr>
+                            <td>Retained earnings</td>
+                            <td>85,000</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Equity</strong></td>
+                            <td><strong>135,000</strong></td>
+                            <td><strong>50,000</strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Liabilities + equity</strong></td>
+                            <td><strong>161,000</strong></td>
+                            <td><strong>50,000</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+                <p>Equity rollforward: 50,000 + 85,000 − 0 distributions + 0 new contributions = 135,000. The income statement is the middle term.</p>
+
+                <h3>Cash flows, month ended December 31</h3>
+                <p>Indirect operating:</p>
+                <pre class="entry">Profit                                          85,000
+Increase in accounts receivable               (100,000)
+Increase in prepaid insurance                  (11,000)
+Increase in wages payable                        6,000
+Increase in deferred revenue                    20,000
+Operating cash flow                                  0</pre>
+                <p>Direct operating, same total:</p>
+                <pre class="entry">Cash collected from customers                   20,000
+Cash paid for rent                              (8,000)
+Cash paid for insurance                        (12,000)
+Operating cash flow                                  0</pre>
+                <p>The customer who was invoiced $100,000 is absent from the direct method. The customer who parked $20,000 is present. Investing is zero. Financing is zero. Cash is unchanged. The cash rollforward is 50,000 + 0 + 0 + 0 = 50,000.</p>
+                <p>December is the month people quote when they say a business is profitable. It is also a month that produced no cash. Both statements are right. Anyone who picks one and ignores the other is not reading the set.</p>
+
+                <h2>January, so the cameras move</h2>
+                <div class="worked">
+                    <p>The $100,000 receivable is collected.</p>
+                    <p>The $6,000 of December wages are paid.</p>
+                    <p>The deposit job is delivered. $20,000 of deferred revenue becomes revenue. No new invoice.</p>
+                    <p>January rent of $8,000 is paid. One more month of insurance is consumed, $1,000. January wages of $7,000 are earned and paid the same month.</p>
+                    <p>The firm buys a computer for $5,000 cash. Treat it as equipment. Ignore depreciation for one month so the investing line stays clean. We will not pretend a computer is an expense on the day it is purchased, and we will not pretend a month of use is material to the lesson.</p>
+                </div>
+
+                <h3>Income statement, month ended January 31</h3>
+                <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Revenue</td>
+                            <td>20,000</td>
+                        </tr>
+                        <tr>
+                            <td>Rent expense</td>
+                            <td>(8,000)</td>
+                        </tr>
+                        <tr>
+                            <td>Insurance expense</td>
+                            <td>(1,000)</td>
+                        </tr>
+                        <tr>
+                            <td>Wage expense</td>
+                            <td>(7,000)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Profit</strong></td>
+                            <td><strong>4,000</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+                <p>January delivered one prepaid job and incurred a normal month of costs. Profit is $4,000. Anyone who still thinks the bank app is the income statement is about to be confused in the opposite direction.</p>
+
+                <h3>Cash flows, month ended January 31</h3>
+                <pre class="entry">Profit                                           4,000
+Decrease in accounts receivable                100,000
+Decrease in prepaid insurance                    1,000
+Decrease in wages payable                       (6,000)
+Decrease in deferred revenue                   (20,000)
+Operating cash flow                             79,000
+
+Purchase of equipment                           (5,000)
+Investing cash flow                             (5,000)
+
+Financing cash flow                                  0
+
+Net increase in cash                            74,000
+Opening cash                                    50,000
+Closing cash                                   124,000</pre>
+                <p>Direct operating check: collections 100,000, wages paid 13,000, rent paid 8,000. 100,000 − 13,000 − 8,000 = 79,000. The deposit collected in December is not January cash. The revenue recognized from that deposit is January profit and a subtraction in the indirect method, which is how the two statements stay honest with each other.</p>
+
+                <h3>Balance sheet, as at January 31</h3>
+                <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Jan 31</th>
+                            <th>Dec 31</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Cash</td>
+                            <td>124,000</td>
+                            <td>50,000</td>
+                        </tr>
+                        <tr>
+                            <td>Prepaid insurance</td>
+                            <td>10,000</td>
+                            <td>11,000</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Current assets</strong></td>
+                            <td><strong>134,000</strong></td>
+                            <td><strong>161,000</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Equipment</td>
+                            <td>5,000</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Total assets</strong></td>
+                            <td><strong>139,000</strong></td>
+                            <td><strong>161,000</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Current liabilities</td>
+                            <td>—</td>
+                            <td>26,000</td>
+                        </tr>
+                        <tr>
+                            <td>Share capital</td>
+                            <td>50,000</td>
+                            <td>50,000</td>
+                        </tr>
+                        <tr>
+                            <td>Retained earnings</td>
+                            <td>89,000</td>
+                            <td>85,000</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Equity</strong></td>
+                            <td><strong>139,000</strong></td>
+                            <td><strong>135,000</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+                <p>Equity rollforward: 135,000 + 4,000 = 139,000. Cash rollforward: 50,000 + 79,000 − 5,000 + 0 = 124,000. Assets fell from 161,000 to 139,000 because the receivable was collected and then partly spent, and because the two December claims were cleared. A shrinking balance sheet is not a failing firm. It can be a firm that collected its bills and paid its people.</p>
+                <p>Two months together: profit 89,000, net cash increase 74,000. The $15,000 gap is the remaining prepaid insurance and the computer, resources that are not cash. Articulation does not require profit and the cash change to be equal. It requires you to be able to name the assets and claims that explain the difference.</p>
+
+                <h2>How to read a real set, in order</h2>
+                <ol>
+                    <li>The auditor's report and the accounting-policy note. Framework first.</li>
+                    <li>The income statement for the mix of the period, and whether profit is coming from the ordinary activity or from a sale of a building.</li>
+                    <li>The cash flow statement, operating first. If profit and OCF have different signs, sit there until you can name the working-capital line that caused it. That is December. Then January.</li>
+                    <li>The balance sheet for liquidity and leverage. Current assets against current liabilities. Debt against equity. The residual against the resources.</li>
+                    <li>The equity statement for issuances, buybacks, and dividends. If equity jumped and profit did not, someone contributed capital. If equity fell and the firm was profitable, someone was paid a distribution, or shares were repurchased, or a loss sat in OCI.</li>
+                </ol>
+                <p>Non-GAAP measures live outside this order. EBITDA is profit before interest, tax, depreciation, and amortization. It can be a useful operating approximation. It is not a cash flow, it is not a GAAP total, and it does not pay the bond. If a filing leads with adjusted EBITDA, go find the GAAP profit and the operating cash flow before you adopt the adjective.</p>
+
+                <h2>Funding rounds are transactions</h2>
+                <p>A startup is not a fourth kind of accounting. It is a firm whose early cash usually comes from owners and from hybrid paper, and whose early profit is often a loss. The three cameras still work. What changes is the right-hand side and the financing section. This section uses a new firm so the consulting example can stay clean.</p>
+                <p>The words seed, A, B, C, and IPO are market language for the stage of the raise and the type of buyer. They are not accounts. The accounts are cash, a liability, or equity, decided by whether the entity has a present obligation it cannot avoid. Dilution is a change in who owns the residual. It is not an expense, and it never hits the income statement. If you book a "dilution expense," you have invented an account the framework does not have.</p>
+
+                <h3>Incorporation and founder shares</h3>
+                <div class="worked">
+                    <p>Two founders form the company. They issue 8,000,000 common shares for $10,000 of cash, and they assign a prototype they built in evenings. The prototype fails the asset test for internally generated development. It is not recognized.</p>
+                </div>
+                <pre class="entry">Debit  Cash                    10,000
+Credit Share capital                    10,000</pre>
+                <p>The cap table says 8,000,000 shares. The balance sheet says $10,000 of cash and $10,000 of equity. Share count and the equity total are not required to look like each other. Par of a tenth of a cent would split the credit between share capital and additional paid-in capital. The residual is the same. The prototype is economically why the next investor shows up, and it is absent from the assets. Internally generated development fails the asset test. Do not capitalize "sweat equity." There was no measured cost that met the recognition gate.</p>
+                <p>If a founder later pays a personal expense from the company account, that is a distribution, or a receivable from the founder, not an operating expense. Related-party hygiene is accounting, not manners.</p>
+
+                <h3>Seed, often a convertible note</h3>
+                <p>Seed is the first outside money. It arrives as a priced equity round, a convertible note, or a SAFE. Priced equity this early is less common than paper that postpones the price. Postponing the price does not postpone the classification.</p>
+                <div class="worked">
+                    <p>An angel advances $500,000 under a convertible note. Simple interest 8 percent. The note converts at the next priced equity round at a 20 percent discount to that round's price, or is repaid in cash at maturity if no round occurs. No beneficial conversion feature is separately identified at issuance. Treat the instrument as a single liability at the cash proceeds.</p>
+                </div>
+                <pre class="entry">Debit  Cash                   500,000
+Credit Convertible note                500,000</pre>
+                <p>Cash flow: financing inflow, $500,000. Balance sheet: cash up, liability up. Income statement: nothing at issuance. Over the next year, interest accrues whether or not it is paid.</p>
+                <pre class="entry">Debit  Interest expense        40,000
+Credit Convertible note                 40,000</pre>
+                <p>Profit falls by 40,000. The liability is now 540,000. Operating cash flow, indirect, adds the 40,000 back if it was not paid. If you elected, under IFRS, to put interest paid in financing, unpaid interest never reaches that election. There was no payment. The add-back stays in the operating reconciliation because profit was reduced by a non-cash item.</p>
+                <p>A SAFE is not a note. It is a contract that typically converts into preferred at a future round, sometimes with a valuation cap, sometimes with a discount, sometimes with a right to cash in a liquidity event. The word "simple" is marketing. If the company can be required to deliver cash, or a variable number of shares worth a fixed amount, the SAFE is often a liability. If the only outcome is a residual interest in a fixed percentage of the company and the issuer cannot be forced to cash-settle, an equity classification can be available. Read the cash-settlement and change-of-control clauses. Booking every SAFE as equity because "it turns into shares later" is how a due-diligence file later finds a liability that was never in the total.</p>
+                <p>ASPE and US private-company practice will sometimes look more informal than this. The claim test does not become informal because the firm is young. A lender who is about to take a security interest will run the test even if the founders did not.</p>
+
+                <h3>Series A, the first priced preferred</h3>
+                <div class="worked">
+                    <p>A year later the company raises Series A. New money $4,000,000 at $2.00 a share, so 2,000,000 Series A preferred shares. The note converts at a 20 percent discount, $1.60 a share. Conversion shares: 540,000 / 1.60 = 337,500. The preferred is perpetual, dividends are discretionary, and there is no mandatory redemption. One-times non-participating liquidation preference. Classify the preferred as equity.</p>
+                </div>
+                <pre class="entry">Debit  Convertible note       540,000
+Credit Series A preferred              540,000
+
+Debit  Cash                 4,000,000
+Credit Series A preferred            4,000,000</pre>
+                <p>The conversion is a non-cash financing event. Disclose it. Do not run 540,000 through the cash flow totals. The new money is a financing inflow of 4,000,000. Profit does not move. You do not recognize a gain because the conversion price was $1.60 and the new investor paid $2.00. Retiring a liability by issuing residual shares at the contractual conversion rate is a capital transaction, not a bargain purchase.</p>
+                <p>After the closing, cash is up 4,000,000 from this event, the note is gone, and equity holds 4,540,000 of Series A plus the original 10,000 of common, minus accumulated losses and plus any later profit. The cap table now has common and preferred. The balance sheet may show one line for preferred and one for common, or a single share-capital total with the split in the notes. Either presentation is equity if the claim test said equity.</p>
+                <p>The liquidation preference is economic priority inside equity. In a sale of the company for a small number, Series A takes the first $4,540,000, or converts to common if conversion is worth more. That water-fall lives in the shareholders' agreement and in the note to the equity. It does not, by itself, pull the preferred out of equity and into liabilities. Mandatory redemption would. A coupon the company cannot avoid would. Discretionary 8 percent "accruing" dividends that are only paid on a liquidation are often still equity, and they still have to be disclosed, because they change what common is worth.</p>
+                <p>Why Series A is usually preferred, not common: the investor wants a priority residual, protective provisions, and a conversion option, without taking a debt claim that would sit ahead of a bank. Preferred is a way to sit ahead of the founders inside equity. It is not a way to sit ahead of creditors.</p>
+
+                <h3>Series B and Series C</h3>
+                <p>The accounting does not get a new model. The price changes, the share count changes, and the preference stack gets another layer.</p>
+                <div class="worked">
+                    <p>Series B: $15,000,000 new money at $6.00, so 2,500,000 Series B preferred. Series C: $30,000,000 at $12.00, so 2,500,000 Series C preferred. Each is perpetual, discretionary dividends, no mandatory redemption. Each has a one-times preference. No new convertibles.</p>
+                </div>
+                <pre class="entry">Debit  Cash                15,000,000
+Credit Series B preferred           15,000,000
+
+Debit  Cash                30,000,000
+Credit Series C preferred           30,000,000</pre>
+                <p>Financing inflows. No profit. The later preference sits on top of, or beside, the earlier one depending on whether the deal is stacked or pari passu. That is a legal water-fall. The bookkeeping is still "cash and equity." If a later round includes a recapitalization that cancels old preferred and issues new, you have to read whether old holders put in new cash, whether they wrote off a claim, and whether common was compressed. The journal follows the consideration, not the press release.</p>
+                <p>Down rounds are still equity issuances if the claim is still residual. Issuing a share at $1 after a last round at $12 does not create a loss equal to $11 times the new shares. You record the cash you received. The mark-to-market of the last investor's paper is their problem, not a debit to your retained earnings. A deemed dividend or a beneficial conversion feature can appear in more complex US GAAP fact patterns when a conversion price is reset. That is a specialist measurement. The error to avoid first is booking a loss because the headline valuation fell.</p>
+                <p>Employee options run beside these rounds. The grant is not cash. The accounting is an expense over the vesting period, measured at the grant-date fair value of the award, with a credit to additional paid-in capital. Profit falls. Operating cash flow, indirect, adds the expense back. When the option is exercised, cash comes in at the strike, and that cash is financing. The earlier expense is not reversed. Two events, two cameras.</p>
+
+                <h3>IPO</h3>
+                <p>An initial public offering is a registration and a sale. Primary shares are new shares the company issues. The company receives the cash, net of the incremental costs of issuing the equity. Secondary shares are existing holders selling. The company receives nothing. A filing can be both. Read the cover and the use-of-proceeds note before you add the headline raise to the cash line.</p>
+                <div class="worked">
+                    <p>The company issues 5,000,000 new common shares at $18.00. Gross proceeds $90,000,000. Incremental issuance costs $6,000,000, underwriter discount and legal that would not have been incurred without the issue. Secondary founders sell 1,000,000 of their own shares in the same offering. Those shares are not the company's, and that $18,000,000 never enters the company's bank account. On closing, outstanding preferred converts into common, as the charter required.</p>
+                </div>
+                <pre class="entry">Debit  Cash                84,000,000
+Credit Share capital                84,000,000
+
+Debit  Series A preferred   4,540,000
+Debit  Series B preferred  15,000,000
+Debit  Series C preferred  30,000,000
+Credit Share capital                49,540,000</pre>
+                <p>The $6,000,000 of issuance costs is not an expense. Incremental costs of issuing equity are deducted from equity. IAS 32 and US GAAP agree on that idea. Costs of the listing that are not incremental to the issue, a reorganization you would have done anyway, can be expenses. Split the invoice. Do not dump the entire legal bill into profit, and do not dump the entire legal bill into equity.</p>
+                <p>Cash flow: financing inflow of 84,000,000. The preferred conversion is non-cash. The secondary sale is not a company transaction. The income statement does not record "IPO income." A raise is not revenue. The buyers are being asked to purchase a residual claim. They are not being sold consulting hours.</p>
+                <p>After listing, the public-company package attaches. IFRS or US GAAP, audited annual statements, MD&amp;A, a clock, an auditor's report that will include critical audit matters or key audit matters. The accounting equation did not change on the listing date. The audience did.</p>
+
+                <h3>The rounds on one page</h3>
+                <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Event</th>
+                            <th>Balance sheet</th>
+                            <th>Income statement</th>
+                            <th>Cash flow</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Founder shares for cash</td>
+                            <td>Cash ↑ Equity ↑</td>
+                            <td>—</td>
+                            <td>Financing inflow</td>
+                        </tr>
+                        <tr>
+                            <td>Founder IP that fails recognition</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td>Convertible note, seed</td>
+                            <td>Cash ↑ Liability ↑</td>
+                            <td>—</td>
+                            <td>Financing inflow</td>
+                        </tr>
+                        <tr>
+                            <td>Accrued interest on the note</td>
+                            <td>Liability ↑ Equity ↓</td>
+                            <td>Interest expense</td>
+                            <td>No cash. Add back in indirect OCF.</td>
+                        </tr>
+                        <tr>
+                            <td>SAFE, if it is a liability</td>
+                            <td>Cash ↑ Liability ↑</td>
+                            <td>Later remeasurement can hit profit, depending on the terms and the book.</td>
+                            <td>Financing inflow</td>
+                        </tr>
+                        <tr>
+                            <td>Series A, B, C priced preferred (equity)</td>
+                            <td>Cash ↑ Equity ↑</td>
+                            <td>—</td>
+                            <td>Financing inflow</td>
+                        </tr>
+                        <tr>
+                            <td>Note converts at Series A</td>
+                            <td>Liability ↓ Equity ↑</td>
+                            <td>—</td>
+                            <td>Non-cash financing. Disclose.</td>
+                        </tr>
+                        <tr>
+                            <td>Option grant, vesting</td>
+                            <td>Equity ↑ (APIC) and RE ↓ through profit</td>
+                            <td>Compensation expense</td>
+                            <td>Add back in indirect OCF. No cash.</td>
+                        </tr>
+                        <tr>
+                            <td>Primary IPO, net of issue costs</td>
+                            <td>Cash ↑ Equity ↑ (net)</td>
+                            <td>—</td>
+                            <td>Financing inflow, net</td>
+                        </tr>
+                        <tr>
+                            <td>Secondary sale in the IPO</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td>Preferred converts at IPO</td>
+                            <td>One equity line becomes another</td>
+                            <td>—</td>
+                            <td>Non-cash. Disclose.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+                <p>Read a startup's statements with this table in your hand. If cash jumped and the financing section is quiet, you are missing a line or you are looking at operating collections. If equity jumped and cash did not, look for a conversion. If profit is a large loss and cash rose, look at the financing section before you congratulate the business. They may have sold a residual claim, not a product.</p>
+
+                <h2>What to hold</h2>
+                <p>A report is a product for a user, under a named framework, with a public package or a private one. Every recorded event keeps assets equal to liabilities plus equity, and debt, including a bond, is a claim. The balance sheet is that identity at a date. The income statement is the residual from operations. The cash flow statement is the cash line. A funding round is an entry you can place on those three.</p>
+                <p>Take a new instrument. Decide whether it is a present obligation. Book it. Then point to the line it occupies on each statement. Ratios, consolidations, and multi-element revenue sit on top of that. They do not replace it.</p>
+                <p class="series"><a href="understanding-accounting-2.html">← The equation</a></p>
+            </div>
+
+            <footer class="mt-12 pt-8 border-t border-border-light dark:border-border-dark">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div class="flex items-center gap-4 flex-wrap">
+                        <span class="text-sm text-secondary-text-light dark:text-secondary-text-dark">Tags:</span>
+                        <div class="flex gap-2 flex-wrap">
+                            <span class="px-2 py-1 bg-emerald-100 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200 text-xs font-medium rounded">Finance</span>
+                            <span class="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-xs font-medium rounded">Accounting</span>
+                            <span class="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-xs font-medium rounded">Financial statements</span>
+                        </div>
+                    </div>
+                    <div class="text-sm text-secondary-text-light dark:text-secondary-text-dark">
+                        Published Oct 11, 2026
+                    </div>
+                </div>
+            </footer>
+        </article>
+
+        <footer class="border-t border-border-light dark:border-border-dark mt-12">
+            <div class="max-w-4xl mx-auto px-4 py-8">
+                <div class="text-center text-secondary-text-light dark:text-secondary-text-dark text-sm">
+                    <p>&copy; 2026 Manan Patel. All rights reserved.</p>
+                    <p class="mt-2">
+                        <a href="/" class="hover:text-text-light dark:hover:text-text-dark transition-colors">Home</a>
+                        <span class="mx-2">•</span>
+                        <a href="./" class="hover:text-text-light dark:hover:text-text-dark transition-colors">Blog</a>
+                    </p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const toggleDarkMode = () => {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('darkMode', document.documentElement.classList.contains('dark'));
+        };
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+</body>
+</html>
