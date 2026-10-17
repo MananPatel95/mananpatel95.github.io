@@ -1,0 +1,642 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding Accounting 2 - Assets, liabilities, and equity | Manan Patel</title>
+    <meta name="description" content="The accounting equation: assets, liabilities, and equity. What counts as a resource, what counts as a claim, and why a bond is debt, not a funding-round story.">
+    <meta name="keywords" content="Manan Patel, accounting equation, assets, liabilities, equity, debt, bonds, IFRS, US GAAP">
+    <meta name="author" content="Manan Patel">
+    <link rel="canonical" href="https://mananpatel.info/blog/understanding-accounting-2.html">
+
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://mananpatel.info/blog/understanding-accounting-2.html">
+    <meta property="og:title" content="Understanding Accounting 2 - Assets, liabilities, and equity | Manan Patel">
+    <meta property="og:description" content="Assets, liabilities, equity, debt, and bonds. The equation every later statement is a view of.">
+    <meta property="og:site_name" content="Manan Patel">
+    <meta property="article:published_time" content="2026-10-04">
+    <meta property="article:author" content="https://mananpatel.info/#manan-patel">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://mananpatel.info/blog/understanding-accounting-2.html">
+    <meta name="twitter:title" content="Understanding Accounting 2 - Assets, liabilities, and equity | Manan Patel">
+    <meta name="twitter:description" content="Assets, liabilities, equity, debt, and bonds. The equation every later statement is a view of.">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "BlogPosting",
+          "headline": "Understanding Accounting 2 - Assets, liabilities, and equity",
+          "description": "The accounting equation: assets, liabilities, and equity. What counts as a resource, what counts as a claim, and why a bond is debt, not a funding-round story.",
+          "url": "https://mananpatel.info/blog/understanding-accounting-2.html",
+          "datePublished": "2026-10-04",
+          "dateModified": "2026-10-04",
+          "author": { "@id": "https://mananpatel.info/#manan-patel" },
+          "publisher": { "@id": "https://mananpatel.info/#manan-patel" },
+          "mainEntityOfPage": { "@type": "WebPage", "@id": "https://mananpatel.info/blog/understanding-accounting-2.html" }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://mananpatel.info/" },
+            { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://mananpatel.info/blog/" },
+            { "@type": "ListItem", "position": 3, "name": "Understanding Accounting 2 - Assets, liabilities, and equity", "item": "https://mananpatel.info/blog/understanding-accounting-2.html" }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'text-light': '#1f2937',
+                        'text-dark': '#f9fafb',
+                        'secondary-text-light': '#6b7280',
+                        'secondary-text-dark': '#9ca3af',
+                        'border-light': '#e5e7eb',
+                        'border-dark': '#374151',
+                        'bg-light': '#ffffff',
+                        'bg-dark': '#111827'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .blog-content { line-height: 1.7; }
+        .blog-content h2 { font-size: 1.5rem; font-weight: bold; margin-top: 2rem; margin-bottom: 1rem; }
+        .blog-content h3 { font-size: 1.25rem; font-weight: bold; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+        .blog-content p { margin-bottom: 1rem; }
+        .blog-content ul, .blog-content ol { margin-left: 1.5rem; margin-bottom: 1rem; }
+        .blog-content li { margin-bottom: 0.5rem; }
+        .blog-content a { color: #2563eb; text-decoration: underline; }
+        .dark .blog-content a { color: #60a5fa; }
+        .blog-content table { width: 100%; border-collapse: collapse; margin: 0 0 1.25rem; font-size: 0.95rem; }
+        .blog-content th, .blog-content td {
+            text-align: left; vertical-align: top; border-bottom: 1px solid #e5e7eb;
+            padding: 0.6rem 0.75rem 0.6rem 0; overflow-wrap: break-word;
+        }
+        .dark .blog-content th, .dark .blog-content td { border-bottom-color: #374151; }
+        .blog-content th { font-size: 0.8rem; letter-spacing: 0.02em; text-transform: uppercase; }
+        .blog-content .table-wrap { overflow-x: auto; margin: 0 0 1.25rem; }
+        .blog-content .table-wrap table { margin: 0; }
+        .worked { border-left: 3px solid #059669; padding: 0.15rem 0 0.15rem 1rem; margin: 0 0 1.25rem; }
+        .entry {
+            font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
+            font-size: 0.92rem; line-height: 1.55; background: #f3f4f6;
+            padding: 0.85rem 1rem; margin: 0 0 1rem; white-space: pre-wrap;
+            overflow-x: auto; max-width: 100%;
+        }
+        .dark .entry { background: #1f2937; }
+        .series { font-size: 0.9rem; margin: 0 0 1.5rem; color: #6b7280; }
+        .dark .series { color: #9ca3af; }
+        .series a { color: #2563eb; }
+        .dark .series a { color: #60a5fa; }
+    </style>
+</head>
+<body class="bg-bg-light dark:bg-bg-dark text-text-light dark:text-text-dark transition-colors">
+    <div class="min-h-screen">
+        <header class="border-b border-border-light dark:border-border-dark">
+            <div class="max-w-4xl mx-auto px-4 py-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <a href="../" class="text-xl font-bold text-text-light dark:text-text-dark hover:opacity-80 transition-opacity">Manan Patel</a>
+                        <p class="text-xs text-secondary-text-light dark:text-secondary-text-dark mt-0.5">Tinkering and Sharing</p>
+                    </div>
+                    <div class="flex items-center gap-3 flex-wrap">
+                        <a href="../#writing" class="text-sm text-secondary-text-light dark:text-secondary-text-dark hover:text-text-light dark:hover:text-text-dark transition-colors">← Back to Writing</a>
+                        <a href="../" class="text-sm text-secondary-text-light dark:text-secondary-text-dark hover:text-text-light dark:hover:text-text-dark transition-colors">Home</a>
+                        <a class="w-8 h-8 border border-border-light dark:border-border-dark rounded flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" href="https://x.com/mananthekid" target="_blank" rel="noopener" aria-label="X">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+                        </a>
+                        <a class="w-8 h-8 border border-border-light dark:border-border-dark rounded flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" href="https://www.linkedin.com/in/mananpatel123/" target="_blank" rel="noopener" aria-label="LinkedIn">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z"></path></svg>
+                        </a>
+                        <a class="w-8 h-8 border border-border-light dark:border-border-dark rounded flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" href="https://github.com/MananPatel95" target="_blank" rel="noopener" aria-label="GitHub">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path clip-rule="evenodd" fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.285 2.866 7.92 6.737 9.208.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.942.359.308.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z"></path></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <article class="max-w-4xl mx-auto px-4 py-8">
+            <header class="mb-8">
+                <div class="flex items-center gap-2 mb-4 flex-wrap">
+                    <span class="px-2 py-1 bg-emerald-100 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200 text-xs font-medium rounded">Finance</span>
+                    <span class="text-secondary-text-light dark:text-secondary-text-dark text-sm">Oct 4, 2026</span>
+                    <span class="text-secondary-text-light dark:text-secondary-text-dark text-sm">•</span>
+                    <span class="text-secondary-text-light dark:text-secondary-text-dark text-sm">22 min read</span>
+                </div>
+                <h1 class="text-3xl font-bold text-text-light dark:text-text-dark mb-4">Understanding Accounting 2 - Assets, liabilities, and equity</h1>
+                <p class="text-lg text-secondary-text-light dark:text-secondary-text-dark">
+                    Assets, liabilities, and equity. The equation that every recorded transaction keeps in balance, and the reason a bond is a claim, not a chapter of startup folklore.
+                </p>
+            </header>
+
+            <div class="blog-content prose prose-lg max-w-none">
+                <p class="series">Series: <a href="understanding-accounting-1.html">1. Language and disclosure</a> · 2. The equation · <a href="understanding-accounting-3.html">3. The statements</a></p>
+                <p>The equation is assets = liabilities + equity. Every recorded event keeps it in balance. This note is how to classify what is on each side, why the split matters, and what fails the test even though it looks real. Debit and credit. Current and non-current. Debt versus equity. A bond, measured at present value and amortized until maturity.</p>
+
+                <h2>The equation is a claim identity</h2>
+                <p>Every resource is claimed by someone. There is no leftover pile called "the company's own money." If outsiders have a claim against those resources, it is a liability. Whatever remains is equity. Owners own the residual, not the trucks.</p>
+                <pre class="entry">Assets  =  Liabilities  +  Equity</pre>
+                <p>Rearrange it as needed:</p>
+                <pre class="entry">Assets − Liabilities  =  Equity
+Assets − Equity       =  Liabilities</pre>
+                <p>The first is the net assets identity. Equity is not a pile of cash—it is what remains after all outsider claims. The second: if you know resources and the residual, you know the claims.</p>
+                <p>The equation is an identity, not a target. Double entry makes it true after every entry. A book that does not balance is not "almost right"—an entry is missing or an amount was typed once. Find it before interpreting ratios.</p>
+                <p><strong>First mistake:</strong> Treating equity as "what the company is worth." Book equity is the residual under a named measurement. Land bought for $1M ten years ago sits at $1M (historical cost). The market values the firm at $8M. Both are correct. They answer different questions.</p>
+                <p><strong>Second mistake:</strong> Treating bank balance as equity. Cash is an asset. The claim on it might be a lender's, a customer's (deferred revenue), or the owners'. Read the right-hand side before you spend the left.</p>
+
+                <h2>Debit and credit are sides, not verdicts</h2>
+                <p>The ledger has a left side and a right side. Debit is left. Credit is right. Which side increases an account depends on where the account sits in the equation.</p>
+                <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Account</th>
+                            <th>Increase</th>
+                            <th>Decrease</th>
+                            <th>Normal balance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Asset</td>
+                            <td>Debit</td>
+                            <td>Credit</td>
+                            <td>Debit</td>
+                        </tr>
+                        <tr>
+                            <td>Liability</td>
+                            <td>Credit</td>
+                            <td>Debit</td>
+                            <td>Credit</td>
+                        </tr>
+                        <tr>
+                            <td>Equity (share capital, retained earnings)</td>
+                            <td>Credit</td>
+                            <td>Debit</td>
+                            <td>Credit</td>
+                        </tr>
+                        <tr>
+                            <td>Revenue (closes into equity)</td>
+                            <td>Credit</td>
+                            <td>Debit</td>
+                            <td>Credit</td>
+                        </tr>
+                        <tr>
+                            <td>Expense (closes into equity)</td>
+                            <td>Debit</td>
+                            <td>Credit</td>
+                            <td>Debit</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+                <p>Revenue increases equity, so it lives on the credit side. Expense decreases equity, so it lives on the debit side. That is the only reason the income statement has a shape. It is a temporary equity account that we display separately for a period and then close into retained earnings. Booking revenue is already a change in equity, even before anyone prints an income statement.</p>
+                <p>Contra accounts flip the normal balance of the account they reduce. Accumulated depreciation is a credit sitting against a debit-balance asset. Allowance for doubtful accounts is the same idea against receivables. Treasury stock is a debit sitting against equity. Read the name, then find what it is contra to, before you add it as if it were a new pile.</p>
+
+                <h2>An asset is a present resource you control</h2>
+                <p>An asset is a present economic resource controlled by the entity from a past event. It is a right with potential to produce benefits. Potential is enough. The benefit does not have to be certain. It does not have to be cash next Tuesday.</p>
+                <p>Three requirements (all three must exist):</p>
+                <ol>
+                    <li><strong>Right, with potential benefits.</strong> A claim on a customer, a legal title to a machine, a license, a deposit at a bank. A skilled workforce is valuable and usually fails this test, because the entity does not have a right it can enforce against the people walking out. Internally generated goodwill, the excess a buyer would pay for the assembled firm, also fails. You did not acquire a separately identifiable right. Purchased goodwill in a business combination is recognized because a transaction priced the assembled residual. Do not import that treatment onto a firm that was never bought.</li>
+                    <li><strong>Control.</strong> The entity can direct the use of the right and obtain the benefits. Legal title is common evidence. It is not the only evidence. A leased warehouse that the lessee controls for the term is the lessee's right-of-use asset, even though the lessor still holds legal title. Inventory sitting at a customer's warehouse on consignment is still the consignor's asset if the consignor still controls it. Possession without control is not an asset of the possessor.</li>
+                    <li><strong>Past event.</strong> The right already exists. A purchase order you have issued, with nothing delivered and no payment made, is an executory contract. Both sides still have unperformed promises. Neither an asset nor a liability is recognized for the unperformed part. The machine arriving next month is next month's asset.</li>
+                </ol>
+                <p>Recognition is a second gate. An item can meet the definition and still stay off the statements if it cannot be measured in a way that is useful. Internally generated brands often die at this gate. The advertising spend is real. Isolating a reliable amount for "the brand" usually is not. The spend is expensed. The brand can still be the reason someone buys the shares.</p>
+
+                <h3>Current versus non-current</h3>
+                <p>The split exists for liquidity. A lender wants to know which resources will turn into cash soon enough to meet the claims that come due soon. Under IAS 1 an asset is current when any one of these is true: you expect to realize it in the normal operating cycle, you hold it primarily for trading, you expect to realize it within twelve months after the reporting date, or it is cash or a cash equivalent unless restricted for at least twelve months. Everything else is non-current.</p>
+                <p>The operating cycle can be longer than a year. A homebuilder's inventory of houses under construction is current even if the house will not close for eighteen months, because that is the cycle. A bond you intend to hold to a maturity thirteen months away is non-current, even though it is a financial instrument, unless you have classified it as current for another reason. Intent and the calendar both matter. Read the classification policy before you build a current ratio.</p>
+                <p>US GAAP uses a similar current and non-current presentation for most non-financial companies. The tests are close enough to treat as one idea, until you open a bank or a broker. There the operating cycle is the whole book, the statement is often unclassified, and the current split is less useful. The examples here stay with a commercial or industrial presentation.</p>
+
+                <h3>The asset classes you will actually meet</h3>
+                <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>What the right is</th>
+                            <th>Usual measurement</th>
+                            <th>The trap</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Cash and cash equivalents</td>
+                            <td>Demand deposits and short, highly liquid instruments that convert to known amounts of cash and face an insignificant risk of change in value. IFRS uses a three-month remaining-maturity idea for equivalents.</td>
+                            <td>Face. Foreign currency is translated at the closing rate.</td>
+                            <td>A compensating balance that cannot be used is restricted cash. It may still be cash, and it is not cash you can spend. A line of credit you have not drawn is not cash.</td>
+                        </tr>
+                        <tr>
+                            <td>Accounts receivable</td>
+                            <td>The contractual right to cash from a customer for goods or services already transferred.</td>
+                            <td>Amortized cost, reduced by expected credit losses. IFRS 9 is a forward-looking expected-loss model. Older US language of "probable incurred losses" has been replaced by CECL, which is also expected-loss, with a different construction.</td>
+                            <td>Gross receivables without the allowance overstate the asset. The allowance is a contra-asset, not a liability.</td>
+                        </tr>
+                        <tr>
+                            <td>Inventory</td>
+                            <td>Goods held for sale, in production, or consumed in production.</td>
+                            <td>Lower of cost and net realizable value. Cost can be specific identification, FIFO, or a weighted average. US GAAP still allows LIFO. IFRS does not.</td>
+                            <td>A write-down is a new cost basis under US GAAP for most inventory. IFRS can reverse a write-down if NRV recovers, limited to the amount previously written down. The same warehouse can show two different recoveries.</td>
+                        </tr>
+                        <tr>
+                            <td>Prepaid expenses</td>
+                            <td>A payment that buys a future benefit you have not yet consumed. Insurance, rent paid ahead.</td>
+                            <td>Unconsumed cost.</td>
+                            <td>Prepaying does not create an expense. Consuming creates the expense. The December insurance payment is this case: $12,000 paid, $1,000 consumed.</td>
+                        </tr>
+                        <tr>
+                            <td>Property, plant, and equipment</td>
+                            <td>Tangible items held for use in production, supply, rental, or administration, expected to be used for more than one period.</td>
+                            <td>Cost less accumulated depreciation and impairment. IFRS also allows a revaluation model. US GAAP does not revalue PPE upward.</td>
+                            <td>Land is not depreciated. A building on the land is. The residual value is an estimate, and changing it is a change in estimate, not an error.</td>
+                        </tr>
+                        <tr>
+                            <td>Intangible assets</td>
+                            <td>An identifiable non-monetary asset without physical substance. Identifiable means it is separable or arises from a contract or law.</td>
+                            <td>Cost less amortization and impairment, if the life is finite. Indefinite-lived intangibles are not amortized. They are tested for impairment.</td>
+                            <td>Research is expensed. IFRS can capitalize development after a list of tests. US GAAP expenses most R&amp;D. Same engineers, different asset.</td>
+                        </tr>
+                        <tr>
+                            <td>Financial assets other than receivables</td>
+                            <td>A contractual right to cash, or an equity instrument of another entity.</td>
+                            <td>Depends on the business model and the cash-flow test: amortized cost, fair value through OCI, or fair value through profit or loss. US GAAP has its own classification map. Do not mix the maps.</td>
+                            <td>Fair value of a holding is not "the company made that much cash." The gain can sit in OCI and never have been collected.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+                <p>Impairment is the admission that the asset will not recover its carrying amount. For PPE and finite-lived intangibles, IFRS compares carrying amount to recoverable amount, the higher of value in use and fair value less costs of disposal, and can reverse a later recovery (not for goodwill). US GAAP uses a two-step idea for long-lived assets to be held and used: first an recoverability test on undiscounted cash flows, then a write-down to fair value if that test fails. A reversal is generally prohibited. The same factory can be unimpaired under US GAAP, because undiscounted cash flows still cover the book, and impaired under IFRS, because the discounted value in use does not. Measurement is a choice the framework already made.</p>
+
+                <h2>A liability is a present obligation you cannot avoid</h2>
+                <p>A liability is a present obligation to transfer an economic resource from a past event. An obligation is a duty the entity has no practical ability to avoid.</p>
+                <p>Three requirements (all three must exist):</p>
+                <ol>
+                    <li><strong>Present obligation.</strong> It exists now. A board plan to buy a machine next year is not an obligation. A signed purchase you can cancel without penalty is not one either. A constructive obligation can exist without a contract if past practice has created a valid expectation in the counterparty that the entity will pay. Warranties and restructuring announcements fail or pass on that test, not on whether a lawyer drafted a note.</li>
+                    <li><strong>Transfer of a resource.</strong> Cash, goods, services, or another asset. An obligation to issue a fixed number of your own shares is often equity, not a liability, because your own shares are not an asset of the entity. An obligation to issue a variable number of shares worth a fixed dollar amount is often a liability, because the economic substance is "we owe $X," settled in paper. The word "shares" on the term sheet does not decide the classification. The variability does.</li>
+                    <li><strong>Past event.</strong> The obligating event has already happened. Goods were received. Work was done. A law was broken. A customer paid you in advance, and you now owe the performance. The December customer deposit of $20,000 is this last case.</li>
+                </ol>
+                <p>A provision is a liability of uncertain timing or amount. Recognize it when the obligation is present, an outflow is probable, and the amount can be estimated reliably. Probable is not the same bar in the two books. IFRS recognizes a provision when an outflow is more likely than not. US GAAP recognizes a loss contingency when the loss is probable, meaning likely, and the amount can be estimated. The same lawsuit can be a liability under IFRS and only a paragraph in the notes under US GAAP. A contingent liability that fails recognition still has to be disclosed unless the outflow is remote. Equity investors who only read the totals miss the case that is sitting in the notes.</p>
+                <p>An executory contract is still not a liability for the unperformed part. A five-year services agreement you signed yesterday, with nothing delivered and nothing paid, does not put five years of fees on the balance sheet. A lease is no longer treated that way for the lessee. IFRS 16 and US GAAP Topic 842 put a right-of-use asset and a lease liability on the books for most leases. The old operating-lease off-balance-sheet treatment is the historical exam trick, not the current rule for public companies. Private-company elections can still look more like the old world. Read the policy note.</p>
+
+                <h3>Current versus non-current claims</h3>
+                <p>A liability is current when you expect to settle it in the operating cycle, you hold it for trading, it is due within twelve months, or you do not have the right at the reporting date to defer settlement for at least twelve months. The last test is the one that changes the classification of a long-term loan.</p>
+                <p>A five-year loan with a remaining life of six months is current, even if you intend to refinance it, unless at the reporting date you already have a right to refinance or to roll it for at least twelve months. IFRS looks at rights existing at the reporting date. A refinance completed after the reporting date, before the statements are issued, does not turn the loan non-current under IFRS. US GAAP can treat a post-balance-sheet refinance as evidence that the loan is non-current if the refinance is completed before issuance. Same loan, same January refinance, two classifications. The current ratio moves. The cash does not.</p>
+                <p>Covenant breaches do the same damage. If a long-term facility becomes callable because you missed a ratio, the whole facility is current unless you have obtained a waiver that gives you the right to defer for twelve months, and that waiver exists at the date the standard requires. Do not classify a breached loan as non-current because "the bank likes us."</p>
+
+                <h2>Equity is the residual claim</h2>
+                <p>Equity is Assets minus Liabilities. That is the definition. Everything else is a subdivision of the residual for users who want to know how the residual got there and who owns it.</p>
+                <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Piece</th>
+                            <th>What it records</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Share capital, or common stock at par</td>
+                            <td>The legal capital of the shares issued. Some jurisdictions have no par. Then the whole proceeds sit in one capital account.</td>
+                        </tr>
+                        <tr>
+                            <td>Additional paid-in capital, or share premium</td>
+                            <td>Proceeds above par. The economic contribution of the owners at issuance, minus the par slice.</td>
+                        </tr>
+                        <tr>
+                            <td>Retained earnings</td>
+                            <td>Cumulative profit not distributed. This is earned equity, not contributed. A firm can have large retained earnings and no cash. Profit was earned and then tied up in receivables or machines.</td>
+                        </tr>
+                        <tr>
+                            <td>Accumulated other comprehensive income</td>
+                            <td>Gains and losses that the framework keeps out of profit: certain foreign-currency translations, certain fair-value swings, certain pension remeasurements. ASPE has no OCI bucket. The same gain can sit in profit under ASPE.</td>
+                        </tr>
+                        <tr>
+                            <td>Treasury stock</td>
+                            <td>The entity's own shares reacquired. A contra-equity. You do not recognize a gain on trading your own shares.</td>
+                        </tr>
+                        <tr>
+                            <td>Non-controlling interest</td>
+                            <td>The residual that belongs to outside owners of a subsidiary, presented inside equity on the consolidated statements. It is equity of the group, not of the parent's shareholders.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+                <p>Contributed capital is what owners put in. Earned capital is what the entity kept. A dividend is a distribution of earned capital, not an expense. It never hits profit. It reduces retained earnings and reduces cash, or it creates a payable. Share issuances increase contributed capital. They are not income. An IPO is a share issuance. It is not revenue.</p>
+                <p>Preferred shares are the first hybrid. If the shares are perpetual, dividends are discretionary, and there is no obligation to deliver cash, they are equity. If the shares are mandatorily redeemable for cash on a date, they are a liability, no matter what the certificate says. If dividends are cumulative and still discretionary, missed dividends are not a liability until the entity has an obligation it cannot avoid. Disclosure of arrears is not recognition. Read the redemption clause before you put preferred in equity because the name has "share" in it.</p>
+
+                <h2>The December firm, classified</h2>
+                <p>The December firm has four leftovers and an $85,000 accrual profit. To put them on the equation, start from an opening position.</p>
+                <div class="worked">
+                    <p>On November 30 the firm has $50,000 of cash, and no other assets or claims. The founder contributed that cash for common shares. Share capital is $50,000. Retained earnings are $0.</p>
+                    <p>Work of $100,000 is delivered and invoiced, unpaid. A different customer pays a $20,000 deposit for January work. Rent of $8,000 is paid. On December 1 the firm pays $12,000 for twelve months of insurance. Wages of $6,000 are earned and unpaid.</p>
+                </div>
+                <p>Walk each event through the equation. If a row does not balance, stop. The event was not recorded.</p>
+                <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Event</th>
+                            <th>Assets</th>
+                            <th>Liabilities</th>
+                            <th>Equity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>November 30</td>
+                            <td>Cash 50,000</td>
+                            <td>—</td>
+                            <td>Share capital 50,000</td>
+                        </tr>
+                        <tr>
+                            <td>Pay insurance</td>
+                            <td>Cash −12,000; Prepaid +12,000</td>
+                            <td>—</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td>Pay rent</td>
+                            <td>Cash −8,000</td>
+                            <td>—</td>
+                            <td>Rent expense −8,000</td>
+                        </tr>
+                        <tr>
+                            <td>Deliver and invoice</td>
+                            <td>Receivable +100,000</td>
+                            <td>—</td>
+                            <td>Revenue +100,000</td>
+                        </tr>
+                        <tr>
+                            <td>Collect the deposit</td>
+                            <td>Cash +20,000</td>
+                            <td>Deferred revenue +20,000</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td>Accrue wages</td>
+                            <td>—</td>
+                            <td>Wages payable +6,000</td>
+                            <td>Wage expense −6,000</td>
+                        </tr>
+                        <tr>
+                            <td>Consume one month of insurance</td>
+                            <td>Prepaid −1,000</td>
+                            <td>—</td>
+                            <td>Insurance expense −1,000</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+                <p>December 31, classified:</p>
+                <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Cash</td>
+                            <td>50,000</td>
+                        </tr>
+                        <tr>
+                            <td>Accounts receivable</td>
+                            <td>100,000</td>
+                        </tr>
+                        <tr>
+                            <td>Prepaid insurance</td>
+                            <td>11,000</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Current assets</strong></td>
+                            <td><strong>161,000</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Non-current assets</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Total assets</strong></td>
+                            <td><strong>161,000</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Wages payable</td>
+                            <td>6,000</td>
+                        </tr>
+                        <tr>
+                            <td>Deferred revenue</td>
+                            <td>20,000</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Current liabilities</strong></td>
+                            <td><strong>26,000</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Share capital</td>
+                            <td>50,000</td>
+                        </tr>
+                        <tr>
+                            <td>Retained earnings</td>
+                            <td>85,000</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Equity</strong></td>
+                            <td><strong>135,000</strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Liabilities + equity</strong></td>
+                            <td><strong>161,000</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+                <p>Cash did not move, net, across December. 50,000 in, 50,000 out, 20,000 back. Profit is 85,000. Net assets rose by 85,000, from 50,000 to 135,000. That rise is the receivable, the remaining prepaid, and the two new claims. Equity rose because revenue exceeded expenses, not because the bank account grew. A current ratio of 161 / 26 looks comfortable. Eleven thousand of that numerator is insurance, not cash, and 100,000 of it has not been collected. The equation is balanced. Liquidity is a different question, and the cash flow statement is where it shows up.</p>
+                <p>Prepaid insurance of 11,000 is current if the remaining eleven months all fall inside the next year, which they do. If the policy had been three years, you would split the prepaid: the next twelve months current, the rest non-current. The whole prepaid does not go in current just because it is not a building. The calendar, not the name, decides.</p>
+
+                <h2>Debt is a liability with a contract</h2>
+                <p>Debt is not a fourth element. It is a liability whose terms usually include a principal, a cost of borrowing, and a maturity. Bank loans, notes, bonds, commercial paper, and most convertible notes sit here. Trade payables are liabilities and are not what people mean by debt. Deferred revenue is a liability and is not debt. When a credit agreement defines Debt with a capital D, read the definition. It often includes leases and sometimes excludes revolving amounts you have not drawn. The accounting total and the covenant total are cousins, not twins.</p>
+                <p>Interest is the cost of having the claim outstanding. Under the effective-interest method, interest expense for a period is the carrying amount at the start of the period times the market yield at issuance. The cash coupon can be higher or lower. The difference amortizes the premium or the discount. Cash-basis "interest I paid" is not the expense. Expense the coupon and ignore the amortization, and you report the wrong profit every year of the bond's life, and the wrong liability on every balance sheet after issuance.</p>
+                <p>Secured debt has a specific claim on identified assets. Unsecured debt has a general claim. Subordinated debt stands behind senior debt in a liquidation. None of that changes the fact that all of them are liabilities. It changes the recovery a particular lender should expect, and it belongs in the notes and in the debt agreement. Priority is not classification.</p>
+
+                <h2>A bond is a packaged debt claim</h2>
+                <p>A bond is a transferable package of the same claim. The indenture sets the face amount, the coupon, the payment dates, the maturity, the covenants, and any call or conversion features. The issuer writes the coupon. The market writes the yield. Those two rates are equal only by accident, on the day the bond is priced at par.</p>
+                <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>If at issuance</th>
+                            <th>The cash the issuer receives</th>
+                            <th>The liability at issuance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Coupon equals yield</td>
+                            <td>Face</td>
+                            <td>Face. Par.</td>
+                        </tr>
+                        <tr>
+                            <td>Coupon below yield</td>
+                            <td>Less than face</td>
+                            <td>Less than face. Discount. Investors demanded a cheaper price so their return equals the market rate.</td>
+                        </tr>
+                        <tr>
+                            <td>Coupon above yield</td>
+                            <td>More than face</td>
+                            <td>More than face. Premium. Investors paid up for a coupon richer than the market.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+                <p>The liability is the present value of the remaining contractual cash flows, discounted at the market rate on the issue date. Subsequent accounting for a vanilla instrument held at amortized cost does not update that discount rate each period. Fair-value accounting, if elected or required, does. Know which model you are in before you ask why the liability did not move when yields moved.</p>
+
+                <h3>Worked issuance</h3>
+                <div class="worked">
+                    <p>The firm later issues a two-year bond. Face $100,000. Annual coupon 10 percent, paid at each anniversary. The market yield for this credit on the issue date is 12 percent. No transaction costs, so the issue price equals the present value of the cash flows at 12 percent.</p>
+                </div>
+                <pre class="entry">PV of face      = 100,000 / 1.12²           = 79,719
+PV of coupons   = 10,000 / 1.12
+                  + 10,000 / 1.12²          = 16,901
+Issue price                                 = 96,620</pre>
+                <pre class="entry">Debit  Cash                    96,620
+Credit Bonds payable                    96,620</pre>
+                <p>Some ledgers keep Bonds payable at face and a separate Discount on bonds payable of 3,380. The net carrying amount is still 96,620. Net presentation and gross presentation are the same liability. Use one and stay with it.</p>
+                <p>Year 1, effective interest:</p>
+                <pre class="entry">Interest expense  = 96,620 × 0.12  = 11,594
+Cash coupon                        = 10,000
+Amortization of discount           =  1,594
+Carrying amount at anniversary     = 98,214</pre>
+                <pre class="entry">Debit  Interest expense        11,594
+Credit Cash                             10,000
+Credit Bonds payable                     1,594</pre>
+                <p>Year 2:</p>
+                <pre class="entry">Interest expense  = 98,214 × 0.12  = 11,786
+Cash coupon                        = 10,000
+Amortization                       =  1,786
+Carrying amount at maturity        = 100,000</pre>
+                <p>The last year's effective rate is held so the carrying amount lands on face. Rounding of a dollar is normal. What is not normal is expensing 10,000 each year and leaving the liability at 96,620 until maturity, then booking a 3,380 loss at redemption. That path reports the wrong expense in both years and a phantom loss at the end. The economics were a 12 percent borrowing from the first day.</p>
+                <p>At maturity:</p>
+                <pre class="entry">Debit  Bonds payable          100,000
+Credit Cash                            100,000</pre>
+                <p>The 100,000 is not an expense. The claim is being settled. Interest was already recognized along the way. Debiting interest expense for the redemption mixes the settlement of the claim with the cost of carrying it.</p>
+                <p>Between issuance and the first anniversary the classification follows the remaining life. On the issue date the whole 96,620 is non-current. On the balance sheet one year before maturity, the remaining carrying amount is current, unless you already have a refinance right that meets the standard. Interest payable, if the coupon date is not the reporting date, is a separate current liability for the accrued slice.</p>
+
+                <h3>Features that change the claim, not the element</h3>
+                <ul>
+                    <li><strong>Callable.</strong> The issuer can redeem early, usually at a premium. The call is an option of the issuer. Under amortized-cost accounting you still start from the cash flows you expect. A call does not make the bond equity.</li>
+                    <li><strong>Convertible into a fixed number of shares.</strong> IFRS splits a vanilla convertible into a liability equal to the value of a straight bond and an equity component for the residual. US GAAP often keeps a conventional convertible as a single liability, with exceptions for cash-conversion features and certain beneficial conversion features. The same instrument can be one line or two lines depending on the book. Conversion, when it happens, swaps a liability for equity. It does not create a gain because you "retired cheap debt."</li>
+                    <li><strong>Convertible into a variable number of shares worth a fixed amount.</strong> This is a debt claim being settled in a variable number of shares. It is usually a liability in whole. The share settlement is a form of payment, not a contribution of capital at issuance.</li>
+                </ul>
+                <p>Zero-coupon bonds are the discount case with a coupon of zero. The entire return is amortization. Deep-discount munis and stripped Treasuries are this idea in the market. The accounting is the same effective-interest engine.</p>
+
+                <h2>Debt versus equity is a claim test</h2>
+                <p>Put the two residual questions next to each other. A liability answers "what must we transfer, and can we avoid it?" Equity answers "what is left?" Hybrid paper tries to look like one and behave like the other. The framework does not care what the bankers called the round.</p>
+                <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Debt</th>
+                            <th>Equity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Obligation to deliver cash or another asset</td>
+                            <td>Yes, or to settle in a variable number of shares worth a fixed amount.</td>
+                            <td>No, if the only settlement is a residual interest in a fixed number of shares, and dividends are discretionary.</td>
+                        </tr>
+                        <tr>
+                            <td>Return to the holder</td>
+                            <td>Interest, a contractual yield. Miss it and you are in default.</td>
+                            <td>Dividends, if declared. Miss them and you have disappointed people. You have not defaulted, unless a separate contract says otherwise.</td>
+                        </tr>
+                        <tr>
+                            <td>Maturity</td>
+                            <td>Usually. Perpetual debt exists, and the other tests still have to be run.</td>
+                            <td>Usually none. Mandatorily redeemable stock is the exception, and it is a liability.</td>
+                        </tr>
+                        <tr>
+                            <td>Priority</td>
+                            <td>Ahead of residual owners.</td>
+                            <td>Last. Preferred sits ahead of common inside equity, or hops out of equity if it is really debt.</td>
+                        </tr>
+                        <tr>
+                            <td>Effect of issuance on profit</td>
+                            <td>None at issuance. Interest later reduces profit.</td>
+                            <td>None at issuance. Dividends never reduce profit.</td>
+                        </tr>
+                        <tr>
+                            <td>Effect of issuance on cash</td>
+                            <td>Financing inflow, then financing outflows for interest and principal. Interest paid can be operating or financing on the cash flow statement, depending on the framework. The claim is a liability either way.</td>
+                            <td>Financing inflow. Distributions are financing outflows.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+                <p>A founder loan that has no interest, no maturity, and a history of never being called can still be a liability if the company cannot avoid repayment when the founder asks. Substance is not "we all know I will not take the money out." Substance is whether the entity has a practical ability to refuse. Document the thing you mean. If you mean equity, issue shares or formally convert the loan. Leaving a related-party payable on the books and calling it "patient capital" is how a due-diligence file later reclassifies your equity ratio in a week.</p>
+                <p>A SAFE, a convertible note, and a priced preferred share can land in three different places on the right-hand side. Run the liability test before you name the account. Once the claim is a liability or equity, the cash flow line is the financing section, or a non-cash disclosure if no cash moved.</p>
+
+                <h2>What to hold</h2>
+                <p>Assets: present resources you control. Liabilities: obligations you cannot avoid. Equity: the residual. Debt is a liability. Bonds are contracts, measured at present value, kept at amortized cost unless fair-value applies. Debits and credits move the piles. Not moral language.</p>
+                <p>The December firm: $161K assets, $26K liabilities, $135K equity. $85K profit. $0 cash change. The balance sheet is the identity at a date. Income statement is the change from operations. Cash flow is the cash line change. Seed, Series A, IPO are transactions. Not a fourth kind of accounting.</p>
+                <p class="series"><a href="understanding-accounting-1.html">← Language and disclosure</a> · <a href="understanding-accounting-3.html">The statements →</a></p>
+            </div>
+
+            <footer class="mt-12 pt-8 border-t border-border-light dark:border-border-dark">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div class="flex items-center gap-4 flex-wrap">
+                        <span class="text-sm text-secondary-text-light dark:text-secondary-text-dark">Tags:</span>
+                        <div class="flex gap-2 flex-wrap">
+                            <span class="px-2 py-1 bg-emerald-100 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200 text-xs font-medium rounded">Finance</span>
+                            <span class="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-xs font-medium rounded">Accounting</span>
+                            <span class="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-xs font-medium rounded">Bonds</span>
+                        </div>
+                    </div>
+                    <div class="text-sm text-secondary-text-light dark:text-secondary-text-dark">
+                        Published Oct 4, 2026
+                    </div>
+                </div>
+            </footer>
+        </article>
+
+        <footer class="border-t border-border-light dark:border-border-dark mt-12">
+            <div class="max-w-4xl mx-auto px-4 py-8">
+                <div class="text-center text-secondary-text-light dark:text-secondary-text-dark text-sm">
+                    <p>&copy; 2026 Manan Patel. All rights reserved.</p>
+                    <p class="mt-2">
+                        <a href="/" class="hover:text-text-light dark:hover:text-text-dark transition-colors">Home</a>
+                        <span class="mx-2">•</span>
+                        <a href="./" class="hover:text-text-light dark:hover:text-text-dark transition-colors">Blog</a>
+                    </p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const toggleDarkMode = () => {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('darkMode', document.documentElement.classList.contains('dark'));
+        };
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+</body>
+</html>

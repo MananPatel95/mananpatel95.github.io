@@ -1,6 +1,50 @@
 {
   "posts": [
     {
+      "id": "lessons-ginos-pizza-stratford",
+      "title": "Lessons from running a pizza franchise with my family while in high school",
+      "description": "A family Gino's Pizza in Stratford, Ontario, from 2010 to 2020. What it was like helping my parents and brother run it through high school, and what it taught me about expenses, sales, and hiring.",
+      "date": "2026-10-17",
+      "category": "Entrepreneurship",
+      "tags": ["Entrepreneurship", "Family business", "Franchise"],
+      "readTime": "4 min read",
+      "featured": false,
+      "file": "blog/lessons-ginos-pizza-stratford.html"
+    },
+    {
+      "id": "understanding-accounting-3",
+      "title": "Understanding Accounting 3 - The three statements",
+      "description": "Balance sheet, income statement, cash flow, then seed through IPO as entries, not folklore.",
+      "date": "2026-10-11",
+      "category": "Finance",
+      "tags": ["Finance", "Accounting", "Financial statements"],
+      "readTime": "22 min read",
+      "featured": false,
+      "file": "blog/understanding-accounting-3.html"
+    },
+    {
+      "id": "understanding-accounting-2",
+      "title": "Understanding Accounting 2 - Assets, liabilities, and equity",
+      "description": "Assets, liabilities, equity, debt, and bonds. The equation every later statement is a view of.",
+      "date": "2026-10-04",
+      "category": "Finance",
+      "tags": ["Finance", "Accounting", "Bonds"],
+      "readTime": "22 min read",
+      "featured": false,
+      "file": "blog/understanding-accounting-2.html"
+    },
+    {
+      "id": "understanding-accounting-1",
+      "title": "Understanding Accounting 1 - Language and disclosure",
+      "description": "The language before the numbers: accounting versus bookkeeping, GAAP, and what public and private companies actually disclose.",
+      "date": "2026-09-27",
+      "category": "Finance",
+      "tags": ["Finance", "Accounting", "GAAP"],
+      "readTime": "28 min read",
+      "featured": false,
+      "file": "blog/understanding-accounting-1.html"
+    },
+    {
       "id": "rentplay-lessons-first-startup",
       "title": "Lessons from my 1st Startup RentPlay (RentPlay.ca)",
       "description": "Reflections on building RentPlay and classic first-time founder mistakes: co-founders, validation, distribution, B2B vs B2C, and why cashflow beats VC money.",
@@ -70,9 +114,7 @@
       "color": "green"
     },
     {
-      "name": "Entrepreneurship",
-      "slug": "entrepreneurship",
-      "count": 1,
+      "count": 2,
       "color": "purple"
     },
     {
@@ -84,7 +126,7 @@
     {
       "name": "Finance",
       "slug": "finance",
-      "count": 0,
+      "count": 3,
       "color": "emerald"
     },
     {
