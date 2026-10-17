@@ -776,6 +776,13 @@
           grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
           gap: 1.5rem;
         }
+        .writing-subheader {
+          justify-content: flex-end;
+          margin: 0 0 1.5rem;
+        }
+        .writing-grid[hidden] {
+          display: none;
+        }
         .writing-card {
           border: 1px solid #000;
           border-radius: 0.75rem;
@@ -808,6 +815,35 @@
         .writing-card a {
           color: #06c;
           font-size: 0.9rem;
+        }
+        #writingRecent {
+          grid-template-columns: 1fr;
+          gap: 0.75rem;
+        }
+        #writingRecent .writing-card {
+          min-height: 0;
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) auto;
+          grid-template-areas:
+            "title meta"
+            "desc read";
+          column-gap: 1.5rem;
+          row-gap: 0.35rem;
+          align-items: baseline;
+        }
+        #writingRecent .writing-card h3 { grid-area: title; margin: 0; }
+        #writingRecent .writing-card .meta { grid-area: meta; justify-self: end; margin: 0; white-space: nowrap; }
+        #writingRecent .writing-card p:not(.meta) { grid-area: desc; margin: 0; }
+        #writingRecent .writing-card a { grid-area: read; justify-self: end; white-space: nowrap; }
+        @media (max-width: 520px) {
+          #writingRecent .writing-card {
+            grid-template-columns: 1fr;
+            grid-template-areas: "title" "meta" "desc" "read";
+          }
+          #writingRecent .writing-card .meta,
+          #writingRecent .writing-card a {
+            justify-self: start;
+          }
         }
         .notes-group {
           margin: 0 0 2rem;
@@ -1074,9 +1110,17 @@
 </div>
 
 <div id="writing" class="page-view" hidden>
+<div class="travel-subheader writing-subheader">
+<div class="travel-view-switch" role="group" aria-label="Writing view">
+<button type="button" id="writingViewRecent" class="is-active" aria-pressed="true"><span class="material-icons" aria-hidden="true">schedule</span>Recent</button>
+<button type="button" id="writingViewTopics" aria-pressed="false"><span class="material-icons" aria-hidden="true">category</span>By topic</button>
+</div>
+</div>
+<div class="writing-grid" id="writingRecent"></div>
+<div id="writingTopics" hidden>
 <h3 class="page-heading">AI / ML notes</h3>
 <div class="writing-grid">
-<article class="writing-card">
+<article class="writing-card" data-date="2026-07">
 <h3>Prompt to Response, what actually happens? And whats in the AI cake?</h3>
 <p class="meta">July 2026</p>
 <p>Talk at Platform Calgary, July 2026. AI Summer School: Prompt to Response &amp; Problems to Solve.</p>
@@ -1085,13 +1129,13 @@
 </div>
 <h3 class="page-heading">Entrepreneurship and business</h3>
 <div class="writing-grid">
-<article class="writing-card">
+<article class="writing-card" data-date="2026-10-17">
 <h3>Lessons from running a pizza franchise with my family while in high school</h3>
 <p class="meta">Oct 17, 2026</p>
 <p>A family Gino's Pizza in Stratford, Ontario, from 2010 to 2020. What it was like helping my parents and brother run it through high school, and what it taught me about expenses, sales, and hiring.</p>
 <a href="blog/lessons-ginos-pizza-stratford.html">Read</a>
 </article>
-<article class="writing-card">
+<article class="writing-card" data-date="2025-09-10">
 <h3>Lessons from my 1st Startup - RentPlay.ca</h3>
 <p class="meta">Sep 10, 2025</p>
 <p>Reflections on building RentPlay, on co-founders, validation, distribution, B2B vs B2C, and why cashflow beats VC money.</p>
@@ -1100,19 +1144,19 @@
 </div>
 <h3 class="page-heading">Finance</h3>
 <div class="writing-grid">
-<article class="writing-card">
+<article class="writing-card" data-date="2026-10-11">
 <h3>Understanding Accounting 3 - The three statements</h3>
 <p class="meta">Oct 11, 2026</p>
 <p>Balance sheet, income statement, cash flow, then seed through IPO as entries, not folklore.</p>
 <a href="blog/understanding-accounting-3.html">Read</a>
 </article>
-<article class="writing-card">
+<article class="writing-card" data-date="2026-10-04">
 <h3>Understanding Accounting 2 - Assets, liabilities, and equity</h3>
 <p class="meta">Oct 4, 2026</p>
 <p>Assets, liabilities, equity, debt, and bonds. The equation every later statement is a view of.</p>
 <a href="blog/understanding-accounting-2.html">Read</a>
 </article>
-<article class="writing-card">
+<article class="writing-card" data-date="2026-09-27">
 <h3>Understanding Accounting 1 - Language and disclosure</h3>
 <p class="meta">Sep 27, 2026</p>
 <p>The language before the numbers: accounting versus bookkeeping, GAAP, and what public and private companies actually disclose.</p>
@@ -1121,25 +1165,25 @@
 </div>
 <h3 class="page-heading">iOS</h3>
 <div class="writing-grid">
-<article class="writing-card">
+<article class="writing-card" data-date="2024-12-15">
 <h3>SwiftUI Modern Development</h3>
 <p class="meta">Dec 15, 2024</p>
 <p>Exploring the latest SwiftUI features and modern iOS development practices.</p>
 <a href="blog/swiftui-modern-development.html">Read</a>
 </article>
-<article class="writing-card">
+<article class="writing-card" data-date="2024-02-28">
 <h3>Swift Concurrency &amp; Multithreading</h3>
 <p class="meta">Feb 28, 2024</p>
 <p>Understanding async/await and structured concurrency in Swift.</p>
 <a href="blog/swift-concurrency-multithreading.html">Read</a>
 </article>
-<article class="writing-card">
+<article class="writing-card" data-date="2023-12-30">
 <h3>iOS Networking with Async/Await</h3>
 <p class="meta">Dec 30, 2023</p>
 <p>Modern networking patterns in iOS using async/await.</p>
 <a href="blog/ios-networking-async-await.html">Read</a>
 </article>
-<article class="writing-card">
+<article class="writing-card" data-date="2023-12-22">
 <h3>iOS Unit Testing &amp; Mock Objects</h3>
 <p class="meta">Dec 22, 2023</p>
 <p>Best practices for testing iOS applications with mock objects.</p>
@@ -1148,15 +1192,40 @@
 </div>
 <h3 class="page-heading">Substack notes</h3>
 <div class="writing-grid">
-<article class="writing-card">
+<article class="writing-card" data-date="2026-03-16">
 <h3>Kevin’s Rule</h3>
 <p class="meta">Mar 16, 2026</p>
 <p>How I plan on getting 6 more adventures in 2026.</p>
 <a href="https://manapate.substack.com/p/kevins-rule" target="_blank" rel="noopener">Read</a>
 </article>
 </div>
+</div>
 <button type="button" class="back-to-main">← Back to main page</button>
 </div>
+<script>
+(function() {
+    var recent = document.getElementById('writingRecent');
+    var topics = document.getElementById('writingTopics');
+    var recentBtn = document.getElementById('writingViewRecent');
+    var topicsBtn = document.getElementById('writingViewTopics');
+    var cards = Array.prototype.slice.call(topics.querySelectorAll('.writing-card'));
+    cards.sort(function(a, b) { return b.dataset.date.localeCompare(a.dataset.date); });
+    cards.forEach(function(card) { recent.appendChild(card.cloneNode(true)); });
+
+    function setView(view) {
+        var byTopic = view === 'topics';
+        recent.hidden = byTopic;
+        topics.hidden = !byTopic;
+        recentBtn.classList.toggle('is-active', !byTopic);
+        topicsBtn.classList.toggle('is-active', byTopic);
+        recentBtn.setAttribute('aria-pressed', String(!byTopic));
+        topicsBtn.setAttribute('aria-pressed', String(byTopic));
+    }
+
+    recentBtn.addEventListener('click', function() { setView('recent'); });
+    topicsBtn.addEventListener('click', function() { setView('topics'); });
+})();
+</script>
 
 <div id="travel" class="page-view" hidden>
 <section class="mb-8 pt-2" id="travel-gallery">
