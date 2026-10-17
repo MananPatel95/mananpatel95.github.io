@@ -1,6 +1,17 @@
 {
   "posts": [
     {
+      "id": "lessons-ginos-pizza-stratford",
+      "title": "Lessons from running a pizza franchise with my family while in high school",
+      "description": "A family Gino's Pizza in Stratford, Ontario, from 2010 to 2020. What it was like helping my parents and brother run it through high school, and what it taught me about expenses, sales, and hiring.",
+      "date": "2026-10-17",
+      "category": "Entrepreneurship",
+      "tags": ["Entrepreneurship", "Family business", "Franchise"],
+      "readTime": "4 min read",
+      "featured": false,
+      "file": "blog/lessons-ginos-pizza-stratford.html"
+    },
+    {
       "id": "understanding-accounting-3",
       "title": "Understanding Accounting 3 - The three statements",
       "description": "Balance sheet, income statement, cash flow, then seed through IPO as entries, not folklore.",
@@ -32,17 +43,6 @@
       "readTime": "28 min read",
       "featured": false,
       "file": "blog/understanding-accounting-1.html"
-    },
-    {
-      "id": "lessons-ginos-pizza-stratford",
-      "title": "Lessons from running a pizza franchise with my family while in high school",
-      "description": "A family Gino's Pizza in Stratford, Ontario, from 2010 to 2020. What it was like helping my parents and brother run it through high school, and what it taught me about expenses, sales, and hiring.",
-      "date": "2026-07-25",
-      "category": "Entrepreneurship",
-      "tags": ["Entrepreneurship", "Family business", "Franchise"],
-      "readTime": "4 min read",
-      "featured": false,
-      "file": "blog/lessons-ginos-pizza-stratford.html"
     },
     {
       "id": "rentplay-lessons-first-startup",
