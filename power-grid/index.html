@@ -51,6 +51,11 @@
   #intro .back:hover { color: var(--ink); }
   #intro h1 { font-size: 24px; font-weight: 900; line-height: 1.15; margin: 8px 0 6px; letter-spacing: -0.01em; }
   #intro .sub { font-size: 14px; color: var(--muted); line-height: 1.45; }
+  #intro .keys { font-size: 12px; color: var(--muted); margin-top: 10px; line-height: 1.5; }
+  #intro .keys kbd {
+    font: inherit; font-weight: 800; font-size: 11px; padding: 1px 5px; border-radius: 5px;
+    background: #f0f0ec; border: 1px solid #e2e0da; border-bottom-width: 2px;
+  }
   #intro .date { font-size: 12px; color: var(--muted); font-weight: 700; margin-top: 10px; }
   .btn-row { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
   .btn {
@@ -177,7 +182,7 @@
   @media (max-width: 720px) {
     #intro { left: 12px; right: 12px; top: 12px; width: auto; padding: 14px 16px; }
     #intro h1 { font-size: 19px; margin: 4px 0 2px; }
-    #intro .sub, #intro .date { display: none; }
+    #intro .sub, #intro .date, #intro .keys { display: none; }
     .btn-row { margin-top: 10px; }
     .btn { padding: 7px 12px; font-size: 13px; }
     #flow { bottom: 12px; }
@@ -218,6 +223,7 @@
     <button class="btn" id="tour-btn">▶ Take the tour</button>
     <button class="btn ghost" id="reset-btn">Reset view</button>
   </div>
+  <p class="keys"><kbd>Drag</kbd> or <kbd>WASD</kbd> <kbd>←↑↓→</kbd> to move · <kbd>Right-drag</kbd> to turn · <kbd>Scroll</kbd> to zoom</p>
   <p class="date">Aug 15, 2026 · Source: <a class="src" href="https://power2026.ai/" target="_blank" rel="noopener">power2026.ai</a></p>
 </header>
 
@@ -466,7 +472,10 @@ const controls = new OrbitControls(camera, renderer.domElement);
 controls.target.copy(HOME_TARGET);
 controls.enableDamping = true;
 controls.dampingFactor = 0.08;
-controls.screenSpacePanning = true;
+// Drag (or one finger) moves the map; right-drag (or two fingers) turns and zooms
+controls.screenSpacePanning = false;
+controls.mouseButtons = { LEFT: THREE.MOUSE.PAN, MIDDLE: THREE.MOUSE.DOLLY, RIGHT: THREE.MOUSE.ROTATE };
+controls.touches = { ONE: THREE.TOUCH.PAN, TWO: THREE.TOUCH.DOLLY_ROTATE };
 controls.minZoom = 0.7;
 controls.maxZoom = 4;
 controls.minPolarAngle = 0.35;
@@ -1263,12 +1272,55 @@ document.getElementById('prev-btn').addEventListener('click', () => step(-1));
 document.getElementById('close-btn').addEventListener('click', () => clearSelection());
 document.getElementById('tour-btn').addEventListener('click', () => select(ORDER[0]));
 document.getElementById('reset-btn').addEventListener('click', () => clearSelection());
+// WASD / arrow keys move the camera across the diorama
+const MOVE_KEYS = {
+  w: [0, 1], arrowup: [0, 1], s: [0, -1], arrowdown: [0, -1],
+  a: [-1, 0], arrowleft: [-1, 0], d: [1, 0], arrowright: [1, 0],
+};
+// key → { down, up }: a quick tap still moves for a short beat
+const held = new Map();
+const TAP_MS = 160;
 window.addEventListener('keydown', (e) => {
-  if (e.target.tagName === 'INPUT') return;
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
   if (e.key === 'Escape') clearSelection();
-  if (e.key === 'ArrowRight') step(1);
-  if (e.key === 'ArrowLeft' && selected) step(-1);
+  const k = e.key.toLowerCase();
+  if (MOVE_KEYS[k] && !e.metaKey && !e.ctrlKey && !e.altKey) {
+    if (!held.has(k) || held.get(k).up) held.set(k, { down: performance.now(), up: 0 });
+    tween = null;
+    e.preventDefault();
+  }
 });
+window.addEventListener('keyup', (e) => {
+  const h = held.get(e.key.toLowerCase());
+  if (h) h.up = Math.max(performance.now(), h.down + TAP_MS);
+});
+window.addEventListener('blur', () => held.clear());
+const kFwd = new THREE.Vector3(), kRight = new THREE.Vector3(), kMove = new THREE.Vector3();
+function keyboardMove(dt) {
+  let mx = 0, mz = 0;
+  const now = performance.now();
+  for (const [k, h] of held) {
+    if (h.up && now > h.up) { held.delete(k); continue; }
+    mx += MOVE_KEYS[k][0];
+    mz += MOVE_KEYS[k][1];
+  }
+  if (mx || mz) {
+    camera.getWorldDirection(kFwd);
+    kFwd.y = 0;
+    kFwd.normalize();
+    kRight.crossVectors(kFwd, UP).normalize();
+    kMove.copy(kFwd).multiplyScalar(mz).addScaledVector(kRight, mx).normalize().multiplyScalar((16 * dt) / camera.zoom);
+    controls.target.add(kMove);
+    camera.position.add(kMove);
+  }
+  // keep the diorama within reach however the camera was moved
+  kMove.set(
+    THREE.MathUtils.clamp(controls.target.x, -21, 21) - controls.target.x,
+    0,
+    THREE.MathUtils.clamp(controls.target.z, -11, 11) - controls.target.z,
+  );
+  if (kMove.x || kMove.z) { controls.target.add(kMove); camera.position.add(kMove); }
+}
 
 /* Picking */
 const raycaster = new THREE.Raycaster();
@@ -1329,6 +1381,7 @@ function frame() {
     camera.updateProjectionMatrix();
     if (k >= 1) tween = null;
   }
+  keyboardMove(dt);
   controls.update();
 
   rotors.forEach((r, i) => { r.rotation.z -= dt * (1.4 + i * 0.25); });
