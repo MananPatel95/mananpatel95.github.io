@@ -1,6 +1,17 @@
 {
   "posts": [
     {
+      "id": "autonomy-city-how-machines-see",
+      "title": "Autonomy City: learning how self-driving cars see",
+      "description": "I built a browser city sim to learn what Tesla-, Waymo-, and Waabi-style self-driving stacks see, how they plan, and how the data engine behind them works.",
+      "date": "2026-10-18",
+      "category": "AI / ML",
+      "tags": ["AI", "Self-driving", "Simulation"],
+      "readTime": "5 min read",
+      "featured": false,
+      "file": "blog/autonomy-city-how-machines-see.html"
+    },
+    {
       "id": "lessons-ginos-pizza-stratford",
       "title": "Lessons from running a pizza franchise with my family while in high school",
       "description": "A family Gino's Pizza in Stratford, Ontario, from 2010 to 2020. What it was like helping my parents and brother run it through high school, and what it taught me about expenses, sales, and hiring.",

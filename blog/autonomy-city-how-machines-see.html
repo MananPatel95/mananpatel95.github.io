@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autonomy City: learning how self-driving cars see | Manan Patel</title>
+    <meta name="description" content="I built a browser city sim to learn what Tesla-, Waymo-, and Waabi-style self-driving stacks see, how they plan, and how the data engine behind them works.">
+    <meta name="keywords" content="Manan Patel, self-driving, autonomous vehicles, lidar, perception, BEV occupancy, Three.js, machine learning, data engine">
+    <meta name="author" content="Manan Patel">
+    <link rel="canonical" href="https://mananpatel.info/blog/autonomy-city-how-machines-see.html">
+
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://mananpatel.info/blog/autonomy-city-how-machines-see.html">
+    <meta property="og:title" content="Autonomy City: learning how self-driving cars see | Manan Patel">
+    <meta property="og:description" content="A browser city sim comparing camera-only, lidar + HD map, and occupancy-forecast self-driving stacks.">
+    <meta property="og:image" content="https://mananpatel.info/blog/autonomy-city/f3-waabi-style.jpg">
+    <meta property="og:site_name" content="Manan Patel">
+    <meta property="article:published_time" content="2026-10-18">
+    <meta property="article:author" content="https://mananpatel.info/#manan-patel">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://mananpatel.info/blog/autonomy-city-how-machines-see.html">
+    <meta name="twitter:title" content="Autonomy City: learning how self-driving cars see | Manan Patel">
+    <meta name="twitter:image" content="https://mananpatel.info/blog/autonomy-city/f3-waabi-style.jpg">
+    <meta name="twitter:description" content="Camera-only vs lidar + HD map vs occupancy forecast, in a city I built to learn them.">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "BlogPosting",
+          "headline": "Autonomy City: learning how self-driving cars see",
+          "description": "I built a browser city sim to learn what Tesla-, Waymo-, and Waabi-style self-driving stacks see, how they plan, and how the data engine behind them works.",
+          "url": "https://mananpatel.info/blog/autonomy-city-how-machines-see.html",
+          "datePublished": "2026-10-18",
+          "dateModified": "2026-10-18",
+          "image": "https://mananpatel.info/blog/autonomy-city/f3-waabi-style.jpg",
+          "author": { "@id": "https://mananpatel.info/#manan-patel" },
+          "publisher": { "@id": "https://mananpatel.info/#manan-patel" },
+          "mainEntityOfPage": { "@type": "WebPage", "@id": "https://mananpatel.info/blog/autonomy-city-how-machines-see.html" }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://mananpatel.info/" },
+            { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://mananpatel.info/blog/" },
+            { "@type": "ListItem", "position": 3, "name": "Autonomy City", "item": "https://mananpatel.info/blog/autonomy-city-how-machines-see.html" }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'text-light': '#1f2937',
+                        'text-dark': '#f9fafb',
+                        'secondary-text-light': '#6b7280',
+                        'secondary-text-dark': '#9ca3af',
+                        'border-light': '#e5e7eb',
+                        'border-dark': '#374151',
+                        'bg-light': '#ffffff',
+                        'bg-dark': '#111827'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .blog-content { line-height: 1.7; }
+        .blog-content h2 { font-size: 1.5rem; font-weight: bold; margin-top: 2rem; margin-bottom: 1rem; }
+        .blog-content p { margin-bottom: 1rem; }
+        .blog-content ul { margin-left: 1.5rem; margin-bottom: 1rem; }
+        .blog-content li { margin-bottom: 0.5rem; }
+        .blog-content a { color: #2563eb; text-decoration: underline; }
+        .dark .blog-content a { color: #60a5fa; }
+        figure { margin: 2rem 0; }
+        figure img { display: block; margin: 0 auto; max-width: 100%; max-height: 640px; width: auto; height: auto; border-radius: 8px; }
+        figcaption { margin-top: 0.75rem; text-align: center; font-size: 0.95rem; font-style: italic; color: #6b7280; }
+        .dark figcaption { color: #9ca3af; }
+    </style>
+</head>
+<body class="bg-bg-light dark:bg-bg-dark text-text-light dark:text-text-dark transition-colors">
+    <div class="min-h-screen">
+        <header class="border-b border-border-light dark:border-border-dark">
+            <div class="max-w-4xl mx-auto px-4 py-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <a href="../" class="text-xl font-bold text-text-light dark:text-text-dark hover:opacity-80 transition-opacity">Manan Patel</a>
+                        <p class="text-xs text-secondary-text-light dark:text-secondary-text-dark mt-0.5">Tinkering and Sharing</p>
+                    </div>
+                    <div class="flex items-center gap-3 flex-wrap">
+                        <a href="../#writing" class="text-sm text-secondary-text-light dark:text-secondary-text-dark hover:text-text-light dark:hover:text-text-dark transition-colors">← Back to Writing</a>
+                        <a href="../" class="text-sm text-secondary-text-light dark:text-secondary-text-dark hover:text-text-light dark:hover:text-text-dark transition-colors">Home</a>
+                        <a class="w-8 h-8 border border-border-light dark:border-border-dark rounded flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" href="https://x.com/mananthekid" target="_blank" rel="noopener" aria-label="X">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+                        </a>
+                        <a class="w-8 h-8 border border-border-light dark:border-border-dark rounded flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" href="https://www.linkedin.com/in/mananpatel123/" target="_blank" rel="noopener" aria-label="LinkedIn">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z"></path></svg>
+                        </a>
+                        <a class="w-8 h-8 border border-border-light dark:border-border-dark rounded flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" href="https://github.com/MananPatel95" target="_blank" rel="noopener" aria-label="GitHub">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path clip-rule="evenodd" fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.285 2.866 7.92 6.737 9.208.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.942.359.308.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z"></path></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <article class="max-w-4xl mx-auto px-4 py-8">
+            <header class="mb-8">
+                <div class="flex items-center gap-2 mb-4 flex-wrap">
+                    <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs font-medium rounded">AI / ML</span>
+                    <span class="text-secondary-text-light dark:text-secondary-text-dark text-sm">Oct 18, 2026</span>
+                    <span class="text-secondary-text-light dark:text-secondary-text-dark text-sm">•</span>
+                    <span class="text-secondary-text-light dark:text-secondary-text-dark text-sm">5 min read</span>
+                </div>
+                <h1 class="text-3xl font-bold text-text-light dark:text-text-dark mb-4">Autonomy City: learning how self-driving cars see</h1>
+                <p class="text-lg text-secondary-text-light dark:text-secondary-text-dark">
+                    I wanted to actually understand what a self-driving car sees, not just read about it. So I built Autonomy City: a small 3D city in the browser where one car drives itself, and you can flip between three different ways of seeing the street.
+                </p>
+                <figure class="mt-6">
+                    <img src="autonomy-city/f3-waabi-style.jpg" alt="Autonomy City in the Waabi-style view: lidar sweep, a bird's-eye occupancy grid, and a forecast of where things will be in 1 to 3 seconds">
+                    <figcaption>The Waabi-style view. The car turns lidar into a bird's-eye grid of what's occupied, then guesses where everything will be 1, 2, and 3 seconds from now.</figcaption>
+                </figure>
+            </header>
+
+            <div class="blog-content">
+                <p>It's built with TypeScript and Three.js, with the lidar ray casting in Rust compiled to WebAssembly. Behind the game there's a Python data pipeline that trains small models on what the cars record. Everything here is a simplified stand-in based on what these companies say in public. It's not their software, and none of them are involved.</p>
+
+                <h2>Three ways to see the same street</h2>
+                <p>The fun part is that F1, F2, and F3 aren't just different overlays. Each one has its own planner, so the car actually drives differently depending on what it's allowed to see.</p>
+
+                <h2>F1: cameras only (Tesla-style)</h2>
+                <p>Tesla says it doesn't need lidar or radar, and doesn't rely on detailed HD maps. So in this view the car only gets cameras. It draws boxes around what it sees, builds a rough occupancy picture from that, and follows the nav route like you'd follow Google Maps.</p>
+                <figure>
+                    <img src="autonomy-city/f1-tesla-style.jpg" alt="Tesla-style view with camera frustums and vision boxes around signs and pedestrians" loading="lazy">
+                    <figcaption>Camera-only. Vision boxes on the yield signs and pedestrians, the nav route on the minimap, no lidar anywhere.</figcaption>
+                </figure>
+                <p>What clicked for me: if a camera can't see it, it doesn't exist. Hide a pedestrian behind a parked car and this stack finds out late.</p>
+
+                <h2>F2: lidar, radar, and an HD map (Waymo-style)</h2>
+                <p>Waymo's 6th-gen Driver uses 13 cameras, 4 lidars, and 6 radars, and only drives in areas it has mapped in detail. In the sim, a spinning lidar sweeps 360° around the car, radar pings show up, and everything gets fused into one set of boxes. The car drives on a pre-built lane graph instead of reading the road live.</p>
+                <figure>
+                    <img src="autonomy-city/f2-waymo-style.jpg" alt="Waymo-style view with a 360 degree lidar sweep around the car at an intersection" loading="lazy">
+                    <figcaption>The lidar sweep at an intersection. Points get corrected for the car's own motion so the rings don't smear while it drives.</figcaption>
+                </figure>
+                <p>That motion fix was a real lesson. A lidar takes time to spin, and the car moves during that spin. If you don't correct for it, a pole looks bent.</p>
+
+                <h2>F3: occupancy forecasting (Waabi-style)</h2>
+                <p>Waabi describes an "AI-first" stack that stays interpretable, trained heavily in its own simulator. Here the car turns lidar into a bird's-eye grid, forecasts that grid 1 to 3 seconds out, and scores a fan of possible paths against the forecast. It also runs variants of the same scene, like a jaywalker stepping out a bit earlier, to see where the plan breaks.</p>
+
+                <h2>The part nobody sees: the data engine</h2>
+                <p>Most of the work in self-driving isn't the car. It's the loop that makes the car better. So I built a small version of that:</p>
+                <ul>
+                    <li><strong>Record</strong> drives, in the browser or headless in Node.</li>
+                    <li><strong>Mine</strong> the interesting moments: takeovers, perception misses, near-misses.</li>
+                    <li><strong>Label</strong> them with a fake labeling vendor that adds noise on purpose, then <strong>QA</strong> to catch the bad labels.</li>
+                    <li><strong>Split</strong> by scenario so the test set isn't just the training set again.</li>
+                    <li><strong>Train</strong> a PointNet-style perception model and a driving policy with behaviour cloning and DAgger in PyTorch.</li>
+                    <li><strong>Gate</strong> the new model: it only ships if it beats the old one. Then export to ONNX and run it in the browser.</li>
+                </ul>
+                <p>The perception model hit an F1 of 0.99 against 0.62 for the hand-written baseline. I want to be honest about that number though. It's on simulated data with clean geometry, and the test objects were all close to the car. Real roads are much harder. The point was to learn the loop, not to set a record.</p>
+
+                <h2>What I took away</h2>
+                <ul>
+                    <li><strong>Sensors decide what's possible.</strong> The planner can only be as good as what it's allowed to see.</li>
+                    <li><strong>Maps are a trade.</strong> An HD map makes driving easier, but you're stuck where you've mapped.</li>
+                    <li><strong>Prediction is the hard part.</strong> Seeing a pedestrian is easy. Knowing whether they'll step out is the real problem.</li>
+                    <li><strong>The data loop is the product.</strong> Mining, labelling, QA, and gating matter more than any one model.</li>
+                </ul>
+                <p>It's the same thing I see building LLM agents at work. The model is only part of it. Evals, data, and knowing when something is safe to ship are the rest.</p>
+            </div>
+
+            <footer class="mt-12 pt-8 border-t border-border-light dark:border-border-dark">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div class="flex items-center gap-4 flex-wrap">
+                        <span class="text-sm text-secondary-text-light dark:text-secondary-text-dark">Tags:</span>
+                        <div class="flex gap-2 flex-wrap">
+                            <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs font-medium rounded">AI / ML</span>
+                            <span class="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-xs font-medium rounded">Self-driving</span>
+                            <span class="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-xs font-medium rounded">Simulation</span>
+                        </div>
+                    </div>
+                    <div class="text-sm text-secondary-text-light dark:text-secondary-text-dark">
+                        Published Oct 18, 2026
+                    </div>
+                </div>
+            </footer>
+        </article>
+
+        <footer class="border-t border-border-light dark:border-border-dark mt-12">
+            <div class="max-w-4xl mx-auto px-4 py-8">
+                <div class="text-center text-secondary-text-light dark:text-secondary-text-dark text-sm">
+                    <p>&copy; 2026 Manan Patel. All rights reserved.</p>
+                    <p class="mt-2">
+                        <a href="/" class="hover:text-text-light dark:hover:text-text-dark transition-colors">Home</a>
+                        <span class="mx-2">•</span>
+                        <a href="./" class="hover:text-text-light dark:hover:text-text-dark transition-colors">Blog</a>
+                    </p>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script>
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+</body>
+</html>
