@@ -77,6 +77,7 @@
         .blog-content h2 { font-size: 1.5rem; font-weight: bold; margin-top: 2rem; margin-bottom: 1rem; }
         .blog-content p { margin-bottom: 1rem; }
         .blog-content ul { margin-left: 1.5rem; margin-bottom: 1rem; }
+        .blog-content ol { list-style: decimal; margin-left: 1.5rem; margin-bottom: 1rem; }
         .blog-content li { margin-bottom: 0.5rem; }
         .blog-content a { color: #2563eb; text-decoration: underline; }
         .dark .blog-content a { color: #60a5fa; }
@@ -122,63 +123,65 @@
                 </div>
                 <h1 class="text-3xl font-bold text-text-light dark:text-text-dark mb-4">Autonomy City: learning how self-driving cars see</h1>
                 <p class="text-lg text-secondary-text-light dark:text-secondary-text-dark">
-                    I wanted to actually understand what a self-driving car sees, not just read about it. So I built Autonomy City: a small 3D city in the browser where one car drives itself, and you can flip between three different ways of seeing the street.
+                    I kept reading about Tesla vs Waymo and honestly didn't get what the cars actually see. So I built a little city in the browser where a car drives itself, and you can flip between 3 different ways of seeing the same street. Click below and try it.
                 </p>
                 <p class="mt-4">
                     <a href="/autonomy-city/" class="inline-block px-4 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors">▶ Play Autonomy City</a>
-                    <span class="ml-2 text-sm text-secondary-text-light dark:text-secondary-text-dark">Runs in your browser. Best on a laptop or desktop with a keyboard.</span>
+                    <span class="ml-2 text-sm text-secondary-text-light dark:text-secondary-text-dark">Runs in your browser. Use a laptop, you need a keyboard.</span>
                 </p>
                 <figure class="mt-6">
                     <img src="autonomy-city/f3-waabi-style.jpg" alt="Autonomy City in the Waabi-style view: lidar sweep, a bird's-eye occupancy grid, and a forecast of where things will be in 1 to 3 seconds">
-                    <figcaption>The Waabi-style view. The car turns lidar into a bird's-eye grid of what's occupied, then guesses where everything will be 1, 2, and 3 seconds from now.</figcaption>
+                    <figcaption>Waabi-style view. Lidar turns into a top-down grid of what's taken, then it guesses where everything will be in 1, 2, and 3 seconds.</figcaption>
                 </figure>
             </header>
 
             <div class="blog-content">
-                <p>It's built with TypeScript and Three.js, with the lidar ray casting in Rust compiled to WebAssembly. Behind the game there's a Python data pipeline that trains small models on what the cars record. Everything here is a simplified stand-in based on what these companies say in public. It's not their software, and none of them are involved.</p>
+                <p>Quick disclaimer first. This is NOT Tesla's, Waymo's, or Waabi's software. It's my simplified version, based on what they say publicly. They have nothing to do with it.</p>
+                <p>Stack for the nerds: TypeScript + Three.js for the city, Rust compiled to WebAssembly for the lidar rays, and a Python pipeline that trains small models on what the cars record.</p>
 
-                <h2>Three ways to see the same street</h2>
-                <p>The fun part is that F1, F2, and F3 aren't just different overlays. Each one has its own planner, so the car actually drives differently depending on what it's allowed to see.</p>
+                <h2>Same street, 3 ways of seeing it</h2>
+                <p>Press F1, F2, or F3 and you're not just changing the overlay. Each one has its own planner, so the car literally drives differently based on what it's allowed to see.</p>
 
-                <h2>F1: cameras only (Tesla-style)</h2>
-                <p>Tesla says it doesn't need lidar or radar, and doesn't rely on detailed HD maps. So in this view the car only gets cameras. It draws boxes around what it sees, builds a rough occupancy picture from that, and follows the nav route like you'd follow Google Maps.</p>
+                <h2>F1 – Tesla-style (cameras only)</h2>
+                <p>Tesla says it doesn't need lidar, radar, or detailed HD maps. So this car only gets cameras. It draws boxes around what it sees, builds a rough picture of what's around it, and follows the nav route kind of like you following Google Maps.</p>
                 <figure>
-                    <img src="autonomy-city/f1-tesla-style.jpg" alt="Tesla-style view with camera frustums and vision boxes around signs and pedestrians" loading="lazy">
-                    <figcaption>Camera-only. Vision boxes on the yield signs and pedestrians, the nav route on the minimap, no lidar anywhere.</figcaption>
+                    <img src="autonomy-city/f1-tesla-style.jpg" alt="Tesla-style view with camera cones and vision boxes around signs and pedestrians" loading="lazy">
+                    <figcaption>Cameras only. Boxes on the yield signs and people, route on the minimap, zero lidar.</figcaption>
                 </figure>
-                <p>What clicked for me: if a camera can't see it, it doesn't exist. Hide a pedestrian behind a parked car and this stack finds out late.</p>
+                <p>Biggest takeaway: if the camera can't see it, it doesn't exist. Put a pedestrian behind a parked car (press 2 in the game) and you'll see what I mean.</p>
 
-                <h2>F2: lidar, radar, and an HD map (Waymo-style)</h2>
-                <p>Waymo's 6th-gen Driver uses 13 cameras, 4 lidars, and 6 radars, and only drives in areas it has mapped in detail. In the sim, a spinning lidar sweeps 360° around the car, radar pings show up, and everything gets fused into one set of boxes. The car drives on a pre-built lane graph instead of reading the road live.</p>
+                <h2>F2 – Waymo-style (lidar + radar + HD map)</h2>
+                <p>Waymo's 6th gen car has 13 cameras, 4 lidars, and 6 radars. That's a lot of hardware. It also only drives where it's already mapped the streets in detail. In the game you get a full 360° lidar scan around the car, radar pings, and it all gets combined into one set of boxes. It drives on a pre-built map of the lanes instead of figuring out the road live.</p>
                 <figure>
-                    <img src="autonomy-city/f2-waymo-style.jpg" alt="Waymo-style view with a 360 degree lidar sweep around the car at an intersection" loading="lazy">
-                    <figcaption>The lidar sweep at an intersection. Points get corrected for the car's own motion so the rings don't smear while it drives.</figcaption>
+                    <img src="autonomy-city/f2-waymo-style.jpg" alt="Waymo-style view with a 360 degree lidar scan around the car at an intersection" loading="lazy">
+                    <figcaption>Lidar at an intersection. Each scan gets pinned to where the car was when it took it.</figcaption>
                 </figure>
-                <p>That motion fix was a real lesson. A lidar takes time to spin, and the car moves during that spin. If you don't correct for it, a pole looks bent.</p>
+                <p>This one got me. A lidar scan isn't instant, and the car keeps moving while it's scanning. My first version just drew the points wherever the car was right now, so dots slid under the car and trailed behind it. Turns out real AV stacks deal with this too. You have to place each scan where the car was when it took it.</p>
 
-                <h2>F3: occupancy forecasting (Waabi-style)</h2>
-                <p>Waabi describes an "AI-first" stack that stays interpretable, trained heavily in its own simulator. Here the car turns lidar into a bird's-eye grid, forecasts that grid 1 to 3 seconds out, and scores a fan of possible paths against the forecast. It also runs variants of the same scene, like a jaywalker stepping out a bit earlier, to see where the plan breaks.</p>
+                <h2>F3 – Waabi-style (predicting the future)</h2>
+                <p>Waabi calls itself "AI-first" and trains a ton in its own simulator. Here the car turns lidar into a top-down grid, predicts that grid 1–3 seconds ahead, and picks a path from a bunch of options based on where things will be. It also replays the same moment with small changes, like the jaywalker stepping out a bit earlier, to see when the plan breaks.</p>
 
-                <h2>The part nobody sees: the data engine</h2>
-                <p>Most of the work in self-driving isn't the car. It's the loop that makes the car better. So I built a small version of that:</p>
+                <h2>The boring part that actually matters</h2>
+                <p>Most of self-driving isn't the car. It's the loop that makes the car better every week. So I built a mini version:</p>
                 <ul>
-                    <li><strong>Record</strong> drives, in the browser or headless in Node.</li>
-                    <li><strong>Mine</strong> the interesting moments: takeovers, perception misses, near-misses.</li>
-                    <li><strong>Label</strong> them with a fake labeling vendor that adds noise on purpose, then <strong>QA</strong> to catch the bad labels.</li>
-                    <li><strong>Split</strong> by scenario so the test set isn't just the training set again.</li>
-                    <li><strong>Train</strong> a PointNet-style perception model and a driving policy with behaviour cloning and DAgger in PyTorch.</li>
-                    <li><strong>Gate</strong> the new model: it only ships if it beats the old one. Then export to ONNX and run it in the browser.</li>
+                    <li>Record drives (in the browser, or headless in Node)</li>
+                    <li>Pull out the interesting moments → takeovers, missed detections, near-misses</li>
+                    <li>Label them with a fake labeling vendor that makes mistakes on purpose, then QA to catch them</li>
+                    <li>Split by scenario so you're not testing on stuff you trained on</li>
+                    <li>Train a perception model and a driving policy in PyTorch</li>
+                    <li>Only ship the new model if it beats the old one, then export it to ONNX</li>
                 </ul>
-                <p>The perception model hit an F1 of 0.99 against 0.62 for the hand-written baseline. I want to be honest about that number though. It's on simulated data with clean geometry, and the test objects were all close to the car. Real roads are much harder. The point was to learn the loop, not to set a record.</p>
+                <p>The perception model got an F1 of 0.99 vs 0.62 for my hand-written rules. Sounds great, but let's be real. It's simulated data, clean shapes, and everything in the test set was close to the car. Real roads are WAY harder. The point was learning the loop, not breaking records.</p>
 
-                <h2>What I took away</h2>
-                <ul>
-                    <li><strong>Sensors decide what's possible.</strong> The planner can only be as good as what it's allowed to see.</li>
-                    <li><strong>Maps are a trade.</strong> An HD map makes driving easier, but you're stuck where you've mapped.</li>
-                    <li><strong>Prediction is the hard part.</strong> Seeing a pedestrian is easy. Knowing whether they'll step out is the real problem.</li>
-                    <li><strong>The data loop is the product.</strong> Mining, labelling, QA, and gating matter more than any one model.</li>
-                </ul>
-                <p>It's the same thing I see building LLM agents at work. The model is only part of it. Evals, data, and knowing when something is safe to ship are the rest.</p>
+                <h2>What I learned</h2>
+                <ol>
+                    <li>Your sensors decide everything. The planner is only as good as what it can see.</li>
+                    <li>HD maps make driving easier, but you're stuck wherever you've mapped. Waymo city by city, Tesla anywhere (in theory).</li>
+                    <li>Seeing a pedestrian is easy. Knowing if they're about to step out is the actual hard problem.</li>
+                    <li>The data loop is the real product. Mining, labeling, QA, and deciding what ships matter more than any one model.</li>
+                </ol>
+                <p>Honestly, it's the same lesson I keep learning building AI agents for clients at Rocket Agency. The model is only part of it. Testing it, fixing the data, and knowing when it's safe to put in front of real people is the rest.</p>
+                <p>Go drive it around and let me know what breaks. DM me on X!</p>
             </div>
 
             <footer class="mt-12 pt-8 border-t border-border-light dark:border-border-dark">
