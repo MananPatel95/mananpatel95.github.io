@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AUTONOMY CITY: How Machines See</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0a0a0f;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    #app { width: 100vw; height: 100vh; position: relative; }
+    #canvas-container { width: 100%; height: 100%; }
+    canvas { display: block; }
+
+    .hud { position: absolute; pointer-events: none; }
+    .hud-interactive { pointer-events: auto; }
+
+    #disclaimer {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      font-size: 10px;
+      color: #666;
+      max-width: 380px;
+      z-index: 6;
+    }
+
+    #view-switcher {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 4px;
+      background: rgba(0,0,0,0.7);
+      padding: 8px;
+      border-radius: 8px;
+      z-index: 32;
+    }
+
+    .view-btn {
+      padding: 8px 16px;
+      background: #222;
+      border: 1px solid #444;
+      color: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    .view-btn:hover { background: #333; }
+    .view-btn.active { background: #0066cc; border-color: #0088ff; }
+
+    #left-hud-stack {
+      position: absolute;
+      bottom: 50px;
+      left: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      z-index: 8;
+    }
+    #status-panel {
+      position: static;
+      background: rgba(0,0,0,0.8);
+      padding: 15px;
+      border-radius: 8px;
+      min-width: 200px;
+    }
+
+    .status-row {
+      display: flex;
+      justify-content: space-between;
+      margin: 5px 0;
+      font-size: 14px;
+      gap: 16px;
+    }
+    .status-value { font-weight: bold; color: #0f0; }
+    .status-warning { color: #ff0; }
+    .status-danger { color: #f00; }
+
+    #drive-badge {
+      position: absolute;
+      top: 58px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 6px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      z-index: 14;
+      border: 1px solid #2f8;
+      background: rgba(0, 30, 16, 0.88);
+      color: #9f8;
+    }
+    #drive-badge.manual {
+      border-color: #fa0;
+      background: rgba(40, 24, 0, 0.9);
+      color: #ffe08a;
+    }
+    #drive-badge.hidden,
+    #status-panel.hidden,
+    #left-hud-stack.hidden { display: none !important; }
+
+    #drive-hint {
+      position: absolute;
+      top: 96px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.82);
+      border: 1px solid #555;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      color: #ddd;
+      z-index: 14;
+      display: none;
+      max-width: 420px;
+      text-align: center;
+    }
+    #drive-hint.visible { display: block; }
+
+    #collision-flash {
+      position: absolute;
+      top: 132px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 8px 18px;
+      background: rgba(80, 0, 0, 0.92);
+      border: 2px solid #f44;
+      color: #fcc;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      border-radius: 6px;
+      z-index: 16;
+      display: none;
+    }
+    #collision-flash.visible { display: block; }
+
+    :root {
+      --hud-panel-width: min(300px, calc(100vw - 24px));
+      --hud-panel-gap: 8px;
+    }
+
+    #top-right-stack {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: var(--hud-panel-gap);
+      max-height: calc(100vh - 128px);
+      overflow-x: hidden;
+      overflow-y: auto;
+      z-index: 12;
+      pointer-events: none;
+    }
+    #top-right-stack > * { pointer-events: auto; }
+    #top-right-stack.panels-hidden .hud-panel { display: none !important; }
+
+    .hud-panel {
+      position: relative;
+      width: var(--hud-panel-width);
+      max-width: var(--hud-panel-width);
+      background: rgba(0, 8, 16, 0.92);
+      border: 1px solid #2a5a72;
+      border-radius: 8px;
+      overflow: hidden;
+      flex: 0 0 auto;
+    }
+    .hud-panel-head {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 8px;
+      background: #111;
+      cursor: grab;
+      user-select: none;
+    }
+    .hud-panel-head:active { cursor: grabbing; }
+    .hud-panel-title {
+      flex: 1;
+      font-size: 12px;
+      font-weight: 800;
+      color: #7fd7ff;
+      letter-spacing: 0.02em;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .hud-panel-help,
+    .hud-panel-min,
+    .hud-panel-close {
+      width: 22px;
+      height: 22px;
+      border: 1px solid #456;
+      background: #1a1a1a;
+      color: #def;
+      border-radius: 4px;
+      cursor: pointer;
+      line-height: 1;
+      font-size: 13px;
+      flex: 0 0 auto;
+    }
+    .hud-panel-help {
+      font-weight: 800;
+      font-size: 12px;
+    }
+    .hud-panel-help:hover,
+    .hud-panel-min:hover,
+    .hud-panel-close:hover { background: #333; }
+    .hud-help-popover {
+      position: fixed;
+      z-index: 30;
+      max-width: min(280px, calc(100vw - 16px));
+      max-height: min(70vh, 420px);
+      overflow: auto;
+      padding: 10px 12px;
+      background: rgba(6, 12, 20, 0.96);
+      border: 1px solid #4a7a92;
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+      pointer-events: auto;
+      color: #d5e4ee;
+    }
+    .hud-help-popover.hidden { display: none !important; }
+    .hud-help-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: #7fd7ff;
+      margin-bottom: 6px;
+    }
+    .hud-help-body {
+      font-size: 11px;
+      line-height: 1.45;
+      white-space: pre-wrap;
+    }
+    .hud-panel.collapsed .hud-panel-body { display: none; }
+    .hud-panel.closed { display: none !important; }
+    .hud-panel.floating {
+      position: fixed;
+      z-index: 22;
+      margin: 0;
+    }
+
+    #gear-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      border: 1px solid #555;
+      background: rgba(0,0,0,0.75);
+      color: #fff;
+      font-size: 18px;
+      cursor: pointer;
+      line-height: 1;
+    }
+    #gear-btn:hover { background: #222; }
+
+    #view-explainer .hud-panel-body { padding: 8px 12px 10px; }
+    #view-explainer.hidden { display: none !important; }
+    #view-explainer .vx-k,
+    #ai-view-explainer .ai-k,
+    .compare-explainer .ai-k {
+      display: block;
+      color: #7fd7ff;
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      margin-bottom: 2px;
+    }
+    #view-explainer-uses {
+      margin: 0 0 6px;
+      font-size: 11px;
+      line-height: 1.4;
+      color: #d5e4ee;
+    }
+    .compare-explainer p {
+      margin: 0 0 6px;
+      font-size: 11px;
+      line-height: 1.45;
+      color: #d5e4ee;
+    }
+    #camera-explainer-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #c9e7a8;
+    }
+
+    #ai-view-panel {
+      background: rgba(0,0,0,0.92);
+    }
+    #ai-view-header.hud-panel-title {
+      font-weight: bold;
+      font-size: 12px;
+      color: #cfe;
+    }
+    #ai-view-explainer {
+      padding: 0 10px 8px;
+      background: #111;
+      border-bottom: 1px solid #333;
+      font-size: 11px;
+      line-height: 1.45;
+      color: #c5d4e0;
+    }
+    #ai-view-explainer p { margin: 3px 0 0; }
+    #ai-view-insets { display: flex; gap: 4px; padding: 4px; }
+    #ai-view-insets .inset { flex: 1; }
+    #ai-view-insets .inset-label { font-size: 10px; color: #8ab; padding: 2px 4px; }
+    #raw-camera-canvas, #ai-view-canvas {
+      width: 100%;
+      height: 120px;
+      background: #0b0f18;
+      display: block;
+    }
+
+    #bev-overlay {
+      display: none;
+      background: rgba(0,0,0,0.88);
+      max-height: min(34vh, 240px);
+    }
+    #bev-overlay.visible { display: block; }
+    #bev-overlay:not(.visible) { display: none !important; }
+    #bev-overlay .hud-panel-body {
+      padding: 8px 10px 10px;
+      overflow: auto;
+      max-height: min(28vh, 200px);
+    }
+
+    #decision-banner {
+      position: absolute;
+      bottom: 86px;
+      left: 50%;
+      transform: translateX(-50%);
+      min-width: 420px;
+      max-width: 80%;
+      padding: 8px 16px;
+      background: rgba(0, 20, 10, 0.88);
+      border: 1px solid #2f8;
+      border-radius: 6px;
+      color: #bfffce;
+      font-size: 13px;
+      font-weight: 600;
+      text-align: center;
+      z-index: 10;
+      display: none;
+      pointer-events: auto;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    #decision-banner.visible { display: block; }
+    #decision-banner.slow {
+      border-color: #fa0;
+      color: #ffe0a0;
+      background: rgba(40, 24, 0, 0.88);
+    }
+    #decision-banner.brake {
+      border-color: #f44;
+      color: #ffc0c0;
+      background: rgba(40, 0, 0, 0.88);
+    }
+
+    #phys-debug {
+      display: none;
+      position: static;
+      background: rgba(0,0,0,0.78);
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 11px;
+      line-height: 1.45;
+      color: #9ed;
+      min-width: 148px;
+    }
+    #phys-debug.visible { display: block; }
+
+    #controls-hint {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background: rgba(0,0,0,0.7);
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      color: #888;
+      z-index: 8;
+    }
+    .control-key {
+      color: #fff;
+      background: #333;
+      padding: 2px 6px;
+      border-radius: 3px;
+      margin-right: 5px;
+    }
+
+    #minimap {
+      position: absolute;
+      top: 56px;
+      left: 10px;
+      width: 210px;
+      height: 210px;
+      background: #1a2a22;
+      border-radius: 16px;
+      border: 3px solid #0c0c0c;
+      box-shadow: 0 0 0 1px #3a3a3a, 0 8px 18px rgba(0,0,0,0.45);
+      z-index: 8;
+      pointer-events: auto;
+    }
+    #minimap.hidden { display: none !important; }
+    body[data-shot="on"] .hud { display: none !important; }
+
+    #pause-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(4, 6, 12, 0.62);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+      pointer-events: auto;
+    }
+    #pause-overlay.visible { display: flex; }
+
+    #start-menu {
+      position: absolute;
+      inset: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: rgba(4, 10, 18, 0.38);
+      pointer-events: auto;
+    }
+    #start-menu.hidden { display: none; }
+    body.trip-menu-open .hud,
+    body.trip-menu-open #view-switcher,
+    body.trip-menu-open #decision-banner,
+    body.trip-menu-open #takeover-btn { visibility: hidden; }
+    #start-card {
+      width: min(1040px, 96vw);
+      max-height: min(92vh, 860px);
+      overflow: auto;
+      background: rgba(0, 8, 16, 0.92);
+      border: 1px solid #2a5a72;
+      border-radius: 12px;
+      padding: 22px 24px 18px;
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(10px);
+    }
+    #start-arrived-banner {
+      display: none;
+      margin: 0 0 8px;
+      color: #ff7ab8;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    #start-arrived-banner.visible { display: block; }
+    #start-card h1 {
+      font-size: clamp(22px, 3.2vw, 30px);
+      letter-spacing: 0.06em;
+      line-height: 1.15;
+      margin: 0 0 8px;
+    }
+    #start-card .start-lead {
+      color: #d5e4ee;
+      font-size: 14px;
+      line-height: 1.45;
+      margin: 0 0 14px;
+      max-width: 62ch;
+    }
+    #start-layout {
+      display: grid;
+      grid-template-columns: minmax(280px, 1fr) minmax(320px, 1.15fr);
+      gap: 18px 22px;
+      align-items: start;
+    }
+    #start-card .start-label {
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #7fd7ff;
+      margin: 0 0 8px;
+    }
+    #start-stacks {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .stack-card {
+      text-align: left;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid #2a5a72;
+      background: rgba(0, 8, 16, 0.92);
+      color: #fff;
+      cursor: pointer;
+    }
+    .stack-card:hover { background: #0c2230; }
+    .stack-card.active {
+      background: #16324a;
+      border-color: #08f;
+      box-shadow: inset 0 0 0 1px #08f;
+    }
+    .stack-card-k {
+      display: block;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      color: #7fd7ff;
+      margin-bottom: 3px;
+    }
+    .stack-card-d {
+      display: block;
+      font-size: 12px;
+      line-height: 1.35;
+      color: #c5d4e0;
+    }
+    #start-map-wrap {
+      background: #1a2a22;
+      border-radius: 16px;
+      border: 3px solid #0c0c0c;
+      box-shadow: 0 0 0 1px #3a3a3a, 0 8px 18px rgba(0,0,0,0.45);
+      overflow: hidden;
+    }
+    #start-map {
+      width: 100%;
+      height: min(46vh, 420px);
+      display: block;
+      background: #1a2a22;
+      cursor: crosshair;
+    }
+    #start-map-legend {
+      display: flex;
+      gap: 14px;
+      padding: 6px 10px 8px;
+      font-size: 11px;
+      color: #cfe;
+      background: rgba(8, 14, 12, 0.72);
+    }
+    #start-map-legend span { display: flex; align-items: center; gap: 6px; }
+    #start-map-legend i {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      display: inline-block;
+      border: 1px solid #fff;
+    }
+    #start-map-legend .leg-start { background: #5dff9a; }
+    #start-map-legend .leg-dest { background: #ff2d8a; }
+    #start-mode-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 0 0 12px;
+    }
+    #start-camera-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 12px 0 14px;
+    }
+    #start-status { color: #cfe; font-size: 13px; min-height: 1.3em; margin-bottom: 10px; }
+    #start-reroll.hidden,
+    #start-reset.hidden { display: none !important; }
+    .start-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .start-actions .pause-btn { flex: 1; min-width: 140px; }
+    .start-actions .pause-btn:disabled { opacity: 0.45; cursor: default; }
+    #start-keys {
+      margin: 10px 0 0;
+      font-size: 11px;
+      color: #8aa;
+    }
+    @media (max-width: 820px) {
+      #start-layout { grid-template-columns: 1fr; }
+      #start-map { height: min(38vh, 320px); }
+      #start-stacks { grid-template-columns: 1fr; }
+    }
+    #raw-camera-canvas { cursor: pointer; }
+    #takeover-btn {
+      position: absolute;
+      top: 96px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 16;
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: 1px solid #fa0;
+      background: rgba(40, 24, 0, 0.92);
+      color: #ffe08a;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+    }
+    #takeover-btn.hidden { display: none; }
+
+    #pause-menu {
+      width: min(520px, 92vw);
+      max-height: 88vh;
+      overflow: auto;
+      background: rgba(10, 12, 18, 0.96);
+      border: 1px solid #3a4a66;
+      border-radius: 14px;
+      padding: 22px 24px 18px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.55);
+    }
+    #pause-menu h2 {
+      text-align: center;
+      letter-spacing: 0.18em;
+      font-size: 18px;
+      margin-bottom: 16px;
+      color: #9fd;
+    }
+    .pause-actions { display: flex; gap: 8px; margin-bottom: 16px; }
+    .pause-btn {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #446;
+      background: #1a2433;
+      color: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+    .pause-btn:hover { background: #243044; }
+    .pause-btn.primary { background: #0066cc; border-color: #08f; }
+    .pause-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin: 10px 0;
+      font-size: 13px;
+    }
+    .pause-row label { color: #bcd; }
+    .pause-row select, .seg {
+      background: #151a24;
+      color: #fff;
+      border: 1px solid #445;
+      border-radius: 6px;
+      padding: 6px 8px;
+    }
+    .seg { display: flex; padding: 0; overflow: hidden; }
+    .seg button {
+      background: transparent;
+      color: #ccc;
+      border: 0;
+      padding: 6px 10px;
+      cursor: pointer;
+    }
+    .seg button.active { background: #0066cc; color: #fff; }
+    #pause-controls {
+      margin-top: 14px;
+      border-top: 1px solid #334;
+      padding-top: 10px;
+      font-size: 12px;
+      color: #9aa;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px 12px;
+    }
+    #pause-controls div { display: flex; align-items: center; }
+
+    #ride-request {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0,0,0,0.95);
+      padding: 20px;
+      border-radius: 12px;
+      border: 2px solid #0066cc;
+      display: none;
+      min-width: 300px;
+      z-index: 20;
+    }
+    #ride-request.visible { display: block; }
+    #ride-request h3 { margin-bottom: 15px; color: #0088ff; }
+    .ride-btn {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+    }
+    .ride-btn-accept { background: #0066cc; color: white; }
+    .ride-btn-decline { background: #333; color: #888; }
+
+    #info-card {
+      background: rgba(0,0,0,0.95);
+      border: 1px solid #444;
+      max-height: 70vh;
+    }
+    #info-card .hud-panel-body {
+      padding: 8px 16px 16px;
+      overflow-y: auto;
+      max-height: 62vh;
+    }
+    #info-card h2 { font-size: 15px; margin-bottom: 4px; }
+    .info-section { margin: 15px 0; }
+    .info-section h4 { color: #0088ff; margin-bottom: 8px; font-size: 12px; text-transform: uppercase; }
+    .info-section p { color: #ccc; font-size: 13px; line-height: 1.5; }
+    .info-strengths { color: #4a4 !important; }
+    .info-weaknesses { color: #a44 !important; }
+
+    #recording-indicator {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      display: none;
+      align-items: center;
+      gap: 8px;
+      background: rgba(200,0,0,0.8);
+      padding: 8px 12px;
+      border-radius: 6px;
+      z-index: 12;
+    }
+    #recording-indicator.visible { display: flex; }
+    .rec-dot {
+      width: 10px;
+      height: 10px;
+      background: #f00;
+      border-radius: 50%;
+      animation: pulse 1s infinite;
+    }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+    #loading {
+      position: absolute;
+      inset: 0;
+      background: #0a0a0f;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+    #loading h1 { font-size: 32px; margin-bottom: 10px; }
+    #loading p { color: #666; margin-bottom: 30px; }
+    .loader {
+      width: 40px; height: 40px;
+      border: 3px solid #333;
+      border-top-color: #0088ff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #loading.hidden { display: none; }
+
+    #compare-container {
+      position: absolute;
+      inset: 0;
+      display: none;
+      z-index: 5;
+    }
+    #compare-container.visible { display: flex; }
+    .compare-panel { flex: 1; position: relative; border: 2px solid #333; }
+    .compare-label {
+      position: absolute;
+      top: 10px; left: 10px;
+      background: rgba(0,0,0,0.8);
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: bold;
+      z-index: 10;
+    }
+    .compare-explainer {
+      position: absolute;
+      top: 10px; right: 10px;
+      width: min(320px, 42%);
+      background: rgba(0, 8, 16, 0.9);
+      border: 1px solid #2a5a72;
+      border-radius: 8px;
+      padding: 10px 12px;
+      z-index: 10;
+      pointer-events: none;
+    }
+    .compare-explainer h5 {
+      margin: 0 0 6px;
+      color: #7fd7ff;
+      font-size: 12px;
+    }
+    .compare-detection-time {
+      position: absolute;
+      bottom: 60px; left: 10px;
+      background: rgba(0,0,0,0.8);
+      padding: 12px;
+      border-radius: 6px;
+      z-index: 10;
+      min-width: 200px;
+    }
+    .compare-detection-time h4 { color: #0088ff; margin-bottom: 8px; font-size: 12px; }
+    .detection-timing-row { display: flex; justify-content: space-between; margin: 4px 0; font-size: 12px; }
+    .timing-early { color: #0f0; }
+    .timing-late { color: #f80; }
+    .timing-missed { color: #f00; }
+    .compare-canvas { width: 100%; height: 100%; }
+  </style>
+  <script type="module" crossorigin src="./assets/index-CsXAXfQB.js"></script>
+</head>
+<body>
+  <div id="app">
+    <div id="loading">
+      <h1>AUTONOMY CITY</h1>
+      <p>How Machines See</p>
+      <div class="loader"></div>
+    </div>
+
+    <div id="canvas-container"></div>
+
+    <div id="compare-container">
+      <div class="compare-panel" id="compare-left">
+        <div class="compare-label" id="compare-left-label">F1: Tesla-style</div>
+        <div class="compare-explainer" id="compare-left-explainer">
+          <h5 id="compare-left-ex-title">F1 · Tesla-style</h5>
+          <p><span class="ai-k">Uses</span><span id="compare-left-uses">Cameras only (Tesla Vision). An occupancy network turns the eight-camera video into 3D occupied/free voxels. No lidar, no radar, no HD map.</span></p>
+          <p><span class="ai-k">Unlike others</span><span id="compare-left-diff">Waymo fuses lidar + radar + a prior map. Waabi predicts where space will be occupied in 1–3 s.</span></p>
+        </div>
+        <div class="compare-detection-time" id="compare-left-timing">
+          <h4>Detection Timing</h4>
+          <div class="detection-timing-row"><span>Pedestrian #1</span><span class="timing-early" id="left-ped1-time">—</span></div>
+          <div class="detection-timing-row"><span>Vehicle #1</span><span class="timing-early" id="left-veh1-time">—</span></div>
+        </div>
+        <canvas class="compare-canvas" id="compare-canvas-left"></canvas>
+      </div>
+      <div class="compare-panel" id="compare-right">
+        <div class="compare-label" id="compare-right-label">F2: Waymo-style</div>
+        <div class="compare-explainer" id="compare-right-explainer">
+          <h5 id="compare-right-ex-title">F2 · Waymo-style</h5>
+          <p><span class="ai-k">Uses</span><span id="compare-right-uses">6th-gen Waymo Driver: lidar + radar + cameras, fused into labeled 3D boxes with track IDs. Localizes against an HD map.</span></p>
+          <p><span class="ai-k">Unlike others</span><span id="compare-right-diff">Tesla is cameras-only and has no map. Waabi scores future occupancy, not current boxes.</span></p>
+        </div>
+        <div class="compare-detection-time" id="compare-right-timing">
+          <h4>Detection Timing</h4>
+          <div class="detection-timing-row"><span>Pedestrian #1</span><span class="timing-late" id="right-ped1-time">—</span></div>
+          <div class="detection-timing-row"><span>Vehicle #1</span><span class="timing-early" id="right-veh1-time">—</span></div>
+        </div>
+        <canvas class="compare-canvas" id="compare-canvas-right"></canvas>
+      </div>
+    </div>
+
+    <div id="view-switcher" class="hud hud-interactive">
+      <button class="view-btn active" data-profile="tesla">F1: Tesla-style</button>
+      <button class="view-btn" data-profile="waymo">F2: Waymo-style</button>
+      <button class="view-btn" data-profile="waabi">F3: Waabi-style</button>
+    </div>
+
+    <div id="drive-badge" class="hud">AUTOPILOT</div>
+    <button id="takeover-btn" class="hidden" type="button">Take over</button>
+    <div id="drive-hint" class="hud">W throttle · S brake then reverse · A/D steer · Space handbrake. Hold right mouse to look. T autopilot.</div>
+    <div id="collision-flash" class="hud">COLLISION</div>
+
+    <div id="left-hud-stack" class="hud">
+      <div id="phys-debug"></div>
+      <div id="status-panel">
+        <div class="status-row"><span>Speed</span><span class="status-value" id="speed-value">0 km/h</span></div>
+        <div class="status-row"><span>Stopping Dist</span><span class="status-value" id="stopping-dist">0 m</span></div>
+        <div class="status-row"><span>Control</span><span class="status-value" id="control-source">AUTOPILOT</span></div>
+        <div class="status-row"><span>Detections</span><span class="status-value" id="detection-count">0</span></div>
+        <div class="status-row"><span>Collisions</span><span class="status-value" id="collision-count">0</span></div>
+        <div class="status-row"><span>Weather</span><span class="status-value" id="weather-status">Clear</span></div>
+        <div class="status-row"><span>FPS</span><span class="status-value" id="fps-value">--</span></div>
+      </div>
+    </div>
+
+    <canvas id="minimap" class="hud" width="210" height="210"></canvas>
+
+    <div id="top-right-stack" class="hud hud-interactive">
+      <button id="gear-btn" title="Pause / settings (Esc)">⚙</button>
+      <section class="hud-panel" id="view-explainer" data-panel="explainer">
+        <div class="hud-panel-head">
+          <div id="view-explainer-title" class="hud-panel-title">F1 · Tesla-style</div>
+          <button type="button" class="hud-panel-help" data-help="explainer" title="What is this?" aria-label="Help">?</button>
+          <button type="button" class="hud-panel-min" data-panel="explainer" title="Collapse">–</button>
+          <button type="button" class="hud-panel-close" data-panel="explainer" title="Close">×</button>
+        </div>
+        <div class="hud-panel-body">
+          <p id="view-explainer-uses">Cameras only → occupancy network + vision boxes</p>
+          <div id="camera-explainer-title">Chase camera</div>
+        </div>
+      </section>
+      <section class="hud-panel" id="ai-view-panel" data-panel="ai-view">
+        <div class="hud-panel-head">
+          <div id="ai-view-header" class="hud-panel-title">AI View · F1</div>
+          <button type="button" class="hud-panel-help" data-help="ai-view" title="What is this?" aria-label="Help">?</button>
+          <button type="button" class="hud-panel-min" data-panel="ai-view" title="Collapse">–</button>
+          <button type="button" class="hud-panel-close" data-panel="ai-view" title="Close">×</button>
+        </div>
+        <div class="hud-panel-body">
+          <div id="ai-view-insets">
+            <div class="inset">
+              <div class="inset-label" id="ai-view-raw-label">Front camera (vision)</div>
+              <canvas id="raw-camera-canvas" width="320" height="180"></canvas>
+            </div>
+            <div class="inset">
+              <div class="inset-label" id="ai-view-perc-label">Vision boxes + occupancy</div>
+              <canvas id="ai-view-canvas" width="320" height="180"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="hud-panel closed" id="info-card" data-panel="info">
+        <div class="hud-panel-head">
+          <div id="info-title" class="hud-panel-title">Baseline Lidar Stack</div>
+          <button type="button" class="hud-panel-help" data-help="info" title="What is this?" aria-label="Help">?</button>
+          <button type="button" class="hud-panel-min" data-panel="info" title="Collapse">–</button>
+          <button type="button" class="hud-panel-close" data-panel="info" title="Close">×</button>
+        </div>
+        <div class="hud-panel-body">
+          <div class="info-section"><h4>Sensors</h4><p id="info-sensors"></p></div>
+          <div class="info-section"><h4>Internal Representation</h4><p id="info-internals"></p></div>
+          <div class="info-section"><h4>Strengths</h4><p id="info-strengths" class="info-strengths"></p></div>
+          <div class="info-section"><h4>Weaknesses</h4><p id="info-weaknesses" class="info-weaknesses"></p></div>
+          <div class="info-section"><h4>Real-world Example</h4><p id="info-example"></p></div>
+        </div>
+      </section>
+      <section class="hud-panel" id="bev-overlay" data-panel="bev">
+        <div class="hud-panel-head">
+          <div class="hud-panel-title">Waabi BEV + Sim World</div>
+          <button type="button" class="hud-panel-help" data-help="bev" title="What is this?" aria-label="Help">?</button>
+          <button type="button" class="hud-panel-min" data-panel="bev" title="Collapse">–</button>
+          <button type="button" class="hud-panel-close" data-panel="bev" title="Close">×</button>
+        </div>
+        <div class="hud-panel-body">
+          <canvas id="bev-canvas" width="400" height="180" style="background: #1a1a2e; border: 1px solid #333; width: 100%; height: auto;"></canvas>
+          <div id="simworld-table" style="margin-top: 8px; font-size: 11px; max-height: 120px; overflow-y: auto;">
+            <table style="width: 100%; border-collapse: collapse; color: #ccc;">
+              <thead>
+                <tr style="border-bottom: 1px solid #444;">
+                  <th style="text-align: left; padding: 4px;">Variant</th>
+                  <th style="text-align: center;">Type</th>
+                  <th style="text-align: center;">Result</th>
+                  <th style="text-align: right;">TTC</th>
+                </tr>
+              </thead>
+              <tbody id="simworld-variants"></tbody>
+            </table>
+          </div>
+          <div style="margin-top: 6px; font-size: 11px; color: #888;">
+            <span id="simworld-stats">20 variants</span>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <button id="decision-banner" class="visible" type="button">Cruising: lane clear</button>
+
+    <div id="recording-indicator" class="hud">
+      <div class="rec-dot"></div>
+      <span>REC</span>
+    </div>
+
+    <div id="controls-hint" class="hud">
+      <div><span class="control-key">Esc</span> Pause / settings</div>
+      <div><span class="control-key">WASD</span> Drive · <span class="control-key">RMB</span> Look</div>
+      <div><span class="control-key">T</span> Autopilot</div>
+      <div><span class="control-key">C</span> Camera · <span class="control-key">P</span> Panels</div>
+      <div><span class="control-key">Bksp</span> Restart</div>
+    </div>
+
+    <div id="ride-request" class="hud hud-interactive">
+      <h3>New Ride Request</h3>
+      <div class="status-row"><span>Passenger</span><span id="ride-passenger">John Smith</span></div>
+      <div class="status-row"><span>Fare</span><span id="ride-fare">$12.50</span></div>
+      <button class="ride-btn ride-btn-accept" id="accept-ride">Accept Ride</button>
+      <button class="ride-btn ride-btn-decline" id="decline-ride">Decline</button>
+    </div>
+
+    <div id="pause-overlay" class="hud-interactive">
+      <div id="pause-menu">
+        <h2>PAUSED</h2>
+        <div class="pause-actions">
+          <button class="pause-btn primary" id="pause-resume">Resume</button>
+          <button class="pause-btn" id="pause-restart">Restart</button>
+        </div>
+        <div class="pause-row">
+          <label>Quality</label>
+          <div class="seg" id="quality-seg">
+            <button data-quality="low">Low</button>
+            <button data-quality="med" class="active">Med</button>
+            <button data-quality="high">High</button>
+          </div>
+        </div>
+        <div class="pause-row">
+          <label>Look</label>
+          <div class="seg" id="look-seg">
+            <button data-look="low" class="active">Low</button>
+            <button data-look="high">High</button>
+          </div>
+        </div>
+        <div class="pause-row">
+          <label for="perception-model">Perception mode</label>
+          <select id="perception-model">
+            <option value="heuristic">Heuristic</option>
+            <option value="v1">v1</option>
+          </select>
+        </div>
+        <div class="pause-row">
+          <label for="shadow-toggle">Shadow Mode</label>
+          <input type="checkbox" id="shadow-toggle">
+        </div>
+        <div class="pause-row">
+          <label>Camera mode</label>
+          <div class="seg" id="camera-seg">
+            <button data-camera="chase" class="active">Chase</button>
+            <button data-camera="hood">1st</button>
+            <button data-camera="bev">BEV</button>
+            <button data-camera="orbit">Orbit</button>
+          </div>
+        </div>
+        <div class="pause-row">
+          <label>Camera</label>
+          <button class="pause-btn" id="pause-reset-camera" style="flex:0 0 auto;padding:6px 12px">Reset (R)</button>
+        </div>
+        <div class="pause-row">
+          <label for="phys-debug-toggle">Physics debug</label>
+          <input type="checkbox" id="phys-debug-toggle">
+        </div>
+        <div id="pause-controls">
+          <div><span class="control-key">W / ↑</span> Throttle</div>
+          <div><span class="control-key">S / ↓</span> Brake / reverse</div>
+          <div><span class="control-key">A D / ←→</span> Steer</div>
+          <div><span class="control-key">Space</span> Handbrake</div>
+          <div><span class="control-key">T</span> Autopilot / Manual (re-engage)</div>
+          <div><span class="control-key">RMB hold</span> Orbit camera</div>
+          <div><span class="control-key">Wheel</span> Zoom</div>
+          <div><span class="control-key">C</span> Cycle camera</div>
+          <div><span class="control-key">R</span> Reset camera</div>
+          <div><span class="control-key">K</span> Record</div>
+          <div><span class="control-key">V</span> AI View</div>
+          <div><span class="control-key">G</span> Ground truth</div>
+          <div><span class="control-key">I</span> Info card</div>
+          <div><span class="control-key">P</span> Panels (toggle / reset)</div>
+          <div><span class="control-key">N</span> Day / night</div>
+          <div><span class="control-key">M</span> Compare Tesla/Waymo</div>
+          <div><span class="control-key">Backspace</span> Restart</div>
+          <div><span class="control-key">Esc</span> Pause / resume</div>
+          <div><span class="control-key">F1–F3</span> Stack</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="start-menu" class="hud-interactive">
+      <div id="start-card">
+        <p id="start-arrived-banner">Arrived — choose next destination</p>
+        <h1 id="start-title">AUTONOMY CITY: How Machines See</h1>
+        <p class="start-lead" id="start-lead">Watch how three public-style stacks see the same street. Choose a view, A → B or Random, then Start.</p>
+        <div id="start-layout">
+          <div id="start-copy">
+            <div class="start-label">Starting view</div>
+            <div id="start-stacks">
+              <button type="button" class="stack-card active" data-profile="tesla">
+                <span class="stack-card-k">F1 · Tesla-style</span>
+                <span class="stack-card-d">Cameras only — depth from pixels, no lidar or map.</span>
+              </button>
+              <button type="button" class="stack-card" data-profile="waymo">
+                <span class="stack-card-k">F2 · Waymo-style</span>
+                <span class="stack-card-d">Lidar + radar + cameras, fused on a prior HD map.</span>
+              </button>
+              <button type="button" class="stack-card" data-profile="waabi">
+                <span class="stack-card-k">F3 · Waabi-style</span>
+                <span class="stack-card-d">Bird’s-eye occupancy — where space will be in 1–3 s.</span>
+              </button>
+            </div>
+            <div id="start-camera-row">
+              <div class="start-label" style="margin:0">Camera</div>
+              <div class="seg" id="start-camera-seg">
+                <button type="button" data-camera="chase" class="active">Chase</button>
+                <button type="button" data-camera="hood">First person</button>
+              </div>
+            </div>
+            <div id="start-mode-row">
+              <div class="start-label" style="margin:0">Trip</div>
+              <div class="seg" id="start-mode-seg">
+                <button type="button" data-mode="ab" class="active">A → B</button>
+                <button type="button" data-mode="random">Random</button>
+              </div>
+            </div>
+            <div id="start-status">Click the map to set the start (green pin), then the destination (pink pad).</div>
+            <div class="start-actions">
+              <button type="button" id="start-reset" class="pause-btn">Reset</button>
+              <button type="button" id="start-reroll" class="pause-btn hidden">Reroll</button>
+              <button type="button" id="start-manual" class="pause-btn">Just drive</button>
+              <button type="button" id="start-auto" class="pause-btn primary" disabled>Start</button>
+            </div>
+            <p id="start-keys">Enter starts · Esc closes the arrived menu or pauses as before</p>
+          </div>
+          <div id="start-map-col">
+            <div class="start-label">City map</div>
+            <div id="start-map-wrap">
+              <canvas id="start-map" width="560" height="420"></canvas>
+              <div id="start-map-legend">
+                <span><i class="leg-start"></i> Start</span>
+                <span><i class="leg-dest"></i> Destination</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="disclaimer" class="hud">
+      Simplified educational models based on public information.
+      Not affiliated with or endorsed by any company named.
+    </div>
+  </div>
+
+</body>
+</html>
