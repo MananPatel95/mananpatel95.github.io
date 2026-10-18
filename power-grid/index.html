@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tiny Power Grid</title>
+<meta name="description" content="A clickable miniature power grid: power plants, substations, transmission lines, homes and an AI data center, explained in plain words. Distilled from Power 2026.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f3f2ee;
+    --card: #ffffff;
+    --ink: #23303a;
+    --muted: #6b7680;
+    --line: #e6e3dc;
+    --sun: #ffb703;
+    --sun-soft: #fff4d6;
+    --blue: #3f7fe6;
+    --shadow: 0 10px 30px rgba(35, 48, 58, 0.12), 0 2px 6px rgba(35, 48, 58, 0.06);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  #scene { position: fixed; inset: 0; }
+  #scene canvas { display: block; touch-action: none; }
+  button { font: inherit; cursor: pointer; border: 0; background: none; color: inherit; }
+  a { color: var(--blue); }
+
+  .card {
+    background: var(--card);
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+  }
+
+  /* Header */
+  #intro {
+    position: fixed; top: 16px; left: 16px; z-index: 5;
+    width: 330px; padding: 18px 20px;
+  }
+  #intro { transition: opacity .25s ease, transform .25s ease; }
+  body.focused #intro { opacity: 0; transform: translateY(-8px); pointer-events: none; }
+  #intro .back { font-size: 13px; font-weight: 700; color: var(--muted); text-decoration: none; }
+  #intro .back:hover { color: var(--ink); }
+  #intro h1 { font-size: 24px; font-weight: 900; line-height: 1.15; margin: 8px 0 6px; letter-spacing: -0.01em; }
+  #intro .sub { font-size: 14px; color: var(--muted); line-height: 1.45; }
+  #intro .date { font-size: 12px; color: var(--muted); font-weight: 700; margin-top: 10px; }
+  .btn-row { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+  .btn {
+    padding: 9px 14px; border-radius: 999px; font-weight: 800; font-size: 14px;
+    background: var(--ink); color: #fff; transition: transform .15s ease, background .15s ease;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn.ghost { background: #f0eee8; color: var(--ink); }
+  .btn.ghost:hover { background: #e7e4dc; }
+
+  /* Flow bar */
+  #flow {
+    position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 5;
+    display: flex; align-items: center; gap: 4px; padding: 6px;
+    max-width: calc(100vw - 32px); overflow-x: auto; scrollbar-width: none;
+  }
+  #flow::-webkit-scrollbar { display: none; }
+  .chip {
+    display: flex; align-items: center; gap: 6px; white-space: nowrap;
+    padding: 8px 12px; border-radius: 999px; font-weight: 800; font-size: 13px; color: var(--muted);
+    transition: background .15s ease, color .15s ease;
+  }
+  .chip:hover { background: #f3f1ec; color: var(--ink); }
+  .chip .n {
+    width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center;
+    font-size: 11px; background: #efede7; color: var(--ink);
+  }
+  .chip.on { background: var(--sun-soft); color: var(--ink); }
+  .chip.on .n { background: var(--sun); }
+  .arrow { color: #c9c4b8; font-weight: 900; font-size: 12px; }
+  .sep { width: 1px; height: 22px; background: var(--line); margin: 0 4px; }
+
+  /* Pins */
+  #pins { position: fixed; inset: 0; pointer-events: none; z-index: 3; }
+  .pin {
+    position: absolute; left: 0; top: 0; pointer-events: auto;
+    display: flex; align-items: center; gap: 5px;
+    padding: 4px 10px 4px 5px; border-radius: 999px;
+    background: rgba(255,255,255,0.94); box-shadow: 0 4px 12px rgba(35,48,58,0.14);
+    font-weight: 800; font-size: 12px; white-space: nowrap;
+    transition: opacity .2s ease, box-shadow .2s ease, background .2s ease;
+  }
+  .pin .e { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; background: #f3f1ec; font-size: 13px; }
+  .pin:hover { box-shadow: 0 6px 16px rgba(35,48,58,0.22); }
+  .pin.on { background: var(--sun); }
+  .pin.on .e { background: #fff; }
+  .pin.dim { opacity: .45; }
+  .pin::after {
+    content: ""; position: absolute; left: 50%; bottom: -5px; transform: translateX(-50%);
+    border: 5px solid transparent; border-top-color: rgba(255,255,255,0.94); border-bottom: 0;
+  }
+  .pin.on::after { border-top-color: var(--sun); }
+
+  /* Panel */
+  #panel {
+    position: fixed; top: 16px; right: 16px; bottom: 84px; z-index: 6;
+    width: 380px; display: flex; flex-direction: column; overflow: hidden;
+    transform: translateX(calc(100% + 24px)); transition: transform .35s cubic-bezier(.2,.8,.2,1);
+  }
+  #panel.open { transform: none; }
+  #panel .scroll { overflow-y: auto; padding: 20px 22px 8px; flex: 1; }
+  #panel .close {
+    position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; border-radius: 50%;
+    background: #f3f1ec; font-size: 16px; font-weight: 900; color: var(--muted);
+  }
+  #panel .close:hover { color: var(--ink); }
+  .step-tag {
+    display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px;
+    background: var(--sun-soft); font-size: 12px; font-weight: 800;
+  }
+  #panel h2 { font-size: 24px; font-weight: 900; margin: 12px 0 4px; line-height: 1.15; display: flex; gap: 10px; align-items: center; padding-right: 30px; }
+  #panel h2 .e { font-size: 28px; }
+  .tagline { color: var(--muted); font-weight: 700; font-size: 15px; margin-bottom: 14px; }
+  .body-list { list-style: none; display: grid; gap: 10px; margin-bottom: 16px; }
+  .body-list li { position: relative; padding-left: 20px; font-size: 15px; line-height: 1.5; }
+  .body-list li::before {
+    content: ""; position: absolute; left: 4px; top: 9px; width: 7px; height: 7px; border-radius: 50%; background: var(--sun);
+  }
+  .book { background: #f6f4ef; border-radius: 14px; padding: 14px 16px; margin-bottom: 16px; }
+  .book-h { font-size: 12px; font-weight: 900; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+  a.src { color: inherit; text-decoration: underline; text-decoration-color: #cfc9bd; text-underline-offset: 2px; }
+  a.src:hover { color: var(--ink); text-decoration-color: currentColor; }
+  .book ul { list-style: none; display: grid; gap: 8px; }
+  .book li { font-size: 14px; line-height: 1.5; }
+  .book b { font-weight: 900; }
+  .panel-nav {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    padding: 12px 16px; border-top: 1px solid var(--line);
+  }
+  .panel-nav .count { font-size: 13px; font-weight: 800; color: var(--muted); }
+
+  /* Merit order widget */
+  .merit { border: 1px solid var(--line); border-radius: 14px; padding: 14px; margin-bottom: 16px; }
+  .merit h3 { font-size: 15px; font-weight: 900; margin-bottom: 2px; }
+  .merit .hint { font-size: 13px; color: var(--muted); margin-bottom: 10px; }
+  .merit svg { width: 100%; height: auto; display: block; }
+  .merit input[type=range] { width: 100%; margin: 10px 0 4px; accent-color: var(--ink); }
+  .merit .readout { font-size: 14px; line-height: 1.45; }
+  .merit .price { font-size: 22px; font-weight: 900; }
+  .legend { display: flex; flex-wrap: wrap; gap: 4px 10px; margin-top: 8px; font-size: 11px; font-weight: 700; color: var(--muted); }
+  .legend span { display: inline-flex; align-items: center; gap: 4px; }
+  .legend i { width: 9px; height: 9px; border-radius: 3px; display: inline-block; }
+
+  /* Tooltip */
+  #tip {
+    position: fixed; z-index: 7; pointer-events: none; padding: 6px 10px; border-radius: 10px;
+    background: var(--ink); color: #fff; font-size: 12px; font-weight: 800; opacity: 0; transition: opacity .12s ease;
+  }
+
+  #credit {
+    position: fixed; right: 16px; bottom: 22px; z-index: 4; font-size: 12px; color: var(--muted); font-weight: 700;
+    max-width: 240px; text-align: right; line-height: 1.4;
+  }
+
+  #loading {
+    position: fixed; inset: 0; z-index: 10; display: grid; place-items: center; background: var(--bg);
+    font-weight: 800; color: var(--muted); transition: opacity .4s ease;
+  }
+  #loading.gone { opacity: 0; pointer-events: none; }
+
+  @media (max-width: 1100px) {
+    #credit { display: none; }
+  }
+  @media (max-width: 720px) {
+    #intro { left: 12px; right: 12px; top: 12px; width: auto; padding: 14px 16px; }
+    #intro h1 { font-size: 19px; margin: 4px 0 2px; }
+    #intro .sub, #intro .date { display: none; }
+    .btn-row { margin-top: 10px; }
+    .btn { padding: 7px 12px; font-size: 13px; }
+    #flow { bottom: 12px; }
+    .chip { padding: 7px 10px; font-size: 12px; }
+    .chip .lbl { display: none; }
+    .chip.on .lbl { display: inline; }
+    .pin { padding: 3px; font-size: 0; gap: 0; }
+    .pin .lbl { display: none; }
+    #panel {
+      top: auto; left: 0; right: 0; bottom: 0; width: auto; height: 56vh;
+      border-radius: 20px 20px 0 0; transform: translateY(105%);
+    }
+    #panel .scroll { padding: 18px 16px 8px; }
+    #panel h2 { font-size: 21px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #panel { transition: none; }
+  }
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+<div id="scene"></div>
+<div id="pins"></div>
+
+<header id="intro" class="card">
+  <a class="back" href="/">← Manan Patel</a>
+  <h1>How the power grid works</h1>
+  <p class="sub">A tiny grid you can click. Power flows left to right: it's made, stepped up, moved, stepped down, delivered, and used. Tap anything to see what it does.</p>
+  <div class="btn-row">
+    <button class="btn" id="tour-btn">▶ Take the tour</button>
+    <button class="btn ghost" id="reset-btn">Reset view</button>
+  </div>
+  <p class="date">Aug 15, 2026 · Source: <a class="src" href="https://power2026.ai/" target="_blank" rel="noopener">power2026.ai</a></p>
+</header>
+
+<nav id="flow" class="card" aria-label="Steps of the grid"></nav>
+
+<aside id="panel" class="card" aria-live="polite">
+  <button class="close" id="close-btn" aria-label="Close">✕</button>
+  <div class="scroll" id="panel-body"></div>
+  <div class="panel-nav">
+    <button class="btn ghost" id="prev-btn">← Prev</button>
+    <span class="count" id="count"></span>
+    <button class="btn" id="next-btn">Next →</button>
+  </div>
+</aside>
+
+<div id="tip"></div>
+<p id="credit">Facts distilled from <a href="https://power2026.ai/" target="_blank" rel="noopener">Power 2026</a> by Neel Somani. Toy model, not to scale.</p>
+<div id="loading">Building a tiny grid…</div>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+
+/* ------------------------------------------------------------------ */
+/* Content                                                             */
+/* ------------------------------------------------------------------ */
+
+const STEPS = [
+  { n: 1, key: 'make',    label: 'Make it' },
+  { n: 2, key: 'up',      label: 'Step it up' },
+  { n: 3, key: 'move',    label: 'Move it' },
+  { n: 4, key: 'down',    label: 'Step it down' },
+  { n: 5, key: 'deliver', label: 'Deliver it' },
+  { n: 6, key: 'use',     label: 'Use it' },
+  { n: '⚖', key: 'balance', label: 'Balance it' },
+];
+
+const INFO = {
+  gas: {
+    step: 'make', emoji: '🔥', short: 'Gas', title: 'Natural gas plant',
+    tagline: 'The workhorse that usually sets the price.',
+    body: [
+      'Burns natural gas to spin a turbine, which spins a generator. Basically a jet engine bolted to the ground.',
+      'It can ramp up and down in minutes, so it fills in whenever wind and sun fall short.',
+      'This one has two stacks: a big efficient <b>combined-cycle</b> unit, and a small <b>peaker</b> that only runs when demand is high. Try raising demand at the grid operator and watch the second stack.',
+    ],
+    book: [
+      'Simple-cycle turbines run about <b>300–400 MW</b>. Combined-cycle plants reuse the hot exhaust to make steam and get to about <b>600 MW</b>.',
+      'A <b>heat rate of ~7</b> is typical: burn 7 MMBtu of gas, get 1 MWh of power. Lower is more efficient.',
+      'Turbine makers (GE Vernova, Siemens Energy, Mitsubishi Power) are <b>sold out</b>, with backlogs of months to years.',
+      '<b>Homer City, PA:</b> a 2 GW coal plant that closed in 2023 is being rebuilt as a <b>4.4 GW gas plant (~$10B)</b> to power a data center campus.',
+    ],
+  },
+  nuclear: {
+    step: 'make', emoji: '⚛️', short: 'Nuclear', title: 'Nuclear plant',
+    tagline: 'Steady power, around the clock.',
+    body: [
+      'Splits uranium atoms to make heat, boils water, and the steam spins a turbine.',
+      'The big hourglass is a cooling tower. That cloud is water vapour, not smoke.',
+      'Fuel is cheap per MWh, so it runs flat out 24/7 and is rarely the plant that sets the price. It is slow to turn up or down, so it covers the "base" of demand.',
+    ],
+    book: [
+      'A <b>1 GW</b> plant already counts as big. The Homer City gas rebuild for one data center campus is <b>4.4 GW</b>.',
+    ],
+  },
+  wind: {
+    step: 'make', emoji: '💨', short: 'Wind', title: 'Wind farm',
+    tagline: 'Free fuel, but only when it blows.',
+    body: [
+      'Wind turns the blades, and the blades turn a generator inside the box at the top (the nacelle).',
+      'No fuel bill, so it offers power at about $0 and gets used first whenever it is spinning.',
+      'Output swings with the weather, so something else has to be ready to fill the gap.',
+    ],
+    book: [
+      'In Texas (ERCOT), wind farms have bid as low as <b>–$20/MWh</b>. Subsidies pay them per MWh produced, so they would rather pay you to take the power than shut off.',
+    ],
+  },
+  solar: {
+    step: 'make', emoji: '☀️', short: 'Solar', title: 'Solar farm',
+    tagline: 'Floods the grid at noon, gone by dinner.',
+    body: [
+      'Panels turn sunlight straight into electricity, and inverters convert it into the AC the grid uses.',
+      'Like wind, it costs about $0 to run, so midday prices can crash on sunny days.',
+      'The catch: the sun sets right as people get home and turn everything on.',
+    ],
+    book: [
+      'The <b>duck curve</b>: demand minus solar dips at midday (the duck\'s belly), then shoots up at sunset (its neck). Gas plants have to ramp hard to cover the evening.',
+    ],
+  },
+  battery: {
+    step: 'make', emoji: '🔋', short: 'Battery', title: 'Battery storage',
+    tagline: 'Buy low at noon, sell high at dinner.',
+    body: [
+      'Shipping-container-sized lithium batteries charge when power is cheap and discharge when it is expensive.',
+      'They flatten the duck curve: soak up extra midday solar, release it during the evening rush.',
+      'Most hold 2–4 hours of power. They shift power across a day, not across weeks.',
+    ],
+    book: [
+      'Wholesale power usually trades between <b>~$10 and $150/MWh</b>, sometimes far higher. A battery earns the gap between the cheap hours and the expensive ones.',
+    ],
+  },
+  stepup: {
+    step: 'up', emoji: '⬆️', short: 'Step-up', title: 'Step-up substation',
+    tagline: 'Cranks the voltage way up for the long trip.',
+    body: [
+      'Generators make power at roughly 10–25 kV. The big transformers here raise it to 115–765 kV.',
+      'Why: the same power at higher voltage means less current, and less current means less energy lost as heat in the wires.',
+      'Think of squeezing water into a high-pressure hose so it can travel far.',
+      'Large transformers are custom-built and can take years to get, another bottleneck for new plants.',
+    ],
+    book: [
+      'The grid runs at <b>60 Hz</b>. Every generator plugged in here spins in sync, and <b>supply must equal demand every second</b>, because power is hard to store.',
+    ],
+  },
+  transmission: {
+    step: 'move', emoji: '🗼', short: 'Transmission', title: 'Transmission lines',
+    tagline: 'The highways of the grid.',
+    body: [
+      'High-voltage lines carry power hundreds of kilometres from plants to cities. Three wires make one circuit (three-phase power), and these towers carry two circuits.',
+      'You cannot route power like a package. It flows along every path at once, split by physics.',
+      'Every line has a maximum <b>rating</b>. When a line is full, it is "congested".',
+    ],
+    book: [
+      '<b>Congestion is why price depends on where you are.</b> Toy example: cheap $10 power, a 50 MW line, and a city. At 10 MWh of demand, the city pays $10. At 60 MWh the line is maxed out, so the last 10 MWh has to come from a local $100 plant, and the city\'s price jumps to <b>$100</b>.',
+      'Texas (ERCOT) is mostly its own island, with only <b>~1 GW</b> of links to the rest of the US.',
+    ],
+  },
+  stepdown: {
+    step: 'down', emoji: '⬇️', short: 'Step-down', title: 'Step-down substation',
+    tagline: 'Brings the voltage back down to neighbourhood size.',
+    body: [
+      'Transformers drop the voltage from highway levels to local distribution levels, roughly 4–35 kV.',
+      'Circuit breakers here can cut off one section if something goes wrong, so one fault does not take down the whole city.',
+      'This is where the highway ends and the local streets begin.',
+    ],
+  },
+  distribution: {
+    step: 'deliver', emoji: '🪵', short: 'Poles & wires', title: 'Distribution lines',
+    tagline: 'The local streets.',
+    body: [
+      'Wooden poles carry power down your street.',
+      'The grey can on the pole is one last transformer. It steps power down to the 120/240 V your outlets use.',
+      'Most outages you actually notice (storms, a car hitting a pole) happen here, not on the big lines.',
+    ],
+    book: [
+      'Your bill is <b>energy + transmission + distribution</b>. Paying for the wires is a separate charge from paying for the power itself.',
+    ],
+  },
+  homes: {
+    step: 'use', emoji: '🏡', short: 'Homes', title: 'Homes',
+    tagline: 'Where it all ends up.',
+    body: [
+      'Demand peaks on hot afternoons and early evenings: A/C, ovens, TVs, EVs plugging in.',
+      'You pay a fairly flat retail rate, but behind the scenes the wholesale price changes every few minutes.',
+      'Every time you flip a switch, some plant somewhere turns up a tiny bit to match.',
+    ],
+    book: [
+      'Texas values power that fails to arrive during a blackout at <b>$5,000/MWh</b>. That is the price signal that says "turn on, whatever it costs".',
+    ],
+  },
+  datacenter: {
+    step: 'use', emoji: '🤖', short: 'Data center', title: 'AI data center',
+    tagline: 'The new giant on the grid.',
+    body: [
+      'Racks of GPUs running 24/7, plus big chillers on the roof to keep them cool. One campus can draw as much as a city.',
+      'They want power now, but new plants and lines take years. Some skip the wait and build their own gas plant on site ("behind the meter").',
+    ],
+    book: [
+      'The real bottleneck for AI is <b>power</b>, not chips.',
+      'Data centers use about <b>5% of US power</b>, and that demand is said to be <b>doubling every two years</b>.',
+      'Anthropic\'s <b>$19B, 20-year lease</b> with TeraWulf for <b>400 MW</b> works out to roughly <b>$271/MWh</b>, way above typical wholesale prices.',
+      'An on-site gas plant for compute runs around <b>$300M</b>, and the GPUs inside can still cost more.',
+    ],
+  },
+  operator: {
+    step: 'balance', emoji: '🎛️', short: 'Grid operator', title: 'Grid operator (ISO)',
+    tagline: 'Runs a giant auction every 5 minutes.',
+    body: [
+      'Regional operators like PJM, MISO, CAISO and ERCOT do not own the plants. They decide which ones run.',
+      'Every plant offers a price. The operator stacks them cheapest first (the "merit order") until supply meets demand.',
+      'The <b>last plant needed sets the price</b>, and every running plant gets paid that same price. Try it below, and watch the billboard and the gas stacks.',
+    ],
+    book: [
+      'Prices are set a <b>day ahead</b>, then corrected in <b>real time</b>.',
+      'Typical wholesale prices run <b>$10–150/MWh</b>. Alberta caps at <b>C$1,000</b>, and Texas lets shortages hit <b>$5,000</b>.',
+    ],
+    widget: 'merit',
+  },
+};
+
+const ORDER = ['gas', 'nuclear', 'wind', 'solar', 'battery', 'stepup', 'transmission', 'stepdown', 'distribution', 'homes', 'datacenter', 'operator'];
+
+/* Illustrative supply stack for the merit-order widget */
+const STACK = [
+  { name: 'Wind', gw: 6, cost: 0, color: '#9fd3e6' },
+  { name: 'Solar', gw: 6, cost: 0, color: '#ffd166' },
+  { name: 'Nuclear', gw: 8, cost: 8, color: '#b8a9e3' },
+  { name: 'Coal', gw: 6, cost: 26, color: '#8d8a84' },
+  { name: 'Gas (combined-cycle)', gw: 12, cost: 38, color: '#f4a261' },
+  { name: 'Gas peaker', gw: 6, cost: 85, color: '#e76f51' },
+  { name: 'Oil (emergency)', gw: 2, cost: 160, color: '#6d597a' },
+];
+const STACK_TOTAL = STACK.reduce((a, s) => a + s.gw, 0);
+let demand = 30;
+
+function clearing(d) {
+  let acc = 0;
+  for (const s of STACK) {
+    acc += s.gw;
+    if (d <= acc) return { price: s.cost, setter: s.name, short: false };
+  }
+  return { price: 5000, setter: 'Not enough supply', short: true };
+}
+
+/* ------------------------------------------------------------------ */
+/* Three.js setup                                                      */
+/* ------------------------------------------------------------------ */
+
+const BG = new THREE.Color('#f3f2ee');
+const container = document.getElementById('scene');
+let renderer;
+try {
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+} catch (e) {
+  document.getElementById('loading').textContent = 'This needs WebGL, which your browser has turned off.';
+  throw e;
+}
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.15;
+container.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = BG;
+
+let viewH = 26;
+const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 400);
+const HOME_TARGET = new THREE.Vector3(6.8, 1.2, -0.9);
+const CAM_OFFSET = new THREE.Vector3(16, 27, 34);
+camera.position.copy(HOME_TARGET).add(CAM_OFFSET);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.copy(HOME_TARGET);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.screenSpacePanning = true;
+controls.minZoom = 0.7;
+controls.maxZoom = 4;
+controls.minPolarAngle = 0.35;
+controls.maxPolarAngle = 1.2;
+controls.minAzimuthAngle = -0.5;
+controls.maxAzimuthAngle = 1.3;
+
+scene.add(new THREE.HemisphereLight('#ffffff', '#cfc8b8', 1.5));
+const sunLight = new THREE.DirectionalLight('#fff6e8', 2.4);
+sunLight.position.set(-14, 28, 16);
+sunLight.castShadow = true;
+sunLight.shadow.mapSize.set(2048, 2048);
+Object.assign(sunLight.shadow.camera, { left: -32, right: 32, top: 24, bottom: -24, near: 1, far: 90 });
+sunLight.shadow.bias = -0.0004;
+sunLight.shadow.normalBias = 0.03;
+scene.add(sunLight);
+
+// Space the intro card takes on wide screens, so the diorama sits beside it
+const sideInset = () => (window.innerWidth > 1000 ? 362 : 0);
+function homeTarget() {
+  const t = HOME_TARGET.clone();
+  const inset = sideInset();
+  if (!inset) return t;
+  camera.updateMatrixWorld();
+  const right = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 0);
+  return t.addScaledVector(right, -(inset / 2) * (viewH / window.innerHeight));
+}
+function resize() {
+  const w = window.innerWidth, h = window.innerHeight, a = w / h;
+  viewH = Math.max(27, (sideInset() ? 45 : 46) / ((w - sideInset()) / h));
+  camera.left = -viewH * a / 2; camera.right = viewH * a / 2;
+  camera.top = viewH / 2; camera.bottom = -viewH / 2;
+  camera.updateProjectionMatrix();
+  renderer.setSize(w, h);
+}
+window.addEventListener('resize', () => {
+  resize();
+  if (!selected && !tween) { controls.target.copy(homeTarget()); camera.position.copy(controls.target).add(CAM_OFFSET); }
+});
+resize();
+controls.target.copy(homeTarget());
+camera.position.copy(controls.target).add(CAM_OFFSET);
+
+/* ------------------------------------------------------------------ */
+/* Modelling helpers                                                   */
+/* ------------------------------------------------------------------ */
+
+const mat = (color, extra = {}) => new THREE.MeshStandardMaterial({ color, roughness: 0.78, metalness: 0.04, ...extra });
+
+function shade(m) { m.castShadow = true; m.receiveShadow = true; return m; }
+function rbox(w, h, d, color, r = 0.08) {
+  const rad = Math.min(r, w / 2 - 0.001, h / 2 - 0.001, d / 2 - 0.001);
+  return shade(new THREE.Mesh(new RoundedBoxGeometry(w, h, d, 2, Math.max(rad, 0.0005)), mat(color)));
+}
+function cyl(rt, rb, h, color, seg = 20) {
+  return shade(new THREE.Mesh(new THREE.CylinderGeometry(rt, rb, h, seg), mat(color)));
+}
+function sphere(r, color, seg = 20) {
+  return shade(new THREE.Mesh(new THREE.SphereGeometry(r, seg, Math.round(seg * 0.7)), mat(color)));
+}
+function at(o, x, y, z) { o.position.set(x, y, z); return o; }
+const UP = new THREE.Vector3(0, 1, 0);
+function beam(a, b, t, color) {
+  const len = a.distanceTo(b);
+  const m = shade(new THREE.Mesh(new THREE.BoxGeometry(t, len, t), mat(color)));
+  m.position.copy(a).add(b).multiplyScalar(0.5);
+  m.quaternion.setFromUnitVectors(UP, b.clone().sub(a).normalize());
+  return m;
+}
+const V = (x, y, z) => new THREE.Vector3(x, y, z);
+
+function sagPoints(a, b, sag, n = 16) {
+  const pts = [];
+  for (let i = 0; i <= n; i++) {
+    const t = i / n;
+    const p = a.clone().lerp(b, t);
+    p.y -= sag * 4 * t * (1 - t);
+    pts.push(p);
+  }
+  return pts;
+}
+function wire(points, color = '#3d4449', r = 0.028) {
+  const curve = new THREE.CatmullRomCurve3(points);
+  const m = new THREE.Mesh(new THREE.TubeGeometry(curve, Math.max(8, points.length * 2), r, 5), mat(color));
+  m.castShadow = true;
+  return m;
+}
+
+/* Sections: clickable groups */
+const sections = {};
+function section(id, x, z) {
+  const g = new THREE.Group();
+  g.position.set(x, 0, z);
+  scene.add(g);
+  sections[id] = { id, group: g };
+  return g;
+}
+
+/* ------------------------------------------------------------------ */
+/* Ground                                                              */
+/* ------------------------------------------------------------------ */
+
+const plinth = rbox(46, 1.4, 25, '#fbfaf7', 0.4);
+at(plinth, 0, -0.85, 0);
+scene.add(plinth);
+const grass = rbox(45, 0.4, 24, '#bfe0a6', 0.18);
+at(grass, 0, -0.2, 0);
+grass.castShadow = false;
+scene.add(grass);
+
+// road in town
+const road = rbox(1.1, 0.06, 14.5, '#d9d7d1', 0.03);
+at(road, 15.9, 0.02, -3.6);
+road.castShadow = false;
+scene.add(road);
+const road2 = rbox(5.2, 0.06, 1.1, '#d9d7d1', 0.03);
+at(road2, 18.5, 0.02, 3.2);
+road2.castShadow = false;
+scene.add(road2);
+
+function tree(x, z, s = 1, kind = 0) {
+  const g = new THREE.Group();
+  g.add(at(cyl(0.08 * s, 0.11 * s, 0.6 * s, '#9a7353', 8), 0, 0.3 * s, 0));
+  if (kind === 0) {
+    g.add(at(sphere(0.55 * s, '#7cc47a', 14), 0, 0.95 * s, 0));
+    g.add(at(sphere(0.38 * s, '#8fd28a', 12), 0.25 * s, 1.3 * s, 0.1 * s));
+  } else {
+    const c = shade(new THREE.Mesh(new THREE.ConeGeometry(0.55 * s, 1.5 * s, 10), mat('#5fae73')));
+    g.add(at(c, 0, 1.25 * s, 0));
+  }
+  g.position.set(x, 0, z);
+  scene.add(g);
+}
+[
+  [-20.5, -10, 1.1, 1], [-19.6, 1.2, 1, 0], [-20.4, 8.6, 1.2, 1], [-18.3, 10, 0.9, 0], [-12.6, -4.8, 0.9, 0],
+  [-4.8, -5.2, 1, 1], [-4, 7.4, 1, 0], [-3, -9.2, 1.1, 0], [-1, 4.6, 0.9, 1], [0.6, -3.8, 0.8, 0],
+  [5, 4.4, 1, 0], [6.2, -4.4, 0.9, 1], [7.6, -9.6, 1.1, 0], [8.6, 8.8, 1, 1], [4, 9.4, 1.2, 0],
+  [-2.6, 9.8, 0.9, 1], [10.2, 5.6, 0.9, 0], [21, -10.2, 1, 1], [21.3, 0.6, 0.9, 0], [13.2, 9.8, 1, 0],
+  [21.2, 10, 1.1, 1], [10, -10.2, 0.9, 1], [-7.6, 10, 1, 0], [1.4, 10.2, 0.8, 1], [-21, -4.5, 0.9, 0],
+].forEach(([x, z, s, k]) => tree(x, z, s, k));
+
+/* ------------------------------------------------------------------ */
+/* 1. Power sources                                                    */
+/* ------------------------------------------------------------------ */
+
+// Gas plant
+const gas = section('gas', -15, 5);
+gas.add(at(rbox(5.5, 0.16, 4, '#d9d6cf'), 0, 0.08, 0));
+gas.add(at(rbox(3, 1.8, 2, '#eeebe4'), -0.9, 1.0, 0.7));
+gas.add(at(rbox(3.08, 0.16, 2.08, '#7fa7c9'), -0.9, 1.92, 0.7));
+for (let i = 0; i < 3; i++) gas.add(at(rbox(0.45, 0.5, 0.05, '#a9cbe6', 0.02), -1.9 + i * 0.95, 1.0, 1.72));
+gas.add(at(rbox(1.5, 2.4, 1.5, '#cdc7bc'), 1.4, 1.28, 0.6));
+const stackA = at(cyl(0.3, 0.38, 5, '#f4f2ec'), 1.2, 2.6, -0.95);
+const stackB = at(cyl(0.22, 0.28, 3.4, '#f4f2ec'), 2.3, 1.8, -0.95);
+gas.add(stackA, stackB);
+gas.add(at(cyl(0.32, 0.32, 0.4, '#e05a47'), 1.2, 4.7, -0.95));
+gas.add(at(cyl(0.24, 0.24, 0.3, '#e05a47'), 2.3, 3.2, -0.95));
+const tank = cyl(0.55, 0.55, 1.8, '#f2c14e');
+tank.rotation.z = Math.PI / 2;
+gas.add(at(tank, -1.4, 0.7, -1.15));
+// gas pipeline coming in from the edge
+const pipe = cyl(0.14, 0.14, 4.6, '#f2c14e', 12);
+pipe.rotation.z = Math.PI / 2;
+gas.add(at(pipe, -4.95, 0.35, -1.15));
+for (let i = 0; i < 4; i++) gas.add(at(rbox(0.12, 0.3, 0.3, '#b9b4aa', 0.02), -6.6 + i * 1.2, 0.15, -1.15));
+
+// Nuclear plant
+const nuc = section('nuclear', -16, -2.5);
+nuc.add(at(rbox(5.2, 0.16, 3.6, '#d9d6cf'), 0, 0.08, 0));
+const towerPts = [];
+for (let i = 0; i <= 24; i++) {
+  const t = i / 24;
+  towerPts.push(new THREE.Vector2(1.0 + 0.85 * Math.pow(t - 0.72, 2) / 0.5184, t * 4.6));
+}
+const cooling = shade(new THREE.Mesh(new THREE.LatheGeometry(towerPts, 40), mat('#e6e2d9', { side: THREE.DoubleSide })));
+nuc.add(at(cooling, -1.0, 0.1, 0));
+nuc.add(at(cyl(1.02, 1.02, 0.18, '#f08a5d', 40), -1.0, 4.0, 0));
+const reactor = cyl(0.95, 0.95, 1.6, '#f6f4ee', 32);
+nuc.add(at(reactor, 1.55, 0.9, 0.5));
+const dome = shade(new THREE.Mesh(new THREE.SphereGeometry(0.95, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2), mat('#f6f4ee')));
+nuc.add(at(dome, 1.55, 1.7, 0.5));
+nuc.add(at(rbox(1.4, 0.9, 1.0, '#cfd8dc'), 1.6, 0.55, -1.15));
+
+// Wind farm
+const wind = section('wind', -14.5, -8.5);
+const rotors = [];
+[[-3.5, 0.4, 1], [0, -0.1, 1.1], [3.5, 0.3, 0.95]].forEach(([x, z, s]) => {
+  const t = new THREE.Group();
+  t.add(at(cyl(0.1, 0.2, 6, '#fbfbf8', 14), 0, 3, 0));
+  t.add(at(rbox(0.5, 0.42, 0.95, '#fbfbf8', 0.14), 0, 6.1, 0.05));
+  const rotor = new THREE.Group();
+  rotor.position.set(0, 6.1, 0.6);
+  rotor.add(sphere(0.2, '#fbfbf8', 14));
+  for (let i = 0; i < 3; i++) {
+    const pivot = new THREE.Group();
+    pivot.rotation.z = (i * Math.PI * 2) / 3;
+    pivot.add(at(rbox(0.22, 2.3, 0.06, '#fbfbf8', 0.03), 0, 1.25, 0));
+    pivot.add(at(rbox(0.16, 0.35, 0.07, '#e76f51', 0.03), 0, 2.25, 0));
+    rotor.add(pivot);
+  }
+  rotor.rotation.z = Math.random() * Math.PI;
+  t.add(rotor);
+  rotors.push(rotor);
+  t.add(at(cyl(0.45, 0.5, 0.12, '#d9d6cf', 16), 0, 0.06, 0));
+  t.scale.setScalar(s);
+  t.position.set(x, 0, z);
+  wind.add(t);
+});
+
+// Solar farm
+const solar = section('solar', -9.5, 6.5);
+for (let r = 0; r < 3; r++) {
+  for (let c = 0; c < 4; c++) {
+    const p = new THREE.Group();
+    p.add(at(cyl(0.05, 0.05, 0.5, '#9aa3a8', 6), 0, 0.25, 0));
+    const panel = new THREE.Group();
+    panel.add(rbox(1.4, 0.06, 0.95, '#f4f4f2', 0.02));
+    panel.add(at(rbox(1.3, 0.04, 0.85, '#3559a8', 0.01), 0, 0.03, 0));
+    panel.rotation.x = 0.55;
+    panel.position.y = 0.55;
+    p.add(panel);
+    p.position.set(-2.4 + c * 1.6, 0, -1.6 + r * 1.6);
+    solar.add(p);
+  }
+}
+solar.add(at(rbox(0.6, 0.6, 0.5, '#e9e6df'), 2.9, 0.3, 1.8));
+
+// Batteries
+const bat = section('battery', -10.6, 0.5);
+bat.add(at(rbox(3, 0.12, 2.8, '#d9d6cf'), 0, 0.06, 0));
+for (let i = 0; i < 3; i++) {
+  const z = -0.85 + i * 0.85;
+  bat.add(at(rbox(2.4, 0.85, 0.66, '#f6f6f3', 0.06), 0, 0.56, z));
+  bat.add(at(rbox(2.42, 0.12, 0.68, '#6cc28a', 0.03), 0, 0.82, z));
+  bat.add(at(rbox(0.3, 0.16, 0.3, '#c9ced1', 0.03), 0.8, 1.06, z));
+}
+
+/* ------------------------------------------------------------------ */
+/* 2 & 4. Substations                                                  */
+/* ------------------------------------------------------------------ */
+
+function substation(g, gantryX, accent) {
+  g.add(at(rbox(4, 0.12, 4, '#d4d1ca'), 0, 0.06, 0));
+  // fence
+  for (let i = -3; i <= 3; i++) {
+    const v = i * 0.65;
+    for (const [x, z] of [[v, -1.95], [v, 1.95], [-1.95, v], [1.95, v]]) {
+      g.add(at(cyl(0.03, 0.03, 0.7, '#b7bcbf', 6), x, 0.47, z));
+    }
+  }
+  for (const z of [-1.95, 1.95]) g.add(at(rbox(3.95, 0.04, 0.04, '#b7bcbf', 0.01), 0, 0.8, z));
+  for (const x of [-1.95, 1.95]) g.add(at(rbox(0.04, 0.04, 3.95, '#b7bcbf', 0.01), x, 0.8, 0));
+  // transformers
+  const tx = -gantryX * 0.45;
+  for (const z of [-0.75, 0.75]) {
+    g.add(at(rbox(1.0, 1.0, 0.9, '#93a6ad', 0.06), tx, 0.62, z));
+    for (const dz of [-0.48, 0.48]) {
+      for (let f = 0; f < 4; f++) g.add(at(rbox(0.14, 0.75, 0.05, '#80949b', 0.01), tx - 0.33 + f * 0.22, 0.58, z + dz));
+    }
+    for (let b = 0; b < 3; b++) {
+      g.add(at(cyl(0.05, 0.07, 0.42, accent, 8), tx - 0.3 + b * 0.3, 1.33, z));
+      g.add(beam(V(tx - 0.3 + b * 0.3, 1.54, z), V(gantryX, 3.25, z * 1.2 + (b - 1) * 0.3), 0.03, '#5b6266'));
+    }
+  }
+  // gantry where the big wires land
+  for (const z of [-1.8, 1.8]) g.add(at(rbox(0.16, 3.6, 0.16, '#a7b0b6', 0.03), gantryX, 1.8, z));
+  g.add(at(rbox(0.14, 0.14, 3.8, '#a7b0b6', 0.03), gantryX, 3.45, 0));
+  for (const z of [-1.5, -0.9, -0.3, 0.3, 0.9, 1.5]) g.add(at(cyl(0.05, 0.05, 0.22, '#6fb6d8', 8), gantryX, 3.28, z));
+  // lightning masts
+  for (const [x, z] of [[-1.7, -1.7], [1.7, 1.7]]) g.add(at(cyl(0.03, 0.05, 2.4, '#a7b0b6', 6), x, 1.2, z));
+}
+
+const stepup = section('stepup', -6, 0);
+substation(stepup, 1.5, '#d9875a');
+const stepdown = section('stepdown', 11, 0);
+substation(stepdown, -1.5, '#d9875a');
+// riser pole that feeds the neighbourhood
+stepdown.add(at(cyl(0.07, 0.09, 2.4, '#8b6b4a', 8), 1.7, 1.2, 0));
+stepdown.add(at(rbox(0.9, 0.07, 0.07, '#8b6b4a', 0.02), 1.7, 2.3, 0));
+
+/* ------------------------------------------------------------------ */
+/* 3. Transmission                                                     */
+/* ------------------------------------------------------------------ */
+
+const trans = section('transmission', 0, 0);
+const TOWER_X = [-1.5, 2.5, 6.5];
+const ARM_Y = [5.2, 6.0, 6.8];
+const STEEL = '#a2abb1';
+
+function tower(x) {
+  const g = new THREE.Group();
+  const H = 7.2;
+  const half = (y) => 0.75 + (0.2 - 0.75) * (y / H);
+  const corner = (sx, sz, y) => V(sx * half(y), y, sz * half(y));
+  const corners = [[-1, -1], [1, -1], [1, 1], [-1, 1]];
+  for (const [sx, sz] of corners) g.add(beam(corner(sx, sz, 0), corner(sx, sz, H), 0.1, STEEL));
+  const levels = [0, 1.6, 3.2, 4.6, 5.8, H];
+  for (let l = 0; l < levels.length - 1; l++) {
+    const y0 = levels[l], y1 = levels[l + 1];
+    for (let c = 0; c < 4; c++) {
+      const [ax, az] = corners[c], [bx, bz] = corners[(c + 1) % 4];
+      g.add(beam(corner(ax, az, y0), corner(bx, bz, y1), 0.04, STEEL));
+      g.add(beam(corner(bx, bz, y0), corner(ax, az, y1), 0.04, STEEL));
+    }
+  }
+  for (const y of ARM_Y) {
+    g.add(beam(V(0, y, -1.55), V(0, y, 1.55), 0.1, STEEL));
+    for (const s of [-1, 1]) {
+      g.add(beam(V(0, y - 0.45, s * 0.25), V(0, y, s * 1.3), 0.04, STEEL));
+      g.add(at(cyl(0.06, 0.06, 0.3, '#6fb6d8', 8), 0, y - 0.15, s * 1.4));
+    }
+  }
+  g.add(beam(V(0, H, 0), V(0, H + 0.6, 0), 0.08, STEEL));
+  g.add(at(cyl(0.6, 0.85, 0.12, '#d9d6cf', 4), 0, 0.06, 0));
+  g.position.x = x;
+  return g;
+}
+TOWER_X.forEach((x) => trans.add(tower(x)));
+
+// 6 conductors from step-up gantry → 3 towers → step-down gantry
+const GANTRY_Z = [0.3, 0.9, 1.5];
+const transRoutes = [];
+for (let k = 0; k < 3; k++) {
+  for (const s of [-1, 1]) {
+    const nodes = [V(-4.5, 3.28, s * GANTRY_Z[k])];
+    TOWER_X.forEach((x) => nodes.push(V(x, ARM_Y[k] - 0.3, s * 1.4)));
+    nodes.push(V(9.5, 3.28, s * GANTRY_Z[k]));
+    let all = [];
+    for (let i = 0; i < nodes.length - 1; i++) {
+      const pts = sagPoints(nodes[i], nodes[i + 1], 0.35, 14);
+      trans.add(wire(pts));
+      all = all.concat(i ? pts.slice(1) : pts);
+    }
+    transRoutes.push(all);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* 5. Distribution                                                     */
+/* ------------------------------------------------------------------ */
+
+const dist = section('distribution', 0, 0);
+const POLE_X = 14.5;
+const POLES = [{ z: 0 }, { z: -3.5, tx: true }, { z: -7, tx: true }, { z: 3.2, tx: true }];
+for (const p of POLES) {
+  dist.add(at(cyl(0.08, 0.11, 3.2, '#8b6b4a', 10), POLE_X, 1.6, p.z));
+  dist.add(at(rbox(1.2, 0.08, 0.08, '#8b6b4a', 0.02), POLE_X, 3.0, p.z));
+  for (const dx of [-0.5, 0.5]) dist.add(at(cyl(0.04, 0.04, 0.12, '#6fb6d8', 6), POLE_X + dx, 3.08, p.z));
+  if (p.tx) dist.add(at(cyl(0.17, 0.17, 0.42, '#9aa6ab', 14), POLE_X + 0.24, 2.35, p.z));
+}
+const feeder = (z1, z2, x1 = POLE_X, y1 = 3.1) => [-0.5, 0.5].map((dx) => sagPoints(V(x1 + dx, y1, z1), V(POLE_X + dx, 3.1, z2), 0.22, 12));
+const distRoutes = [];
+// substation riser → P0
+for (const dx of [-0.45, 0.45]) {
+  const pts = sagPoints(V(12.7 + dx, 2.32, 0), V(POLE_X + (dx > 0 ? 0.5 : -0.5), 3.1, 0), 0.2, 12);
+  dist.add(wire(pts, '#3d4449', 0.022));
+}
+const streetA = [], streetB = [];
+for (const [za, zb] of [[0, -3.5], [-3.5, -7]]) {
+  const [a, b] = feeder(za, zb);
+  dist.add(wire(a, '#3d4449', 0.022), wire(b, '#3d4449', 0.022));
+  streetA.push(...a); streetB.push(...b);
+}
+{
+  const [a, b] = feeder(0, 3.2);
+  dist.add(wire(a, '#3d4449', 0.022), wire(b, '#3d4449', 0.022));
+}
+distRoutes.push(
+  [V(12.25, 2.32, 0), ...sagPoints(V(12.25, 2.32, 0), V(POLE_X - 0.5, 3.1, 0), 0.2, 12), ...streetA],
+  [V(13.15, 2.32, 0), ...sagPoints(V(13.15, 2.32, 0), V(POLE_X + 0.5, 3.1, 0), 0.2, 12), ...streetB],
+);
+// line to the data center
+const dcPts = sagPoints(V(POLE_X + 0.5, 3.1, 3.2), V(16.05, 1.9, 4.6), 0.15, 10);
+dist.add(wire(dcPts, '#3d4449', 0.03));
+distRoutes.push([
+  ...sagPoints(V(13.15, 2.32, 0), V(POLE_X + 0.5, 3.1, 0), 0.2, 12),
+  ...sagPoints(V(POLE_X + 0.5, 3.1, 0), V(POLE_X + 0.5, 3.1, 3.2), 0.22, 12),
+  ...dcPts,
+]);
+
+/* ------------------------------------------------------------------ */
+/* 6. Homes and the data center                                        */
+/* ------------------------------------------------------------------ */
+
+function roofGeo(w, h, d) {
+  const s = new THREE.Shape();
+  s.moveTo(-w / 2, 0); s.lineTo(w / 2, 0); s.lineTo(0, h); s.closePath();
+  const g = new THREE.ExtrudeGeometry(s, { depth: d, bevelEnabled: false });
+  g.translate(0, 0, -d / 2);
+  return g;
+}
+const homes = section('homes', 0, 0);
+const HOUSES = [
+  [17.4, -1.6, '#ffd6a5', '#e07a5f', -1], [17.4, -5.0, '#cde7f0', '#5b7db1', -1], [17.4, -8.4, '#fde2e4', '#c8553d', -1],
+  [20.3, -3.3, '#e2ece9', '#7a9e7e', -1], [20.3, -6.8, '#fff1c1', '#d08c60', -1],
+  [12.2, -5.4, '#e8dff5', '#7d6ba8', 1], [12.2, -8.8, '#d8f3dc', '#52796f', 1],
+];
+for (const [x, z, wall, roof, face] of HOUSES) {
+  const h = new THREE.Group();
+  h.add(at(rbox(1.6, 1.0, 1.4, wall, 0.06), 0, 0.5, 0));
+  const r = shade(new THREE.Mesh(roofGeo(1.85, 0.75, 1.6), mat(roof)));
+  r.rotation.y = Math.PI / 2;
+  h.add(at(r, 0, 1.0, 0));
+  h.add(at(rbox(0.18, 0.45, 0.18, roof, 0.02), 0.35, 1.45, 0.4));
+  h.add(at(rbox(0.05, 0.5, 0.32, '#8b6b4a', 0.02), face * 0.81, 0.25, 0));
+  for (const dz of [-0.45, 0.45]) h.add(at(rbox(0.05, 0.28, 0.28, '#a9d6f0', 0.02), face * 0.81, 0.6, dz));
+  h.add(at(rbox(0.3, 0.3, 0.05, '#a9d6f0', 0.02), 0, 0.6, 0.71));
+  h.position.set(x, 0, z);
+  homes.add(h);
+}
+// service drops from the nearest pole
+const HOUSE_POLES = [0, -3.5, -7];
+for (const [x, z, , , face] of HOUSES) {
+  const pz = HOUSE_POLES.reduce((a, b) => (Math.abs(b - z) < Math.abs(a - z) ? b : a));
+  const from = V(POLE_X + (face < 0 ? 0.24 : -0.1), 2.6, pz);
+  const to = V(x + face * 0.8, 1.05, z);
+  homes.add(wire(sagPoints(from, to, 0.18, 10), '#4a5157', 0.014));
+}
+
+const dc = section('datacenter', 18.5, 6.3);
+dc.add(at(rbox(5.6, 0.14, 4.2, '#d9d6cf'), 0, 0.07, 0));
+dc.add(at(rbox(5, 2.1, 3.4, '#eef0f3', 0.1), 0, 1.15, 0));
+dc.add(at(rbox(5.04, 0.3, 3.44, '#5b8def', 0.05), 0, 1.75, 0));
+for (let i = 0; i < 5; i++) dc.add(at(rbox(0.6, 0.9, 0.05, '#2f3b4a', 0.02), -1.9 + i * 0.95, 0.85, 1.72));
+const fans = [];
+for (let i = 0; i < 3; i++) {
+  for (let j = 0; j < 2; j++) {
+    const x = -1.6 + i * 1.6, z = -0.75 + j * 1.5;
+    dc.add(at(rbox(1.2, 0.35, 1.1, '#dfe3e8', 0.05), x, 2.38, z));
+    const fan = new THREE.Group();
+    fan.add(at(cyl(0.38, 0.38, 0.04, '#3b4650', 18), 0, 0, 0));
+    for (let b = 0; b < 3; b++) {
+      const bl = rbox(0.6, 0.02, 0.1, '#c9d2da', 0.005);
+      bl.rotation.y = (b * Math.PI) / 3;
+      fan.add(at(bl, 0, 0.04, 0));
+    }
+    fan.position.set(x, 2.58, z);
+    dc.add(fan);
+    fans.push(fan);
+  }
+}
+dc.add(at(rbox(0.9, 0.7, 0.6, '#f2c14e', 0.05), 2.4, 0.42, -2.6 + 0.4));
+dc.add(at(rbox(0.9, 0.7, 0.6, '#f2c14e', 0.05), 1.3, 0.42, -2.6 + 0.4));
+dc.add(at(rbox(0.6, 0.6, 0.1, '#ffffff', 0.02), -2.5, 1.2, 1.72));
+
+/* ------------------------------------------------------------------ */
+/* Grid operator with a price billboard                                */
+/* ------------------------------------------------------------------ */
+
+const op = section('operator', 2.5, -7.6);
+op.add(at(rbox(4, 0.14, 3, '#d9d6cf'), 0, 0.07, 0));
+op.add(at(rbox(3.4, 1.9, 2.4, '#f7f4ee', 0.1), 0, 1.05, 0));
+op.add(at(rbox(3.44, 0.55, 2.44, '#a8d4f0', 0.05), 0, 1.25, 0));
+op.add(at(rbox(0.5, 0.75, 0.05, '#8b6b4a', 0.02), 0, 0.45, 1.22));
+op.add(at(cyl(0.04, 0.05, 1.8, '#a7b0b6', 6), -1.3, 2.9, -0.7));
+op.add(at(sphere(0.09, '#e05a47', 10), -1.3, 3.82, -0.7));
+const dish = shade(new THREE.Mesh(new THREE.SphereGeometry(0.4, 18, 8, 0, Math.PI * 2, 0, Math.PI / 2.4), mat('#ffffff', { side: THREE.DoubleSide })));
+dish.rotation.x = Math.PI - 0.7;
+op.add(at(dish, 1.1, 2.55, -0.6));
+for (const x of [-0.9, 0.9]) op.add(at(cyl(0.05, 0.05, 1.2, '#a7b0b6', 6), x, 2.6, 0.5));
+op.add(at(rbox(2.3, 1.15, 0.12, '#2a3540', 0.05), 0, 3.25, 0.5));
+const boardCanvas = document.createElement('canvas');
+boardCanvas.width = 512; boardCanvas.height = 256;
+const boardTex = new THREE.CanvasTexture(boardCanvas);
+boardTex.colorSpace = THREE.SRGBColorSpace;
+boardTex.anisotropy = 4;
+const board = new THREE.Mesh(new THREE.PlaneGeometry(2.1, 1.0), new THREE.MeshBasicMaterial({ map: boardTex, toneMapped: false }));
+op.add(at(board, 0, 3.25, 0.57));
+
+function drawBoard() {
+  const c = boardCanvas.getContext('2d');
+  const { price, setter, short } = clearing(demand);
+  c.fillStyle = '#24313d'; c.fillRect(0, 0, 512, 256);
+  c.fillStyle = '#9fb3c3'; c.font = '800 34px Nunito, sans-serif'; c.textAlign = 'center';
+  c.fillText('GRID PRICE NOW', 256, 58);
+  c.fillStyle = short ? '#ff6b6b' : '#ffc83d'; c.font = '900 92px Nunito, sans-serif';
+  c.fillText(`$${price.toLocaleString()}`, 256, 158);
+  c.fillStyle = '#d9e2ea'; c.font = '700 30px Nunito, sans-serif';
+  c.fillText(short ? 'shortage!' : `per MWh · set by ${setter.replace(' (combined-cycle)', '')}`, 256, 212);
+  boardTex.needsUpdate = true;
+}
+
+/* ------------------------------------------------------------------ */
+/* Flow pulses                                                         */
+/* ------------------------------------------------------------------ */
+
+function makeRoute(points) {
+  const cum = [0];
+  for (let i = 1; i < points.length; i++) cum.push(cum[i - 1] + points[i].distanceTo(points[i - 1]));
+  const len = cum[cum.length - 1];
+  return {
+    len,
+    at(d, out) {
+      let i = 1;
+      while (i < cum.length - 1 && cum[i] < d) i++;
+      const seg = cum[i] - cum[i - 1] || 1;
+      return out.copy(points[i - 1]).lerp(points[i], (d - cum[i - 1]) / seg);
+    },
+  };
+}
+const pulseGeo = new THREE.SphereGeometry(1, 12, 8);
+const pulseMat = new THREE.MeshBasicMaterial({ color: '#ffc21a', toneMapped: false });
+const flows = [];
+function addFlow(points, spacing, size, speed = 1) {
+  const route = makeRoute(points);
+  const n = Math.max(1, Math.round(route.len / spacing));
+  const pulses = [];
+  for (let i = 0; i < n; i++) {
+    const m = new THREE.Mesh(pulseGeo, pulseMat);
+    m.scale.setScalar(size);
+    scene.add(m);
+    pulses.push(m);
+  }
+  flows.push({ route, pulses, speed });
+}
+
+// glowing cable paths on the ground from each source to the step-up yard
+const GY = 0.07;
+const groundRoutes = [
+  [V(-12.3, GY, 4.1), V(-7.2, GY, 4.1), V(-7.2, GY, 1.9)],
+  [V(-7.1, GY, 6.0), V(-5.2, GY, 6.0), V(-5.2, GY, 1.9)],
+  [V(-9.2, GY, 0.4), V(-8.0, GY, 0.4)],
+  [V(-13.4, GY, -1.8), V(-8.0, GY, -1.8)],
+  [V(-14.5, GY, -7.9), V(-6.5, GY, -7.9), V(-6.5, GY, -1.9)],
+];
+const stripMat = new THREE.MeshStandardMaterial({ color: '#f1dc9a', roughness: 0.9 });
+for (const pts of groundRoutes) {
+  for (let i = 0; i < pts.length - 1; i++) {
+    const a = pts[i], b = pts[i + 1];
+    const len = a.distanceTo(b) + 0.2;
+    const strip = new THREE.Mesh(new THREE.BoxGeometry(Math.abs(a.x - b.x) > 0.01 ? len : 0.2, 0.04, Math.abs(a.z - b.z) > 0.01 ? len : 0.2), stripMat);
+    strip.position.copy(a).add(b).multiplyScalar(0.5).setY(0.02);
+    strip.receiveShadow = true;
+    scene.add(strip);
+  }
+  addFlow(pts, 1.4, 0.13, 0.8);
+}
+transRoutes.forEach((pts) => addFlow(pts, 2.2, 0.1, 1.4));
+distRoutes.forEach((pts) => addFlow(pts, 1.4, 0.08, 0.9));
+
+/* ------------------------------------------------------------------ */
+/* Smoke and steam                                                     */
+/* ------------------------------------------------------------------ */
+
+const puffGeo = new THREE.SphereGeometry(1, 12, 10);
+const puffs = [];
+const emitters = [
+  { pos: V(-15 + 1.2, 5.2, 5 - 0.95), color: '#f2f2f2', rate: () => (clearing(demand).price >= 38 ? 3 : 0.6), acc: 0, size: 0.32 },
+  { pos: V(-15 + 2.3, 3.5, 5 - 0.95), color: '#e4e4e4', rate: () => (clearing(demand).price >= 85 ? 4 : 0), acc: 0, size: 0.26 },
+  { pos: V(-17, 4.7, -2.5), color: '#ffffff', rate: () => 2.4, acc: 0, size: 0.55 },
+];
+function updateSmoke(dt) {
+  for (const e of emitters) {
+    e.acc += dt * e.rate();
+    while (e.acc >= 1) {
+      e.acc -= 1;
+      const m = new THREE.Mesh(puffGeo, new THREE.MeshStandardMaterial({ color: e.color, transparent: true, opacity: 0.85, depthWrite: false, roughness: 1 }));
+      m.position.copy(e.pos).add(V((Math.random() - 0.5) * 0.3, 0, (Math.random() - 0.5) * 0.3));
+      m.userData = { life: 0, max: 2.8 + Math.random(), size: e.size };
+      scene.add(m);
+      puffs.push(m);
+    }
+  }
+  for (let i = puffs.length - 1; i >= 0; i--) {
+    const p = puffs[i], u = p.userData;
+    u.life += dt;
+    const k = u.life / u.max;
+    p.position.y += dt * 0.9;
+    p.position.x += dt * 0.35;
+    p.scale.setScalar(u.size * (1 + k * 1.6));
+    p.material.opacity = 0.85 * (1 - k);
+    if (k >= 1) { scene.remove(p); p.material.dispose(); puffs.splice(i, 1); }
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Selection, highlight, camera                                        */
+/* ------------------------------------------------------------------ */
+
+const pickables = [];
+for (const s of Object.values(sections)) {
+  s.meshes = [];
+  s.group.traverse((o) => {
+    if (!o.isMesh) return;
+    o.material = o.material.clone();
+    o.userData.base = o.material.color.clone();
+    o.userData.sid = s.id;
+    s.meshes.push(o);
+    pickables.push(o);
+  });
+  s.box = new THREE.Box3().setFromObject(s.group);
+  s.center = s.box.getCenter(new THREE.Vector3());
+  s.size = s.box.getSize(new THREE.Vector3());
+}
+// nicer pin anchors for spread-out sections
+const anchors = {
+  transmission: V(-1.5, 8.4, 0),
+  distribution: V(POLE_X, 3.6, -3.5),
+  homes: V(18.8, 2.2, -5),
+  wind: V(-14.5, 8.4, -8.6),
+};
+
+const halo = new THREE.Mesh(new THREE.RingGeometry(0.92, 1, 72), new THREE.MeshBasicMaterial({ color: '#ffb703', transparent: true, opacity: 0.9, toneMapped: false }));
+halo.rotation.x = -Math.PI / 2;
+halo.position.y = 0.05;
+halo.visible = false;
+scene.add(halo);
+
+let selected = null, hovered = null;
+
+function applyLook() {
+  for (const s of Object.values(sections)) {
+    const dim = selected && selected !== s.id;
+    for (const m of s.meshes) {
+      m.material.color.copy(m.userData.base);
+      if (dim) m.material.color.lerp(BG, 0.6);
+      if (m.material.emissive) {
+        if (s.id === selected) { m.material.emissive.set('#ffb703'); m.material.emissiveIntensity = 0.2; }
+        else if (s.id === hovered) { m.material.emissive.set('#ffffff'); m.material.emissiveIntensity = 0.16; }
+        else { m.material.emissive.set('#000000'); m.material.emissiveIntensity = 0; }
+      }
+    }
+  }
+  for (const [id, el] of Object.entries(pinEls)) {
+    el.classList.toggle('on', id === selected);
+    el.classList.toggle('dim', !!selected && id !== selected);
+  }
+  const step = selected ? INFO[selected].step : null;
+  document.querySelectorAll('.chip').forEach((c) => c.classList.toggle('on', c.dataset.step === step));
+}
+
+let tween = null;
+const ease = (k) => (k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2);
+function flyTo(target, zoom) {
+  const instant = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  tween = { t: 0, dur: instant ? 0.01 : 0.9, fromT: controls.target.clone(), toT: target, fromZ: camera.zoom, toZ: zoom, off: camera.position.clone().sub(controls.target) };
+}
+controls.addEventListener('start', () => { tween = null; });
+
+const isMobile = () => window.innerWidth <= 720;
+function focusOn(s) {
+  const t = s.center.clone();
+  t.y = Math.min(t.y, 1.5);
+  const maxDim = Math.max(s.size.x, s.size.z, s.size.y * 1.2);
+  const zoom = THREE.MathUtils.clamp(viewH / (maxDim * 1.9), 1.15, 2.6);
+  const wpp = viewH / zoom / window.innerHeight;
+  camera.updateMatrixWorld();
+  const right = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 0);
+  const up = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 1);
+  if (isMobile()) t.addScaledVector(up, -(window.innerHeight * 0.56) / 2 * wpp);
+  else t.addScaledVector(right, (404 / 2) * wpp);
+  flyTo(t, zoom);
+}
+
+function select(id) {
+  selected = id;
+  const s = sections[id];
+  const r = Math.max(s.size.x, s.size.z) / 2 + 0.7;
+  halo.visible = true;
+  halo.position.set(s.center.x, 0.05, s.center.z);
+  halo.userData.rx = s.size.x / 2 + 0.8;
+  halo.userData.rz = s.size.z / 2 + 0.8;
+  focusOn(s);
+  renderPanel(id);
+  document.body.classList.add('focused');
+  applyLook();
+}
+function clearSelection(resetCam = true) {
+  selected = null;
+  halo.visible = false;
+  panel.classList.remove('open');
+  document.body.classList.remove('focused');
+  applyLook();
+  if (resetCam) flyTo(homeTarget(), 1);
+}
+
+/* ------------------------------------------------------------------ */
+/* UI: flow bar, pins, panel                                           */
+/* ------------------------------------------------------------------ */
+
+const flowEl = document.getElementById('flow');
+STEPS.forEach((st, i) => {
+  if (st.key === 'balance') flowEl.insertAdjacentHTML('beforeend', '<span class="sep"></span>');
+  else if (i > 0) flowEl.insertAdjacentHTML('beforeend', '<span class="arrow">›</span>');
+  const b = document.createElement('button');
+  b.className = 'chip';
+  b.dataset.step = st.key;
+  b.innerHTML = `<span class="n">${st.n}</span><span class="lbl">${st.label}</span>`;
+  b.addEventListener('click', () => select(ORDER.find((id) => INFO[id].step === st.key)));
+  flowEl.appendChild(b);
+});
+
+const pinsEl = document.getElementById('pins');
+const pinEls = {};
+for (const id of ORDER) {
+  const b = document.createElement('button');
+  b.className = 'pin';
+  b.innerHTML = `<span class="e">${INFO[id].emoji}</span><span class="lbl">${INFO[id].short}</span>`;
+  b.setAttribute('aria-label', INFO[id].title);
+  b.addEventListener('click', () => select(id));
+  pinsEl.appendChild(b);
+  pinEls[id] = b;
+}
+const tmpV = new THREE.Vector3();
+function updatePins() {
+  const w = window.innerWidth, h = window.innerHeight;
+  for (const id of ORDER) {
+    const s = sections[id];
+    const a = anchors[id] || V(s.center.x, s.box.max.y + 0.5, s.center.z);
+    tmpV.copy(a).project(camera);
+    const x = (tmpV.x + 1) / 2 * w, y = (1 - tmpV.y) / 2 * h;
+    pinEls[id].style.transform = `translate(${x}px, ${y}px) translate(-50%, -100%) translateY(-6px)`;
+  }
+}
+
+const panel = document.getElementById('panel');
+const panelBody = document.getElementById('panel-body');
+function renderPanel(id) {
+  const info = INFO[id];
+  const st = STEPS.find((s) => s.key === info.step);
+  const idx = ORDER.indexOf(id);
+  panelBody.innerHTML = `
+    <span class="step-tag">${st.key === 'balance' ? '⚖ Always on' : 'Step ' + st.n} · ${st.label}</span>
+    <h2><span class="e">${info.emoji}</span>${info.title}</h2>
+    <p class="tagline">${info.tagline}</p>
+    <ul class="body-list">${info.body.map((b) => `<li>${b}</li>`).join('')}</ul>
+    ${info.widget === 'merit' ? meritHTML() : ''}
+    ${info.book ? `<div class="book"><div class="book-h">📖 From <a class="src" href="https://power2026.ai/" target="_blank" rel="noopener">Power 2026</a></div><ul>${info.book.map((b) => `<li>${b}</li>`).join('')}</ul></div>` : ''}
+  `;
+  panelBody.scrollTop = 0;
+  document.getElementById('count').textContent = `${idx + 1} / ${ORDER.length}`;
+  document.getElementById('prev-btn').disabled = idx === 0;
+  document.getElementById('prev-btn').style.opacity = idx === 0 ? 0.4 : 1;
+  document.getElementById('next-btn').textContent = idx === ORDER.length - 1 ? 'Done ✓' : 'Next →';
+  panel.classList.add('open');
+  if (info.widget === 'merit') wireMerit();
+}
+
+function meritHTML() {
+  return `<div class="merit">
+    <h3>Try it: run the auction</h3>
+    <p class="hint">Drag demand. Plants switch on cheapest first.</p>
+    <div id="merit-chart"></div>
+    <input type="range" id="demand" min="8" max="50" step="1" value="${demand}" aria-label="Demand in GW">
+    <div class="readout" id="merit-readout"></div>
+    <div class="legend">${STACK.map((s) => `<span><i style="background:${s.color}"></i>${s.name}</span>`).join('')}</div>
+    <p class="hint" style="margin:8px 0 0">Illustrative numbers for a made-up region.</p>
+  </div>`;
+}
+function drawMerit() {
+  const W = 320, H = 150, pad = 4, maxGW = 50, maxP = 170;
+  const x = (g) => pad + (g / maxGW) * (W - pad * 2);
+  const y = (p) => H - 18 - (Math.min(p, maxP) / maxP) * (H - 30);
+  const { price, setter, short } = clearing(demand);
+  let acc = 0, bars = '';
+  for (const s of STACK) {
+    const on = demand > acc;
+    const top = y(Math.max(s.cost, 3));
+    bars += `<rect x="${x(acc) + 0.5}" y="${top}" width="${x(acc + s.gw) - x(acc) - 1}" height="${H - 18 - top}" rx="3" fill="${s.color}" opacity="${on ? 1 : 0.35}"/>`;
+    acc += s.gw;
+  }
+  const dx = x(Math.min(demand, maxGW));
+  const py = short ? 10 : y(price);
+  document.getElementById('merit-chart').innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Merit order chart">
+    <line x1="${pad}" x2="${W - pad}" y1="${H - 18}" y2="${H - 18}" stroke="#d9d5cc"/>
+    ${bars}
+    <line x1="${pad}" x2="${W - pad}" y1="${py}" y2="${py}" stroke="#23303a" stroke-dasharray="4 4" opacity=".6"/>
+    <line x1="${dx}" x2="${dx}" y1="6" y2="${H - 18}" stroke="#e05a47" stroke-width="2.5"/>
+    <text x="${dx > W - 90 ? dx - 5 : dx + 5}" y="16" font-size="11" font-weight="800" fill="#e05a47" text-anchor="${dx > W - 90 ? 'end' : 'start'}">demand ${demand} GW</text>
+    <text x="${pad}" y="${H - 4}" font-size="10" font-weight="700" fill="#6b7680">cheapest →</text>
+    <text x="${W - pad}" y="${H - 4}" font-size="10" font-weight="700" fill="#6b7680" text-anchor="end">→ priciest</text>
+  </svg>`;
+  document.getElementById('merit-readout').innerHTML = short
+    ? `<span class="price" style="color:#e05a47">$5,000/MWh</span><br>Demand is bigger than every plant combined (${STACK_TOTAL} GW). Prices hit the scarcity cap and the operator starts rolling blackouts.`
+    : `<span class="price">$${price}/MWh</span><br>Set by <b>${setter}</b>, the last plant needed. Every running plant gets paid $${price}, even the wind farm that bid $0. That gap is their profit.`;
+}
+function wireMerit() {
+  drawMerit();
+  document.getElementById('demand').addEventListener('input', (e) => {
+    demand = +e.target.value;
+    drawMerit();
+    drawBoard();
+  });
+}
+
+function step(dir) {
+  const idx = selected ? ORDER.indexOf(selected) : -1;
+  const next = idx + dir;
+  if (next >= ORDER.length) { clearSelection(); return; }
+  if (next >= 0) select(ORDER[next]);
+}
+document.getElementById('next-btn').addEventListener('click', () => step(1));
+document.getElementById('prev-btn').addEventListener('click', () => step(-1));
+document.getElementById('close-btn').addEventListener('click', () => clearSelection());
+document.getElementById('tour-btn').addEventListener('click', () => select(ORDER[0]));
+document.getElementById('reset-btn').addEventListener('click', () => clearSelection());
+window.addEventListener('keydown', (e) => {
+  if (e.target.tagName === 'INPUT') return;
+  if (e.key === 'Escape') clearSelection();
+  if (e.key === 'ArrowRight') step(1);
+  if (e.key === 'ArrowLeft' && selected) step(-1);
+});
+
+/* Picking */
+const raycaster = new THREE.Raycaster();
+const ndc = new THREE.Vector2();
+const tip = document.getElementById('tip');
+function pick(ev) {
+  const r = renderer.domElement.getBoundingClientRect();
+  ndc.set(((ev.clientX - r.left) / r.width) * 2 - 1, -((ev.clientY - r.top) / r.height) * 2 + 1);
+  raycaster.setFromCamera(ndc, camera);
+  const hit = raycaster.intersectObjects(pickables, false)[0];
+  return hit ? hit.object.userData.sid : null;
+}
+let downAt = null;
+renderer.domElement.addEventListener('pointerdown', (e) => { downAt = { x: e.clientX, y: e.clientY }; });
+renderer.domElement.addEventListener('pointerup', (e) => {
+  if (!downAt) return;
+  const moved = Math.hypot(e.clientX - downAt.x, e.clientY - downAt.y);
+  downAt = null;
+  if (moved > 6) return;
+  const id = pick(e);
+  if (id) select(id);
+  else if (selected) clearSelection(false);
+});
+renderer.domElement.addEventListener('pointermove', (e) => {
+  if (e.pointerType !== 'mouse' || e.buttons) return;
+  const id = pick(e);
+  if (id !== hovered) {
+    hovered = id;
+    renderer.domElement.style.cursor = id ? 'pointer' : 'grab';
+    applyLook();
+  }
+  if (id) {
+    tip.textContent = `${INFO[id].emoji} ${INFO[id].title}`;
+    tip.style.left = e.clientX + 14 + 'px';
+    tip.style.top = e.clientY + 14 + 'px';
+    tip.style.opacity = 1;
+  } else tip.style.opacity = 0;
+});
+renderer.domElement.addEventListener('pointerleave', () => { tip.style.opacity = 0; });
+
+/* ------------------------------------------------------------------ */
+/* Loop                                                                */
+/* ------------------------------------------------------------------ */
+
+const clock = new THREE.Clock();
+let time = 0;
+const tmpP = new THREE.Vector3();
+function frame() {
+  const dt = Math.min(clock.getDelta(), 0.05);
+  time += dt;
+
+  if (tween) {
+    tween.t += dt;
+    const k = ease(Math.min(1, tween.t / tween.dur));
+    controls.target.lerpVectors(tween.fromT, tween.toT, k);
+    camera.position.copy(controls.target).add(tween.off);
+    camera.zoom = THREE.MathUtils.lerp(tween.fromZ, tween.toZ, k);
+    camera.updateProjectionMatrix();
+    if (k >= 1) tween = null;
+  }
+  controls.update();
+
+  rotors.forEach((r, i) => { r.rotation.z -= dt * (1.4 + i * 0.25); });
+  fans.forEach((f) => { f.rotation.y += dt * 8; });
+
+  const speedBase = 1.6 + demand / 12;
+  for (const f of flows) {
+    const n = f.pulses.length, len = f.route.len;
+    for (let i = 0; i < n; i++) {
+      const d = (time * speedBase * f.speed + (i / n) * len) % len;
+      f.route.at(d, f.pulses[i].position);
+    }
+  }
+
+  updateSmoke(dt);
+
+  if (halo.visible) {
+    const p = 1 + Math.sin(time * 3) * 0.04;
+    halo.scale.set(halo.userData.rx * p, halo.userData.rz * p, 1);
+    halo.material.opacity = 0.55 + Math.sin(time * 3) * 0.25;
+    for (const m of sections[selected].meshes) {
+      if (m.material.emissive) m.material.emissiveIntensity = 0.16 + Math.sin(time * 3) * 0.08;
+    }
+  }
+
+  updatePins();
+  renderer.render(scene, camera);
+  requestAnimationFrame(frame);
+}
+
+drawBoard();
+document.fonts?.ready.then(drawBoard);
+applyLook();
+renderer.domElement.style.cursor = 'grab';
+frame();
+requestAnimationFrame(() => document.getElementById('loading').classList.add('gone'));
+</script>
+</body>
+</html>
