@@ -51,6 +51,11 @@
   #intro .back:hover { color: var(--ink); }
   #intro h1 { font-size: 24px; font-weight: 900; line-height: 1.15; margin: 8px 0 6px; letter-spacing: -0.01em; }
   #intro .sub { font-size: 14px; color: var(--muted); line-height: 1.45; }
+  #intro .keys { font-size: 12px; color: var(--muted); margin-top: 10px; line-height: 1.5; }
+  #intro .keys kbd {
+    font: inherit; font-weight: 800; font-size: 11px; padding: 1px 5px; border-radius: 5px;
+    background: #f0f0ec; border: 1px solid #e2e0da; border-bottom-width: 2px;
+  }
   #intro .date { font-size: 12px; color: var(--muted); font-weight: 700; margin-top: 10px; }
   .btn-row { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
   .btn {
@@ -177,7 +182,7 @@
   @media (max-width: 720px) {
     #intro { left: 12px; right: 12px; top: 12px; width: auto; padding: 14px 16px; }
     #intro h1 { font-size: 19px; margin: 4px 0 2px; }
-    #intro .sub, #intro .date { display: none; }
+    #intro .sub, #intro .date, #intro .keys { display: none; }
     .btn-row { margin-top: 10px; }
     .btn { padding: 7px 12px; font-size: 13px; }
     #flow { bottom: 12px; }
@@ -218,6 +223,7 @@
     <button class="btn" id="tour-btn">▶ Take the tour</button>
     <button class="btn ghost" id="reset-btn">Reset view</button>
   </div>
+  <p class="keys"><kbd>Drag</kbd> or <kbd>WASD</kbd> <kbd>←↑↓→</kbd> to move · <kbd>Right-drag</kbd> to turn · <kbd>Scroll</kbd> to zoom</p>
   <p class="date">Aug 15, 2026 · Source: <a class="src" href="https://power2026.ai/" target="_blank" rel="noopener">power2026.ai</a></p>
 </header>
 
@@ -458,7 +464,7 @@ scene.background = BG;
 
 let viewH = 26;
 const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 400);
-const HOME_TARGET = new THREE.Vector3(6.8, 1.2, -0.9);
+const HOME_TARGET = new THREE.Vector3(8.2, 1.2, -3.4);
 const CAM_OFFSET = new THREE.Vector3(16, 27, 34);
 camera.position.copy(HOME_TARGET).add(CAM_OFFSET);
 
@@ -466,7 +472,10 @@ const controls = new OrbitControls(camera, renderer.domElement);
 controls.target.copy(HOME_TARGET);
 controls.enableDamping = true;
 controls.dampingFactor = 0.08;
-controls.screenSpacePanning = true;
+// Drag (or one finger) moves the map; right-drag (or two fingers) turns and zooms
+controls.screenSpacePanning = false;
+controls.mouseButtons = { LEFT: THREE.MOUSE.PAN, MIDDLE: THREE.MOUSE.DOLLY, RIGHT: THREE.MOUSE.ROTATE };
+controls.touches = { ONE: THREE.TOUCH.PAN, TWO: THREE.TOUCH.DOLLY_ROTATE };
 controls.minZoom = 0.7;
 controls.maxZoom = 4;
 controls.minPolarAngle = 0.35;
@@ -496,7 +505,7 @@ function homeTarget() {
 }
 function resize() {
   const w = window.innerWidth, h = window.innerHeight, a = w / h;
-  viewH = Math.max(27, (sideInset() ? 45 : 46) / ((w - sideInset()) / h));
+  viewH = Math.max(29, (sideInset() ? 48 : 48) / ((w - sideInset()) / h));
   camera.left = -viewH * a / 2; camera.right = viewH * a / 2;
   camera.top = viewH / 2; camera.bottom = -viewH / 2;
   camera.updateProjectionMatrix();
@@ -555,11 +564,16 @@ function wire(points, color = '#3d4449', r = 0.028) {
   return m;
 }
 
+/* Layout spread: world positions are authored on a compact grid, then
+   stretched (more front-to-back than side-to-side) so pieces breathe */
+const SX = 1.15, SZ = 1.4;
+const W = (x, y, z) => V(x * SX, y, z * SZ);
+
 /* Sections: clickable groups */
 const sections = {};
 function section(id, x, z) {
   const g = new THREE.Group();
-  g.position.set(x, 0, z);
+  g.position.set(x * SX, 0, z * SZ);
   scene.add(g);
   sections[id] = { id, group: g };
   return g;
@@ -569,21 +583,21 @@ function section(id, x, z) {
 /* Ground                                                              */
 /* ------------------------------------------------------------------ */
 
-const plinth = rbox(46, 1.4, 25, '#fbfaf7', 0.4);
+const plinth = rbox(46 * SX, 1.4, 25 * SZ, '#fbfaf7', 0.4);
 at(plinth, 0, -0.85, 0);
 scene.add(plinth);
-const grass = rbox(45, 0.4, 24, '#bfe0a6', 0.18);
+const grass = rbox(45 * SX + 0.3, 0.4, 24 * SZ + 0.4, '#bfe0a6', 0.18);
 at(grass, 0, -0.2, 0);
 grass.castShadow = false;
 scene.add(grass);
 
 // road in town
-const road = rbox(1.1, 0.06, 14.5, '#d9d7d1', 0.03);
-at(road, 15.9, 0.02, -3.6);
+const road = rbox(1.1, 0.06, 14.5 * SZ, '#d9d7d1', 0.03);
+at(road, 11 * SX + 4.9, 0.02, -3.6 * SZ);
 road.castShadow = false;
 scene.add(road);
-const road2 = rbox(5.2, 0.06, 1.1, '#d9d7d1', 0.03);
-at(road2, 18.5, 0.02, 3.2);
+const road2 = rbox(5.2 * SX, 0.06, 1.1, '#d9d7d1', 0.03);
+at(road2, 18.5 * SX, 0.02, 3.2 * SZ);
 road2.castShadow = false;
 scene.add(road2);
 
@@ -606,7 +620,7 @@ function tree(x, z, s = 1, kind = 0) {
   [5, 4.4, 1, 0], [6.2, -4.4, 0.9, 1], [7.6, -9.6, 1.1, 0], [8.6, 8.8, 1, 1], [4, 9.4, 1.2, 0],
   [-2.6, 9.8, 0.9, 1], [10.2, 5.6, 0.9, 0], [21, -10.2, 1, 1], [21.3, 0.6, 0.9, 0], [13.2, 9.8, 1, 0],
   [21.2, 10, 1.1, 1], [10, -10.2, 0.9, 1], [-7.6, 10, 1, 0], [1.4, 10.2, 0.8, 1], [-21, -4.5, 0.9, 0],
-].forEach(([x, z, s, k]) => tree(x, z, s, k));
+].forEach(([x, z, s, k]) => tree(x * SX, z * SZ, s, k));
 
 /* ------------------------------------------------------------------ */
 /* 1. Power sources                                                    */
@@ -752,7 +766,8 @@ stepdown.add(at(rbox(0.9, 0.07, 0.07, '#8b6b4a', 0.02), 1.7, 2.3, 0));
 /* ------------------------------------------------------------------ */
 
 const trans = section('transmission', 0, 0);
-const TOWER_X = [-1.5, 2.5, 6.5];
+const GANTRY_UP_X = -6 * SX + 1.5, GANTRY_DOWN_X = 11 * SX - 1.5;
+const TOWER_X = [1, 2, 3].map((i) => GANTRY_UP_X + ((GANTRY_DOWN_X - GANTRY_UP_X) * i) / 4);
 const ARM_Y = [5.2, 6.0, 6.8];
 const STEEL = '#a2abb1';
 
@@ -791,9 +806,9 @@ const GANTRY_Z = [0.3, 0.9, 1.5];
 const transRoutes = [];
 for (let k = 0; k < 3; k++) {
   for (const s of [-1, 1]) {
-    const nodes = [V(-4.5, 3.28, s * GANTRY_Z[k])];
+    const nodes = [V(GANTRY_UP_X, 3.28, s * GANTRY_Z[k])];
     TOWER_X.forEach((x) => nodes.push(V(x, ARM_Y[k] - 0.3, s * 1.4)));
-    nodes.push(V(9.5, 3.28, s * GANTRY_Z[k]));
+    nodes.push(V(GANTRY_DOWN_X, 3.28, s * GANTRY_Z[k]));
     let all = [];
     for (let i = 0; i < nodes.length - 1; i++) {
       const pts = sagPoints(nodes[i], nodes[i + 1], 0.35, 14);
@@ -809,8 +824,9 @@ for (let k = 0; k < 3; k++) {
 /* ------------------------------------------------------------------ */
 
 const dist = section('distribution', 0, 0);
-const POLE_X = 14.5;
-const POLES = [{ z: 0 }, { z: -3.5, tx: true }, { z: -7, tx: true }, { z: 3.2, tx: true }];
+const POLE_X = 11 * SX + 3.5, RISER_X = 11 * SX + 1.7;
+const PZ = [0, -3.5 * SZ, -7 * SZ, 3.2 * SZ];
+const POLES = [{ z: PZ[0] }, { z: PZ[1], tx: true }, { z: PZ[2], tx: true }, { z: PZ[3], tx: true }];
 for (const p of POLES) {
   dist.add(at(cyl(0.08, 0.11, 3.2, '#8b6b4a', 10), POLE_X, 1.6, p.z));
   dist.add(at(rbox(1.2, 0.08, 0.08, '#8b6b4a', 0.02), POLE_X, 3.0, p.z));
@@ -821,29 +837,29 @@ const feeder = (z1, z2, x1 = POLE_X, y1 = 3.1) => [-0.5, 0.5].map((dx) => sagPoi
 const distRoutes = [];
 // substation riser → P0
 for (const dx of [-0.45, 0.45]) {
-  const pts = sagPoints(V(12.7 + dx, 2.32, 0), V(POLE_X + (dx > 0 ? 0.5 : -0.5), 3.1, 0), 0.2, 12);
+  const pts = sagPoints(V(RISER_X + dx, 2.32, 0), V(POLE_X + (dx > 0 ? 0.5 : -0.5), 3.1, 0), 0.2, 12);
   dist.add(wire(pts, '#3d4449', 0.022));
 }
 const streetA = [], streetB = [];
-for (const [za, zb] of [[0, -3.5], [-3.5, -7]]) {
+for (const [za, zb] of [[PZ[0], PZ[1]], [PZ[1], PZ[2]]]) {
   const [a, b] = feeder(za, zb);
   dist.add(wire(a, '#3d4449', 0.022), wire(b, '#3d4449', 0.022));
   streetA.push(...a); streetB.push(...b);
 }
 {
-  const [a, b] = feeder(0, 3.2);
+  const [a, b] = feeder(PZ[0], PZ[3]);
   dist.add(wire(a, '#3d4449', 0.022), wire(b, '#3d4449', 0.022));
 }
 distRoutes.push(
-  [V(12.25, 2.32, 0), ...sagPoints(V(12.25, 2.32, 0), V(POLE_X - 0.5, 3.1, 0), 0.2, 12), ...streetA],
-  [V(13.15, 2.32, 0), ...sagPoints(V(13.15, 2.32, 0), V(POLE_X + 0.5, 3.1, 0), 0.2, 12), ...streetB],
+  [V(RISER_X - 0.45, 2.32, 0), ...sagPoints(V(RISER_X - 0.45, 2.32, 0), V(POLE_X - 0.5, 3.1, 0), 0.2, 12), ...streetA],
+  [V(RISER_X + 0.45, 2.32, 0), ...sagPoints(V(RISER_X + 0.45, 2.32, 0), V(POLE_X + 0.5, 3.1, 0), 0.2, 12), ...streetB],
 );
 // line to the data center
-const dcPts = sagPoints(V(POLE_X + 0.5, 3.1, 3.2), V(16.05, 1.9, 4.6), 0.15, 10);
+const dcPts = sagPoints(V(POLE_X + 0.5, 3.1, PZ[3]), V(18.5 * SX - 2.45, 1.9, 6.3 * SZ - 1.7), 0.15, 10);
 dist.add(wire(dcPts, '#3d4449', 0.03));
 distRoutes.push([
-  ...sagPoints(V(13.15, 2.32, 0), V(POLE_X + 0.5, 3.1, 0), 0.2, 12),
-  ...sagPoints(V(POLE_X + 0.5, 3.1, 0), V(POLE_X + 0.5, 3.1, 3.2), 0.22, 12),
+  ...sagPoints(V(RISER_X + 0.45, 2.32, 0), V(POLE_X + 0.5, 3.1, 0), 0.2, 12),
+  ...sagPoints(V(POLE_X + 0.5, 3.1, 0), V(POLE_X + 0.5, 3.1, PZ[3]), 0.22, 12),
   ...dcPts,
 ]);
 
@@ -874,15 +890,16 @@ for (const [x, z, wall, roof, face] of HOUSES) {
   h.add(at(rbox(0.05, 0.5, 0.32, '#8b6b4a', 0.02), face * 0.81, 0.25, 0));
   for (const dz of [-0.45, 0.45]) h.add(at(rbox(0.05, 0.28, 0.28, '#a9d6f0', 0.02), face * 0.81, 0.6, dz));
   h.add(at(rbox(0.3, 0.3, 0.05, '#a9d6f0', 0.02), 0, 0.6, 0.71));
-  h.position.set(x, 0, z);
+  h.position.set(x * SX, 0, z * SZ);
   homes.add(h);
 }
 // service drops from the nearest pole
-const HOUSE_POLES = [0, -3.5, -7];
+const HOUSE_POLES = PZ.slice(0, 3);
 for (const [x, z, , , face] of HOUSES) {
-  const pz = HOUSE_POLES.reduce((a, b) => (Math.abs(b - z) < Math.abs(a - z) ? b : a));
+  const hx = x * SX, hz = z * SZ;
+  const pz = HOUSE_POLES.reduce((a, b) => (Math.abs(b - hz) < Math.abs(a - hz) ? b : a));
   const from = V(POLE_X + (face < 0 ? 0.24 : -0.1), 2.6, pz);
-  const to = V(x + face * 0.8, 1.05, z);
+  const to = V(hx + face * 0.8, 1.05, hz);
   homes.add(wire(sagPoints(from, to, 0.18, 10), '#4a5157', 0.014));
 }
 
@@ -986,11 +1003,11 @@ function addFlow(points, spacing, size, speed = 1) {
 // glowing cable paths on the ground from each source to the step-up yard
 const GY = 0.07;
 const groundRoutes = [
-  [V(-12.3, GY, 4.1), V(-7.2, GY, 4.1), V(-7.2, GY, 1.9)],
-  [V(-7.1, GY, 6.0), V(-5.2, GY, 6.0), V(-5.2, GY, 1.9)],
-  [V(-9.2, GY, 0.4), V(-8.0, GY, 0.4)],
-  [V(-13.4, GY, -1.8), V(-8.0, GY, -1.8)],
-  [V(-14.5, GY, -7.9), V(-6.5, GY, -7.9), V(-6.5, GY, -1.9)],
+  [W(-12.3, GY, 4.1), W(-7.2, GY, 4.1), V(-7.2 * SX, GY, 1.9)],
+  [W(-7.1, GY, 6.0), W(-5.2, GY, 6.0), V(-5.2 * SX, GY, 1.9)],
+  [W(-9.2, GY, 0.4), V(-6 * SX - 1.95, GY, 0.4 * SZ)],
+  [W(-13.4, GY, -1.8), V(-7.6 * SX, GY, -1.8 * SZ), V(-7.6 * SX, GY, -1.9)],
+  [W(-14.5, GY, -7.9), W(-6.5, GY, -7.9), V(-6.5 * SX, GY, -1.9)],
 ];
 const stripMat = new THREE.MeshStandardMaterial({ color: '#f1dc9a', roughness: 0.9 });
 for (const pts of groundRoutes) {
@@ -1014,9 +1031,9 @@ distRoutes.forEach((pts) => addFlow(pts, 1.4, 0.08, 0.9));
 const puffGeo = new THREE.SphereGeometry(1, 12, 10);
 const puffs = [];
 const emitters = [
-  { pos: V(-15 + 1.2, 5.2, 5 - 0.95), color: '#f2f2f2', rate: () => (clearing(demand).price >= 38 ? 3 : 0.6), acc: 0, size: 0.32 },
-  { pos: V(-15 + 2.3, 3.5, 5 - 0.95), color: '#e4e4e4', rate: () => (clearing(demand).price >= 85 ? 4 : 0), acc: 0, size: 0.26 },
-  { pos: V(-17, 4.7, -2.5), color: '#ffffff', rate: () => 2.4, acc: 0, size: 0.55 },
+  { pos: V(-15 * SX + 1.2, 5.2, 5 * SZ - 0.95), color: '#f2f2f2', rate: () => (clearing(demand).price >= 38 ? 3 : 0.6), acc: 0, size: 0.32 },
+  { pos: V(-15 * SX + 2.3, 3.5, 5 * SZ - 0.95), color: '#e4e4e4', rate: () => (clearing(demand).price >= 85 ? 4 : 0), acc: 0, size: 0.26 },
+  { pos: V(-16 * SX - 1, 4.7, -2.5 * SZ), color: '#ffffff', rate: () => 2.4, acc: 0, size: 0.55 },
 ];
 function updateSmoke(dt) {
   for (const e of emitters) {
@@ -1063,10 +1080,10 @@ for (const s of Object.values(sections)) {
 }
 // nicer pin anchors for spread-out sections
 const anchors = {
-  transmission: V(-1.5, 8.4, 0),
-  distribution: V(POLE_X, 3.6, -3.5),
-  homes: V(18.8, 2.2, -5),
-  wind: V(-14.5, 8.4, -8.6),
+  transmission: V(TOWER_X[0], 8.4, 0),
+  distribution: V(POLE_X, 3.6, PZ[1]),
+  homes: W(18.8, 2.2, -5),
+  wind: W(-14.5, 8.4, -8.6),
 };
 
 const halo = new THREE.Mesh(new THREE.RingGeometry(0.92, 1, 72), new THREE.MeshBasicMaterial({ color: '#ffb703', transparent: true, opacity: 0.9, toneMapped: false }));
@@ -1263,12 +1280,55 @@ document.getElementById('prev-btn').addEventListener('click', () => step(-1));
 document.getElementById('close-btn').addEventListener('click', () => clearSelection());
 document.getElementById('tour-btn').addEventListener('click', () => select(ORDER[0]));
 document.getElementById('reset-btn').addEventListener('click', () => clearSelection());
+// WASD / arrow keys move the camera across the diorama
+const MOVE_KEYS = {
+  w: [0, 1], arrowup: [0, 1], s: [0, -1], arrowdown: [0, -1],
+  a: [-1, 0], arrowleft: [-1, 0], d: [1, 0], arrowright: [1, 0],
+};
+// key → { down, up }: a quick tap still moves for a short beat
+const held = new Map();
+const TAP_MS = 160;
 window.addEventListener('keydown', (e) => {
-  if (e.target.tagName === 'INPUT') return;
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
   if (e.key === 'Escape') clearSelection();
-  if (e.key === 'ArrowRight') step(1);
-  if (e.key === 'ArrowLeft' && selected) step(-1);
+  const k = e.key.toLowerCase();
+  if (MOVE_KEYS[k] && !e.metaKey && !e.ctrlKey && !e.altKey) {
+    if (!held.has(k) || held.get(k).up) held.set(k, { down: performance.now(), up: 0 });
+    tween = null;
+    e.preventDefault();
+  }
 });
+window.addEventListener('keyup', (e) => {
+  const h = held.get(e.key.toLowerCase());
+  if (h) h.up = Math.max(performance.now(), h.down + TAP_MS);
+});
+window.addEventListener('blur', () => held.clear());
+const kFwd = new THREE.Vector3(), kRight = new THREE.Vector3(), kMove = new THREE.Vector3();
+function keyboardMove(dt) {
+  let mx = 0, mz = 0;
+  const now = performance.now();
+  for (const [k, h] of held) {
+    if (h.up && now > h.up) { held.delete(k); continue; }
+    mx += MOVE_KEYS[k][0];
+    mz += MOVE_KEYS[k][1];
+  }
+  if (mx || mz) {
+    camera.getWorldDirection(kFwd);
+    kFwd.y = 0;
+    kFwd.normalize();
+    kRight.crossVectors(kFwd, UP).normalize();
+    kMove.copy(kFwd).multiplyScalar(mz).addScaledVector(kRight, mx).normalize().multiplyScalar((16 * dt) / camera.zoom);
+    controls.target.add(kMove);
+    camera.position.add(kMove);
+  }
+  // keep the diorama within reach however the camera was moved
+  kMove.set(
+    THREE.MathUtils.clamp(controls.target.x, -21, 21) - controls.target.x,
+    0,
+    THREE.MathUtils.clamp(controls.target.z, -11, 11) - controls.target.z,
+  );
+  if (kMove.x || kMove.z) { controls.target.add(kMove); camera.position.add(kMove); }
+}
 
 /* Picking */
 const raycaster = new THREE.Raycaster();
@@ -1329,6 +1389,7 @@ function frame() {
     camera.updateProjectionMatrix();
     if (k >= 1) tween = null;
   }
+  keyboardMove(dt);
   controls.update();
 
   rotors.forEach((r, i) => { r.rotation.z -= dt * (1.4 + i * 0.25); });

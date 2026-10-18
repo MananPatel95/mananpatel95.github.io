@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tiny Water System</title>
+<meta name="description" content="A clickable miniature city water system, loosely modelled on Calgary: rivers, treatment, reservoirs, water mains, homes, sewers, wastewater treatment, and back to the river.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f1f3f2;
+    --card: #ffffff;
+    --ink: #23303a;
+    --muted: #6b7680;
+    --line: #e3e6e4;
+    --accent: #3d8bd9;
+    --accent-soft: #e3f1fc;
+    --blue: #3f7fe6;
+    --shadow: 0 10px 30px rgba(35, 48, 58, 0.12), 0 2px 6px rgba(35, 48, 58, 0.06);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  #scene { position: fixed; inset: 0; }
+  #scene canvas { display: block; touch-action: none; }
+  button { font: inherit; cursor: pointer; border: 0; background: none; color: inherit; }
+  a { color: var(--blue); }
+
+  .card { background: var(--card); border-radius: 20px; box-shadow: var(--shadow); }
+
+  /* Header */
+  #intro {
+    position: fixed; top: 16px; left: 16px; z-index: 5;
+    width: 330px; padding: 18px 20px;
+    transition: opacity .25s ease, transform .25s ease;
+  }
+  body.focused #intro { opacity: 0; transform: translateY(-8px); pointer-events: none; }
+  #intro .back { font-size: 13px; font-weight: 700; color: var(--muted); text-decoration: none; }
+  #intro .back:hover { color: var(--ink); }
+  #intro h1 { font-size: 24px; font-weight: 900; line-height: 1.15; margin: 8px 0 6px; letter-spacing: -0.01em; }
+  #intro .sub { font-size: 14px; color: var(--muted); line-height: 1.45; }
+  #intro .keys { font-size: 12px; color: var(--muted); margin-top: 10px; line-height: 1.5; }
+  #intro .keys kbd {
+    font: inherit; font-weight: 800; font-size: 11px; padding: 1px 5px; border-radius: 5px;
+    background: #f0f0ec; border: 1px solid #e2e0da; border-bottom-width: 2px;
+  }
+  #intro .date { font-size: 12px; color: var(--muted); font-weight: 700; margin-top: 10px; }
+  .btn-row { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+  .btn {
+    padding: 9px 14px; border-radius: 999px; font-weight: 800; font-size: 14px;
+    background: var(--ink); color: #fff; transition: transform .15s ease, background .15s ease;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn.ghost { background: #eef0ef; color: var(--ink); }
+  .btn.ghost:hover { background: #e3e7e5; }
+  .btn.blue { background: var(--accent); }
+
+  /* Flow bar */
+  #flow {
+    position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 5;
+    display: flex; align-items: center; gap: 2px; padding: 6px;
+    max-width: calc(100vw - 32px); overflow-x: auto; scrollbar-width: none;
+  }
+  #flow::-webkit-scrollbar { display: none; }
+  .chip {
+    display: flex; align-items: center; gap: 6px; white-space: nowrap;
+    padding: 8px 11px; border-radius: 999px; font-weight: 800; font-size: 13px; color: var(--muted);
+    transition: background .15s ease, color .15s ease;
+  }
+  .chip:hover { background: #f1f3f2; color: var(--ink); }
+  .chip .n {
+    width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center;
+    font-size: 11px; background: #eceeed; color: var(--ink);
+  }
+  .chip.on { background: var(--accent-soft); color: var(--ink); }
+  .chip.on .n { background: var(--accent); color: #fff; }
+  .arrow { color: #c3c9c6; font-weight: 900; font-size: 12px; }
+  .sep { width: 1px; height: 22px; background: var(--line); margin: 0 4px; }
+
+  /* Pins */
+  #pins { position: fixed; inset: 0; pointer-events: none; z-index: 3; }
+  .pin {
+    position: absolute; left: 0; top: 0; pointer-events: auto;
+    display: flex; align-items: center; gap: 5px;
+    padding: 4px 10px 4px 5px; border-radius: 999px;
+    background: rgba(255,255,255,0.94); box-shadow: 0 4px 12px rgba(35,48,58,0.14);
+    font-weight: 800; font-size: 12px; white-space: nowrap;
+    transition: opacity .2s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
+  }
+  .pin .e { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; background: #f1f3f2; font-size: 13px; }
+  .pin:hover { box-shadow: 0 6px 16px rgba(35,48,58,0.22); }
+  .pin.on { background: var(--accent); color: #fff; }
+  .pin.on .e { background: #fff; }
+  .pin.dim { opacity: .45; }
+  .pin::after {
+    content: ""; position: absolute; left: 50%; bottom: -5px; transform: translateX(-50%);
+    border: 5px solid transparent; border-top-color: rgba(255,255,255,0.94); border-bottom: 0;
+  }
+  .pin.on::after { border-top-color: var(--accent); }
+
+  /* Panel */
+  #panel {
+    position: fixed; top: 16px; right: 16px; bottom: 84px; z-index: 6;
+    width: 380px; display: flex; flex-direction: column; overflow: hidden;
+    transform: translateX(calc(100% + 24px)); transition: transform .35s cubic-bezier(.2,.8,.2,1);
+  }
+  #panel.open { transform: none; }
+  #panel .scroll { overflow-y: auto; padding: 20px 22px 8px; flex: 1; }
+  #panel .close {
+    position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; border-radius: 50%;
+    background: #f1f3f2; font-size: 16px; font-weight: 900; color: var(--muted);
+  }
+  #panel .close:hover { color: var(--ink); }
+  .step-tag {
+    display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px;
+    background: var(--accent-soft); font-size: 12px; font-weight: 800;
+  }
+  #panel h2 { font-size: 24px; font-weight: 900; margin: 12px 0 4px; line-height: 1.15; display: flex; gap: 10px; align-items: center; padding-right: 30px; }
+  #panel h2 .e { font-size: 28px; }
+  .tagline { color: var(--muted); font-weight: 700; font-size: 15px; margin-bottom: 14px; }
+  .body-list { list-style: none; display: grid; gap: 10px; margin-bottom: 16px; }
+  .body-list li { position: relative; padding-left: 20px; font-size: 15px; line-height: 1.5; }
+  .body-list li::before {
+    content: ""; position: absolute; left: 4px; top: 8px; width: 8px; height: 8px;
+    border-radius: 50% 0 50% 50%; transform: rotate(-45deg); background: var(--accent);
+  }
+  .facts { background: #f2f5f4; border-radius: 14px; padding: 14px 16px; margin-bottom: 16px; }
+  .facts-h { font-size: 12px; font-weight: 900; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+  a.src { color: inherit; text-decoration: underline; text-decoration-color: #c5ccc9; text-underline-offset: 2px; }
+  a.src:hover { color: var(--ink); text-decoration-color: currentColor; }
+  .facts ul { list-style: none; display: grid; gap: 8px; }
+  .facts li { font-size: 14px; line-height: 1.5; }
+  .facts b { font-weight: 900; }
+  .panel-nav {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    padding: 12px 16px; border-top: 1px solid var(--line);
+  }
+  .panel-nav .count { font-size: 13px; font-weight: 800; color: var(--muted); }
+
+  /* Widgets */
+  .widget { border: 1px solid var(--line); border-radius: 14px; padding: 14px; margin-bottom: 16px; }
+  .widget h3 { font-size: 15px; font-weight: 900; margin-bottom: 2px; }
+  .widget .hint { font-size: 13px; color: var(--muted); margin-bottom: 10px; }
+  .widget input[type=range] { width: 100%; margin: 6px 0 2px; accent-color: var(--accent); }
+  .widget .lbl-row { display: flex; justify-content: space-between; font-size: 13px; font-weight: 800; }
+  .meter { position: relative; height: 14px; border-radius: 999px; background: #eceeed; overflow: hidden; margin: 12px 0 8px; }
+  .meter .fill { position: absolute; inset: 0 auto 0 0; border-radius: 999px; transition: width .2s ease, background .2s ease; }
+  .meter .cap { position: absolute; top: -2px; bottom: -2px; width: 3px; background: var(--ink); border-radius: 2px; transition: left .2s ease; }
+  .status { font-size: 14px; line-height: 1.45; }
+  .status b { font-weight: 900; }
+
+  #tip {
+    position: fixed; z-index: 7; pointer-events: none; padding: 6px 10px; border-radius: 10px;
+    background: var(--ink); color: #fff; font-size: 12px; font-weight: 800; opacity: 0; transition: opacity .12s ease;
+  }
+  #credit {
+    position: fixed; right: 16px; bottom: 22px; z-index: 4; font-size: 12px; color: var(--muted); font-weight: 700;
+    max-width: 240px; text-align: right; line-height: 1.4;
+  }
+  #loading {
+    position: fixed; inset: 0; z-index: 10; display: grid; place-items: center; background: var(--bg);
+    font-weight: 800; color: var(--muted); transition: opacity .4s ease;
+  }
+  #loading.gone { opacity: 0; pointer-events: none; }
+
+  @media (max-width: 1100px) { #credit { display: none; } }
+  @media (max-width: 720px) {
+    #intro { left: 12px; right: 12px; top: 12px; width: auto; padding: 14px 16px; }
+    #intro h1 { font-size: 19px; margin: 4px 0 2px; }
+    #intro .sub, #intro .date, #intro .keys { display: none; }
+    .btn-row { margin-top: 10px; }
+    .btn { padding: 7px 12px; font-size: 13px; }
+    #flow { bottom: 12px; }
+    .chip { padding: 7px 9px; font-size: 12px; }
+    .chip .lbl { display: none; }
+    .chip.on .lbl { display: inline; }
+    .pin { padding: 3px; font-size: 0; gap: 0; }
+    .pin .lbl { display: none; }
+    #panel {
+      top: auto; left: 0; right: 0; bottom: 0; width: auto; height: 56vh;
+      border-radius: 20px 20px 0 0; transform: translateY(105%);
+    }
+    #panel .scroll { padding: 18px 16px 8px; }
+    #panel h2 { font-size: 21px; }
+  }
+  @media (prefers-reduced-motion: reduce) { #panel { transition: none; } }
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+<div id="scene"></div>
+<div id="pins"></div>
+
+<header id="intro" class="card">
+  <a class="back" href="/">← Manan Patel</a>
+  <h1>Where your water comes from (and goes)</h1>
+  <p class="sub">A tiny city water system you can click, loosely modelled on Calgary. Water runs from the mountains, through treatment, out to homes, down the drain, through treatment again, and back to the river.</p>
+  <div class="btn-row">
+    <button class="btn" id="tour-btn">▶ Take the tour</button>
+    <button class="btn ghost" id="reset-btn">Reset view</button>
+  </div>
+  <p class="keys"><kbd>Drag</kbd> or <kbd>WASD</kbd> <kbd>←↑↓→</kbd> to move · <kbd>Right-drag</kbd> to turn · <kbd>Scroll</kbd> to zoom</p>
+  <p class="date">Sep 19, 2026 · Calgary facts: <a class="src" href="https://www.calgary.ca/water/drinking-water.html" target="_blank" rel="noopener">City of Calgary</a></p>
+</header>
+
+<nav id="flow" class="card" aria-label="Steps of the water system"></nav>
+
+<aside id="panel" class="card" aria-live="polite">
+  <button class="close" id="close-btn" aria-label="Close">✕</button>
+  <div class="scroll" id="panel-body"></div>
+  <div class="panel-nav">
+    <button class="btn ghost" id="prev-btn">← Prev</button>
+    <span class="count" id="count"></span>
+    <button class="btn" id="next-btn">Next →</button>
+  </div>
+</aside>
+
+<div id="tip"></div>
+<p id="credit">Calgary facts from the <a href="https://www.calgary.ca/water/drinking-water.html" target="_blank" rel="noopener">City of Calgary</a>. Toy model, not to scale.</p>
+<div id="loading">Filling the pipes…</div>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+
+/* ------------------------------------------------------------------ */
+/* Content                                                             */
+/* ------------------------------------------------------------------ */
+
+const SRC_DRINK = 'https://www.calgary.ca/water/drinking-water.html';
+const SRC_WASTE = 'https://calgary.ca/water/wastewater.html';
+
+const STEPS = [
+  { n: 1, key: 'source',  label: 'Source' },
+  { n: 2, key: 'treat',   label: 'Treat' },
+  { n: 3, key: 'store',   label: 'Store' },
+  { n: 4, key: 'deliver', label: 'Deliver' },
+  { n: 5, key: 'use',     label: 'Use' },
+  { n: 6, key: 'drain',   label: 'Drain' },
+  { n: 7, key: 'clean',   label: 'Clean' },
+  { n: 8, key: 'return',  label: 'Return' },
+  { n: '☔', key: 'rain', label: 'Rain' },
+];
+
+const INFO = {
+  source: {
+    step: 'source', emoji: '🏔️', short: 'River', title: 'Rivers and reservoirs',
+    tagline: 'It starts as snow in the mountains.',
+    body: [
+      'Snow and rain in the mountains melt and run into rivers. That river water is the raw material for everything downstream.',
+      'A dam backs the river up into a reservoir, so the city has a steady pool to draw from even when river flows change.',
+      'River water can look clean, but it carries silt, leaves and microbes you would not want to drink.',
+    ],
+    facts: [
+      'Calgary drinks from two rivers that start in the Rockies: the <b>Bow</b> (through the Bearspaw Reservoir) and the <b>Elbow</b> (through the Glenmore Reservoir).',
+    ],
+    src: SRC_DRINK,
+  },
+  treat: {
+    step: 'treat', emoji: '🧪', short: 'Treatment', title: 'Water treatment plant',
+    tagline: 'Turns river water into drinking water.',
+    body: [
+      '<b>Screen:</b> grates at the intake catch sticks and debris.',
+      '<b>Clump and settle:</b> a chemical makes tiny particles stick together into "floc", which sinks. Watch the round tanks go from murky to clear.',
+      '<b>Filter:</b> the water trickles down through layers of crushed coal and sand.',
+      '<b>Disinfect:</b> a small dose of chlorine kills germs, and a trace stays in the water to keep it safe all the way to your tap.',
+    ],
+    facts: [
+      'Two plants: <b>Bearspaw</b> (500–550 million litres a day) and <b>Glenmore</b> (350–400). Together that is about <b>950 million litres a day</b>, enough to fill the Saddledome nearly three times.',
+      'Alum, sand and polymer form the floc, and about <b>99% of the sediment</b> is gone before the water reaches the filters.',
+      'Filters get backwashed every <b>60–72 hours</b>. The plants recycle that wash water, which cuts how much they take from the river by up to <b>10%</b>.',
+    ],
+    src: SRC_DRINK,
+  },
+  store: {
+    step: 'store', emoji: '💧', short: 'Reservoir', title: 'Reservoirs and pump stations',
+    tagline: 'A buffer, plus the push.',
+    body: [
+      'Clean water is stored in big covered reservoirs, often buried under a grassy hill like this one. The window shows how full it is.',
+      'People use much more water at 7am and on hot evenings than at 3am. Reservoirs fill overnight and drain at the peaks, so the plant can run at a steady pace.',
+      'Pump stations push water uphill and keep the pressure up, so it comes out of your tap (and the fire hydrants) with force.',
+    ],
+    facts: [
+      'Calgary\'s underground reservoirs hold about <b>one day</b> of water, plus extra kept back for emergencies like firefighting.',
+    ],
+    src: SRC_DRINK,
+  },
+  mains: {
+    step: 'deliver', emoji: '🚰', short: 'Water mains', title: 'Water mains',
+    tagline: 'The pipes under every street.',
+    body: [
+      'Big <b>feeder mains</b> carry huge volumes from the plants to the reservoirs and pump stations.',
+      'Smaller mains branch off under every street, feeding fire hydrants and a short service line into each building.',
+      'It is all under pressure, so a break doesn\'t trickle. It erupts.',
+    ],
+    facts: [
+      'Calgary has over <b>5,000 km</b> of water pipe.',
+      'The <b>Bearspaw South Feeder Main</b> normally carries about <b>60%</b> of the city\'s drinking water. Next stop: why it broke and how it\'s being fixed.',
+      'During the 2024 repairs the target was under <b>485 million litres a day</b>. A normal summer day uses <b>650–800</b>.',
+    ],
+    src: SRC_DRINK,
+    widget: 'main',
+  },
+  feeder: {
+    step: 'deliver', emoji: '🚧', short: 'Why it broke', title: 'Why Calgary\'s big pipe broke',
+    tagline: 'The Bearspaw South Feeder Main, and how it\'s being fixed.',
+    body: [
+      '<b>What it\'s made of:</b> a 1975 <b>prestressed concrete</b> pipe. That means a steel can lined and wrapped with concrete, then wound tightly with high-strength steel wire and coated in mortar. The wire is what holds the pressure in. The cutaway model here shows the layers.',
+      '<b>Why it broke:</b> tiny cracks in the outer mortar let soil touch the wire. Chlorides (salts) in that soil attacked it, through corrosion cracking and hydrogen embrittlement, and wires snapped one by one until the pipe couldn\'t hold the pressure. Where the chlorides came from is still being studied.',
+      '<b>Why no one caught it:</b> an independent review blamed about two decades of deferred inspections and upkeep, even though this type of pipe had been flagged as risky after a similar main burst in 2004.',
+      '<b>The fix:</b> crews reinforced the weakest sections, and the city is building a brand-new steel main right beside the old one. That\'s the grey pipe going into the trench here.',
+    ],
+    facts: [
+      'It burst on <b>June 5, 2024</b> and again on <b>Dec. 30, 2025</b>, and both times brought citywide water restrictions.',
+      'The 2004 warning sign was the <b>McKnight feeder main</b> in northeast Calgary, made of the same kind of pipe.',
+      'The weakest segments were reinforced by spring 2026. The new parallel pipe is being fast-tracked (a job that would normally take about four years) to be in service by <b>December 2026</b>.',
+      'The total cost, including the emergency repairs, is about <b>$439 million</b>, and the city has warned water bills could rise to help pay for this and related work.',
+    ],
+    src: 'https://www.calgary.ca/emergencies/feeder-main-repair.html',
+  },
+  homes: {
+    step: 'use', emoji: '🏡', short: 'Homes', title: 'Homes',
+    tagline: 'Where it all comes out.',
+    body: [
+      'Water arrives through a service line and a meter, so each home pays for what it uses.',
+      'Inside, it goes to toilets, showers, laundry and the kitchen. Outside, watering lawns is a big part of why summer use jumps.',
+      'Almost everything that goes down an indoor drain heads to the sewer, not back to the tap.',
+    ],
+    facts: [
+      'A normal summer day in Calgary uses <b>650–800 million litres</b>, and hot, dry days push it higher.',
+    ],
+    src: SRC_DRINK,
+  },
+  sewer: {
+    step: 'drain', emoji: '🚽', short: 'Sewers', title: 'Sanitary sewers',
+    tagline: 'Everything you flush, on a downhill ride.',
+    body: [
+      'Toilets, sinks, showers and washing machines drain into sewer pipes under the street.',
+      'Sewers mostly run on gravity, sloping downhill. Where the ground gets in the way, a <b>lift station</b> pumps the sewage up so it can flow downhill again.',
+      'Manholes let crews get in to inspect and clean. Wipes, grease and "flushable" products are what clog them.',
+    ],
+    facts: [
+      'Calgary keeps sewage and rainwater in <b>separate pipes</b>. Sewage goes to a treatment plant, and storm drains go to the river.',
+    ],
+    src: SRC_WASTE,
+  },
+  wastewater: {
+    step: 'clean', emoji: '🦠', short: 'Wastewater plant', title: 'Wastewater treatment plant',
+    tagline: 'Microbes do most of the work.',
+    body: [
+      '<b>Screens and grit tanks</b> pull out rags, sand and anything else that shouldn\'t be there.',
+      '<b>Primary clarifiers</b> are calm round tanks where solids sink and fats float to the top.',
+      '<b>Bioreactors:</b> air is bubbled in so bacteria can eat the dissolved nutrients, like ammonia and phosphorus.',
+      'One last settle, then <b>UV light</b> disinfects the water before it leaves.',
+    ],
+    facts: [
+      'Three plants: <b>Bonnybrook</b> (by far the largest), <b>Fish Creek</b> and <b>Pine Creek</b>. Together they serve more than a million people.',
+      'The plants focus on removing nutrients, because extra ammonia and phosphorus would feed algae downstream in the Bow.',
+    ],
+    src: SRC_WASTE,
+  },
+  outfall: {
+    step: 'return', emoji: '🐟', short: 'Back to river', title: 'Back to the river',
+    tagline: 'The loop closes.',
+    body: [
+      'Treated water flows out of an outfall pipe and back into the river, downstream of the city.',
+      'From there it becomes someone else\'s water. Towns downstream draw from the same river.',
+      'That is why the standards are strict: the river is a shared pipe.',
+    ],
+    facts: [
+      'The city says what goes back into the Bow is clear, colourless and high in dissolved oxygen, with very little solids, phosphorus, ammonia or nitrogen.',
+      'The Bow flows on into the South Saskatchewan River and, eventually, Hudson Bay.',
+    ],
+    src: SRC_WASTE,
+  },
+  biosolids: {
+    step: 'return', emoji: '🚜', short: 'Biosolids', title: 'Biosolids',
+    tagline: 'The solids get recycled too.',
+    body: [
+      'The solids that settle out at the plant go into egg-shaped digesters, where microbes break them down further.',
+      'What\'s left is <b>biosolids</b>, a nutrient-rich material that works like fertiliser.',
+      'Instead of going to the landfill, it goes back onto farmland or into compost.',
+    ],
+    facts: [
+      'Calgary sends biosolids to the <b>Shepard Lagoons</b>, where they settle for about <b>six weeks</b> in spring and summer before being trucked to farmland.',
+      'The city\'s program recovers that organic matter for composting and agriculture.',
+    ],
+    src: SRC_WASTE,
+  },
+  storm: {
+    step: 'rain', emoji: '🌧️', short: 'Storm drains', title: 'Storm drains',
+    tagline: 'A separate pipe, straight to the river.',
+    body: [
+      'The grates in the gutter are storm drains, and they are not connected to the sewer.',
+      'Rain and snowmelt run through them to the river without a treatment plant. Some go through a stormwater pond first, so dirt can settle out.',
+      'So whatever goes down a storm drain, like car-wash soap, paint or oil, ends up in the river. Only rain down the drain.',
+    ],
+    facts: [
+      'Calgary\'s storm sewers and sanitary sewers are two <b>separate systems</b>. Only the sanitary side goes through a treatment plant.',
+    ],
+    src: SRC_WASTE,
+    widget: 'rain',
+  },
+};
+
+const ORDER = ['source', 'treat', 'store', 'mains', 'feeder', 'homes', 'sewer', 'wastewater', 'outfall', 'biosolids', 'storm'];
+
+/* Interactive state */
+const state = { demand: 650, broken: false, raining: false };
+function supplyLimit() { return state.broken ? 485 : 950; }
+function supplyStatus() {
+  const lim = supplyLimit();
+  if (state.demand <= lim * 0.85) return 'ok';
+  if (state.demand <= lim) return 'tight';
+  return 'over';
+}
+
+/* ------------------------------------------------------------------ */
+/* Three.js setup                                                      */
+/* ------------------------------------------------------------------ */
+
+const BG = new THREE.Color('#f1f3f2');
+const container = document.getElementById('scene');
+let renderer;
+try {
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+} catch (e) {
+  document.getElementById('loading').textContent = 'This needs WebGL, which your browser has turned off.';
+  throw e;
+}
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.15;
+container.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = BG;
+
+let viewH = 26;
+const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 400);
+const HOME_TARGET = new THREE.Vector3(7.5, 1.2, -1.2);
+const CAM_OFFSET = new THREE.Vector3(16, 27, 34);
+const HOME_ZOOM = 1.2;
+camera.position.copy(HOME_TARGET).add(CAM_OFFSET);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.copy(HOME_TARGET);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+// Drag (or one finger) moves the map; right-drag (or two fingers) turns and zooms
+controls.screenSpacePanning = false;
+controls.mouseButtons = { LEFT: THREE.MOUSE.PAN, MIDDLE: THREE.MOUSE.DOLLY, RIGHT: THREE.MOUSE.ROTATE };
+controls.touches = { ONE: THREE.TOUCH.PAN, TWO: THREE.TOUCH.DOLLY_ROTATE };
+controls.minZoom = 0.7;
+controls.maxZoom = 4;
+controls.minPolarAngle = 0.35;
+controls.maxPolarAngle = 1.2;
+controls.minAzimuthAngle = -0.5;
+controls.maxAzimuthAngle = 1.3;
+
+scene.add(new THREE.HemisphereLight('#ffffff', '#c9cfc6', 1.5));
+const sunLight = new THREE.DirectionalLight('#fff8ec', 2.4);
+sunLight.position.set(-14, 28, 16);
+sunLight.castShadow = true;
+sunLight.shadow.mapSize.set(2048, 2048);
+Object.assign(sunLight.shadow.camera, { left: -32, right: 32, top: 24, bottom: -24, near: 1, far: 90 });
+sunLight.shadow.bias = -0.0004;
+sunLight.shadow.normalBias = 0.03;
+scene.add(sunLight);
+
+// Space the intro card takes on wide screens, so the diorama sits beside it
+const sideInset = () => (window.innerWidth > 1000 ? 362 : 0);
+function homeTarget() {
+  const t = HOME_TARGET.clone();
+  const inset = sideInset();
+  if (!inset) return t;
+  camera.updateMatrixWorld();
+  const right = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 0);
+  return t.addScaledVector(right, -(inset / 2) * (viewH / HOME_ZOOM / window.innerHeight));
+}
+function resize() {
+  const w = window.innerWidth, h = window.innerHeight, a = w / h;
+  viewH = Math.max(27, (sideInset() ? 45 : 46) / ((w - sideInset()) / h));
+  camera.left = -viewH * a / 2; camera.right = viewH * a / 2;
+  camera.top = viewH / 2; camera.bottom = -viewH / 2;
+  camera.updateProjectionMatrix();
+  renderer.setSize(w, h);
+}
+window.addEventListener('resize', () => {
+  resize();
+  if (!selected && !tween) { controls.target.copy(homeTarget()); camera.position.copy(controls.target).add(CAM_OFFSET); }
+});
+resize();
+camera.zoom = HOME_ZOOM;
+camera.updateProjectionMatrix();
+controls.target.copy(homeTarget());
+camera.position.copy(controls.target).add(CAM_OFFSET);
+
+/* ------------------------------------------------------------------ */
+/* Modelling helpers                                                   */
+/* ------------------------------------------------------------------ */
+
+const mat = (color, extra = {}) => new THREE.MeshStandardMaterial({ color, roughness: 0.78, metalness: 0.04, ...extra });
+const waterMat = (color) => mat(color, { roughness: 0.25 });
+
+function shade(m) { m.castShadow = true; m.receiveShadow = true; return m; }
+function rbox(w, h, d, color, r = 0.08) {
+  const rad = Math.min(r, w / 2 - 0.001, h / 2 - 0.001, d / 2 - 0.001);
+  return shade(new THREE.Mesh(new RoundedBoxGeometry(w, h, d, 2, Math.max(rad, 0.0005)), mat(color)));
+}
+function cyl(rt, rb, h, color, seg = 20) {
+  return shade(new THREE.Mesh(new THREE.CylinderGeometry(rt, rb, h, seg), mat(color)));
+}
+function sphere(r, color, seg = 20) {
+  return shade(new THREE.Mesh(new THREE.SphereGeometry(r, seg, Math.round(seg * 0.7)), mat(color)));
+}
+function at(o, x, y, z) { o.position.set(x, y, z); return o; }
+const UP = new THREE.Vector3(0, 1, 0);
+const V = (x, y, z) => new THREE.Vector3(x, y, z);
+
+function roofGeo(w, h, d) {
+  const s = new THREE.Shape();
+  s.moveTo(-w / 2, 0); s.lineTo(w / 2, 0); s.lineTo(0, h); s.closePath();
+  const g = new THREE.ExtrudeGeometry(s, { depth: d, bevelEnabled: false });
+  g.translate(0, 0, -d / 2);
+  return g;
+}
+
+/* flat ribbon along a polyline (rivers, banks) */
+function ribbon(points, width, y, material) {
+  const pos = [], idx = [];
+  const n = points.length;
+  for (let i = 0; i < n; i++) {
+    const a = points[Math.max(i - 1, 0)], b = points[Math.min(i + 1, n - 1)];
+    const t = V(b.x - a.x, 0, b.z - a.z).normalize();
+    const nrm = V(-t.z, 0, t.x).multiplyScalar(width / 2);
+    const p = points[i];
+    pos.push(p.x + nrm.x, y, p.z + nrm.z, p.x - nrm.x, y, p.z - nrm.z);
+  }
+  for (let i = 0; i < n - 1; i++) {
+    const a = 2 * i, b = a + 1, c = a + 2, d = a + 3;
+    idx.push(a, c, b, b, c, d);
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.setIndex(idx);
+  g.computeVertexNormals();
+  const m = new THREE.Mesh(g, material);
+  m.receiveShadow = true;
+  return m;
+}
+
+/* half-buried pipe along a polyline, with an optional dug trench under it */
+function pipe(group, pts, r, color, trench = false) {
+  for (let i = 0; i < pts.length - 1; i++) {
+    const a = pts[i], b = pts[i + 1];
+    const len = a.distanceTo(b);
+    const m = shade(new THREE.Mesh(new THREE.CylinderGeometry(r, r, len, 14), mat(color, { roughness: 0.45 })));
+    m.position.copy(a).add(b).multiplyScalar(0.5);
+    m.quaternion.setFromUnitVectors(UP, b.clone().sub(a).normalize());
+    group.add(m);
+    if (trench) {
+      const w = r * 2 + 0.3;
+      const along = Math.abs(a.x - b.x) > 0.01;
+      const t = rbox(along ? len + w : w, 0.03, along ? w : len + w, '#c9a77c', 0.01);
+      t.position.set((a.x + b.x) / 2, 0.016, (a.z + b.z) / 2);
+      t.castShadow = false;
+      group.add(t);
+    }
+  }
+  for (let i = 1; i < pts.length - 1; i++) group.add(at(sphere(r * 1.08, color, 12), pts[i].x, pts[i].y, pts[i].z));
+}
+
+/* Sections: clickable groups (all in world coordinates unless offset) */
+const sections = {};
+function section(id, x = 0, z = 0) {
+  const g = new THREE.Group();
+  g.position.set(x, 0, z);
+  scene.add(g);
+  sections[id] = { id, group: g };
+  return g;
+}
+
+/* ------------------------------------------------------------------ */
+/* Ground, river, trees                                                */
+/* ------------------------------------------------------------------ */
+
+const plinth = rbox(46, 1.4, 25, '#fbfbf9', 0.4);
+at(plinth, 0, -0.85, 0);
+scene.add(plinth);
+const grass = rbox(45, 0.4, 24, '#bfe0a6', 0.18);
+at(grass, 0, -0.2, 0);
+grass.castShadow = false;
+scene.add(grass);
+
+const riverCurve = new THREE.CatmullRomCurve3([
+  V(-21.6, 0, -8.8), V(-18, 0, -8.6), V(-15.5, 0, -8.6), V(-12, 0, -9.2), V(-6, 0, -9.4),
+  V(0, 0, -8.9), V(6, 0, -9.3), V(12, 0, -9.5), V(17, 0, -9.1), V(22.4, 0, -9.4),
+]);
+const riverPts = riverCurve.getPoints(120);
+scene.add(ribbon(riverPts, 3.2, 0.012, mat('#e3d6b4')));
+scene.add(ribbon(riverPts, 2.4, 0.03, waterMat('#6cc0e5')));
+
+const road = rbox(15.2, 0.06, 1.5, '#d9d9d4', 0.03);
+at(road, 7.0, 0.03, 4.0);
+road.castShadow = false;
+scene.add(road);
+for (let x = 0.5; x < 14.5; x += 1.4) scene.add(at(rbox(0.6, 0.012, 0.08, '#ffffff', 0.004), x, 0.065, 4.0));
+
+function tree(x, z, s = 1, kind = 0) {
+  const g = new THREE.Group();
+  g.add(at(cyl(0.08 * s, 0.11 * s, 0.6 * s, '#9a7353', 8), 0, 0.3 * s, 0));
+  if (kind === 0) {
+    g.add(at(sphere(0.55 * s, '#7cc47a', 14), 0, 0.95 * s, 0));
+    g.add(at(sphere(0.38 * s, '#8fd28a', 12), 0.25 * s, 1.3 * s, 0.1 * s));
+  } else {
+    g.add(at(shade(new THREE.Mesh(new THREE.ConeGeometry(0.55 * s, 1.5 * s, 10), mat('#5fae73'))), 0, 1.25 * s, 0));
+  }
+  g.position.set(x, 0, z);
+  scene.add(g);
+}
+[
+  [-20.6, -3.6, 1, 1], [-19.4, 1.2, 1, 0], [-20.4, 8.6, 1.2, 1], [-18.3, 10, 0.9, 0], [-16, 3.5, 1, 1],
+  [-14.6, 7.6, 0.9, 0], [-11.2, 6.4, 1.1, 1], [-8, 9.6, 1, 0], [-5.5, 6.5, 1, 1], [-3, 9.8, 0.9, 0],
+  [-1.6, 6.6, 0.8, 1], [0.6, 10.2, 1, 0], [3.5, 10.3, 0.9, 1], [6.4, 10.6, 1.1, 0], [9.6, 10.4, 0.9, 1],
+  [12.6, 10.2, 1, 0], [-7.6, -6.6, 0.9, 1], [-2.4, -6.8, 1, 0], [6, -6.6, 0.9, 1], [8.8, -5.8, 1.1, 0],
+  [5.2, 0.4, 0.9, 0], [9.4, 0.6, 1, 1], [-17.8, -4.6, 0.9, 0], [-14, 1.4, 0.8, 0], [21.6, -6.4, 1, 1],
+  [-22, -11.2, 0.8, 1], [-12.4, -11.6, 0.9, 1], [0.8, -11.4, 0.8, 0], [9, -11.6, 0.9, 1], [19, -11.6, 0.8, 0],
+].forEach(([x, z, s, k]) => tree(x, z, s, k));
+
+/* ------------------------------------------------------------------ */
+/* 1. Source: mountains, reservoir, dam                                */
+/* ------------------------------------------------------------------ */
+
+const src = section('source');
+function mountain(x, z, r, h) {
+  const g = new THREE.Group();
+  g.add(shade(new THREE.Mesh(new THREE.ConeGeometry(r, h, 7), mat('#9fb0be'))));
+  const cap = shade(new THREE.Mesh(new THREE.ConeGeometry(r * 0.42, h * 0.42, 7), mat('#ffffff')));
+  cap.position.y = h * 0.3;
+  g.add(cap);
+  g.position.set(x, h / 2, z);
+  g.rotation.y = x * 0.7;
+  src.add(g);
+}
+mountain(-21, -11, 1.5, 4.4);
+mountain(-18.9, -11.3, 1.25, 3.6);
+mountain(-21.3, -6.3, 1.25, 3.2);
+mountain(-19.2, -6.9, 0.9, 2.2);
+const lakeBank = new THREE.Mesh(new THREE.CircleGeometry(1, 48), mat('#e3d6b4'));
+lakeBank.rotation.x = -Math.PI / 2;
+lakeBank.scale.set(3.3, 2.4, 1);
+at(lakeBank, -15.6, 0.014, -8.6);
+lakeBank.receiveShadow = true;
+src.add(lakeBank);
+const lake = new THREE.Mesh(new THREE.CircleGeometry(1, 48), waterMat('#58b2dd'));
+lake.rotation.x = -Math.PI / 2;
+lake.scale.set(2.9, 2.0, 1);
+at(lake, -15.6, 0.04, -8.6);
+lake.receiveShadow = true;
+src.add(lake);
+src.add(at(rbox(0.7, 0.8, 3.6, '#cfccc4', 0.08), -12.5, 0.4, -9.2));
+for (let i = 0; i < 3; i++) src.add(at(rbox(0.74, 0.18, 0.5, '#9aa3a8', 0.03), -12.5, 0.72, -10.2 + i * 1.0));
+
+/* ------------------------------------------------------------------ */
+/* 2. Water treatment plant                                            */
+/* ------------------------------------------------------------------ */
+
+const treat = section('treat', -10, -3.6);
+treat.add(at(rbox(6.4, 0.14, 4.6, '#d9d6cf'), 0, 0.07, 0));
+// intake from the river
+treat.add(at(rbox(1.0, 0.5, 0.7, '#cfccc4'), -0.6, 0.25, -4.75));
+pipe(treat, [V(-0.6, 0.18, -4.4), V(-0.6, 0.18, -2.3)], 0.16, '#6a9fbf');
+// clump-and-settle tanks: murky → clearer
+[[-2.0, -1.05, '#a6b48a'], [-2.0, 1.05, '#8fc3c8']].forEach(([x, z, water]) => {
+  treat.add(at(cyl(0.95, 1.0, 0.7, '#e8e5de', 32), x, 0.42, z));
+  treat.add(at(new THREE.Mesh(new THREE.CylinderGeometry(0.85, 0.85, 0.04, 32), waterMat(water)), x, 0.78, z));
+  treat.add(at(rbox(1.7, 0.06, 0.12, '#9aa3a8', 0.02), x, 0.85, z));
+});
+// filter beds
+for (let i = 0; i < 4; i++) {
+  const x = -0.15 + (i % 2) * 1.2, z = -1.0 + Math.floor(i / 2) * 2.0;
+  treat.add(at(rbox(1.05, 0.55, 1.6, '#e8e5de', 0.05), x, 0.42, z));
+  treat.add(at(rbox(0.9, 0.04, 1.45, '#e6d3a3', 0.01), x, 0.68, z));
+  treat.add(at(new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.03, 1.45), waterMat('#7fd0f0')), x, 0.71, z));
+}
+// clearwell + control building
+treat.add(at(rbox(1.6, 1.4, 3.2, '#f4f1ea', 0.1), 2.3, 0.84, 0));
+treat.add(at(rbox(1.64, 0.18, 3.24, '#3d8bd9', 0.05), 2.3, 1.5, 0));
+for (let i = 0; i < 3; i++) treat.add(at(rbox(0.05, 0.4, 0.5, '#a9d6f0', 0.02), 1.48, 0.95, -0.9 + i * 0.9));
+treat.add(at(cyl(0.28, 0.28, 0.9, '#f2c14e', 16), 2.0, 0.6, -2.0));
+treat.add(at(cyl(0.22, 0.22, 0.75, '#ffffff', 16), 2.7, 0.52, -2.0));
+
+/* ------------------------------------------------------------------ */
+/* 3. Underground reservoir + pump station                             */
+/* ------------------------------------------------------------------ */
+
+const store = section('store', -2.5, 1.2);
+store.add(at(rbox(3.4, 0.7, 2.8, '#a9d48f', 0.3), -0.6, 0.35, 0));
+for (const [x, z] of [[-1.6, -0.6], [-0.6, 0.6], [0.4, -0.5]]) {
+  store.add(at(cyl(0.1, 0.1, 0.35, '#f4f2ec', 10), x, 0.8, z));
+  store.add(at(cyl(0.16, 0.16, 0.06, '#f4f2ec', 10), x, 0.98, z));
+}
+// window into the reservoir: the water level moves with the demand widget
+store.add(at(rbox(2.2, 0.5, 0.06, '#e7f3f8', 0.03), -0.6, 0.33, 1.41));
+const levelMesh = new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.42, 0.04), waterMat('#3d8bd9'));
+at(levelMesh, -0.6, 0.33, 1.45);
+store.add(levelMesh);
+const LEVEL_BASE = 0.12, LEVEL_H = 0.42;
+store.add(at(rbox(1.4, 1.1, 1.4, '#efe9df', 0.08), 1.9, 0.6, 0));
+store.add(at(rbox(1.44, 0.14, 1.44, '#3d8bd9', 0.04), 1.9, 1.2, 0));
+store.add(at(rbox(0.35, 0.55, 0.05, '#3d8bd9', 0.02), 1.9, 0.3, 0.71));
+for (const z of [-0.35, 0.35]) store.add(at(cyl(0.18, 0.18, 0.4, '#5b8def', 14), 2.85, 0.22, z));
+
+/* ------------------------------------------------------------------ */
+/* 4. Water mains                                                      */
+/* ------------------------------------------------------------------ */
+
+const mains = section('mains');
+const FEEDER = [V(-6.9, 0.2, -3.6), V(-5.2, 0.2, -3.6), V(-5.2, 0.2, 1.2), V(-4.8, 0.2, 1.2)];
+pipe(mains, FEEDER, 0.26, '#3d8bd9', true);
+const GEYSER_AT = V(-5.2, 0.45, -1.2);
+const STREET_Y = 0.12;
+const OUT = [V(-0.6, 0.12, 1.2), V(1.0, 0.12, 1.2), V(1.0, STREET_Y, 3.6), V(13.6, STREET_Y, 3.6)];
+pipe(mains, OUT.slice(0, 3), 0.13, '#3d8bd9', true);
+pipe(mains, OUT.slice(2), 0.1, '#3d8bd9');
+function hydrant(x, z) {
+  const g = new THREE.Group();
+  g.add(at(cyl(0.12, 0.14, 0.45, '#e05a47', 12), 0, 0.23, 0));
+  g.add(at(sphere(0.13, '#e05a47', 12), 0, 0.47, 0));
+  const n = cyl(0.05, 0.05, 0.34, '#d24a37', 8);
+  n.rotation.z = Math.PI / 2;
+  g.add(at(n, 0, 0.32, 0));
+  g.position.set(x, 0, z);
+  mains.add(g);
+  pipe(mains, [V(x, STREET_Y, 3.6), V(x, STREET_Y, z)], 0.05, '#3d8bd9');
+}
+hydrant(4.0, 2.9);
+hydrant(11.6, 2.9);
+
+/* ------------------------------------------------------------------ */
+/* 4b. Bearspaw-style feeder main: why it broke, and the new pipe      */
+/* ------------------------------------------------------------------ */
+
+const feeder = section('feeder');
+// open trench beside the old main, with the new steel pipe going in
+feeder.add(at(rbox(0.9, 0.04, 3.3, '#b48a5e', 0.02), -4.25, 0.02, -2.3));
+for (let i = 0; i < 2; i++) {
+  const seg = cyl(0.27, 0.27, 1.25, '#7d8b99', 18);
+  seg.rotation.x = Math.PI / 2;
+  feeder.add(at(seg, -4.25, 0.22, -3.3 + i * 1.32));
+  feeder.add(at(cyl(0.3, 0.3, 0.08, '#6b7885', 18), -4.25, 0.22, -3.3 + i * 1.32 + 0.64).rotateX(Math.PI / 2));
+}
+// spare pipe sections waiting on the side
+for (const [dx, dy] of [[0, 0.27], [0.56, 0.27], [0.28, 0.74]]) {
+  const seg = cyl(0.27, 0.27, 1.3, '#7d8b99', 18);
+  seg.rotation.x = Math.PI / 2;
+  feeder.add(at(seg, -1.3 + dx, dy, -2.0));
+}
+// excavator
+const exc = new THREE.Group();
+exc.add(at(rbox(1.1, 0.25, 1.3, '#3b4650', 0.06), 0, 0.13, 0));
+exc.add(at(rbox(1.0, 0.45, 1.0, '#f2b33d', 0.08), 0, 0.5, 0.05));
+exc.add(at(rbox(0.5, 0.5, 0.5, '#f2b33d', 0.08), 0.22, 0.95, 0.25));
+exc.add(at(rbox(0.44, 0.34, 0.05, '#a9d6f0', 0.02), 0.22, 1.0, 0.51));
+const boom = rbox(0.18, 1.3, 0.18, '#f2b33d', 0.04);
+boom.rotation.x = -0.9;
+exc.add(at(boom, -0.25, 1.15, -0.55));
+const stick = rbox(0.14, 0.9, 0.14, '#f2b33d', 0.04);
+stick.rotation.x = 0.5;
+exc.add(at(stick, -0.25, 1.15, -1.45));
+exc.add(at(rbox(0.36, 0.28, 0.3, '#5b6266', 0.04), -0.25, 0.72, -1.7));
+exc.position.set(-3.0, 0, -1.9);
+exc.rotation.y = -0.25;
+feeder.add(exc);
+for (const [x, z] of [[-4.75, -0.55], [-3.75, -0.55], [-3.75, -4.1]]) {
+  feeder.add(at(shade(new THREE.Mesh(new THREE.ConeGeometry(0.12, 0.34, 12), mat('#f28c38'))), x, 0.17, z));
+  feeder.add(at(cyl(0.125, 0.125, 0.04, '#ffffff', 12), x, 0.17, z));
+}
+// cutaway of the old pipe: each layer stops short so the next one shows
+const cut = new THREE.Group();
+cut.add(at(rbox(2.9, 0.16, 1.1, '#e7e4dd', 0.06), 0, 0.08, 0));
+const LAYERS = [
+  [0.36, 2.6, '#3d8bd9'],  // water inside
+  [0.42, 2.4, '#d9d4c8'],  // concrete lining
+  [0.46, 2.1, '#9aa3a8'],  // steel cylinder
+  [0.56, 1.8, '#e3dfd6'],  // concrete core
+];
+for (const [r, len, color] of LAYERS) {
+  const m = shade(new THREE.Mesh(new THREE.CylinderGeometry(r, r, len, 28, 1, false, 0, Math.PI * 1.5), mat(color, { side: THREE.DoubleSide })));
+  m.rotation.z = Math.PI / 2;
+  cut.add(at(m, 0, 0.7, 0));
+}
+// prestress wire wrap: a few loops have snapped (rusty, with gaps)
+for (let i = 0; i < 9; i++) {
+  const x = -0.55 + i * 0.14;
+  const broken = i === 3 || i === 4 || i === 6;
+  const ring = shade(new THREE.Mesh(new THREE.TorusGeometry(0.575, 0.018, 6, 28, broken ? Math.PI * 1.1 : Math.PI * 1.5), mat(broken ? '#c2410c' : '#5b6266')));
+  ring.rotation.y = Math.PI / 2;
+  cut.add(at(ring, x, 0.7, 0));
+}
+const mortar = shade(new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.6, 0.9, 28, 1, false, 0, Math.PI * 1.5), mat('#c9c5bc', { side: THREE.DoubleSide })));
+mortar.rotation.z = Math.PI / 2;
+cut.add(at(mortar, 0.5, 0.7, 0));
+cut.add(at(rbox(0.04, 0.5, 0.02, '#7a2e12', 0.005), 0.5, 1.15, 0.42));
+cut.position.set(-2.4, 0, -4.9);
+feeder.add(cut);
+
+/* ------------------------------------------------------------------ */
+/* 5. Homes                                                            */
+/* ------------------------------------------------------------------ */
+
+const homes = section('homes');
+const HOUSE_Z = 6.6;
+const HOUSES = [
+  [2.6, '#ffd6a5', '#e07a5f'], [5.2, '#cde7f0', '#5b7db1'], [7.8, '#fde2e4', '#c8553d'],
+  [10.4, '#e8dff5', '#7d6ba8'], [13.0, '#d8f3dc', '#52796f'],
+];
+for (const [x, wall, roof] of HOUSES) {
+  const h = new THREE.Group();
+  h.add(at(rbox(1.6, 1.0, 1.4, wall, 0.06), 0, 0.5, 0));
+  const r = shade(new THREE.Mesh(roofGeo(1.65, 0.75, 1.85), mat(roof)));
+  r.rotation.y = Math.PI / 2;
+  h.add(at(r, 0, 1.0, 0));
+  h.add(at(rbox(0.18, 0.45, 0.18, roof, 0.02), 0.45, 1.45, 0.3));
+  h.add(at(rbox(0.32, 0.5, 0.05, '#8b6b4a', 0.02), 0, 0.25, -0.71));
+  for (const dx of [-0.48, 0.48]) h.add(at(rbox(0.3, 0.28, 0.05, '#a9d6f0', 0.02), dx, 0.6, -0.71));
+  h.add(at(rbox(0.2, 0.22, 0.12, '#9aa6ab', 0.02), -0.62, 0.15, -0.76)); // water meter
+  h.position.set(x, 0, HOUSE_Z);
+  homes.add(h);
+  // service line from the main
+  pipe(homes, [V(x - 0.62, STREET_Y + 0.02, 3.6), V(x - 0.62, STREET_Y + 0.02, HOUSE_Z - 0.82)], 0.05, '#3d8bd9');
+}
+// lawn sprinkler behind the second house
+homes.add(at(cyl(0.05, 0.07, 0.18, '#3b4650', 8), 5.9, 0.09, 8.5));
+const SPRINKLER_AT = V(5.9, 0.2, 8.5);
+
+/* ------------------------------------------------------------------ */
+/* 6. Sanitary sewers                                                  */
+/* ------------------------------------------------------------------ */
+
+const sewer = section('sewer');
+const SEWER_Y = 0.1;
+const SEWER_MAIN = [V(2.95, SEWER_Y, 4.4), V(14.3, SEWER_Y, 4.4), V(14.3, SEWER_Y, -1.8), V(11.4, SEWER_Y, -1.8), V(11.4, SEWER_Y, -3.3)];
+pipe(sewer, SEWER_MAIN.slice(0, 2), 0.12, '#a07a4f');
+pipe(sewer, SEWER_MAIN.slice(1), 0.12, '#a07a4f', true);
+for (const [x] of HOUSES) pipe(sewer, [V(x + 0.35, SEWER_Y, HOUSE_Z - 0.75), V(x + 0.35, SEWER_Y, 4.4)], 0.05, '#a07a4f');
+for (const x of [5.5, 9.5]) sewer.add(at(cyl(0.26, 0.26, 0.04, '#5b5f63', 18), x, 0.075, 4.4));
+// lift station
+sewer.add(at(rbox(1.2, 0.9, 1.0, '#efe9df', 0.08), 15.3, 0.45, 0.6));
+sewer.add(at(rbox(1.24, 0.12, 1.04, '#a07a4f', 0.04), 15.3, 0.92, 0.6));
+sewer.add(at(cyl(0.3, 0.3, 0.1, '#8f949a', 16), 14.3, 0.08, 0.6));
+
+/* ------------------------------------------------------------------ */
+/* 7. Wastewater treatment plant                                       */
+/* ------------------------------------------------------------------ */
+
+const ww = section('wastewater', 14, -4.9);
+ww.add(at(rbox(7.6, 0.14, 4.4, '#d9d6cf'), 0, 0.07, 0));
+ww.add(at(rbox(1.2, 0.9, 1.1, '#f1ece3', 0.08), -2.8, 0.52, 0.9));
+ww.add(at(rbox(1.24, 0.12, 1.14, '#a07a4f', 0.04), -2.8, 1.0, 0.9));
+const digester = sphere(0.6, '#d8d2c6', 24);
+digester.scale.set(1, 1.45, 1);
+ww.add(at(digester, -2.8, 0.9, -1.0));
+function roundTank(x, z, water) {
+  ww.add(at(cyl(0.78, 0.82, 0.55, '#e8e5de', 32), x, 0.35, z));
+  ww.add(at(new THREE.Mesh(new THREE.CylinderGeometry(0.68, 0.68, 0.04, 32), waterMat(water)), x, 0.63, z));
+  ww.add(at(rbox(1.4, 0.05, 0.1, '#9aa3a8', 0.02), x, 0.7, z));
+}
+roundTank(-1.2, -0.95, '#8a7a5c');
+roundTank(-1.2, 1.0, '#8a7a5c');
+ww.add(at(rbox(1.7, 0.5, 3.4, '#e8e5de', 0.06), 0.75, 0.32, 0));
+ww.add(at(new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.04, 3.2), waterMat('#8fae8a')), 0.75, 0.58, 0));
+const BUBBLES = { x: 14.75, z: -4.9, w: 1.4, d: 3.0, y: 0.6 };
+roundTank(2.6, 1.0, '#8fc9cf');
+ww.add(at(rbox(1.5, 0.4, 0.8, '#e8e5de', 0.05), 2.6, 0.27, -1.0));
+const uv = new THREE.Mesh(new THREE.BoxGeometry(1.3, 0.04, 0.6), mat('#b388ff', { emissive: '#8b5cf6', emissiveIntensity: 0.6 }));
+ww.add(at(uv, 2.6, 0.48, -1.0));
+
+/* ------------------------------------------------------------------ */
+/* 8. Back to the river + biosolids                                    */
+/* ------------------------------------------------------------------ */
+
+const outfall = section('outfall');
+const OUTFALL = [V(16.6, 0.14, -6.3), V(16.6, 0.14, -8.1)];
+pipe(outfall, OUTFALL, 0.12, '#7cc9e0', true);
+outfall.add(at(rbox(1.0, 0.4, 0.3, '#cfccc4', 0.05), 16.6, 0.2, -7.95));
+outfall.add(at(cyl(0.04, 0.04, 1.0, '#8b6b4a', 6), 18.0, 0.5, -7.6));
+outfall.add(at(rbox(0.9, 0.42, 0.06, '#ffffff', 0.03), 18.0, 1.05, -7.6));
+outfall.add(at(rbox(0.7, 0.08, 0.07, '#3d8bd9', 0.02), 18.0, 1.1, -7.6));
+
+const bio = section('biosolids');
+bio.add(at(rbox(1.0, 0.04, 12.4, '#d8c7a3', 0.02), 18.3, 0.02, 3.6));
+for (const z of [1.4, 3.6]) {
+  bio.add(at(rbox(2.6, 0.28, 1.9, '#cdbf9f', 0.08), 20.6, 0.14, z));
+  bio.add(at(rbox(2.3, 0.05, 1.6, '#7a5f3e', 0.02), 20.6, 0.27, z));
+}
+bio.add(at(rbox(3.6, 0.12, 4.4, '#b88d61', 0.06), 20.6, 0.06, 8.1));
+for (let i = 0; i < 6; i++) bio.add(at(rbox(0.32, 0.28, 4.0, i % 2 ? '#b5d86b' : '#9ccc65', 0.08), 19.15 + i * 0.58, 0.25, 8.1));
+const truck = new THREE.Group();
+truck.add(at(rbox(0.7, 0.55, 0.7, '#f2c14e', 0.08), 0, 0.45, 0.65));
+truck.add(at(rbox(0.6, 0.22, 0.05, '#a9d6f0', 0.02), 0, 0.58, 1.01));
+truck.add(at(rbox(0.8, 0.6, 1.3, '#7a9e7e', 0.08), 0, 0.5, -0.4));
+for (const [x, z] of [[-0.38, 0.6], [0.38, 0.6], [-0.38, -0.6], [0.38, -0.6]]) {
+  const w = cyl(0.17, 0.17, 0.12, '#2f3b4a', 14);
+  w.rotation.z = Math.PI / 2;
+  truck.add(at(w, x, 0.17, z));
+}
+truck.position.set(18.3, 0, 0);
+bio.add(truck);
+const TRUCK_Z = [-2.4, 9.4];
+
+/* ------------------------------------------------------------------ */
+/* Storm drains                                                        */
+/* ------------------------------------------------------------------ */
+
+const storm = section('storm');
+const STORM_Y = 0.13;
+for (const x of [2.2, 8.5]) storm.add(at(rbox(0.5, 0.05, 0.3, '#3b4246', 0.02), x, 0.07, 3.38));
+pipe(storm, [V(8.5, STORM_Y, 3.3), V(8.5, STORM_Y, 2.9), V(2.2, STORM_Y, 2.9)], 0.1, '#5fb3a8', true);
+pipe(storm, [V(2.2, STORM_Y, 3.3), V(2.2, STORM_Y, -3.6)], 0.13, '#5fb3a8', true);
+pipe(storm, [V(2.2, STORM_Y, -5.5), V(2.2, STORM_Y, -7.9)], 0.13, '#5fb3a8', true);
+const pondBank = new THREE.Mesh(new THREE.CircleGeometry(1, 40), mat('#e3d6b4'));
+pondBank.rotation.x = -Math.PI / 2;
+pondBank.scale.set(1.6, 1.2, 1);
+storm.add(at(pondBank, 2.2, 0.014, -4.55));
+const pond = new THREE.Mesh(new THREE.CircleGeometry(1, 40), waterMat('#73b9c9'));
+pond.rotation.x = -Math.PI / 2;
+pond.scale.set(1.3, 0.95, 1);
+storm.add(at(pond, 2.2, 0.035, -4.55));
+storm.add(at(rbox(0.8, 0.35, 0.28, '#cfccc4', 0.05), 2.2, 0.18, -7.8));
+for (const [x, z] of [[1.1, -4.2], [3.3, -4.9], [1.5, -5.3]]) storm.add(at(cyl(0.02, 0.02, 0.5, '#7a9e4f', 5), x, 0.25, z));
+// rain clouds, shown while raining
+const clouds = new THREE.Group();
+for (const [x, z, s] of [[2, 3, 1], [8, 5, 1.2], [13, 2, 0.9]]) {
+  const c = new THREE.Group();
+  [[0, 0, 0.9], [0.8, 0.1, 0.7], [-0.8, -0.05, 0.65], [0.2, 0.45, 0.6]].forEach(([dx, dy, r]) => c.add(at(sphere(r, '#dfe6ea', 16), dx, dy, 0)));
+  c.position.set(x, 9.5, z);
+  c.scale.setScalar(s);
+  clouds.add(c);
+}
+clouds.visible = false;
+scene.add(clouds);
+
+/* ------------------------------------------------------------------ */
+/* Flow pulses                                                         */
+/* ------------------------------------------------------------------ */
+
+function makeRoute(points) {
+  const cum = [0];
+  for (let i = 1; i < points.length; i++) cum.push(cum[i - 1] + points[i].distanceTo(points[i - 1]));
+  const len = cum[cum.length - 1];
+  return {
+    len,
+    at(d, out) {
+      let i = 1;
+      while (i < cum.length - 1 && cum[i] < d) i++;
+      const seg = cum[i] - cum[i - 1] || 1;
+      return out.copy(points[i - 1]).lerp(points[i], (d - cum[i - 1]) / seg);
+    },
+  };
+}
+const pulseGeo = new THREE.SphereGeometry(1, 12, 8);
+const PULSE = {
+  clean: new THREE.MeshBasicMaterial({ color: '#dff4ff', toneMapped: false }),
+  raw: new THREE.MeshBasicMaterial({ color: '#cfe6ef', toneMapped: false }),
+  sewage: new THREE.MeshBasicMaterial({ color: '#d9b98a', toneMapped: false }),
+  storm: new THREE.MeshBasicMaterial({ color: '#d8fff8', toneMapped: false }),
+  river: new THREE.MeshBasicMaterial({ color: '#ffffff', toneMapped: false, transparent: true, opacity: 0.85 }),
+};
+const flows = [];
+function addFlow(points, { spacing, size, speed = 1, kind = 'clean', tag = '' }) {
+  const route = makeRoute(points);
+  const n = Math.max(1, Math.round(route.len / spacing));
+  const pulses = [];
+  for (let i = 0; i < n; i++) {
+    const m = new THREE.Mesh(pulseGeo, PULSE[kind]);
+    m.scale.setScalar(size);
+    scene.add(m);
+    pulses.push(m);
+  }
+  flows.push({ route, pulses, speed, tag });
+}
+const lift = (pts, dy) => pts.map((p) => V(p.x, p.y + dy, p.z));
+
+addFlow(riverPts.map((p) => V(p.x, 0.06, p.z)), { spacing: 1.3, size: 0.07, speed: 0.55, kind: 'river', tag: 'river' });
+addFlow(riverPts.map((p) => V(p.x, 0.06, p.z + 0.6)), { spacing: 1.7, size: 0.05, speed: 0.45, kind: 'river', tag: 'river' });
+addFlow([V(-10.6, 0.36, -8.2), V(-10.6, 0.36, -5.9)], { spacing: 0.7, size: 0.12, kind: 'raw' });
+addFlow(lift(FEEDER, 0.26), { spacing: 1.1, size: 0.15, kind: 'clean', tag: 'feeder' });
+addFlow(lift(OUT, 0.12), { spacing: 1.0, size: 0.11, kind: 'clean', tag: 'city' });
+for (const [x] of HOUSES) {
+  addFlow([V(x - 0.62, STREET_Y + 0.08, 3.6), V(x - 0.62, STREET_Y + 0.08, HOUSE_Z - 0.82)], { spacing: 0.8, size: 0.07, kind: 'clean', speed: 0.6, tag: 'city' });
+  addFlow([V(x + 0.35, SEWER_Y + 0.06, HOUSE_Z - 0.75), V(x + 0.35, SEWER_Y + 0.06, 4.4)], { spacing: 0.8, size: 0.07, kind: 'sewage', speed: 0.6 });
+}
+addFlow(lift(SEWER_MAIN, 0.12), { spacing: 1.0, size: 0.11, kind: 'sewage' });
+addFlow(lift(OUTFALL, 0.12), { spacing: 0.6, size: 0.11, kind: 'clean' });
+addFlow([V(8.5, STORM_Y + 0.1, 3.3), V(8.5, STORM_Y + 0.1, 2.9), V(2.2, STORM_Y + 0.1, 2.9)], { spacing: 0.9, size: 0.1, kind: 'storm', tag: 'storm' });
+addFlow([V(2.2, STORM_Y + 0.13, 3.3), V(2.2, STORM_Y + 0.13, -3.6)], { spacing: 0.9, size: 0.12, kind: 'storm', tag: 'storm' });
+addFlow([V(2.2, STORM_Y + 0.13, -5.5), V(2.2, STORM_Y + 0.13, -7.9)], { spacing: 0.7, size: 0.12, kind: 'storm', tag: 'storm' });
+
+/* ------------------------------------------------------------------ */
+/* Particles: bubbles, sprinkler, geyser, rain                         */
+/* ------------------------------------------------------------------ */
+
+const dropGeo = new THREE.SphereGeometry(1, 8, 6);
+const rainGeo = new THREE.CylinderGeometry(0.02, 0.02, 0.45, 4);
+const parts = [];
+function spawn(pos, vel, { color, size, life, gravity = 0, geo = dropGeo, opacity = 0.9 }) {
+  const m = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color, transparent: true, opacity, depthWrite: false }));
+  m.position.copy(pos);
+  m.scale.setScalar(size);
+  m.userData = { vel, life: 0, max: life, gravity, opacity };
+  scene.add(m);
+  parts.push(m);
+}
+const rnd = (a, b) => a + Math.random() * (b - a);
+const emitters = [
+  {
+    rate: () => 12,
+    emit: () => spawn(V(BUBBLES.x + rnd(-BUBBLES.w / 2, BUBBLES.w / 2), BUBBLES.y, BUBBLES.z + rnd(-BUBBLES.d / 2, BUBBLES.d / 2)), V(0, rnd(0.3, 0.6), 0), { color: '#ffffff', size: rnd(0.04, 0.07), life: 0.7 }),
+  },
+  {
+    rate: () => 26,
+    emit: () => {
+      const a = rnd(0, Math.PI * 2);
+      spawn(SPRINKLER_AT.clone(), V(Math.cos(a) * 1.1, rnd(1.8, 2.4), Math.sin(a) * 1.1), { color: '#8fd3ff', size: 0.045, life: 0.6, gravity: -7 });
+    },
+  },
+  {
+    rate: () => (state.broken ? 45 : 0),
+    emit: () => spawn(GEYSER_AT.clone(), V(rnd(-0.5, 0.5), rnd(5, 6.2), rnd(-0.5, 0.5)), { color: "#5fb4ff", size: rnd(0.09, 0.14), life: 1.3, gravity: -8 }),
+  },
+  {
+    rate: () => (state.raining ? 90 : 0),
+    emit: () => spawn(V(rnd(-1, 15), 9, rnd(-1, 8)), V(0, -15, 0), { color: '#9fd0ec', size: 1, life: 0.6, geo: rainGeo, opacity: 0.7 }),
+  },
+];
+emitters.forEach((e) => { e.acc = 0; });
+function updateParticles(dt) {
+  for (const e of emitters) {
+    e.acc += dt * e.rate();
+    while (e.acc >= 1) { e.acc -= 1; e.emit(); }
+  }
+  for (let i = parts.length - 1; i >= 0; i--) {
+    const p = parts[i], u = p.userData;
+    u.life += dt;
+    u.vel.y += u.gravity * dt;
+    p.position.addScaledVector(u.vel, dt);
+    const k = u.life / u.max;
+    p.material.opacity = u.opacity * (1 - k * k);
+    if (k >= 1 || p.position.y < 0.02) { scene.remove(p); p.material.dispose(); parts.splice(i, 1); }
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Selection, highlight, camera                                        */
+/* ------------------------------------------------------------------ */
+
+const pickables = [];
+for (const s of Object.values(sections)) {
+  s.meshes = [];
+  s.group.traverse((o) => {
+    if (!o.isMesh) return;
+    o.material = o.material.clone();
+    o.userData.base = o.material.color.clone();
+    o.userData.sid = s.id;
+    s.meshes.push(o);
+    pickables.push(o);
+  });
+  s.box = new THREE.Box3().setFromObject(s.group);
+  s.center = s.box.getCenter(new THREE.Vector3());
+  s.size = s.box.getSize(new THREE.Vector3());
+}
+const anchors = {
+  source: V(-15.6, 1.4, -8.6),
+  mains: V(10.5, 0.9, 3.0),
+  feeder: V(-3.0, 2.6, -2.2),
+  homes: V(7.8, 2.2, HOUSE_Z),
+  sewer: V(15.3, 1.5, 0.6),
+  outfall: V(17.6, 1.0, -8.6),
+  biosolids: V(20.6, 1.0, 2.5),
+  storm: V(2.2, 1.0, -4.55),
+};
+
+const halo = new THREE.Mesh(new THREE.RingGeometry(0.92, 1, 72), new THREE.MeshBasicMaterial({ color: '#3d8bd9', transparent: true, opacity: 0.9, toneMapped: false }));
+halo.rotation.x = -Math.PI / 2;
+halo.position.y = 0.06;
+halo.visible = false;
+scene.add(halo);
+
+let selected = null, hovered = null;
+
+function applyLook() {
+  for (const s of Object.values(sections)) {
+    const dim = selected && selected !== s.id;
+    for (const m of s.meshes) {
+      m.material.color.copy(m.userData.base);
+      if (dim) m.material.color.lerp(BG, 0.6);
+      if (m.material.emissive && m !== uv) {
+        if (s.id === selected) { m.material.emissive.set('#5fb4ff'); m.material.emissiveIntensity = 0.2; }
+        else if (s.id === hovered) { m.material.emissive.set('#ffffff'); m.material.emissiveIntensity = 0.16; }
+        else { m.material.emissive.set('#000000'); m.material.emissiveIntensity = 0; }
+      }
+    }
+  }
+  for (const [id, el] of Object.entries(pinEls)) {
+    el.classList.toggle('on', id === selected);
+    el.classList.toggle('dim', !!selected && id !== selected);
+  }
+  const step = selected ? INFO[selected].step : null;
+  document.querySelectorAll('.chip').forEach((c) => c.classList.toggle('on', c.dataset.step === step));
+}
+
+let tween = null;
+const ease = (k) => (k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2);
+function flyTo(target, zoom) {
+  const instant = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  tween = { t: 0, dur: instant ? 0.01 : 0.9, fromT: controls.target.clone(), toT: target, fromZ: camera.zoom, toZ: zoom, off: camera.position.clone().sub(controls.target) };
+}
+controls.addEventListener('start', () => { tween = null; });
+
+const isMobile = () => window.innerWidth <= 720;
+function focusOn(s) {
+  const t = s.center.clone();
+  t.y = Math.min(t.y, 1.5);
+  const maxDim = Math.max(s.size.x, s.size.z, s.size.y * 1.2);
+  const zoom = THREE.MathUtils.clamp(viewH / (maxDim * 1.9), 1.15, 3.4);
+  const wpp = viewH / zoom / window.innerHeight;
+  camera.updateMatrixWorld();
+  const right = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 0);
+  const up = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 1);
+  if (isMobile()) t.addScaledVector(up, -(window.innerHeight * 0.56) / 2 * wpp);
+  else t.addScaledVector(right, (404 / 2) * wpp);
+  flyTo(t, zoom);
+}
+
+function select(id) {
+  selected = id;
+  const s = sections[id];
+  halo.visible = true;
+  halo.position.set(s.center.x, 0.06, s.center.z);
+  halo.userData.rx = s.size.x / 2 + 0.8;
+  halo.userData.rz = s.size.z / 2 + 0.8;
+  focusOn(s);
+  renderPanel(id);
+  document.body.classList.add('focused');
+  applyLook();
+}
+function clearSelection(resetCam = true) {
+  selected = null;
+  halo.visible = false;
+  panel.classList.remove('open');
+  document.body.classList.remove('focused');
+  applyLook();
+  if (resetCam) flyTo(homeTarget(), HOME_ZOOM);
+}
+
+/* ------------------------------------------------------------------ */
+/* UI: flow bar, pins, panel                                           */
+/* ------------------------------------------------------------------ */
+
+const flowEl = document.getElementById('flow');
+STEPS.forEach((st, i) => {
+  if (st.key === 'rain') flowEl.insertAdjacentHTML('beforeend', '<span class="sep"></span>');
+  else if (i > 0) flowEl.insertAdjacentHTML('beforeend', '<span class="arrow">›</span>');
+  const b = document.createElement('button');
+  b.className = 'chip';
+  b.dataset.step = st.key;
+  b.innerHTML = `<span class="n">${st.n}</span><span class="lbl">${st.label}</span>`;
+  b.addEventListener('click', () => select(ORDER.find((id) => INFO[id].step === st.key)));
+  flowEl.appendChild(b);
+});
+
+const pinsEl = document.getElementById('pins');
+const pinEls = {};
+for (const id of ORDER) {
+  const b = document.createElement('button');
+  b.className = 'pin';
+  b.innerHTML = `<span class="e">${INFO[id].emoji}</span><span class="lbl">${INFO[id].short}</span>`;
+  b.setAttribute('aria-label', INFO[id].title);
+  b.addEventListener('click', () => select(id));
+  pinsEl.appendChild(b);
+  pinEls[id] = b;
+}
+const tmpV = new THREE.Vector3();
+function updatePins() {
+  const w = window.innerWidth, h = window.innerHeight;
+  for (const id of ORDER) {
+    const s = sections[id];
+    const a = anchors[id] || V(s.center.x, s.box.max.y + 0.5, s.center.z);
+    tmpV.copy(a).project(camera);
+    const x = (tmpV.x + 1) / 2 * w, y = (1 - tmpV.y) / 2 * h;
+    pinEls[id].style.transform = `translate(${x}px, ${y}px) translate(-50%, -100%) translateY(-6px)`;
+  }
+}
+
+const panel = document.getElementById('panel');
+const panelBody = document.getElementById('panel-body');
+function renderPanel(id) {
+  const info = INFO[id];
+  const st = STEPS.find((s) => s.key === info.step);
+  const idx = ORDER.indexOf(id);
+  panelBody.innerHTML = `
+    <span class="step-tag">${st.key === 'rain' ? '☔ Side system' : 'Step ' + st.n} · ${st.label}</span>
+    <h2><span class="e">${info.emoji}</span>${info.title}</h2>
+    <p class="tagline">${info.tagline}</p>
+    <ul class="body-list">${info.body.map((b) => `<li>${b}</li>`).join('')}</ul>
+    ${info.widget === 'main' ? mainWidgetHTML() : ''}
+    ${info.widget === 'rain' ? rainWidgetHTML() : ''}
+    ${info.facts ? `<div class="facts"><div class="facts-h">📍 In <a class="src" href="${info.src}" target="_blank" rel="noopener">Calgary</a></div><ul>${info.facts.map((b) => `<li>${b}</li>`).join('')}</ul></div>` : ''}
+  `;
+  panelBody.scrollTop = 0;
+  document.getElementById('count').textContent = `${idx + 1} / ${ORDER.length}`;
+  document.getElementById('prev-btn').disabled = idx === 0;
+  document.getElementById('prev-btn').style.opacity = idx === 0 ? 0.4 : 1;
+  document.getElementById('next-btn').textContent = idx === ORDER.length - 1 ? 'Done ✓' : 'Next →';
+  panel.classList.add('open');
+  if (info.widget === 'main') wireMainWidget();
+  if (info.widget === 'rain') wireRainWidget();
+}
+
+function mainWidgetHTML() {
+  return `<div class="widget">
+    <h3>Try it: break the feeder main</h3>
+    <p class="hint">Set how much the city uses, then break the big pipe.</p>
+    <div class="lbl-row"><span>City use</span><span id="demand-val"></span></div>
+    <input type="range" id="demand" min="350" max="900" step="10" value="${state.demand}" aria-label="City water use in million litres per day">
+    <div class="meter"><div class="fill" id="meter-fill"></div><div class="cap" id="meter-cap"></div></div>
+    <p class="status" id="main-status"></p>
+    <div class="btn-row"><button class="btn ${state.broken ? 'ghost' : 'blue'}" id="break-btn"></button></div>
+  </div>`;
+}
+function drawMainWidget() {
+  const lim = supplyLimit(), max = 1000;
+  const st = supplyStatus();
+  const color = { ok: '#5bbf7a', tight: '#f2b33d', over: '#e05a47' }[st];
+  document.getElementById('demand-val').textContent = `${state.demand} million L/day`;
+  const fill = document.getElementById('meter-fill');
+  fill.style.width = `${Math.min(100, (state.demand / max) * 100)}%`;
+  fill.style.background = color;
+  document.getElementById('meter-cap').style.left = `${(lim / max) * 100}%`;
+  const what = state.broken
+    ? `With the main broken, the safe limit drops to about <b>485</b> million L/day (the black line).`
+    : `Both plants together can make about <b>950</b> million L/day (the black line).`;
+  const msg = {
+    ok: 'Reservoirs stay topped up. Taps and hydrants have full pressure.',
+    tight: 'Tight. Reservoirs drain at peak hours and barely refill overnight.',
+    over: 'Over the limit. Reservoirs run down, pressure drops, and there may not be enough left for firefighting. Time for watering bans.',
+  }[st];
+  document.getElementById('main-status').innerHTML = `${what} <b>${msg}</b>`;
+  const b = document.getElementById('break-btn');
+  b.textContent = state.broken ? '🔧 Fix the main' : '💥 Break the feeder main';
+  b.className = `btn ${state.broken ? 'ghost' : 'blue'}`;
+}
+function wireMainWidget() {
+  drawMainWidget();
+  document.getElementById('demand').addEventListener('input', (e) => { state.demand = +e.target.value; drawMainWidget(); });
+  document.getElementById('break-btn').addEventListener('click', () => { state.broken = !state.broken; drawMainWidget(); });
+}
+
+function rainWidgetHTML() {
+  return `<div class="widget">
+    <h3>Try it: make it rain</h3>
+    <p class="hint">Watch the teal storm pipes and the pond. The brown sewer pipes don't change.</p>
+    <div class="btn-row"><button class="btn blue" id="rain-btn"></button></div>
+  </div>`;
+}
+function wireRainWidget() {
+  const b = document.getElementById('rain-btn');
+  const draw = () => { b.textContent = state.raining ? '☀️ Stop the rain' : '🌧️ Make it rain'; b.className = `btn ${state.raining ? 'ghost' : 'blue'}`; };
+  draw();
+  b.addEventListener('click', () => { state.raining = !state.raining; clouds.visible = state.raining; draw(); });
+}
+
+function step(dir) {
+  const idx = selected ? ORDER.indexOf(selected) : -1;
+  const next = idx + dir;
+  if (next >= ORDER.length) { clearSelection(); return; }
+  if (next >= 0) select(ORDER[next]);
+}
+document.getElementById('next-btn').addEventListener('click', () => step(1));
+document.getElementById('prev-btn').addEventListener('click', () => step(-1));
+document.getElementById('close-btn').addEventListener('click', () => clearSelection());
+document.getElementById('tour-btn').addEventListener('click', () => select(ORDER[0]));
+document.getElementById('reset-btn').addEventListener('click', () => clearSelection());
+// WASD / arrow keys move the camera across the diorama
+const MOVE_KEYS = {
+  w: [0, 1], arrowup: [0, 1], s: [0, -1], arrowdown: [0, -1],
+  a: [-1, 0], arrowleft: [-1, 0], d: [1, 0], arrowright: [1, 0],
+};
+// key → { down, up }: a quick tap still moves for a short beat
+const held = new Map();
+const TAP_MS = 160;
+window.addEventListener('keydown', (e) => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (e.key === 'Escape') clearSelection();
+  const k = e.key.toLowerCase();
+  if (MOVE_KEYS[k] && !e.metaKey && !e.ctrlKey && !e.altKey) {
+    if (!held.has(k) || held.get(k).up) held.set(k, { down: performance.now(), up: 0 });
+    tween = null;
+    e.preventDefault();
+  }
+});
+window.addEventListener('keyup', (e) => {
+  const h = held.get(e.key.toLowerCase());
+  if (h) h.up = Math.max(performance.now(), h.down + TAP_MS);
+});
+window.addEventListener('blur', () => held.clear());
+const kFwd = new THREE.Vector3(), kRight = new THREE.Vector3(), kMove = new THREE.Vector3();
+function keyboardMove(dt) {
+  let mx = 0, mz = 0;
+  const now = performance.now();
+  for (const [k, h] of held) {
+    if (h.up && now > h.up) { held.delete(k); continue; }
+    mx += MOVE_KEYS[k][0];
+    mz += MOVE_KEYS[k][1];
+  }
+  if (mx || mz) {
+    camera.getWorldDirection(kFwd);
+    kFwd.y = 0;
+    kFwd.normalize();
+    kRight.crossVectors(kFwd, UP).normalize();
+    kMove.copy(kFwd).multiplyScalar(mz).addScaledVector(kRight, mx).normalize().multiplyScalar((16 * dt) / camera.zoom);
+    controls.target.add(kMove);
+    camera.position.add(kMove);
+  }
+  // keep the diorama within reach however the camera was moved
+  kMove.set(
+    THREE.MathUtils.clamp(controls.target.x, -21, 21) - controls.target.x,
+    0,
+    THREE.MathUtils.clamp(controls.target.z, -11, 11) - controls.target.z,
+  );
+  if (kMove.x || kMove.z) { controls.target.add(kMove); camera.position.add(kMove); }
+}
+
+/* Picking */
+const raycaster = new THREE.Raycaster();
+const ndc = new THREE.Vector2();
+const tip = document.getElementById('tip');
+function pick(ev) {
+  const r = renderer.domElement.getBoundingClientRect();
+  ndc.set(((ev.clientX - r.left) / r.width) * 2 - 1, -((ev.clientY - r.top) / r.height) * 2 + 1);
+  raycaster.setFromCamera(ndc, camera);
+  const hit = raycaster.intersectObjects(pickables, false)[0];
+  return hit ? hit.object.userData.sid : null;
+}
+let downAt = null;
+renderer.domElement.addEventListener('pointerdown', (e) => { downAt = { x: e.clientX, y: e.clientY }; });
+renderer.domElement.addEventListener('pointerup', (e) => {
+  if (!downAt) return;
+  const moved = Math.hypot(e.clientX - downAt.x, e.clientY - downAt.y);
+  downAt = null;
+  if (moved > 6) return;
+  const id = pick(e);
+  if (id) select(id);
+  else if (selected) clearSelection(false);
+});
+renderer.domElement.addEventListener('pointermove', (e) => {
+  if (e.pointerType !== 'mouse' || e.buttons) return;
+  const id = pick(e);
+  if (id !== hovered) {
+    hovered = id;
+    renderer.domElement.style.cursor = id ? 'pointer' : 'grab';
+    applyLook();
+  }
+  if (id) {
+    tip.textContent = `${INFO[id].emoji} ${INFO[id].title}`;
+    tip.style.left = e.clientX + 14 + 'px';
+    tip.style.top = e.clientY + 14 + 'px';
+    tip.style.opacity = 1;
+  } else tip.style.opacity = 0;
+});
+renderer.domElement.addEventListener('pointerleave', () => { tip.style.opacity = 0; });
+
+/* ------------------------------------------------------------------ */
+/* Loop                                                                */
+/* ------------------------------------------------------------------ */
+
+const clock = new THREE.Clock();
+let time = 0, level = 0.9, truckT = 0;
+function frame() {
+  const dt = Math.min(clock.getDelta(), 0.05);
+  time += dt;
+
+  if (tween) {
+    tween.t += dt;
+    const k = ease(Math.min(1, tween.t / tween.dur));
+    controls.target.lerpVectors(tween.fromT, tween.toT, k);
+    camera.position.copy(controls.target).add(tween.off);
+    camera.zoom = THREE.MathUtils.lerp(tween.fromZ, tween.toZ, k);
+    camera.updateProjectionMatrix();
+    if (k >= 1) tween = null;
+  }
+  keyboardMove(dt);
+  controls.update();
+
+  const speedBase = 0.9 + state.demand / 600;
+  for (const f of flows) {
+    let show = true, sp = f.speed;
+    if (f.tag === 'storm') show = state.raining;
+    if (f.tag === 'feeder') show = !state.broken;
+    if (f.tag === 'river') sp *= state.raining ? 1.8 : 1;
+    if (f.tag === 'city' && supplyStatus() === 'over') sp *= 0.4;
+    const n = f.pulses.length, len = f.route.len;
+    for (let i = 0; i < n; i++) {
+      const p = f.pulses[i];
+      p.visible = show;
+      if (!show) continue;
+      const d = (time * speedBase * sp + (i / n) * len) % len;
+      f.route.at(d, p.position);
+    }
+  }
+
+  // reservoir level follows how stretched the supply is
+  const target = { ok: 0.92, tight: 0.5, over: 0.12 }[supplyStatus()];
+  level += (target - level) * Math.min(1, dt * 1.5);
+  levelMesh.scale.y = Math.max(0.02, level);
+  levelMesh.position.y = LEVEL_BASE + (LEVEL_H * level) / 2;
+
+  // biosolids truck drives between the plant and the farm
+  truckT += dt * 0.08;
+  const ping = truckT % 2 < 1 ? truckT % 1 : 1 - (truckT % 1);
+  const tz = THREE.MathUtils.lerp(TRUCK_Z[0], TRUCK_Z[1], THREE.MathUtils.smootherstep(ping, 0, 1));
+  truck.position.z = tz;
+  truck.rotation.y = truckT % 2 < 1 ? 0 : Math.PI;
+
+  updateParticles(dt);
+
+  if (halo.visible) {
+    const p = 1 + Math.sin(time * 3) * 0.04;
+    halo.scale.set(halo.userData.rx * p, halo.userData.rz * p, 1);
+    halo.material.opacity = 0.55 + Math.sin(time * 3) * 0.25;
+    for (const m of sections[selected].meshes) {
+      if (m.material.emissive && m !== uv) m.material.emissiveIntensity = 0.16 + Math.sin(time * 3) * 0.08;
+    }
+  }
+
+  updatePins();
+  renderer.render(scene, camera);
+  requestAnimationFrame(frame);
+}
+
+applyLook();
+renderer.domElement.style.cursor = 'grab';
+frame();
+requestAnimationFrame(() => document.getElementById('loading').classList.add('gone'));
+</script>
+</body>
+</html>
