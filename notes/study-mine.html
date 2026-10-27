@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Mine Study Guide | Manan Patel</title>
+    <meta name="description" content="Study guide for Tiny Mine: how a patch of minerals is explored, assayed, financed on the stock market, built and mined, and who gets paid at each step."/>
+    <meta name="robots" content="noindex"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="study-guide.css"/>
+</head>
+<body data-guide="study-mine">
+    <a class="back" href="../#writing">← Back</a>
+    <div class="wrap">
+        <h1>Tiny Mine: study guide</h1>
+        <p class="lede">One hillside, followed from a prospector's hunch to a drill core, a stock ticker, a working mine and finally a reclaimed site. Plus who gets paid at every step. This is the reading behind the Tiny Mine miniature and its four articles.</p>
+
+        <div class="progress">
+            <span id="progress-label">0 done</span> · <span class="saved">Checks and notes save in this browser.</span>
+            <div class="bar"><span id="progress-bar"></span></div>
+        </div>
+
+        <nav class="toc">
+            <ol>
+                <li><a href="#method">How to use this</a></li>
+                <li><a href="#big-picture">The big picture</a></li>
+                <li><a href="#p1">Why metal is where it is</a></li>
+                <li><a href="#p2">Grassroots exploration</a></li>
+                <li><a href="#p3">Staking a claim</a></li>
+                <li><a href="#p4">Drilling &amp; assay</a></li>
+                <li><a href="#p5">Resource estimate</a></li>
+                <li><a href="#p6">The studies ladder</a></li>
+                <li><a href="#p7">Rock to stock: financing</a></li>
+                <li><a href="#p8">Permits &amp; construction</a></li>
+                <li><a href="#p9">Production</a></li>
+                <li><a href="#p10">Closure</a></li>
+                <li><a href="#money">Follow the money</a></li>
+                <li><a href="#ai">Where AI fits (by buyer)</a></li>
+                <li><a href="#reading">Company reading list</a></li>
+                <li><a href="#articles">Articles to ship</a></li>
+                <li><a href="#glossary">Glossary</a></li>
+            </ol>
+        </nav>
+
+        <section id="method">
+            <h2>How to use this</h2>
+            <ul class="checks">
+                <li><label><input type="checkbox" data-key="m1"><span>For each phase, read the summary, then <strong>close the page</strong> and write the 3-sentence explanation from memory. Wherever you get stuck is what to look up next.</span></label></li>
+                <li><label><input type="checkbox" data-key="m2"><span>Tick each "answer it cold" question only once you can say it out loud without notes.</span></label></li>
+                <li><label><input type="checkbox" data-key="m3"><span>Work the company reading list in parallel, one report a day.</span></label></li>
+                <li><label><input type="checkbox" data-key="m4"><span>Keep the <a href="study-oilfield.html">oilfield guide</a> open. Every phase here has an oil twin, and spotting them is the crossover article.</span></label></li>
+            </ul>
+            <p class="note">The numbers below are rough ballparks for building intuition. Check each one against a current source before it goes into anything you publish.</p>
+        </section>
+
+        <section id="big-picture">
+            <h2>The big picture</h2>
+            <p>Mining is a funnel even steeper than oil's. Thousands of prospects get looked at, a handful become deposits and very few become mines, often 10–20 years after discovery. Along the way the project usually changes hands, and its value is set on a stock exchange long before any metal is sold.</p>
+            <ol class="funnel">
+                <li>Geology says "maybe"</li>
+                <li>Prospect</li>
+                <li>Stake</li>
+                <li>Drill &amp; assay</li>
+                <li>Resource</li>
+                <li>PEA → PFS → FS</li>
+                <li>Finance</li>
+                <li>Permit &amp; build</li>
+                <li>Mine &amp; mill</li>
+                <li>Close</li>
+            </ol>
+            <div class="split">
+                <div><h4>Junior explorers</h4><p>Small listed companies with no revenue. They raise money, drill and hope to find something a major will buy. Most fail; a few make investors 10–100×.</p></div>
+                <div><h4>Majors</h4><p>BHP, Rio Tinto, Newmont, Freeport. They run mines, buy discoveries and replace depleting reserves. They explore less themselves than you'd think.</p></div>
+            </div>
+        </section>
+
+        <section id="p1">
+            <span class="phase-tag">Phase 1</span>
+            <h2>Why metal is where it is</h2>
+            <p>Ore deposits are rare places where geology concentrated a metal hundreds or thousands of times above normal levels, usually via hot fluids moving through cracks in rock. Different processes make different <strong>deposit types</strong>, and explorers hunt by type.</p>
+            <ul>
+                <li><strong>Porphyry copper</strong>: huge, low-grade, near old volcanoes. Most of the world's copper (Chile, Arizona).</li>
+                <li><strong>Orogenic and epithermal gold</strong>: veins along faults or near hot springs. Higher grade, smaller.</li>
+                <li><strong>VMS</strong>: copper-zinc deposits formed at ancient seafloor vents.</li>
+                <li><strong>Lithium</strong>: hard-rock pegmatites (Australia) or brines pumped from salt flats (Chile, Argentina).</li>
+                <li><strong>Placer</strong>: gold eroded and concentrated in rivers. The original gold rushes.</li>
+            </ul>
+            <h3>Answer it cold</h3>
+            <ul class="checks">
+                <li><label><input type="checkbox" data-key="p1q1"><span>Why is "grade × tonnage" the first thing anyone asks about a deposit?</span></label></li>
+                <li><label><input type="checkbox" data-key="p1q2"><span>Porphyry vs vein deposit: open pit or underground, and why?</span></label></li>
+                <li><label><input type="checkbox" data-key="p1q3"><span>Why are copper and lithium "energy transition" metals?</span></label></li>
+            </ul>
+            <div class="recall"><label>My 3-sentence explanation, from memory:</label><textarea data-key="p1-notes"></textarea></div>
+            <p class="note">Read: USGS mineral deposit models overviews. Visual Capitalist pieces on copper and lithium supply.</p>
+        </section>
+
+        <section id="p2">
+            <span class="phase-tag">Phase 2</span>
+            <h2>Grassroots exploration</h2>
+            <p>Before drilling, explorers narrow thousands of square kilometres down to a few targets, cheaply.</p>
+            <ul>
+                <li><strong>Mapping &amp; sampling</strong>: geologists walk the ground, break rocks, take soil and stream-sediment samples.</li>
+                <li><strong>Airborne geophysics</strong>: planes or drones measure magnetism, conductivity (EM) and radioactivity from the air.</li>
+                <li><strong>Ground geophysics</strong>: IP (induced polarization) surveys find disseminated sulphides, which is classic for porphyry copper.</li>
+                <li><strong>Remote sensing</strong>: satellite hyperspectral images spot altered minerals at the surface.</li>
+                <li><strong>Data</strong>: old government surveys and historic drill holes, increasingly mined with ML.</li>
+            </ul>
+            <h3>Answer it cold</h3>
+            <ul class="checks">
+                <li><label><input type="checkbox" data-key="p2q1"><span>What does a magnetic or EM anomaly tell you, and what doesn't it?</span></label></li>
+                <li><label><input type="checkbox" data-key="p2q2"><span>Why do explorers love old historic data?</span></label></li>
+                <li><label><input type="checkbox" data-key="p2q3"><span>What did KoBold Metals do differently in Zambia?</span></label></li>
+            </ul>
+            <div class="recall"><label>My 3-sentence explanation, from memory:</label><textarea data-key="p2-notes"></textarea></div>
+            <p class="note">Read: KoBold Metals coverage (Mingomba copper discovery). A junior's "exploration program" news release on SEDAR+ or its website.</p>
+        </section>
+
+        <section id="p3">
+            <span class="phase-tag">Phase 3</span>
+            <h2>Staking a claim</h2>
+            <p>In most places the state owns minerals and grants <strong>mineral tenure</strong>: a claim or exploration licence, then later a mining lease. Many jurisdictions now let you stake claims online. Holding claims requires fees or a minimum amount of work each year.</p>
+            <p><strong>Option deals</strong> are common here: a prospector or "prospect generator" lets a company earn into the property by spending money on it and paying cash and shares, while keeping a royalty.</p>
+            <h3>Answer it cold</h3>
+            <ul class="checks">
+                <li><label><input type="checkbox" data-key="p3q1"><span>Exploration licence vs mining lease: what's the difference?</span></label></li>
+                <li><label><input type="checkbox" data-key="p3q2"><span>How does a prospect generator make money without ever building a mine?</span></label></li>
+                <li><label><input type="checkbox" data-key="p3q3"><span>Why does jurisdiction (Nevada vs. a risky country) change a project's value so much?</span></label></li>
+            </ul>
+            <div class="recall"><label>My 3-sentence explanation, from memory:</label><textarea data-key="p3-notes"></textarea></div>
+            <p class="note">Read: Fraser Institute Annual Survey of Mining Companies (jurisdiction rankings). EMX Royalty's business overview.</p>
+        </section>
+
+        <section id="p4">
+            <span class="phase-tag">Phase 4</span>
+            <h2>Drilling &amp; assay</h2>
+            <p>Now you drill to sample the rock at depth. <strong>RC drilling</strong> (reverse circulation) is cheaper and returns rock chips; <strong>diamond drilling</strong> returns intact core, which geologists log and photograph. Core is cut in half: one half goes to the lab, one half is kept.</p>
+            <p>At the lab, <strong>assay</strong> measures how much metal is in each sample. Gold usually uses <strong>fire assay</strong> (melt the sample, collect the gold in lead, weigh it). Base metals use acid digestion + ICP (instrument analysis). Every batch includes <strong>QA/QC</strong>: blanks, certified standards and duplicates, to prove the lab and the samples are honest.</p>
+            <div class="numbers"><strong>Reading a drill result</strong>
+                <ul>
+                    <li>"<strong>12 m @ 4.2 g/t Au</strong>" means 12 metres of core averaging 4.2 grams of gold per tonne of rock.</li>
+                    <li>Multiply for "gram-metres" (≈50 here) as a quick size signal.</li>
+                    <li>Check if it's drilled width or <strong>true width</strong>, and whether a short high-grade bit is propping up a long average.</li>
+                    <li>For context, 1 g/t ≈ 1 part per million. Big open-pit gold mines can run around 1 g/t.</li>
+                </ul>
+            </div>
+            <p><strong>Cautionary tale:</strong> Bre-X (1990s) salted its samples with outside gold and became a multi-billion-dollar fraud. It's why QA/QC and Qualified Person rules exist.</p>
+            <h3>Answer it cold</h3>
+            <ul class="checks">
+                <li><label><input type="checkbox" data-key="p4q1"><span>RC vs diamond drilling: cost, speed, what you get.</span></label></li>
+                <li><label><input type="checkbox" data-key="p4q2"><span>Explain fire assay in two sentences.</span></label></li>
+                <li><label><input type="checkbox" data-key="p4q3"><span>Read a real drill-results press release and spot the best and weakest hole.</span></label></li>
+                <li><label><input type="checkbox" data-key="p4q4"><span>What happened at Bre-X, and what rules came out of it (NI 43-101)?</span></label></li>
+            </ul>
+            <div class="recall"><label>My 3-sentence explanation, from memory:</label><textarea data-key="p4-notes"></textarea></div>
+            <p class="note">Read: ALS Global or SGS service pages (fire assay). Major Drilling annual report. Any junior's drill-results news release. A Bre-X documentary or article.</p>
+        </section>
+
+        <section id="p5">
+            <span class="phase-tag">Phase 5</span>
+            <h2>Resource estimate</h2>
+            <p>Geologists take all the drill holes and build a 3D <strong>block model</strong>: the deposit chopped into blocks, each with an estimated grade (using geostatistics like kriging). A <strong>Qualified Person (QP)</strong> signs off on it under disclosure rules.</p>
+            <div class="numbers"><strong>The confidence ladder</strong>
+                <ul>
+                    <li><strong>Inferred</strong> → <strong>Indicated</strong> → <strong>Measured</strong> resources: more drilling = more confidence.</li>
+                    <li><strong>Reserves</strong> (Probable, Proven) only exist after a pre-feasibility or feasibility study proves they're economic to mine.</li>
+                    <li>Rules: NI 43-101 (Canada), JORC (Australia), S-K 1300 (US SEC).</li>
+                </ul>
+            </div>
+            <h3>Answer it cold</h3>
+            <ul class="checks">
+                <li><label><input type="checkbox" data-key="p5q1"><span>Resource vs reserve, and how it maps to oil's resources vs 1P/2P.</span></label></li>
+                <li><label><input type="checkbox" data-key="p5q2"><span>What is a cut-off grade and why does it change with metal price?</span></label></li>
+                <li><label><input type="checkbox" data-key="p5q3"><span>What legally does a QP put their name on?</span></label></li>
+            </ul>
+            <div class="recall"><label>My 3-sentence explanation, from memory:</label><textarea data-key="p5-notes"></textarea></div>
+            <p class="note">Read: CIM Definition Standards. Seequent Leapfrog product demos (block models). The resource section of one NI 43-101 report.</p>
+        </section>
+
+        <section id="p6">
+            <span class="phase-tag">Phase 6</span>
+            <h2>The studies ladder</h2>
+            <p>Each study costs more and narrows the uncertainty on cost and value. It's the mining twin of oil's FID process.</p>
+            <div class="table-scroll">
+                <table>
+                    <tr><th>Study</th><th>Accuracy (rough)</th><th>What it's for</th></tr>
+                    <tr><td>PEA / scoping</td><td>±30–50%</td><td>"Is this worth more work?" Can include inferred resources (with warnings).</td></tr>
+                    <tr><td>Pre-feasibility (PFS)</td><td>±20–25%</td><td>Pick the mining and processing method. First reserves.</td></tr>
+                    <tr><td>Feasibility (FS / DFS)</td><td>±10–15%</td><td>Bankable: what lenders and boards decide on.</td></tr>
+                </table>
+            </div>
+            <div class="numbers"><strong>Metrics in every study</strong>
+                <ul>
+                    <li><strong>NPV</strong> (often at 5% for gold, 8% for base metals) and <strong>IRR</strong>.</li>
+                    <li><strong>Initial capex</strong>, <strong>payback</strong>, <strong>life of mine (LOM)</strong>.</li>
+                    <li><strong>AISC</strong> (all-in sustaining cost) per ounce or per pound.</li>
+                    <li><strong>Strip ratio</strong> (waste rock per tonne of ore), head grade, <strong>recovery</strong> %.</li>
+                </ul>
+            </div>
+            <h3>Answer it cold</h3>
+            <ul class="checks">
+                <li><label><input type="checkbox" data-key="p6q1"><span>Why can a big deposit still have a negative NPV?</span></label></li>
+                <li><label><input type="checkbox" data-key="p6q2"><span>What's AISC, and why do gold investors watch it more than revenue?</span></label></li>
+                <li><label><input type="checkbox" data-key="p6q3"><span>Read the summary and economics chapters of one real feasibility study.</span></label></li>
+            </ul>
+            <div class="recall"><label>My 3-sentence explanation, from memory:</label><textarea data-key="p6-notes"></textarea></div>
+            <p class="note">Read: one NI 43-101 feasibility study on SEDAR+ (sections 1 and 22). World Gold Council AISC guidance.</p>
+        </section>
+
+        <section id="p7">
+            <span class="phase-tag">Phase 7</span>
+            <h2>Rock to stock: financing</h2>
+            <p>This is the part most people never see. A junior with no revenue funds years of drilling and studies by selling shares, and the stock price tracks the project's risk.</p>
+            <ul>
+                <li><strong>Listing</strong>: most juniors list on the TSX Venture, ASX or LSE AIM. Toronto hosts more listed mining companies than any other exchange.</li>
+                <li><strong>Private placements</strong>: sell new shares (often with warrants) to funds and retail investors via mining-focused brokers. Canada adds <strong>flow-through shares</strong>, which pass tax deductions to investors.</li>
+                <li><strong>Dilution</strong>: every raise shrinks existing owners' stake, so share count matters.</li>
+                <li><strong>Streams and royalties</strong>: a company like Franco-Nevada or Wheaton pays cash up front for a cut of future production or metal at a fixed low price.</li>
+                <li><strong>Debt and offtake</strong>: project-finance banks and export credit agencies lend after a feasibility study. Traders (Glencore, Trafigura) may prepay for future concentrate.</li>
+                <li><strong>The exit</strong>: often a takeover by a major or mid-tier, rather than building the mine.</li>
+            </ul>
+            <div class="numbers"><strong>The Lassonde Curve</strong>
+                <ul>
+                    <li>Stock rises on discovery (speculation), peaks around the resource estimate.</li>
+                    <li>Falls through studies, permitting and financing (the "orphan period": early speculators leave, producers' investors aren't in yet).</li>
+                    <li>Rises again on construction and production.</li>
+                </ul>
+            </div>
+            <h3>Answer it cold</h3>
+            <ul class="checks">
+                <li><label><input type="checkbox" data-key="p7q1"><span>Draw the Lassonde Curve and label each phase.</span></label></li>
+                <li><label><input type="checkbox" data-key="p7q2"><span>Stream vs royalty (NSR): how is each paid?</span></label></li>
+                <li><label><input type="checkbox" data-key="p7q3"><span>Why do juniors usually sell rather than build?</span></label></li>
+                <li><label><input type="checkbox" data-key="p7q4"><span>Find one junior's share count over 5 years and compute the dilution.</span></label></li>
+            </ul>
+            <div class="recall"><label>My 3-sentence explanation, from memory:</label><textarea data-key="p7-notes"></textarea></div>
+            <p class="note">Read: Franco-Nevada or Wheaton Precious Metals annual report. TMX "Mining" listing stats. Search "Lassonde Curve" for the original chart.</p>
+        </section>
+
+        <section id="p8">
+            <span class="phase-tag">Phase 8</span>
+            <h2>Permits &amp; construction</h2>
+            <p>Permitting can take longer than all the geology. Environmental impact assessments, water and air permits, and agreements with Indigenous nations and local communities (impact-benefit agreements) all have to land. Then an <strong>EPCM</strong> firm engineers and manages construction of the pit or shaft, the mill, tailings facility, power, water and roads.</p>
+            <div class="split">
+                <div><h4>Open pit</h4><p>Big, shallow, low-grade deposits. Blast benches, load with shovels, haul with 300-tonne trucks. Cheap per tonne, with lots of waste rock.</p></div>
+                <div><h4>Underground</h4><p>Deeper, higher-grade deposits. Shafts or ramps, drilling and blasting stopes, then backfilling. More expensive per tonne, less surface disturbance.</p></div>
+            </div>
+            <h3>Answer it cold</h3>
+            <ul class="checks">
+                <li><label><input type="checkbox" data-key="p8q1"><span>Why can discovery-to-production take 15+ years?</span></label></li>
+                <li><label><input type="checkbox" data-key="p8q2"><span>What does an EPCM contractor do vs the mine owner?</span></label></li>
+                <li><label><input type="checkbox" data-key="p8q3"><span>What is "social licence to operate"?</span></label></li>
+            </ul>
+            <div class="recall"><label>My 3-sentence explanation, from memory:</label><textarea data-key="p8-notes"></textarea></div>
+            <p class="note">Read: S&amp;P Global research on mine lead times. Resolution Copper (Arizona) and Pebble (Alaska) as permitting case studies.</p>
+        </section>
+
+        <section id="p9">
+            <span class="phase-tag">Phase 9</span>
+            <h2>Production</h2>
+            <p>Mining is moving rock; processing is getting the metal out of it.</p>
+            <ol>
+                <li><strong>Drill &amp; blast</strong> the rock (explosives from Orica, Dyno Nobel).</li>
+                <li><strong>Load &amp; haul</strong> to the crusher (increasingly autonomous trucks).</li>
+                <li><strong>Crush &amp; grind</strong> to powder in SAG and ball mills. This uses huge amounts of power.</li>
+                <li><strong>Separate</strong>: <strong>flotation</strong> for copper/zinc (bubbles carry mineral to make a ~25–30% copper concentrate); <strong>leaching</strong> for gold (cyanide, then carbon-in-leach); heap leach for low-grade ore.</li>
+                <li><strong>Ship</strong>: concentrate goes to a smelter (often in China), while gold leaves as a doré bar to a refiner.</li>
+            </ol>
+            <p>Smelters charge <strong>TC/RCs</strong> (treatment and refining charges), deducted from what the miner is paid. Prices are set off exchanges like the LME and COMEX.</p>
+            <h3>Answer it cold</h3>
+            <ul class="checks">
+                <li><label><input type="checkbox" data-key="p9q1"><span>Explain flotation to a 10-year-old.</span></label></li>
+                <li><label><input type="checkbox" data-key="p9q2"><span>Why does a miner sell concentrate instead of pure copper?</span></label></li>
+                <li><label><input type="checkbox" data-key="p9q3"><span>What happens to a miner's revenue when TC/RCs fall to near zero?</span></label></li>
+            </ul>
+            <div class="recall"><label>My 3-sentence explanation, from memory:</label><textarea data-key="p9-notes"></textarea></div>
+            <p class="note">Read: Freeport-McMoRan 10-K (operations). Komatsu FrontRunner / Caterpillar MineStar pages. A copper flotation plant video.</p>
+        </section>
+
+        <section id="p10">
+            <span class="phase-tag">Phase 10</span>
+            <h2>Closure</h2>
+            <p>Mines end. Companies post <strong>reclamation bonds</strong> so the government isn't stuck with the cleanup. The biggest long-term risk is <strong>tailings</strong>, the ground-up waste stored behind dams. Mount Polley (Canada, 2014) and Brumadinho (Brazil, 2019, where about 270 people died) led to the Global Industry Standard on Tailings Management.</p>
+            <h3>Answer it cold</h3>
+            <ul class="checks">
+                <li><label><input type="checkbox" data-key="p10q1"><span>What are tailings, and why are upstream-raised dams risky?</span></label></li>
+                <li><label><input type="checkbox" data-key="p10q2"><span>How does closure cost show up on a miner's balance sheet?</span></label></li>
+            </ul>
+            <div class="recall"><label>My 3-sentence explanation, from memory:</label><textarea data-key="p10-notes"></textarea></div>
+            <p class="note">Read: GISTM summary (globaltailingsreview.org). Coverage of the Brumadinho disaster and what changed at Vale.</p>
+        </section>
+
+        <section id="money">
+            <h2>Follow the money</h2>
+            <p>Who's at each phase, who pays them and how they earn. This table becomes the badge cards in the miniature.</p>
+            <div class="table-scroll">
+                <table>
+                    <tr><th>Phase</th><th>Players</th><th>How they earn</th><th>Examples</th></tr>
+                    <tr><td>Grassroots</td><td>Prospectors, prospect generators, AI explorers</td><td>Option properties out for cash + shares + royalty</td><td>EMX Royalty (EMX), KoBold Metals (private)</td></tr>
+                    <tr><td>Tenure</td><td>Government mining registries</td><td>Claim fees, later royalties</td><td>British Columbia, Nevada, Western Australia</td></tr>
+                    <tr><td>Drilling</td><td>Drilling contractors</td><td>Per metre drilled</td><td>Major Drilling (MDI), Boart Longyear, Foraco</td></tr>
+                    <tr><td>Assay</td><td>Commercial labs</td><td>Per sample; backlogs in booms</td><td>ALS, SGS, Bureau Veritas, Intertek</td></tr>
+                    <tr><td>Modeling &amp; studies</td><td>Consultants and QPs; mining software</td><td>Study fees; software licenses</td><td>SRK, Ausenco, Wood, AMC; Seequent (Bentley), Datamine, Deswik</td></tr>
+                    <tr><td>The company</td><td>Juniors, mid-tiers, majors</td><td>Juniors: get bought. Majors: produce metal</td><td>Newmont (NEM), Barrick (B), BHP, Rio Tinto (RIO), Freeport (FCX)</td></tr>
+                    <tr><td>Capital markets</td><td>Mining brokers, retail, exchanges</td><td>Placement fees, warrants; listing fees</td><td>Canaccord Genuity, BMO; TSX / TSX-V, ASX</td></tr>
+                    <tr><td>Alt financing</td><td>Streamers, royalty cos, traders, project-finance banks, export credit agencies</td><td>Upfront cash for discounted future metal; interest; trading margin</td><td>Franco-Nevada (FNV), Wheaton (WPM), Royal Gold (RGLD); Glencore, Trafigura</td></tr>
+                    <tr><td>Construction</td><td>EPCM engineers, equipment makers, contract miners</td><td>Fees; equipment sales + sticky parts/service revenue</td><td>Hatch, Worley, Fluor; Caterpillar (CAT), Komatsu, Epiroc, Sandvik, Metso; Orica</td></tr>
+                    <tr><td>Processing</td><td>Smelters and refiners</td><td>TC/RCs deducted from concentrate value</td><td>Chinese smelters, Boliden; gold refiners</td></tr>
+                    <tr><td>Pricing</td><td>Exchanges</td><td>Benchmark prices for contracts</td><td>LME, COMEX</td></tr>
+                    <tr><td>Licence to operate</td><td>Governments, Indigenous and community partners, regulators</td><td>Royalties, impact-benefit agreements, closure bonds</td><td>Varies by jurisdiction</td></tr>
+                </table>
+            </div>
+            <h3>Boom vs bust</h3>
+            <p>In a metal boom, juniors raise money easily, so drillers and assay labs book out for months and their prices rise. Equipment makers' backlogs grow and royalty/stream companies collect more on fixed contracts. In a bust, junior financing dries up first (the exploration "winter"), so drillers and labs feel it fast, while royalty companies often use the downturn to buy new streams cheaply. Know 2011–2015 (the end of the commodity supercycle) as the case study.</p>
+            <h3>Answer it cold</h3>
+            <ul class="checks">
+                <li><label><input type="checkbox" data-key="mq1"><span>Why have royalty and streaming companies often beaten the miners themselves over long periods?</span></label></li>
+                <li><label><input type="checkbox" data-key="mq2"><span>Follow $100 of copper concentrate: TC/RCs, royalty, mining cost, processing cost, profit.</span></label></li>
+                <li><label><input type="checkbox" data-key="mq3"><span>Map each mining player to its oil twin (assay lab ↔ ?, streamer ↔ ?, junior ↔ ?).</span></label></li>
+            </ul>
+        </section>
+
+        <section id="ai">
+            <h2>Where AI fits, by buyer</h2>
+            <p>Frame every AI idea as "which player above would pay for this, and what number does it move?"</p>
+            <div class="table-scroll">
+                <table>
+                    <tr><th>Buyer</th><th>Pain</th><th>AI play</th><th>Metric it moves</th></tr>
+                    <tr><td>Explorer / junior</td><td>Most drill holes miss</td><td>ML targeting across geophysics, geochem and historic data</td><td>Discovery cost per ounce, hit rate</td></tr>
+                    <tr><td>Assay lab</td><td>Sample backlogs, manual logging</td><td>Computer vision on core photos, LIMS automation</td><td>Turnaround time, throughput</td></tr>
+                    <tr><td>Geologist / QP</td><td>Months to build block models</td><td>Faster modeling, auto-logging, LLMs over decades of reports</td><td>Study time and cost</td></tr>
+                    <tr><td>Mine operator</td><td>Haulage is the biggest cost</td><td>Autonomous trucks and drills, dispatch optimization</td><td>Cost per tonne, safety incidents</td></tr>
+                    <tr><td>Processing plant</td><td>Recovery swings with ore</td><td>Ore sorting, process-control optimization</td><td>Recovery %, energy per tonne</td></tr>
+                    <tr><td>Investors / IR</td><td>Hard to read technical releases</td><td>LLM summaries of drill results and 43-101s</td><td>Investor reach</td></tr>
+                </table>
+            </div>
+            <ul class="checks">
+                <li><label><input type="checkbox" data-key="ai1"><span>Look up KoBold Metals, Earth AI and one ore-sorting company and note their buyer.</span></label></li>
+                <li><label><input type="checkbox" data-key="ai2"><span>Connect autonomous haulage to the Autonomy City post (same perception problems, simpler world).</span></label></li>
+            </ul>
+            <div class="recall"><label>AI notes:</label><textarea data-key="ai-notes"></textarea></div>
+        </section>
+
+        <section id="reading" class="reading">
+            <h2>Company reading list</h2>
+            <p>One per row of the money table. Read the annual report "Business" section plus one recent earnings call. About 30 minutes each.</p>
+            <div class="table-scroll">
+                <table>
+                    <tr><th></th><th>Company</th><th>Their customer</th><th>What they charge per unit</th><th>What kills them in a downturn</th></tr>
+                    <tr><td><input type="checkbox" data-key="r1"></td><td>EMX Royalty</td><td><input type="text" data-key="r1a"></td><td><input type="text" data-key="r1b"></td><td><input type="text" data-key="r1c"></td></tr>
+                    <tr><td><input type="checkbox" data-key="r2"></td><td>Major Drilling</td><td><input type="text" data-key="r2a"></td><td><input type="text" data-key="r2b"></td><td><input type="text" data-key="r2c"></td></tr>
+                    <tr><td><input type="checkbox" data-key="r3"></td><td>ALS (or SGS)</td><td><input type="text" data-key="r3a"></td><td><input type="text" data-key="r3b"></td><td><input type="text" data-key="r3c"></td></tr>
+                    <tr><td><input type="checkbox" data-key="r4"></td><td>One junior explorer of your choice</td><td><input type="text" data-key="r4a"></td><td><input type="text" data-key="r4b"></td><td><input type="text" data-key="r4c"></td></tr>
+                    <tr><td><input type="checkbox" data-key="r5"></td><td>Newmont</td><td><input type="text" data-key="r5a"></td><td><input type="text" data-key="r5b"></td><td><input type="text" data-key="r5c"></td></tr>
+                    <tr><td><input type="checkbox" data-key="r6"></td><td>Freeport-McMoRan</td><td><input type="text" data-key="r6a"></td><td><input type="text" data-key="r6b"></td><td><input type="text" data-key="r6c"></td></tr>
+                    <tr><td><input type="checkbox" data-key="r7"></td><td>Franco-Nevada</td><td><input type="text" data-key="r7a"></td><td><input type="text" data-key="r7b"></td><td><input type="text" data-key="r7c"></td></tr>
+                    <tr><td><input type="checkbox" data-key="r8"></td><td>Wheaton Precious Metals</td><td><input type="text" data-key="r8a"></td><td><input type="text" data-key="r8b"></td><td><input type="text" data-key="r8c"></td></tr>
+                    <tr><td><input type="checkbox" data-key="r9"></td><td>Caterpillar (Resource Industries segment)</td><td><input type="text" data-key="r9a"></td><td><input type="text" data-key="r9b"></td><td><input type="text" data-key="r9c"></td></tr>
+                    <tr><td><input type="checkbox" data-key="r10"></td><td>Glencore (marketing segment)</td><td><input type="text" data-key="r10a"></td><td><input type="text" data-key="r10b"></td><td><input type="text" data-key="r10c"></td></tr>
+                </table>
+            </div>
+            <p class="note">Bonus: Ed Conway, <em>Material World</em> (sand, salt, iron, copper, oil, lithium). Mining podcasts or YouTube channels that walk through feasibility studies.</p>
+        </section>
+
+        <section id="articles">
+            <h2>Articles to ship</h2>
+            <ul class="checks">
+                <li><label><input type="checkbox" data-key="a0"><span><strong>Tiny Mine miniature</strong>: 10 stops, Follow-the-money badges, a Lassonde Curve ticker that moves as you click, a metal-price slider.</span></label></li>
+                <li><label><input type="checkbox" data-key="a1"><span><strong>"What '12 metres at 4 g/t' means, and why a stock jumped 300% on it."</strong> Phases 4–5.</span></label></li>
+                <li><label><input type="checkbox" data-key="a2"><span><strong>"From a rock to a stock: the life cycle of a mining company."</strong> Phases 6–7 and the Lassonde Curve.</span></label></li>
+                <li><label><input type="checkbox" data-key="a3"><span><strong>"Who makes money in a gold rush? (Usually not the miners.)"</strong> The money table.</span></label></li>
+                <li><label><input type="checkbox" data-key="a4"><span><strong>"AI in mining: from finding deposits to driverless haul trucks."</strong> The by-buyer table.</span></label></li>
+                <li><label><input type="checkbox" data-key="a5"><span><strong>Crossover: "Oil wells and gold mines are the same business."</strong> Side-by-side risk ladders using both guides.</span></label></li>
+            </ul>
+        </section>
+
+        <section id="glossary">
+            <h2>Glossary</h2>
+            <div class="table-scroll">
+                <table>
+                    <tr><td><strong>g/t</strong></td><td>Grams per tonne, the standard grade unit for gold and silver.</td></tr>
+                    <tr><td><strong>Assay</strong></td><td>Lab measurement of metal content in a sample.</td></tr>
+                    <tr><td><strong>QP</strong></td><td>Qualified Person: a licensed professional who signs off on technical disclosure.</td></tr>
+                    <tr><td><strong>NI 43-101</strong></td><td>Canada's rules for public mining technical disclosure.</td></tr>
+                    <tr><td><strong>PEA / PFS / FS</strong></td><td>The three study levels, from rough to bankable.</td></tr>
+                    <tr><td><strong>AISC</strong></td><td>All-in sustaining cost per ounce, the key gold cost metric.</td></tr>
+                    <tr><td><strong>Strip ratio</strong></td><td>Tonnes of waste moved per tonne of ore.</td></tr>
+                    <tr><td><strong>Recovery</strong></td><td>Percent of the metal in ore that the plant actually captures.</td></tr>
+                    <tr><td><strong>NSR royalty</strong></td><td>Net smelter return: a percentage of revenue after smelting and transport costs.</td></tr>
+                    <tr><td><strong>Stream</strong></td><td>Upfront payment for the right to buy future metal at a fixed low price.</td></tr>
+                    <tr><td><strong>Flow-through shares</strong></td><td>Canadian shares that pass exploration tax deductions to investors.</td></tr>
+                    <tr><td><strong>Tailings</strong></td><td>Ground-up waste left after processing, stored behind dams.</td></tr>
+                    <tr><td><strong>TC/RCs</strong></td><td>Treatment and refining charges a smelter deducts from concentrate value.</td></tr>
+                </table>
+            </div>
+        </section>
+    </div>
+    <script src="study-guide.js"></script>
+</body>
+</html>
