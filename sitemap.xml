@@ -13,6 +13,18 @@
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://mananpatel.info/mine/</loc>
+    <lastmod>2026-10-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://mananpatel.info/oilfield/</loc>
+    <lastmod>2026-10-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://mananpatel.info/oil-gas/</loc>
     <lastmod>2026-10-04</lastmod>
     <changefreq>monthly</changefreq>
