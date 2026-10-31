@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Oilfield Study Guide | Manan Patel</title>
+    <meta name="description" content="Study guide for Tiny Oilfield: how a patch of oil is found, proven, financed and drilled, on land and at sea, and who gets paid at each step."/>
+    <meta name="robots" content="noindex"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="study-guide.css"/>
+</head>
+<body data-guide="study-oilfield">
+    <a class="back" href="../#writing">← Back</a>
+    <div class="wrap">
+        <h1>Tiny Oilfield: study guide</h1>
+        <p class="lede">One patch of ground, followed from "nobody knows there's oil here" to "first barrel," on land and at sea. Plus who gets paid at every step. This is the reading behind the Tiny Oilfield miniature and its four articles.</p>
+
+        <div class="progress">
+            <span id="progress-label">0 done</span> · <span class="saved">Checks and notes save in this browser.</span>
+            <div class="bar"><span id="progress-bar"></span></div>
+        </div>
+
+        <nav class="toc">
+            <ol>
+                <li><a href="#method">How to use this</a></li>
+                <li><a href="#big-picture">The big picture</a></li>
+                <li><a href="#p1">Why oil is where it is</a></li>
+                <li><a href="#p2">Rights &amp; leasing</a></li>
+                <li><a href="#p3">Seismic survey</a></li>
+                <li><a href="#p4">Interpretation &amp; the prospect</a></li>
+                <li><a href="#p5">Exploration well</a></li>
+                <li><a href="#p6">Appraisal &amp; reserves</a></li>
+                <li><a href="#p7">The development decision (FID)</a></li>
+                <li><a href="#p8">Drilling &amp; completing wells</a></li>
+                <li><a href="#p9">First oil &amp; decline</a></li>
+                <li><a href="#money">Follow the money</a></li>
+                <li><a href="#ai">Where AI fits (by buyer)</a></li>
+                <li><a href="#reading">Company reading list</a></li>
+                <li><a href="#articles">Articles to ship</a></li>
+                <li><a href="#glossary">Glossary</a></li>
+            </ol>
+        </nav>
+
+        <section id="method">
+            <h2>How to use this</h2>
+            <ul class="checks">
+                <li><label><input type="checkbox" data-key="m1"><span>For each phase, read the summary, then <strong>close the page</strong> and write the 3-sentence explanation from memory in the box. Wherever you get stuck is what to look up next.</span></label></li>
+                <li><label><input type="checkbox" data-key="m2"><span>Tick each "answer it cold" question only once you can say it out loud without notes.</span></label></li>
+                <li><label><input type="checkbox" data-key="m3"><span>Work the company reading list in parallel, one 10-K "Business" section a day.</span></label></li>
+                <li><label><input type="checkbox" data-key="m4"><span>Your 3-sentence boxes become the click-text in the miniature, so write them for a smart friend, not an engineer.</span></label></li>
+            </ul>
+            <p class="note">The numbers below are rough ballparks for building intuition. Check each one against a current source before it goes into anything you publish.</p>
+        </section>
+
+        <section id="big-picture">
+            <h2>The big picture</h2>
+            <p>Upstream oil is a series of bets on rock you can't see. Each step costs more than the one before and removes some uncertainty, until a company is confident enough to spend billions.</p>
+            <ol class="funnel">
+                <li>Geology says "maybe"</li>
+                <li>Get the rights</li>
+                <li>Seismic</li>
+                <li>Pick a prospect</li>
+                <li>Wildcat well</li>
+                <li>Appraise</li>
+                <li>FID</li>
+                <li>Drill &amp; complete</li>
+                <li>Produce &amp; decline</li>
+            </ol>
+            <div class="split">
+                <div><h4>On land (US shale)</h4><p>The oil is known to be there. The game is manufacturing: drill thousands of near-identical horizontal wells cheaply and fast. Weeks per well, millions per well.</p></div>
+                <div><h4>At sea (deepwater)</h4><p>The oil is a big unknown until you drill. The game is megaprojects: a few huge fields, a floating factory, decades of output. Years per project, billions per project.</p></div>
+            </div>
+        </section>
+
+        <section id="p1">
+            <span class="phase-tag">Phase 1</span>
+            <h2>Why oil is where it is</h2>
+            <p>Oil is ancient plankton and algae buried in mud, cooked by heat and pressure over millions of years. You need a <strong>petroleum system</strong>, where all the pieces line up:</p>
+            <ul>
+                <li><strong>Source rock</strong>: organic-rich shale that generated the oil.</li>
+                <li><strong>Migration</strong>: oil is lighter than water, so it moves upward through rock.</li>
+                <li><strong>Reservoir</strong>: porous, permeable rock (sandstone, limestone) that holds it like a sponge.</li>
+                <li><strong>Trap + seal</strong>: a shape (dome, fault) capped by tight rock that stops it escaping.</li>
+                <li><strong>Timing</strong>: the trap had to exist before the oil migrated.</li>
+            </ul>
+            <div class="split">
+                <div><h4>Conventional</h4><p>Oil migrated into a trap. Drill into the trap and it flows. Classic offshore and Middle East fields.</p></div>
+                <div><h4>Unconventional (shale)</h4><p>Drill into the source rock itself. It's too tight to flow, so you crack it open by fracking. This is the Permian, Bakken, Eagle Ford.</p></div>
+            </div>
+            <h3>Answer it cold</h3>
+            <ul class="checks">
+                <li><label><input type="checkbox" data-key="p1q1"><span>Name the five parts of a petroleum system.</span></label></li>
+                <li><label><input type="checkbox" data-key="p1q2"><span>Why is shale called "unconventional," and why did it need fracking?</span></label></li>
+                <li><label><input type="checkbox" data-key="p1q3"><span>What's a sedimentary basin, and why does oil only show up in them?</span></label></li>
+            </ul>
+            <div class="recall"><label>My 3-sentence explanation, from memory:</label><textarea data-key="p1-notes"></textarea></div>
+            <p class="note">Read: PetroWiki "Petroleum system". AAPG "Petroleum geology" primer. Yergin, <em>The Prize</em>, for the history.</p>
+        </section>
+
+        <section id="p2">
+            <span class="phase-tag">Phase 2</span>
+            <h2>Rights &amp; leasing</h2>
+            <p>Before you touch the ground you need the right to drill and keep what comes out. The US is unusual: <strong>private people can own the minerals under their land</strong>. Almost everywhere else, the state owns them.</p>
+            <div class="split">
+                <div><h4>On land (US)</h4><p>A <strong>landman</strong> finds the mineral owner and negotiates a lease: an upfront <strong>bonus</strong> per acre, a <strong>royalty</strong> share of production, and a primary term (say 3–5 years). Drill and produce before it ends and the lease is "held by production."</p></div>
+                <div><h4>At sea</h4><p>Governments run <strong>lease sales or licensing rounds</strong> (BOEM in the US Gulf). Abroad it's often a <strong>production sharing contract (PSC)</strong>: the company pays the costs, then recovers them and splits "profit oil" with the state. Guyana is the famous recent case.</p></div>
+            </div>
+            <div class="numbers"><strong>Numbers to know</strong>
+                <ul>
+                    <li>Royalties typically run 12.5%–25% of production value. Many private Texas leases sit at 20–25%.</li>
+                    <li>Texas also charges severance tax on production (about 4.6% on oil).</li>
+                    <li>Mineral rights get split, sold and inherited, so one well can have hundreds of royalty owners.</li>
+                </ul>
+            </div>
+            <h3>Answer it cold</h3>
+            <ul class="checks">
+                <li><label><input type="checkbox" data-key="p2q1"><span>What are a bonus, a royalty and "held by production"?</span></label></li>
+                <li><label><input type="checkbox" data-key="p2q2"><span>How does a PSC differ from a US-style lease plus royalty?</span></label></li>
+                <li><label><input type="checkbox" data-key="p2q3"><span>Why are royalty owners the safest seat in the business?</span></label></li>
+            </ul>
+            <div class="recall"><label>My 3-sentence explanation, from memory:</label><textarea data-key="p2-notes"></textarea></div>
+            <p class="note">Read: Texas Pacific Land or Viper Energy 10-K (business section). BOEM lease sale overview. A plain-English explainer on Guyana's PSC with ExxonMobil.</p>
+        </section>
+
+        <section id="p3">
+            <span class="phase-tag">Phase 3</span>
+            <h2>Seismic survey</h2>
+            <p>Seismic is ultrasound for the earth. You send sound down, and it bounces back off each rock layer at different times. Millions of these echoes become a 2D slice or a 3D "cube" of the subsurface.</p>
+            <div class="split">
+                <div><h4>On land</h4><p><strong>Vibroseis trucks</strong> shake the ground with a heavy plate (or small dynamite charges where trucks can't go). Lines of geophones listen. Crews negotiate access with every landowner.</p></div>
+                <div><h4>At sea</h4><p>A boat fires <strong>air guns</strong> and tows streamers kilometres long, full of hydrophones. Ocean-bottom nodes laid on the seafloor give better pictures at a higher cost.</p></div>
+            </div>
+            <p><strong>The business model twist:</strong> seismic companies often shoot <strong>multi-client</strong> surveys on their own dime, then license the same data to many oil companies. Shoot once, sell many times. That's a data business, not a services business.</p>
+            <h3>Answer it cold</h3>
+            <ul class="checks">
+                <li><label><input type="checkbox" data-key="p3q1"><span>How does a sound echo turn into a picture of rock layers?</span></label></li>
+                <li><label><input type="checkbox" data-key="p3q2"><span>2D vs 3D vs 4D (time-lapse) seismic: what's each for?</span></label></li>
+                <li><label><input type="checkbox" data-key="p3q3"><span>Why is multi-client seismic a better business than proprietary shoots?</span></label></li>
+            </ul>
+            <div class="recall"><label>My 3-sentence explanation, from memory:</label><textarea data-key="p3-notes"></textarea></div>
+            <p class="note">Read: SEG Wiki "Seismic reflection". TGS annual report (multi-client model). Watch a vibroseis crew video and a marine streamer deployment video.</p>
+        </section>
+
+        <section id="p4">
+            <span class="phase-tag">Phase 4</span>
+            <h2>Interpretation &amp; the prospect</h2>
+            <p>Geophysicists and geologists pick horizons and faults in the seismic cube, map possible traps and estimate how much oil one might hold. A mapped, drillable trap is a <strong>prospect</strong>. Each one gets a <strong>chance of success</strong> by multiplying the odds that every part of the petroleum system works.</p>
+            <div class="numbers"><strong>Numbers to know</strong>
+                <ul>
+                    <li>A frontier "wildcat" often has a success chance around 10–30%. Near existing fields it's much higher.</li>
+                    <li>Prospect size is a range, not a number: P90 (low case), P50 (mid), P10 (high).</li>
+                    <li>Expected value ≈ chance of success × value if found − cost of a dry hole.</li>
+                </ul>
+            </div>
+            <h3>Answer it cold</h3>
+            <ul class="checks">
+                <li><label><input type="checkbox" data-key="p4q1"><span>What makes a "lead" turn into a "prospect"?</span></label></li>
+                <li><label><input type="checkbox" data-key="p4q2"><span>What do P90 / P50 / P10 mean? (P90 = 90% chance of at least this much.)</span></label></li>
+                <li><label><input type="checkbox" data-key="p4q3"><span>Work a toy expected-value calc: 25% chance, $800M if found, $100M dry hole.</span></label></li>
+            </ul>
+            <div class="recall"><label>My 3-sentence explanation, from memory:</label><textarea data-key="p4-notes"></textarea></div>
+            <p class="note">Read: PetroWiki "Prospect risk analysis". SLB Petrel product pages (what interpreters actually use).</p>
+        </section>
+
+        <section id="p5">
+            <span class="phase-tag">Phase 5</span>
+            <h2>Exploration well</h2>
+            <p>The only way to know is to drill. The first well into a new prospect is the <strong>wildcat</strong>. While drilling, tools measure the rock (<strong>well logs</strong>: resistivity, porosity, gamma ray), and cores or fluid samples may come up. Result: a dry hole or a discovery.</p>
+            <div class="split">
+                <div><h4>On land</h4><p>A land rig on trucks, a few weeks of drilling. In shale basins true wildcats are rare now because the rock is mapped, so the risk is cost and productivity, not "is it there."</p></div>
+                <div><h4>At sea</h4><p>Shallow water: a <strong>jackup</strong> (legs on the seabed). Deep water: a <strong>semisubmersible</strong> or <strong>drillship</strong> held in place by thrusters. A deepwater wildcat can cost $100M+.</p></div>
+            </div>
+            <h3>Answer it cold</h3>
+            <ul class="checks">
+                <li><label><input type="checkbox" data-key="p5q1"><span>Jackup vs semisub vs drillship: when do you use each?</span></label></li>
+                <li><label><input type="checkbox" data-key="p5q2"><span>What do well logs tell you, and what does "pay zone" mean?</span></label></li>
+                <li><label><input type="checkbox" data-key="p5q3"><span>Why is a dry hole still worth something (information value)?</span></label></li>
+            </ul>
+            <div class="recall"><label>My 3-sentence explanation, from memory:</label><textarea data-key="p5-notes"></textarea></div>
+            <p class="note">Read: Transocean or Valaris fleet pages and 10-K. PetroWiki "Well logging". The Liza discovery story (Guyana, 2015).</p>
+        </section>
+
+        <section id="p6">
+            <span class="phase-tag">Phase 6</span>
+            <h2>Appraisal &amp; reserves</h2>
+            <p>One discovery well tells you oil exists, not how much. <strong>Appraisal wells</strong> and flow tests measure the field's extent, thickness and how fast it flows. Then the oil gets classified into <strong>reserves</strong>: the recoverable, economic, booked part.</p>
+            <div class="numbers"><strong>The ladder</strong>
+                <ul>
+                    <li><strong>Resources</strong>: oil that's there, whether or not you can profitably get it.</li>
+                    <li><strong>Reserves</strong>: what you can produce profitably under current conditions. Proved (1P), Proved + Probable (2P), + Possible (3P).</li>
+                    <li>US public companies report proved reserves under SEC rules, often audited by independent firms. PV-10 is their discounted value at 10%.</li>
+                </ul>
+            </div>
+            <h3>Answer it cold</h3>
+            <ul class="checks">
+                <li><label><input type="checkbox" data-key="p6q1"><span>Resources vs reserves, and 1P / 2P / 3P.</span></label></li>
+                <li><label><input type="checkbox" data-key="p6q2"><span>What is PV-10 and why do banks and investors care?</span></label></li>
+                <li><label><input type="checkbox" data-key="p6q3"><span>What is the recovery factor, and why is it often only 10% in shale?</span></label></li>
+            </ul>
+            <div class="recall"><label>My 3-sentence explanation, from memory:</label><textarea data-key="p6-notes"></textarea></div>
+            <p class="note">Read: SPE PRMS summary. The reserves section of any E&amp;P 10-K (search "proved reserves"). Ryder Scott's website for what a reserve auditor does.</p>
+        </section>
+
+        <section id="p7">
+            <span class="phase-tag">Phase 7</span>
+            <h2>The development decision (FID)</h2>
+            <p><strong>Final investment decision</strong> is the moment a company and its partners commit the big money. Engineers pick a development concept, finance models the cash flows, and the board says yes or no.</p>
+            <div class="split">
+                <div><h4>On land</h4><p>FID is a pad of wells, a few tens of millions. It's repeated constantly, almost like a factory deciding next quarter's output. Key number: <strong>breakeven oil price</strong> per well.</p></div>
+                <div><h4>At sea</h4><p>Pick a concept: fixed platform, spar, TLP, <strong>FPSO</strong> (floating production ship) or a <strong>subsea tieback</strong> to existing infrastructure. Billions up front, first oil years later, decades of production.</p></div>
+            </div>
+            <div class="numbers"><strong>The model</strong>
+                <ul>
+                    <li>Inputs: production profile × oil price − royalty − taxes − operating cost − capex.</li>
+                    <li>Outputs: NPV (usually at a 10% discount rate), IRR, payback period, breakeven price.</li>
+                    <li>Industry surveys (Dallas Fed Energy Survey) put new US shale well breakevens somewhere around $60–70 WTI. Check the latest.</li>
+                </ul>
+            </div>
+            <h3>Answer it cold</h3>
+            <ul class="checks">
+                <li><label><input type="checkbox" data-key="p7q1"><span>What's an FPSO and why is it popular in deep water?</span></label></li>
+                <li><label><input type="checkbox" data-key="p7q2"><span>Why does a 10-year deepwater project need a lower breakeven than a shale well to get approved?</span></label></li>
+                <li><label><input type="checkbox" data-key="p7q3"><span>Build a 10-row spreadsheet: one well, decline curve, price, costs → NPV.</span></label></li>
+            </ul>
+            <div class="recall"><label>My 3-sentence explanation, from memory:</label><textarea data-key="p7-notes"></textarea></div>
+            <p class="note">Read: Dallas Fed Energy Survey breakeven questions. An Exxon Guyana project page (Yellowtail or Hammerhead). SBM Offshore annual report (FPSO lease model).</p>
+        </section>
+
+        <section id="p8">
+            <span class="phase-tag">Phase 8</span>
+            <h2>Drilling &amp; completing wells</h2>
+            <p>A well is a telescope of steel pipe. Drill a section, run <strong>casing</strong>, cement it, drill a smaller section below, repeat. <strong>Drilling mud</strong> cools the bit, carries rock chips up and holds back pressure. A <strong>blowout preventer</strong> sits on top as the last line of defence.</p>
+            <div class="split">
+                <div><h4>On land (shale)</h4><p>Drill down about 2 km, turn sideways and drill a <strong>horizontal lateral</strong> that can run 2–3 miles. Then <strong>complete</strong> it: perforate, and frack in dozens of stages with water, sand and chemicals to crack the rock open. Many wells per pad.</p></div>
+                <div><h4>At sea</h4><p>Wells end in <strong>subsea trees</strong> (valve stacks on the seafloor), connected by flowlines and risers up to the FPSO or platform. Installation vessels, ROVs and specialist subsea contractors do this work.</p></div>
+            </div>
+            <div class="numbers"><strong>Numbers to know</strong>
+                <ul>
+                    <li>A Permian horizontal well costs roughly $6–10M all-in, and drilling plus completion take weeks.</li>
+                    <li>Land rig day rates are tens of thousands of dollars; deepwater drillships several hundred thousand.</li>
+                    <li>Completion (fracking) is often more than half the well's cost.</li>
+                </ul>
+            </div>
+            <h3>Answer it cold</h3>
+            <ul class="checks">
+                <li><label><input type="checkbox" data-key="p8q1"><span>Walk through a well from conductor to production casing.</span></label></li>
+                <li><label><input type="checkbox" data-key="p8q2"><span>What actually happens in a frac stage, and why sand?</span></label></li>
+                <li><label><input type="checkbox" data-key="p8q3"><span>What went wrong at Deepwater Horizon (2010), in two sentences?</span></label></li>
+                <li><label><input type="checkbox" data-key="p8q4"><span>Who on a well site works for the operator vs. the contractors?</span></label></li>
+            </ul>
+            <div class="recall"><label>My 3-sentence explanation, from memory:</label><textarea data-key="p8-notes"></textarea></div>
+            <p class="note">Read: Halliburton or Liberty Energy 10-K (completions). Helmerich &amp; Payne 10-K (land rigs). TechnipFMC subsea overview. Watch a "life of a frac" animation.</p>
+        </section>
+
+        <section id="p9">
+            <span class="phase-tag">Phase 9</span>
+            <h2>First oil &amp; decline</h2>
+            <p>Every well produces most at the start, then declines as pressure drops. Plotting that is the <strong>type curve</strong>, the most important chart in a shale investor deck.</p>
+            <div class="split">
+                <div><h4>On land</h4><p>Shale wells can fall about 60–70% in year one. To stay flat a company has to keep drilling, which is the "treadmill." When prices fall, US output follows within months.</p></div>
+                <div><h4>At sea</h4><p>Big fields plateau for years, then decline slowly. Water or gas injection keeps pressure up. Output responds to price over years, not months.</p></div>
+            </div>
+            <p>After production: oil flows to midstream (gathering, pipelines), which is where the existing <a href="../oil-gas/">Tiny Oil &amp; Gas</a> takes over. At the end of field life comes <strong>plugging and abandonment</strong> (offshore decommissioning is a big, costly business of its own).</p>
+            <h3>Answer it cold</h3>
+            <ul class="checks">
+                <li><label><input type="checkbox" data-key="p9q1"><span>Why does shale's steep decline make US supply "short-cycle"?</span></label></li>
+                <li><label><input type="checkbox" data-key="p9q2"><span>What is EUR (estimated ultimate recovery)?</span></label></li>
+                <li><label><input type="checkbox" data-key="p9q3"><span>Who pays to plug old wells, and what are "orphan wells"?</span></label></li>
+            </ul>
+            <div class="recall"><label>My 3-sentence explanation, from memory:</label><textarea data-key="p9-notes"></textarea></div>
+            <p class="note">Read: Diamondback or EOG investor presentation (find the type curves). EIA "Drilling Productivity" data.</p>
+        </section>
+
+        <section id="money">
+            <h2>Follow the money</h2>
+            <p>Who's at each phase, who pays them and how they earn. This table becomes the badge cards in the miniature.</p>
+            <div class="table-scroll">
+                <table>
+                    <tr><th>Phase</th><th>Players</th><th>How they earn</th><th>Examples</th></tr>
+                    <tr><td>Rights</td><td>Mineral owners, landmen, governments, mineral &amp; royalty companies</td><td>Lease bonus + royalty off the top, no costs to pay</td><td>Texas Pacific Land (TPL), Viper Energy (VNOM), Black Stone Minerals (BSM)</td></tr>
+                    <tr><td>Seismic</td><td>Seismic contractors / data libraries</td><td>Proprietary surveys or multi-client data licenses</td><td>TGS, Viridien (ex-CGG), SLB</td></tr>
+                    <tr><td>Interpretation</td><td>Software &amp; data vendors</td><td>Licenses, SaaS, data subscriptions</td><td>SLB (Petrel/Delfi), Halliburton Landmark, Enverus, S&amp;P Global</td></tr>
+                    <tr><td>Operator</td><td>Majors, independents, PE-backed privates, national oil companies</td><td>Own the working interest; take price and geology risk; share stakes via JVs and farm-outs</td><td>ExxonMobil (XOM), Chevron (CVX), EOG, Diamondback (FANG), ConocoPhillips (COP), Aramco, Petrobras</td></tr>
+                    <tr><td>Reserves</td><td>Independent reserve auditors</td><td>Fees for reserve reports</td><td>Ryder Scott, DeGolyer &amp; MacNaughton, Netherland Sewell</td></tr>
+                    <tr><td>Financing</td><td>Banks, PE, bond markets, hedge counterparties</td><td>Interest on reserve-based loans (borrowing base reset twice a year); hedging swaps</td><td>JPMorgan, Wells Fargo, EnCap, Quantum</td></tr>
+                    <tr><td>Drilling</td><td>Land &amp; offshore drilling contractors</td><td>Day rates, very cyclical</td><td>Helmerich &amp; Payne (HP), Nabors (NBR), Patterson-UTI (PTEN); Transocean (RIG), Valaris (VAL), Noble (NE)</td></tr>
+                    <tr><td>Services</td><td>Diversified giants + specialists (frac, sand, pipe, mud, wireline)</td><td>Per job / per stage; margins swing with rig count</td><td>SLB, Halliburton (HAL), Baker Hughes (BKR), Liberty Energy (LBRT), Tenaris (TS)</td></tr>
+                    <tr><td>Offshore build</td><td>Subsea equipment, FPSO builders and lessors</td><td>Large EPC contracts or lease-and-operate</td><td>TechnipFMC (FTI), Subsea7, SBM Offshore, MODEC</td></tr>
+                    <tr><td>Government</td><td>Federal, state, foreign governments</td><td>Royalties, severance tax, PSC profit oil</td><td>Texas, Norway, Guyana</td></tr>
+                    <tr><td>Hand-off</td><td>Midstream</td><td>Fee-based gathering and transport</td><td>See Tiny Oil &amp; Gas</td></tr>
+                </table>
+            </div>
+            <h3>Boom vs bust</h3>
+            <p>When oil goes up, day rates and service margins jump first, operators make windfalls, and royalty owners collect more without spending anything. When oil crashes, drillers and service companies get hit hardest (rigs stacked, crews laid off), leveraged operators face borrowing-base cuts, and royalty owners just get a smaller check. Know 2014–16 and 2020 as the two case studies.</p>
+            <h3>Answer it cold</h3>
+            <ul class="checks">
+                <li><label><input type="checkbox" data-key="mq1"><span>Follow $100 of shale-well revenue: royalty, tax, operating cost, gathering, capex payback, operator profit.</span></label></li>
+                <li><label><input type="checkbox" data-key="mq2"><span>Why does an operator hire SLB instead of doing the work itself?</span></label></li>
+                <li><label><input type="checkbox" data-key="mq3"><span>What happened to offshore drillers 2015–2021 (bankruptcies), and why?</span></label></li>
+            </ul>
+        </section>
+
+        <section id="ai">
+            <h2>Where AI fits, by buyer</h2>
+            <p>Frame every AI idea as "which player above would pay for this, and what number does it move?" That's how an SE/AE thinks about accounts.</p>
+            <div class="table-scroll">
+                <table>
+                    <tr><th>Buyer</th><th>Pain</th><th>AI play</th><th>Metric it moves</th></tr>
+                    <tr><td>Operator geoscience team</td><td>Interpreting seismic takes months</td><td>ML fault and horizon picking, seismic foundation models</td><td>Time to prospect, success rate</td></tr>
+                    <tr><td>Operator drilling team</td><td>Non-productive time, stuck pipe</td><td>Real-time drilling optimization, anomaly detection</td><td>Days per well, $ per foot</td></tr>
+                    <tr><td>Operator land / legal</td><td>Thousands of leases and title docs</td><td>LLM extraction over lease documents</td><td>Landman hours, missed lease expiries</td></tr>
+                    <tr><td>Operator engineering</td><td>Decades of well files nobody reads</td><td>RAG over well reports, analog-well search</td><td>Time to answer, repeat mistakes</td></tr>
+                    <tr><td>Production / ops</td><td>Pump failures, methane leaks</td><td>Predictive maintenance, satellite methane detection</td><td>Uptime, emissions fines</td></tr>
+                    <tr><td>Service companies</td><td>Margin pressure</td><td>Selling AI as a platform (SLB, Halliburton)</td><td>Recurring software revenue</td></tr>
+                </table>
+            </div>
+            <ul class="checks">
+                <li><label><input type="checkbox" data-key="ai1"><span>Look up 3 real AI vendors or startups in upstream and note who their buyer is.</span></label></li>
+                <li><label><input type="checkbox" data-key="ai2"><span>Pick one row and write a 5-line discovery call script for that buyer.</span></label></li>
+            </ul>
+            <div class="recall"><label>AI notes:</label><textarea data-key="ai-notes"></textarea></div>
+        </section>
+
+        <section id="reading" class="reading">
+            <h2>Company reading list</h2>
+            <p>One per row of the money table. Read the 10-K "Business" section (or annual report) plus one recent earnings call. About 30 minutes each.</p>
+            <div class="table-scroll">
+                <table>
+                    <tr><th></th><th>Company</th><th>Their customer</th><th>What they charge per unit</th><th>What kills them in a downturn</th></tr>
+                    <tr><td><input type="checkbox" data-key="r1"></td><td>Texas Pacific Land</td><td><input type="text" data-key="r1a"></td><td><input type="text" data-key="r1b"></td><td><input type="text" data-key="r1c"></td></tr>
+                    <tr><td><input type="checkbox" data-key="r2"></td><td>TGS</td><td><input type="text" data-key="r2a"></td><td><input type="text" data-key="r2b"></td><td><input type="text" data-key="r2c"></td></tr>
+                    <tr><td><input type="checkbox" data-key="r3"></td><td>Diamondback Energy</td><td><input type="text" data-key="r3a"></td><td><input type="text" data-key="r3b"></td><td><input type="text" data-key="r3c"></td></tr>
+                    <tr><td><input type="checkbox" data-key="r4"></td><td>ExxonMobil (upstream segment)</td><td><input type="text" data-key="r4a"></td><td><input type="text" data-key="r4b"></td><td><input type="text" data-key="r4c"></td></tr>
+                    <tr><td><input type="checkbox" data-key="r5"></td><td>Helmerich &amp; Payne</td><td><input type="text" data-key="r5a"></td><td><input type="text" data-key="r5b"></td><td><input type="text" data-key="r5c"></td></tr>
+                    <tr><td><input type="checkbox" data-key="r6"></td><td>Transocean</td><td><input type="text" data-key="r6a"></td><td><input type="text" data-key="r6b"></td><td><input type="text" data-key="r6c"></td></tr>
+                    <tr><td><input type="checkbox" data-key="r7"></td><td>SLB</td><td><input type="text" data-key="r7a"></td><td><input type="text" data-key="r7b"></td><td><input type="text" data-key="r7c"></td></tr>
+                    <tr><td><input type="checkbox" data-key="r8"></td><td>Liberty Energy</td><td><input type="text" data-key="r8a"></td><td><input type="text" data-key="r8b"></td><td><input type="text" data-key="r8c"></td></tr>
+                    <tr><td><input type="checkbox" data-key="r9"></td><td>TechnipFMC</td><td><input type="text" data-key="r9a"></td><td><input type="text" data-key="r9b"></td><td><input type="text" data-key="r9c"></td></tr>
+                    <tr><td><input type="checkbox" data-key="r10"></td><td>SBM Offshore</td><td><input type="text" data-key="r10a"></td><td><input type="text" data-key="r10b"></td><td><input type="text" data-key="r10c"></td></tr>
+                </table>
+            </div>
+            <p class="note">Bonus: Yergin, <em>The Prize</em> (history) and <em>The New Map</em> (shale geopolitics). Gregory Zuckerman, <em>The Frackers</em>.</p>
+        </section>
+
+        <section id="articles">
+            <h2>Articles to ship</h2>
+            <ul class="checks">
+                <li><label><input type="checkbox" data-key="a0"><span><strong>Tiny Oilfield miniature</strong>: 9 stops, Land/Sea toggle, Follow-the-money badges, oil-price slider.</span></label></li>
+                <li><label><input type="checkbox" data-key="a1"><span><strong>"How do you find oil under 3 miles of rock?"</strong> Phases 1–5.</span></label></li>
+                <li><label><input type="checkbox" data-key="a2"><span><strong>"The $5 billion yes: how an oil company decides to drill."</strong> Phases 6–7, with the toy NPV model.</span></label></li>
+                <li><label><input type="checkbox" data-key="a3"><span><strong>"Who gets paid when a shale well is drilled?"</strong> The money table, following one $10M well.</span></label></li>
+                <li><label><input type="checkbox" data-key="a4"><span><strong>"Where AI actually helps upstream."</strong> The by-buyer table, with real vendors.</span></label></li>
+            </ul>
+        </section>
+
+        <section id="glossary">
+            <h2>Glossary</h2>
+            <div class="table-scroll">
+                <table>
+                    <tr><td><strong>Basin</strong></td><td>A large low area where sediment piled up over millions of years. Oil only forms in these.</td></tr>
+                    <tr><td><strong>Wildcat</strong></td><td>An exploration well in an unproven area.</td></tr>
+                    <tr><td><strong>Working interest</strong></td><td>Ownership share that pays its share of costs and gets its share of production.</td></tr>
+                    <tr><td><strong>Farm-out</strong></td><td>Giving part of your stake to a partner in exchange for them paying for drilling.</td></tr>
+                    <tr><td><strong>Lateral</strong></td><td>The horizontal section of a shale well.</td></tr>
+                    <tr><td><strong>Completion</strong></td><td>Making a drilled well ready to produce. In shale, mostly fracking.</td></tr>
+                    <tr><td><strong>FPSO</strong></td><td>Floating production, storage and offloading vessel.</td></tr>
+                    <tr><td><strong>Tieback</strong></td><td>Connecting new subsea wells to an existing platform instead of building a new one.</td></tr>
+                    <tr><td><strong>EUR</strong></td><td>Estimated ultimate recovery: total a well will produce over its life.</td></tr>
+                    <tr><td><strong>PV-10</strong></td><td>Present value of proved reserves at a 10% discount rate (SEC standard).</td></tr>
+                    <tr><td><strong>Borrowing base</strong></td><td>How much a bank will lend against your reserves; reset twice a year.</td></tr>
+                    <tr><td><strong>P&amp;A</strong></td><td>Plug and abandon: permanently sealing a well at end of life.</td></tr>
+                </table>
+            </div>
+        </section>
+    </div>
+    <script src="study-guide.js"></script>
+</body>
+</html>
