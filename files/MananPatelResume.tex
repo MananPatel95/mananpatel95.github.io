@@ -3,18 +3,27 @@
 \usepackage{latexsym}
 \usepackage[empty]{fullpage}
 \usepackage{titlesec}
-\usepackage{marvosym}
 \usepackage[usenames,dvipsnames]{color}
-\usepackage{verbatim}
 \usepackage{enumitem}
 \usepackage[hidelinks]{hyperref}
 \usepackage{fancyhdr}
 \usepackage[english]{babel}
-\usepackage{tabularx}
-\usepackage{multicol}
-\setlength{\multicolsep}{-3.0pt}
-\setlength{\columnsep}{-1pt}
-\input{glyphtounicode}
+\usepackage{microtype}
+
+% --- ATS: make the PDF's text layer machine-readable ---
+\ifdefined\XeTeXversion
+  % XeTeX/tectonic: Unicode text layer is native; turn off "fi"/"ff"/"fl" ligatures
+  \usepackage{fontspec}
+  \setmainfont{lmroman10}[
+    Extension=.otf, UprightFont=*-regular, BoldFont=*-bold,
+    ItalicFont=*-italic, BoldItalicFont=*-bolditalic,
+    Ligatures={NoCommon,TeX}]
+\else
+  \input{glyphtounicode}
+  \pdfgentounicode=1                            % map every glyph to real Unicode
+  \DisableLigatures{encoding = *, family = *}   % "fi", "ff", "fl" stay as plain letters
+\fi
+\hypersetup{pdftitle={Manan Patel - Resume}, pdfauthor={Manan Patel}}
 
 \pagestyle{fancy}
 \fancyhf{}
@@ -29,33 +38,31 @@
 \addtolength{\textheight}{1.2in}
 
 \urlstyle{same}
-
 \raggedbottom
 \raggedright
-\setlength{\tabcolsep}{0in}
+
+% --- ATS: unnumbered section headings (no stray "1", "2" in the text layer) ---
+\titleformat{\section}{\normalfont\Large\bfseries}{}{0em}{}
+\titlespacing*{\section}{0pt}{10pt}{6pt}
+
+% --- ATS: one linear flow per job, no side-by-side columns ---
+% Line 1: Company \hfill Location (location right-aligned)
+% Line 2: Job Title \hfill Dates (dates right-aligned; tested to stay with their own job)
+\newcommand{\resumeSubheading}[4]{% {company}{location}{title}{dates}
+  \vspace{3pt}\item
+  \textbf{#1} \hfill \textbf{\small #2}\\
+  \textit{\small #3} \hfill \textit{\small #4}\vspace{-2pt}
+}
+
+\newcommand{\resumeProjectHeading}[1]{%
+  \vspace{3pt}\item {\small #1}\vspace{-2pt}
+}
 
 \newcommand{\resumeItem}[1]{
   \item\small{
     {#1 \vspace{2pt}}
   }
 }
-
-\newcommand{\resumeSubheading}[4]{
-  \vspace{3pt}\item
-    \begin{tabular*}{1.0\textwidth}[t]{l@{\extracolsep{\fill}}r}
-      \textbf{#1} & \textbf{\small #2} \\
-      \textit{\small#3} & \textit{\small #4} \\
-    \end{tabular*}\vspace{-2pt}
-}
-
-\newcommand{\resumeProjectHeading}[2]{
-    \vspace{3pt}\item
-    \begin{tabular*}{1.0\textwidth}{l@{\extracolsep{\fill}}r}
-      \small#1 & \textbf{\small #2}\\
-    \end{tabular*}\vspace{-2pt}
-}
-
-\renewcommand\labelitemi{$\vcenter{\hbox{\tiny$\bullet$}}$}
 
 \newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.0in, label={}]}
 \newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
@@ -72,7 +79,7 @@
 \end{center}
 
 \section{Summary}
-\small{Senior Software Engineer with 8+ years building production mobile and software applications serving millions of users across government, fintech, and startup environments. Expert in iOS development (Swift, SwiftUI, UIKit), cross-platform development (React Native), and full-stack engineering. Academic background in Statistical Machine Learning including neural networks, backpropagation, multivariate analysis, and statistical inference. Proven track record in team leadership, product management, and agile development.}
+\small{Senior Software Engineer with 8+ years building production mobile and software applications serving millions of users across government, fintech, and startup environments. Expert in iOS development (Swift, SwiftUI, UIKit), cross-platform development (React Native), and full-stack engineering. Proficient in Python for backend services and ML model training, with hands-on AWS experience deploying infrastructure, APIs, and web applications. Academic background in Statistical Machine Learning including neural networks, backpropagation, multivariate analysis, and statistical inference. Proven track record in team leadership, product management, and agile development.}
 
 \vspace{2pt}
 
@@ -82,60 +89,65 @@
 
 \resumeSubheading
       {Rocket Agency}{Calgary, AB (Hybrid)}
-      {AI Deployment Strategist}{August 2025 -- Present}
+      {AI Deployment Strategist (Consulting, Part-Time)}{Aug 2025 - Present}
       \resumeItemListStart
         \resumeItem{Built, deployed, and operate production voice and chat LLM agents for SMB clients, autonomously resolving 60\% of inbound call and support ticket volume (real estate bookings, restaurant reservations)}
         \resumeItem{Shipped AI agent systems across client SaaS stacks including Zendesk, Gorgias, HubSpot, Monday.com, and Shopify, automating support triage, sales follow-up, and order workflows via REST APIs and webhooks}
         \resumeItem{Own the full deployment lifecycle: agent design, tool and API integration, rollout to live customer traffic, and ongoing monitoring of resolution and escalation rates}
+        \resumeItem{Built internal tools and full-stack web applications in Python, Node.js, and React to automate client workflows}
       \resumeItemListEnd
 
 \resumeSubheading
       {Environment and Climate Change Canada}{Calgary, AB (Remote)}
-      {Software Engineer (iOS \& Full Stack)}{March 2023 -- Present}
+      {Software Engineer (Contract, Full-Time)}{Mar 2023 - Present}
       \resumeItemListStart
         \resumeItem{Engineer for WeatherCAN, the \#3 weather app in Canada, serving 5M+ monthly active users}
         \resumeItem{Lead a team of 4 engineers delivering weather dissemination modernization KPIs across Weather.gc.ca, iOS, and Android}
-        \resumeItem{Build features against real-time weather services, including GPS severe-weather alerting with radar, lightning, and tornado tracking}
-        \resumeItem{Drive CI/CD, automated testing, and code review standards across the team}
+        \resumeItem{Build full-stack features across the iOS app and Node.js/Python backend services for real-time weather data, including GPS severe-weather alerting with radar, lightning, and tornado tracking}
+        \resumeItem{Drive CI/CD, automated testing, and code review standards for well-structured, tested code across the team}
       \resumeItemListEnd
 
 \resumeSubheading
       {RentPlay}{Calgary, AB}
-      {Co-Founder \& Chief Technology Officer}{January 2025 -- September 2025}
+      {Chief Technology Officer (CTO)}{Jan 2025 - Sep 2025}
       \resumeItemListStart
-        \resumeItem{Primary developer of the RentPlay website, web app, and mobile apps: rent reporting, local merchant rewards, and receipt-to-cash redemption}
-        \resumeItem{Built a receipt OCR pipeline plus a compliant application layer spanning financial authorization, transactions, location-based notifications, and two-sided marketplace matching}
-        \resumeItem{Architected the platform on React Native, Node.js (Express), and TypeScript with MongoDB, PostgreSQL, and CI/CD; scaled to 1,000+ users and 100 merchants}
+        \resumeItem{Co-founded a fintech rewards startup where members earn points for paying rent and bills by debit card and redeem them at local merchants; grew it from a winning hackathon project to 1,000+ users and 100 merchants}
+        \resumeItem{Raised a \$100K SAFE note plus \$50K in non-dilutive funding from Alberta Innovates and SR\&ED tax credits}
+        \resumeItem{Completed the Platform Calgary Incubator and the Alberta Catalyzer Traction program; defined the ideal customer profile (ICP), built the sales pipeline and outreach strategy, and led go-to-market (GTM) messaging and investor pitching}
+        \resumeItem{Primary developer of the website, iOS app, and backend, architected on React Native, Node.js (Express), and TypeScript with MongoDB, PostgreSQL, and CI/CD}
+        \resumeItem{Built an automated receipt OCR pipeline that extracts and verifies purchase data for receipt-to-cash rewards}
+        \resumeItem{Integrated Plaid for bank account linking and debit-card transaction data, secured with OAuth 2.0 and multi-factor authentication; built location-based merchant notifications and two-sided member--merchant matching}
       \resumeItemListEnd
 
-    \resumeSubheading
+\newpage
+\resumeSubheading
       {Wattpad}{Toronto, ON (Remote)}
-      {iOS Engineer}{August 2021 -- March 2023}
+      {iOS Engineer}{Aug 2021 - Mar 2023}
       \resumeItemListStart
         \resumeItem{Lead engineer for the new Wattpad Comments experience on an app serving 90M+ users, delivering a 300\% engagement increase}
         \resumeItem{Managed bi-monthly releases at 99.9\% crash-free rate; conducted 100+ code reviews enforcing quality standards}
       \resumeItemListEnd
-\newpage
-    \resumeSubheading
+
+\resumeSubheading
       {TD}{Toronto, ON (Hybrid)}
-      {iOS Developer}{January 2020 -- August 2021}
+      {iOS Developer}{Jan 2020 - Aug 2021}
       \resumeItemListStart
         \resumeItem{Built app features for account management, fund transfers, and transaction history}
         \resumeItem{Integrated financial APIs with multi-factor authentication and PCI-DSS controls; wrote test suites covering critical transaction flows}
       \resumeItemListEnd
 
-    \resumeSubheading
+\resumeSubheading
       {Environment and Climate Change Canada}{Toronto, ON}
-      {Full Stack Developer}{May 2017 -- January 2020}
+      {Full Stack Developer}{May 2017 - Jan 2020}
       \resumeItemListStart
         \resumeItem{Led WeatherCAN from discovery through launch, reaching 1M+ users within the first year}
-        \resumeItem{Built REST APIs serving 10M+ monthly calls with Python and Node.js backend services}
-        \resumeItem{Built XML/JSON parsing pipelines processing 50,000+ daily weather updates with automated testing and CI/CD}
+        \resumeItem{Built XML/JSON data ingestion pipelines processing 50,000+ daily weather updates with automated testing and CI/CD}
+        \resumeItem{Built Python and Node.js REST API services handling 10M+ monthly calls}
       \resumeItemListEnd
 
-    \resumeSubheading
+\resumeSubheading
       {University of Toronto}{Toronto, ON}
-      {Machine Learning Research Assistant (Internship)}{September 2016 -- December 2016}
+      {Machine Learning Research Assistant (Internship)}{Sep 2016 - Dec 2016}
       \resumeItemListStart
         \resumeItem{Trained machine learning models in Python and R, including neural networks and random walk models}
         \resumeItem{Generated real-world inferences from model outputs on the economic impacts of foreign trade policies}
@@ -147,9 +159,9 @@
 
 \section{Education}
 \resumeSubHeadingListStart
-    \resumeSubheading
+\resumeSubheading
       {University of Toronto}{Toronto, ON}
-      {Bachelor of Science, Computer Science \& Statistical Machine Learning, Co-op}{2014 -- 2019}
+      {Bachelor of Science, Computer Science \& Statistical Machine Learning, Co-op}{2014 - 2019}
       \resumeItemListStart
         \resumeItem{Coursework: Statistical Machine Learning, Neural Networks, Deep Learning, Natural Language Processing, Computer Vision, Statistical Inference, Multivariate Analysis}
       \resumeItemListEnd
@@ -158,44 +170,45 @@
 \vspace{3pt}
 
 \section{Technical Skills}
- \begin{itemize}[leftmargin=0.15in, label={}]
+\begin{itemize}[leftmargin=0.15in, label={}]
     \small{\item{
-     \textbf{Languages}: Python, TypeScript, JavaScript, SQL, R, Swift, Objective-C, Java
+     \textbf{iOS \& Mobile}: Swift, SwiftUI, UIKit, Objective-C, Core Data, CloudKit, MapKit, React Native
      }}
      \item{
-     \textbf{Backend \& Data}: Node.js (Express/NestJS), Python (Django), REST APIs, GraphQL, microservices, real-time data pipelines
+     \textbf{Languages}: Swift, Python, Java, Objective-C, TypeScript, JavaScript, SQL, R
      }
      \item{
-     \textbf{Databases}: PostgreSQL, MongoDB, SQLite, Firebase, CloudKit, Core Data
+     \textbf{Backend \& Data}: Python (Django), Node.js (Express/NestJS), REST APIs, GraphQL, microservices, data ingestion pipelines
+     }
+     \item{
+     \textbf{Databases}: PostgreSQL, SQLite, MongoDB, Firebase
+     }
+     \item{
+     \textbf{Frontend}: React, Vue.js, HTML5, CSS3
+     }
+     \item{
+     \textbf{Cloud \& DevOps}: AWS (infrastructure, APIs, web app hosting), Docker, GitHub Actions, CI/CD pipelines, Git, Postman
+     }
+     \item{
+     \textbf{Testing}: Unit \& integration testing, TDD, automated test suites
      }
      \item{
      \textbf{Platforms \& Integrations}: Zendesk, Gorgias, HubSpot, Monday.com, Shopify, webhook \& API orchestration
      }
-     \item{
-     \textbf{DevOps \& Testing}: Git, GitHub Actions, CI/CD Pipelines, Docker, Postman, unit \& integration testing, TDD
-     }
-     \item{
-     \textbf{Frontend \& Mobile}: React, Vue.js, React Native, Swift, SwiftUI, UIKit, HTML5, CSS3
-     }
- \end{itemize}
+\end{itemize}
 
 \vspace{3pt}
 
 \section{Projects}
-
 \resumeSubHeadingListStart
-      \resumeProjectHeading
-          {\textbf{Goal Getter} -- iOS Habit Tracker -- 1,000+ MAU -- Paying Subscribers}{2025 -- 2026}
-          \resumeItemListStart
-            \resumeItem{Shipped a solo iOS app with CloudKit sync across iPhone, iPad, and Apple Watch, and in-app purchases converting at 3\%}
-          \resumeItemListEnd
-
-      \resumeProjectHeading
-          {\textbf{Countries Quiz} -- Interactive Geography App -- 500+ MAU}{2025}
-          \resumeItemListStart
-            \resumeItem{Built custom MapKit rendering with 4 game modes and progressive difficulty}
-          \resumeItemListEnd
-
+  \resumeProjectHeading{\textbf{Goal Getter} \textendash{} iOS Habit Tracker \textendash{} 1,000+ MAU \textendash{} Paying Subscribers}
+    \resumeItemListStart
+      \resumeItem{Shipped a solo iOS app with CloudKit sync across iPhone, iPad, and Apple Watch, and in-app purchases converting at 3\%}
+    \resumeItemListEnd
+  \resumeProjectHeading{\textbf{Countries Quiz} \textendash{} Interactive Geography App \textendash{} 500+ MAU}
+    \resumeItemListStart
+      \resumeItem{Built custom MapKit rendering with 4 game modes and progressive difficulty}
+    \resumeItemListEnd
 \resumeSubHeadingListEnd
 
 \end{document}
