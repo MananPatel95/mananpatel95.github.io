@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building a support chat agent for Maybliss: what broke when it started calling Shopify, Gorgias and HubSpot | Manan Patel</title>
+    <meta name="description" content="A case study of an AI support chat agent for Maybliss: two weeks to launch, about 200 chats a week, around 50% resolved without a person, and the two integration failures I had to fix.">
+    <meta name="keywords" content="Manan Patel, AI agent, LLM, customer support, Shopify, Gorgias, HubSpot, tool calling, Maybliss, Rocket Agency">
+    <meta name="author" content="Manan Patel">
+    <link rel="canonical" href="https://mananpatel.info/blog/maybliss-support-agent.html">
+
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://mananpatel.info/blog/maybliss-support-agent.html">
+    <meta property="og:title" content="Building a support chat agent for Maybliss | Manan Patel">
+    <meta property="og:description" content="Two weeks to launch, ~200 chats a week, ~50% resolved, 20+ hours a week saved. And the order lookups and discount codes that broke along the way.">
+    <meta property="og:site_name" content="Manan Patel">
+    <meta property="article:published_time" content="2026-11-22">
+    <meta property="article:author" content="https://mananpatel.info/#manan-patel">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:url" content="https://mananpatel.info/blog/maybliss-support-agent.html">
+    <meta name="twitter:title" content="Building a support chat agent for Maybliss | Manan Patel">
+    <meta name="twitter:description" content="Two weeks to launch, ~200 chats a week, ~50% resolved, 20+ hours a week saved. And the order lookups and discount codes that broke along the way.">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "BlogPosting",
+          "headline": "Building a support chat agent for Maybliss: what broke when it started calling Shopify, Gorgias and HubSpot",
+          "description": "A case study of an AI support chat agent for Maybliss: two weeks to launch, about 200 chats a week, around 50% resolved without a person, and the two integration failures I had to fix.",
+          "url": "https://mananpatel.info/blog/maybliss-support-agent.html",
+          "datePublished": "2026-11-22",
+          "dateModified": "2026-11-22",
+          "author": { "@id": "https://mananpatel.info/#manan-patel" },
+          "publisher": { "@id": "https://mananpatel.info/#manan-patel" },
+          "mainEntityOfPage": { "@type": "WebPage", "@id": "https://mananpatel.info/blog/maybliss-support-agent.html" }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://mananpatel.info/" },
+            { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://mananpatel.info/blog/" },
+            { "@type": "ListItem", "position": 3, "name": "Building a support chat agent for Maybliss", "item": "https://mananpatel.info/blog/maybliss-support-agent.html" }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'text-light': '#1f2937',
+                        'text-dark': '#f9fafb',
+                        'secondary-text-light': '#6b7280',
+                        'secondary-text-dark': '#9ca3af',
+                        'border-light': '#e5e7eb',
+                        'border-dark': '#374151',
+                        'bg-light': '#ffffff',
+                        'bg-dark': '#111827'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .blog-content { line-height: 1.7; }
+        .blog-content h2 { font-size: 1.5rem; font-weight: bold; margin-top: 2rem; margin-bottom: 1rem; }
+        .blog-content p { margin-bottom: 1rem; }
+        .blog-content ul { list-style: disc; margin-left: 1.5rem; margin-bottom: 1rem; }
+        .blog-content ol { list-style: decimal; margin-left: 1.5rem; margin-bottom: 1rem; }
+        .blog-content li { margin-bottom: 0.5rem; }
+        .blog-content a { color: #2563eb; text-decoration: underline; }
+        .dark .blog-content a { color: #60a5fa; }
+        .blog-content code { background-color: #f3f4f6; padding: 0.125rem 0.25rem; border-radius: 0.25rem; font-family: 'Monaco', 'Menlo', monospace; font-size: 0.875rem; }
+        .dark .blog-content code { background-color: #374151; }
+        .stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; margin: 1.5rem 0; }
+        @media (min-width: 640px) { .stats { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+        .stat { border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 0.75rem 1rem; }
+        .dark .stat { border-color: #374151; }
+        .stat b { display: block; font-size: 1.5rem; line-height: 1.2; }
+        .stat span { font-size: 0.85rem; color: #6b7280; }
+        .dark .stat span { color: #9ca3af; }
+    </style>
+</head>
+<body class="bg-bg-light dark:bg-bg-dark text-text-light dark:text-text-dark transition-colors">
+    <div class="min-h-screen">
+        <header class="border-b border-border-light dark:border-border-dark">
+            <div class="max-w-4xl mx-auto px-4 py-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <a href="../" class="text-xl font-bold text-text-light dark:text-text-dark hover:opacity-80 transition-opacity">Manan Patel</a>
+                        <p class="text-xs text-secondary-text-light dark:text-secondary-text-dark mt-0.5">Tinkering and Sharing</p>
+                    </div>
+                    <div class="flex items-center gap-3 flex-wrap">
+                        <a href="../#writing" class="text-sm text-secondary-text-light dark:text-secondary-text-dark hover:text-text-light dark:hover:text-text-dark transition-colors">← Back to Writing</a>
+                        <a href="../" class="text-sm text-secondary-text-light dark:text-secondary-text-dark hover:text-text-light dark:hover:text-text-dark transition-colors">Home</a>
+                        <a class="w-8 h-8 border border-border-light dark:border-border-dark rounded flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" href="https://x.com/mananthekid" target="_blank" rel="noopener" aria-label="X">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+                        </a>
+                        <a class="w-8 h-8 border border-border-light dark:border-border-dark rounded flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" href="https://www.linkedin.com/in/mananpatel123/" target="_blank" rel="noopener" aria-label="LinkedIn">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z"></path></svg>
+                        </a>
+                        <a class="w-8 h-8 border border-border-light dark:border-border-dark rounded flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" href="https://github.com/MananPatel95" target="_blank" rel="noopener" aria-label="GitHub">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path clip-rule="evenodd" fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.285 2.866 7.92 6.737 9.208.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.942.359.308.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z"></path></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+
+        <article class="max-w-4xl mx-auto px-4 py-8">
+            <header class="mb-8">
+                <div class="flex items-center gap-2 mb-4 flex-wrap">
+                    <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs font-medium rounded">AI / ML</span>
+                    <span class="text-secondary-text-light dark:text-secondary-text-dark text-sm">Nov 22, 2026</span>
+                    <span class="text-secondary-text-light dark:text-secondary-text-dark text-sm">•</span>
+                    <span class="text-secondary-text-light dark:text-secondary-text-dark text-sm">6 min read</span>
+                </div>
+                <h1 class="text-3xl font-bold text-text-light dark:text-text-dark mb-4">Building a support chat agent for Maybliss: what broke when it started calling Shopify, Gorgias and HubSpot</h1>
+                <p class="text-lg text-secondary-text-light dark:text-secondary-text-dark">
+                    At Rocket Agency I build AI support agents for small businesses. One of the first was a chat agent for <a href="https://www.maybliss.la/" target="_blank" rel="noopener" class="underline">Maybliss</a>, a brand that sells the BlissPod Pro, a magnetic modular pill case for people who take a lot of supplements or travel with them.
+                </p>
+            </header>
+
+            <div class="blog-content">
+                <div class="stats">
+                    <div class="stat"><b>2 weeks</b><span>consult to first version live</span></div>
+                    <div class="stat"><b>~200</b><span>chats a week</span></div>
+                    <div class="stat"><b>~50%</b><span>resolved without a person</span></div>
+                    <div class="stat"><b>20+ hrs</b><span>saved for the team each week</span></div>
+                </div>
+                <p>Most of the work wasn't the model. It was connecting it to the systems the business already runs on, and two of those connections broke in ways I didn't expect.</p>
+
+                <h2>The setup</h2>
+                <ul>
+                    <li>Shopify for orders, fulfillment and tracking</li>
+                    <li>Gorgias as the helpdesk, where chats live and get handed to a person</li>
+                    <li>HubSpot for customer records</li>
+                    <li>Chat only, on the website</li>
+                </ul>
+
+                <h2>What customers actually ask</h2>
+                <p>Before building anything I went through past tickets. Almost everything fell into a few buckets:</p>
+                <ul>
+                    <li>Where's my order, and when will it arrive</li>
+                    <li>Can I cancel or change my order</li>
+                    <li>Discounts and promo codes</li>
+                    <li>Product questions: is it BPA-free, what's it made of, how strong are the magnets, are they safe</li>
+                    <li>Insurance coverage (whether a pill case can be covered or reimbursed)</li>
+                </ul>
+                <p>That split decides how you build. Product and policy questions get answered from a knowledge base: the inside is BPA-free polymer, the outside is anodized aluminum, lab reports are available on request, and returns are 30 days. Order questions need live data from Shopify. Cancellations and discounts involve money, so they need rules.</p>
+
+                <h2>Failure 1: order number lookup</h2>
+                <p>Customers type order numbers every way you can think of: "1042", "#1042", "order 1042", or the long ID from the confirmation email. In Shopify, the "#1042" a customer sees is the order's <em>name</em>, which is a different field from the order ID the API usually looks things up by. Early on, the agent would pass whatever the customer typed straight into the lookup, get nothing back, and tell someone with a real order that it couldn't find it.</p>
+                <p>What I changed:</p>
+                <ul>
+                    <li>The lookup tool cleans the input itself (strips <code>#</code>, spaces and words like "order") and tries it as an order name first.</li>
+                    <li>If that fails it falls back to the customer's email, and checks that the email matches the order before sharing any details.</li>
+                    <li>When nothing matches, the tool returns a plain sentence instead of an empty result, like <code>No order found for 1042. Ask for the email used at checkout.</code> The agent asks a follow-up instead of guessing.</li>
+                </ul>
+                <p>The lesson: put the messy parsing in the tool, not in the prompt. The less the model has to decide, the more reliable it gets.</p>
+
+                <h2>Failure 2: handing out discount codes without approval</h2>
+                <p>This was the bigger one. Customers asked for discounts all the time ("any promo codes?", "I'm a returning customer", "the Black Friday deal didn't apply"). The agent was trying to be helpful, and it gave out discount codes that customer service had never approved for that situation.</p>
+                <p>It's an easy mistake to make. If a code shows up anywhere in the agent's context, like a knowledge base article, an old ticket or a promo page, the model treats it as something it's allowed to share. Being helpful and protecting margin pull in opposite directions, and by default the model picks helpful.</p>
+                <p>What I changed:</p>
+                <ul>
+                    <li>The agent can only mention public promotions that are already on the site, like the current sale or the subscribe-and-save discount.</li>
+                    <li>Anything else (one-off codes, "make it right" discounts, fixing a code that didn't apply) creates a Gorgias ticket for a person to approve, and the agent tells the customer someone will follow up.</li>
+                    <li>I took private codes out of everything the agent can read. A rule in the prompt isn't enough if the code is sitting right there in its context.</li>
+                    <li>I added test conversations that try to talk the agent into a discount, and I run them before every change.</li>
+                </ul>
+                <p>The lesson: anything that costs the business money should be enforced by what the agent can access, not just by what the prompt tells it to do.</p>
+
+                <h2>What the other 50% looks like</h2>
+                <p>The chats that still go to a person are mostly the ones I'd want a person on anyway: cancellations after an order has shipped, discount requests, and anything unusual. Cancellations and insurance questions follow a clear policy, so the agent explains it and passes the chat to the team in Gorgias with the order already attached. Nobody has to start from scratch.</p>
+
+                <h2>What I'd tell someone building their first support agent</h2>
+                <ol>
+                    <li>Read the past tickets before you write a prompt. The question mix tells you what to build.</li>
+                    <li>Expect the lookups to break before the conversation does.</li>
+                    <li>Keep anything that costs money (discounts, refunds, cancellations) behind a person until you have a reason to trust the agent with it.</li>
+                    <li>Don't aim for 100% resolution. Half of 200 chats a week is 20+ hours back for a small team, and a clean handoff beats a confident wrong answer.</li>
+                </ol>
+                <p>I'm looking for AI engineering roles where I can keep building agents like this. If you're hiring, here's <a href="../resume.html">my resume</a>, or reach out on <a href="https://www.linkedin.com/in/mananpatel123/" target="_blank" rel="noopener">LinkedIn</a>.</p>
+            </div>
+
+            <footer class="mt-12 pt-8 border-t border-border-light dark:border-border-dark">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div class="flex items-center gap-4 flex-wrap">
+                        <span class="text-sm text-secondary-text-light dark:text-secondary-text-dark">Tags:</span>
+                        <div class="flex gap-2 flex-wrap">
+                            <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs font-medium rounded">AI</span>
+                            <span class="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-xs font-medium rounded">AI agents</span>
+                            <span class="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-xs font-medium rounded">Customer support</span>
+                            <span class="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-xs font-medium rounded">Shopify</span>
+                        </div>
+                    </div>
+                    <div class="text-sm text-secondary-text-light dark:text-secondary-text-dark">
+                        Published Nov 22, 2026
+                    </div>
+                </div>
+            </footer>
+        </article>
+
+        <footer class="border-t border-border-light dark:border-border-dark mt-12">
+            <div class="max-w-4xl mx-auto px-4 py-8">
+                <div class="text-center text-secondary-text-light dark:text-secondary-text-dark text-sm">
+                    <p>&copy; 2026 Manan Patel. All rights reserved.</p>
+                    <p class="mt-2">
+                        <a href="/" class="hover:text-text-light dark:hover:text-text-dark transition-colors">Home</a>
+                        <span class="mx-2">•</span>
+                        <a href="./" class="hover:text-text-light dark:hover:text-text-dark transition-colors">Blog</a>
+                    </p>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script>
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+</body>
+</html>
