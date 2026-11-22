@@ -43,6 +43,7 @@ Base URL: https://mananpatel.info
 - /blog/uikit-fundamentals.html
 - /blog/swift-concurrency-multithreading.html
 - /blog/rentplay-lessons-first-startup.html
+- /blog/maybliss-support-agent.html (case study: AI support chat agent for Maybliss on Shopify, Gorgias and HubSpot; ~200 chats/week, ~50% resolved, 20+ hours/week saved)
 - /#teams
 - /tools/gex-dashboard.html
 - /tools/year-progress-calculator.html
