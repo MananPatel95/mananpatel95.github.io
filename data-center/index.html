@@ -1,0 +1,1564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tiny Data Center</title>
+<meta name="description" content="A clickable miniature of an AI data center buildout: the land, power from the grid and from on-site gas, backup generators and batteries, construction, the data hall, the racks and chips, liquid cooling, fiber, and who pays for it all.">
+<link rel="canonical" href="https://mananpatel.info/data-center/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f3f1ec;
+    --card: #ffffff;
+    --ink: #23303a;
+    --muted: #6b7680;
+    --line: #e3e6e4;
+    --accent: #2f8fce;
+    --accent-soft: #dcecf8;
+    --blue: #2f7fc4;
+    --shadow: 0 10px 30px rgba(35, 48, 58, 0.12), 0 2px 6px rgba(35, 48, 58, 0.06);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  #scene { position: fixed; inset: 0; }
+  #scene canvas { display: block; touch-action: none; }
+  button { font: inherit; cursor: pointer; border: 0; background: none; color: inherit; }
+  a { color: var(--blue); }
+
+  .card { background: var(--card); border-radius: 20px; box-shadow: var(--shadow); }
+
+  /* Header */
+  #intro {
+    position: fixed; top: 16px; left: 16px; z-index: 5;
+    width: 330px; padding: 18px 20px;
+    transition: opacity .25s ease, transform .25s ease;
+  }
+  body.focused #intro { opacity: 0; transform: translateY(-8px); pointer-events: none; }
+  #intro .back { font-size: 13px; font-weight: 700; color: var(--muted); text-decoration: none; }
+  #intro .back:hover { color: var(--ink); }
+  #intro h1 { font-size: 24px; font-weight: 900; line-height: 1.15; margin: 8px 0 6px; letter-spacing: -0.01em; }
+  #intro .sub { font-size: 14px; color: var(--muted); line-height: 1.45; }
+  #intro .keys { font-size: 12px; color: var(--muted); margin-top: 10px; line-height: 1.5; }
+  #intro .keys kbd {
+    font: inherit; font-weight: 800; font-size: 11px; padding: 1px 5px; border-radius: 5px;
+    background: #f0f0ec; border: 1px solid #e2e0da; border-bottom-width: 2px;
+  }
+  #intro .date { font-size: 12px; color: var(--muted); font-weight: 700; margin-top: 10px; }
+  .btn-row { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+  .btn {
+    padding: 9px 14px; border-radius: 999px; font-weight: 800; font-size: 14px;
+    background: var(--ink); color: #fff; transition: transform .15s ease, background .15s ease;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn.ghost { background: #eef0ef; color: var(--ink); }
+  .btn.ghost:hover { background: #e3e7e5; }
+
+  /* Flow bar */
+  #flow {
+    position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 5;
+    display: flex; align-items: center; gap: 2px; padding: 6px;
+    max-width: calc(100vw - 32px); overflow-x: auto; scrollbar-width: none;
+  }
+  #flow::-webkit-scrollbar { display: none; }
+  .chip {
+    display: flex; align-items: center; gap: 6px; white-space: nowrap;
+    padding: 8px 11px; border-radius: 999px; font-weight: 800; font-size: 13px; color: var(--muted);
+    transition: background .15s ease, color .15s ease;
+  }
+  .chip:hover { background: #f1f3f2; color: var(--ink); }
+  .chip .n {
+    width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center;
+    font-size: 11px; background: #eceeed; color: var(--ink);
+  }
+  .chip.on { background: var(--accent-soft); color: var(--ink); }
+  .chip.on .n { background: var(--accent); color: #fff; }
+  .arrow { color: #c3c9c6; font-weight: 900; font-size: 12px; }
+  .sep { width: 1px; height: 22px; background: var(--line); margin: 0 4px; }
+
+  /* Pins */
+  #pins { position: fixed; inset: 0; pointer-events: none; z-index: 3; }
+  .pin {
+    position: absolute; left: 0; top: 0; pointer-events: auto;
+    display: flex; align-items: center; gap: 5px;
+    padding: 4px 10px 4px 5px; border-radius: 999px;
+    background: rgba(255,255,255,0.94); box-shadow: 0 4px 12px rgba(35,48,58,0.14);
+    font-weight: 800; font-size: 12px; white-space: nowrap;
+    transition: opacity .2s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
+  }
+  .pin .e { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; background: #f1f3f2; font-size: 13px; }
+  .pin:hover { box-shadow: 0 6px 16px rgba(35,48,58,0.22); }
+  .pin.on { background: var(--accent); color: #fff; }
+  .pin.on .e { background: #fff; }
+  .pin.dim { opacity: .45; }
+  .pin::after {
+    content: ""; position: absolute; left: 50%; bottom: -5px; transform: translateX(-50%);
+    border: 5px solid transparent; border-top-color: rgba(255,255,255,0.94); border-bottom: 0;
+  }
+  .pin.on::after { border-top-color: var(--accent); }
+
+  /* Panel */
+  #panel {
+    position: fixed; top: 16px; right: 16px; bottom: 84px; z-index: 6;
+    width: 380px; display: flex; flex-direction: column; overflow: hidden;
+    transform: translateX(calc(100% + 24px)); transition: transform .35s cubic-bezier(.2,.8,.2,1);
+  }
+  #panel.open { transform: none; }
+  #panel .scroll { overflow-y: auto; padding: 20px 22px 8px; flex: 1; }
+  #panel .close {
+    position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; border-radius: 50%;
+    background: #f1f3f2; font-size: 16px; font-weight: 900; color: var(--muted);
+  }
+  #panel .close:hover { color: var(--ink); }
+  .step-tag {
+    display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px;
+    background: var(--accent-soft); font-size: 12px; font-weight: 800;
+  }
+  #panel h2 { font-size: 24px; font-weight: 900; margin: 12px 0 4px; line-height: 1.15; display: flex; gap: 10px; align-items: center; padding-right: 30px; }
+  #panel h2 .e { font-size: 28px; }
+  .tagline { color: var(--muted); font-weight: 700; font-size: 15px; margin-bottom: 14px; }
+  .body-list { list-style: none; display: grid; gap: 10px; margin-bottom: 16px; }
+  .body-list li { position: relative; padding-left: 20px; font-size: 15px; line-height: 1.5; }
+  .body-list li::before {
+    content: ""; position: absolute; left: 4px; top: 8px; width: 8px; height: 8px;
+    border-radius: 50% 0 50% 50%; transform: rotate(-45deg); background: var(--accent);
+  }
+  .facts { background: #f2f5f4; border-radius: 14px; padding: 14px 16px; margin-bottom: 16px; }
+  .facts-h { font-size: 12px; font-weight: 900; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+  a.src { color: inherit; text-decoration: underline; text-decoration-color: #c5ccc9; text-underline-offset: 2px; }
+  a.src:hover { color: var(--ink); text-decoration-color: currentColor; }
+  .facts ul { list-style: none; display: grid; gap: 8px; }
+  .facts li { font-size: 14px; line-height: 1.5; }
+  .facts b { font-weight: 900; }
+  .panel-nav {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    padding: 12px 16px; border-top: 1px solid var(--line);
+  }
+  .panel-nav .count { font-size: 13px; font-weight: 800; color: var(--muted); }
+
+  /* Widgets */
+  .widget { border: 1px solid var(--line); border-radius: 14px; padding: 14px; margin-bottom: 16px; }
+  .widget h3 { font-size: 15px; font-weight: 900; margin-bottom: 2px; }
+  .widget .hint { font-size: 13px; color: var(--muted); margin-bottom: 10px; line-height: 1.45; }
+  .widget input[type=range] { width: 100%; margin: 6px 0 2px; accent-color: var(--accent); }
+  .widget .lbl-row { display: flex; justify-content: space-between; font-size: 13px; font-weight: 800; }
+  .widget .sub-h { font-size: 12px; font-weight: 900; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; margin-top: 4px; }
+  .seg { display: flex; gap: 4px; flex-wrap: wrap; margin: 6px 0 10px; }
+  .seg button { padding: 6px 10px; border-radius: 999px; background: #eef0ef; font-weight: 800; font-size: 13px; }
+  .seg button:hover { background: #e3e7e5; }
+  .seg button.on { background: var(--ink); color: #fff; }
+  .meter { position: relative; height: 14px; border-radius: 999px; background: #eceeed; overflow: hidden; margin: 6px 0 10px; }
+  .meter .fill { position: absolute; inset: 0 auto 0 0; border-radius: 999px; transition: width .2s ease, background .2s ease; }
+  .status { font-size: 14px; line-height: 1.45; }
+  .status b { font-weight: 900; }
+  .big { font-size: 30px; font-weight: 900; margin: 6px 0 4px; }
+  .big small { font-size: 14px; color: var(--muted); font-weight: 800; }
+  .cost-row { display: grid; grid-template-columns: 112px 1fr 58px; align-items: center; gap: 8px; font-size: 13px; margin: 5px 0; }
+  .cost-row .bar { height: 12px; border-radius: 999px; min-width: 3px; transition: width .2s ease; }
+  .cost-row .g { font-weight: 800; text-align: right; }
+  .cost-row small { display: block; color: var(--muted); font-size: 11px; }
+  .stat-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin: 8px 0 10px; }
+  .stat { background: #f2f5f4; border-radius: 10px; padding: 8px 10px; }
+  .stat .v { font-size: 20px; font-weight: 900; }
+  .stat .k { font-size: 11px; font-weight: 800; color: var(--muted); }
+
+  #tip {
+    position: fixed; z-index: 7; pointer-events: none; padding: 6px 10px; border-radius: 10px;
+    background: var(--ink); color: #fff; font-size: 12px; font-weight: 800; opacity: 0; transition: opacity .12s ease;
+  }
+  #credit {
+    position: fixed; right: 16px; bottom: 22px; z-index: 4; font-size: 12px; color: var(--muted); font-weight: 700;
+    max-width: 240px; text-align: right; line-height: 1.4;
+  }
+  #loading {
+    position: fixed; inset: 0; z-index: 10; display: grid; place-items: center; background: var(--bg);
+    font-weight: 800; color: var(--muted); transition: opacity .4s ease;
+  }
+  #loading.gone { opacity: 0; pointer-events: none; }
+
+  @media (max-width: 1100px) { #credit { display: none; } }
+  @media (max-width: 720px) {
+    #intro { left: 12px; right: 12px; top: 12px; width: auto; padding: 14px 16px; }
+    #intro h1 { font-size: 19px; margin: 4px 0 2px; }
+    #intro .sub, #intro .date, #intro .keys { display: none; }
+    .btn-row { margin-top: 10px; }
+    .btn { padding: 7px 12px; font-size: 13px; }
+    #flow { bottom: 12px; }
+    .chip { padding: 7px 9px; font-size: 12px; }
+    .chip .lbl { display: none; }
+    .chip.on .lbl { display: inline; }
+    .pin { padding: 3px; font-size: 0; gap: 0; }
+    .pin .lbl { display: none; }
+    #panel {
+      top: auto; left: 0; right: 0; bottom: 0; width: auto; height: 56vh;
+      border-radius: 20px 20px 0 0; transform: translateY(105%);
+    }
+    #panel .scroll { padding: 18px 16px 8px; }
+    #panel h2 { font-size: 21px; }
+  }
+  @media (prefers-reduced-motion: reduce) { #panel { transition: none; } }
+  :root { --accent: #4f6bed; --accent-soft: #e3e8fd; }
+  .gantt { margin: 8px 0 10px; }
+  .g-row { display: grid; grid-template-columns: 132px 1fr; gap: 8px; align-items: center; font-size: 12px; margin: 5px 0; }
+  .g-row .t { font-weight: 800; line-height: 1.25; }
+  .g-track { position: relative; height: 14px; background: #f2f5f4; border-radius: 999px; }
+  .g-bar { position: absolute; top: 0; bottom: 0; border-radius: 999px; transition: left .25s ease, width .25s ease, background .25s ease; }
+  .g-bar.dash { background: repeating-linear-gradient(90deg, #c9ced3 0 6px, transparent 6px 10px) !important; }
+  .g-axis { display: grid; grid-template-columns: 132px 1fr; gap: 8px; font-size: 11px; color: var(--muted); font-weight: 800; }
+  .g-axis div { display: flex; justify-content: space-between; }
+  .g-live { position: absolute; top: -4px; bottom: -4px; width: 2px; background: #e0533d; border-radius: 2px; }
+  .pl-row { display: grid; grid-template-columns: 1fr auto; font-size: 13px; padding: 3px 0; border-bottom: 1px dashed var(--line); }
+  .pl-row b { font-weight: 900; }
+  .pl-row.neg span:last-child { color: #c2412d; }
+  .pl-row.tot { border-bottom: 0; font-size: 15px; font-weight: 900; padding-top: 6px; }
+  #full { display: none; }
+  body.embed #intro .back, body.embed #intro .date, body.embed #credit { display: none; }
+  body.embed #full { display: inline-flex; }
+  body.embed #intro { width: 300px; padding: 14px 16px; }
+  body.embed #intro h1 { font-size: 20px; }
+  body.embed #intro .sub, body.embed #intro .keys { display: none; }
+  body.embed #intro { width: auto; max-width: 300px; }
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+<div id="scene"></div>
+<div id="pins"></div>
+
+<header id="intro" class="card">
+  <a class="back" href="/">← Manan Patel</a>
+  <h1>What's inside a data center buildout</h1>
+  <p class="sub">A tiny AI campus you can click. Follow it from an empty lot through power, backup, construction, the racks of chips, cooling and fiber, to the bill and who pays it.</p>
+  <div class="btn-row">
+    <button class="btn" id="tour-btn">▶ Take the tour</button>
+    <button class="btn ghost" id="reset-btn">Reset view</button>
+    <a class="btn ghost" id="full" href="/data-center/" target="_top">Full screen ↗</a>
+  </div>
+  <p class="keys"><kbd>Drag</kbd> or <kbd>WASD</kbd> <kbd>←↑↓→</kbd> to move · <kbd>Right-drag</kbd> to turn · <kbd>Scroll</kbd> to zoom</p>
+  <p class="date">Nov 17, 2026 · <a class="src" href="/blog/data-center-buildout.html">Read the write-up</a> · Sources: <a class="src" href="https://www.theregister.com/2025/05/27/oracle_openai_40b/" target="_blank" rel="noopener">The Register</a>, <a class="src" href="https://irei.com/news/cushman-wakefield-releases-2026-data-center-development-cost-guide-citing-21-rise-in-per-mw-construction-costs/" target="_blank" rel="noopener">Cushman &amp; Wakefield</a>, <a class="src" href="https://intelligence.uptimeinstitute.com/resource/uptime-institute-global-data-center-survey-2025" target="_blank" rel="noopener">Uptime Institute</a></p>
+</header>
+
+<nav id="flow" class="card" aria-label="Steps of a data center buildout"></nav>
+
+<aside id="panel" class="card" aria-live="polite">
+  <button class="close" id="close-btn" aria-label="Close">✕</button>
+  <div class="scroll" id="panel-body"></div>
+  <div class="panel-nav">
+    <button class="btn ghost" id="prev-btn">← Prev</button>
+    <span class="count" id="count"></span>
+    <button class="btn" id="next-btn">Next →</button>
+  </div>
+</aside>
+
+<div id="tip"></div>
+<p id="credit">Facts from <a href="https://www.theregister.com/2025/05/27/oracle_openai_40b/" target="_blank" rel="noopener">The Register</a>, <a href="https://irei.com/news/cushman-wakefield-releases-2026-data-center-development-cost-guide-citing-21-rise-in-per-mw-construction-costs/" target="_blank" rel="noopener">Cushman &amp; Wakefield</a>, the <a href="https://intelligence.uptimeinstitute.com/resource/uptime-institute-global-data-center-survey-2025" target="_blank" rel="noopener">Uptime Institute</a> and others. Toy model, not to scale.</p>
+<div id="loading">Pouring the slab…</div>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+
+const EMBED = new URLSearchParams(location.search).has('embed');
+if (EMBED) document.body.classList.add('embed');
+
+/* ------------------------------------------------------------------ */
+/* Content                                                             */
+/* ------------------------------------------------------------------ */
+
+const SRC = {
+  oncor: { url: 'https://publications.scottmadden.com/energy-industry-update-v26-i1/large-loads-and-the-speed-to-power-challenge', name: 'ScottMadden' },
+  transformers: { url: 'https://thenextweb.com/news/us-power-companies-scramble-data-centre-equipment', name: 'The Next Web' },
+  turbines: { url: 'https://www.power-eng.com/gas/turbines/data-centers-drive-record-surge-in-ge-vernova-power-equipment-orders-as-turbine-slots-tighten-through-2030/', name: 'Power Engineering' },
+  abilene: { url: 'https://www.datacenterfrontier.com/hyperscale/article/55276169/crusoe-adds-45-gw-natural-gas-to-fuel-ai-expands-abilene-data-center-to-12-gw', name: 'Data Center Frontier' },
+  cushman: { url: 'https://irei.com/news/cushman-wakefield-releases-2026-data-center-development-cost-guide-citing-21-rise-in-per-mw-construction-costs/', name: 'Cushman & Wakefield via IREI' },
+  register: { url: 'https://www.theregister.com/2025/05/27/oracle_openai_40b/', name: 'The Register' },
+  uptime: { url: 'https://intelligence.uptimeinstitute.com/resource/uptime-institute-global-data-center-survey-2025', name: 'Uptime Institute' },
+  capex: { url: 'https://www.datacentres.com/news/ai-demand-surge-hyperscaler-capex-2026', name: 'Datacentres.com' },
+};
+
+const STEPS = [
+  { n: 1, key: 'land',    label: 'Land' },
+  { n: 2, key: 'power',   label: 'Power' },
+  { n: 3, key: 'backup',  label: 'Backup' },
+  { n: 4, key: 'build',   label: 'Build' },
+  { n: 5, key: 'racks',   label: 'Chips' },
+  { n: 6, key: 'cooling', label: 'Cooling' },
+  { n: 7, key: 'fiber',   label: 'Fiber' },
+  { n: '$', key: 'bill',  label: 'The bill' },
+];
+
+const INFO = {
+  site: {
+    step: 'land', emoji: '📍', short: 'The land', title: 'Picking the land',
+    tagline: 'Data centers go where the power is, not where land is cheap.',
+    body: [
+      "Ten years ago developers shopped for land near fiber and near customers, which is why so many data centers sit in Northern Virginia. Today the first question is simpler: <b>how many megawatts can I get here, and when?</b>",
+      "A good site has four things: a big <b>transmission line</b> nearby, <b>fiber</b> routes, a plan for <b>water</b>, and a town that will say yes. It also has to be flat, out of the floodplain and big enough to grow.",
+      "Land that already has a power commitment from the utility is called <b>powered land</b>. It can sell for many times what the same field is worth as farmland, because it skips years of waiting.",
+      "Then come the deals: zoning, tax breaks, a power contract. More towns now push back on noise, water use and the fear that everyone's power bill goes up.",
+    ],
+    facts: [
+      "One Texas utility, <b>Oncor</b>, has received about <b>103 GW</b> of requests for new load. About <b>82 GW</b> of that is data centers.",
+      "For scale, Texas's all-time peak demand is in the mid-80s of GW.",
+    ],
+    src: SRC.oncor,
+  },
+  power: {
+    step: 'power', emoji: '⚡', short: 'Substation', title: 'Power from the grid',
+    tagline: 'One campus can pull as much power as a city.',
+    body: [
+      "High-voltage lines (often <b>345 kV</b>) run into a <b>substation</b> on site, which the developer usually pays for. Watch the yellow dots: that's power flowing in.",
+      "Big <b>transformers</b> step the voltage down to medium voltage, <b>switchgear</b> routes it around the campus, and smaller transformers by each hall bring it down to the 480 V that equipment uses in the US.",
+      "Inside, power runs through <b>UPS</b> batteries, along <b>busways</b> over the racks, and into power shelves that turn it into about 50 V DC for the chips.",
+      "Before any of this, the utility runs an <b>interconnection study</b> to check the grid can take the load. That often means new lines and upgrades, and it can take years.",
+    ],
+    facts: [
+      "Big power transformers have been taking well over <b>two years</b> to arrive after they're ordered.",
+      "Utilities, data centers and power plants are all trying to buy the same transformers at once.",
+    ],
+    src: SRC.transformers,
+  },
+  gas: {
+    step: 'power', emoji: '🔥', short: 'On-site gas', title: 'Bring your own power',
+    tagline: "When the grid says wait, build a power plant next door.",
+    body: [
+      "Some campuses run <b>behind the meter</b>: gas turbines or big engines on site, fed by a pipeline, making power that never touches the public grid.",
+      "Crusoe added gas generation for the Stargate campus in Abilene, Texas. xAI brought in trailer-mounted turbines in Memphis to get its first cluster running before the grid connection was ready.",
+      "Often it's a <b>bridge</b>: run on your own gas until the utility catches up, then keep the turbines as backup.",
+      "The catch: you need air permits, you carry gas price risk, and turbines are sold out too. You're now in the power plant business.",
+    ],
+    facts: [
+      "GE Vernova's gas turbine backlog hit about <b>100 GW</b> in early 2026, and it expected at least <b>110 GW</b> by year end.",
+      "New heavy-duty turbine orders were quoted at about <b>three years</b> of lead time.",
+    ],
+    src: SRC.turbines,
+  },
+  backup: {
+    step: 'backup', emoji: '🔋', short: 'Backup', title: 'Generators and batteries',
+    tagline: "The power can't blink, not even for a second.",
+    body: [
+      "If the grid hiccups, <b>UPS</b> batteries carry the whole load instantly for a few minutes.",
+      "Meanwhile <b>diesel generators</b> start in about 10 to 15 seconds and take over. Each one is a couple of megawatts, so a big campus has dozens or hundreds of them in a row like this.",
+      "Redundancy has names. <b>N+1</b> means one spare for every set. <b>2N</b> means two of everything. The Uptime Institute rates sites <b>Tier I</b> to <b>Tier IV</b> by how much can fail without the servers noticing.",
+      "AI training sites sometimes skimp here on purpose. A training run saves checkpoints and can restart. A bank's payment system can't.",
+    ],
+  },
+  build: {
+    step: 'build', emoji: '🏗️', short: 'Construction', title: 'Construction',
+    tagline: 'Thousands of workers, and most of them are electricians.',
+    body: [
+      "The order: grade the site, pour the <b>slab</b>, stand up the walls (often concrete <b>tilt-up panels</b> cast on the slab and lifted into place), then the roof.",
+      "Then the expensive part: <b>MEP</b>, short for mechanical, electrical and plumbing. Switchgear, cable, pipes, pumps and cooling gear cost more than the building around them.",
+      "To go faster, builders <b>prefab</b>: whole electrical rooms and power skids are built in a factory and trucked in on flatbeds.",
+      "Before chips arrive, crews run <b>commissioning</b>: giant electric heaters called <b>load banks</b> fake the heat of a full hall to prove power and cooling hold up.",
+    ],
+    facts: [
+      "Crusoe's Abilene campus has <b>8 buildings</b>, about <b>4 million sq ft</b> and <b>1.2 GW</b>.",
+      "About <b>2,000 workers</b> were on site each day, expected to climb toward <b>5,000</b> as it expanded.",
+    ],
+    src: SRC.abilene,
+    widget: 'schedule',
+  },
+  shell: {
+    step: 'build', emoji: '🏢', short: 'Data hall', title: 'The data hall',
+    tagline: "A big, boring box. That's the point.",
+    body: [
+      "A data hall is a windowless box built to hold weight, keep dust out and keep people out. The roof is off here so you can see inside.",
+      "The industry used to price buildings by the square foot. Now it prices by the <b>megawatt</b>: how much power the hall can deliver and how much heat it can remove.",
+      "AI racks weigh well over a tonne each, so new halls put them straight on a concrete slab instead of a raised floor.",
+      "Fences, guards, badge doors and <b>mantraps</b> (two doors that never open at once). Nobody wanders in.",
+    ],
+    facts: [
+      "All-in development for the newest US and Canadian sites averaged about <b>$17.6 million per MW</b> in 2026, <b>not counting chips</b>.",
+      "That figure rose about <b>21%</b> in a year.",
+    ],
+    src: SRC.cushman,
+  },
+  racks: {
+    step: 'racks', emoji: '🧠', short: 'Racks', title: 'The racks and chips',
+    tagline: 'This is where most of the money goes.',
+    body: [
+      "A rack is a steel cabinet. Old office server racks drew <b>5 to 10 kW</b>. An Nvidia <b>GB200 NVL72</b> rack holds 72 GPUs and peaks around <b>120 kW</b>, about what 100 homes use on average.",
+      "GPUs in one rack talk over copper. Racks talk to each other over fiber and switches. That <b>network fabric</b> is what lets 100,000 GPUs act like one computer for training.",
+      "The chips cost more than the building. On a 1 GW campus, think roughly $15 billion of building, power and cooling, and $20 to $30 billion of chips and network gear.",
+      "Chips age fast. Nvidia ships a new generation about every year, while accountants usually spread server costs over <b>5 to 6 years</b>. Whether chips stay useful that long is one of the biggest bets in the whole buildout.",
+    ],
+    facts: [
+      "Each NVL72 rack draws about <b>120 kW</b> at peak, before power and cooling losses.",
+      "By The Register's math, a full <b>1.2 GW</b> campus could hold roughly <b>11,000</b> of these racks.",
+    ],
+    src: SRC.register,
+    widget: 'size',
+  },
+  cooling: {
+    step: 'cooling', emoji: '❄️', short: 'Cooling', title: 'Cooling',
+    tagline: 'Every watt that goes in comes out as heat.',
+    body: [
+      "Chips turn electricity into heat. A 100 MW hall makes 100 MW of heat, all day, every day. Cooling is just moving that heat outside.",
+      "Air can't cool a 120 kW rack. So AI halls use <b>direct-to-chip liquid cooling</b>: a <b>cold plate</b> sits on each chip and coolant flows through it.",
+      "A <b>CDU</b> (coolant distribution unit) passes the heat into a bigger facility water loop. Blue dots go in cold, red dots come out hot.",
+      "Outside, that water is cooled by <b>dry coolers</b> (giant radiators with fans, like these) or by <b>cooling towers</b> that evaporate water. Towers use less power but drink water. Dry coolers use almost no water but more power on hot days.",
+      "The score is <b>PUE</b>: total power in, divided by power that reaches the IT gear. 1.0 would be perfect.",
+    ],
+    facts: [
+      "The industry's average PUE has hovered <b>above 1.5</b>, with little change for six years.",
+      "New hyperscale AI sites aim for about <b>1.1 to 1.2</b>.",
+    ],
+    src: SRC.uptime,
+    widget: 'pue',
+  },
+  network: {
+    step: 'fiber', emoji: '🔌', short: 'Fiber', title: 'Fiber',
+    tagline: 'The quiet orange line everything travels on.',
+    body: [
+      "Long-haul <b>fiber</b> runs along roads and rail lines. A campus wants at least two routes from different directions so one backhoe can't cut it off.",
+      "Carriers hand traffic off in a <b>meet-me room</b>, a small secure room where everyone's cables come together.",
+      "Training sites need less outside bandwidth than you'd think: the hard traffic is inside the cluster. Sites that answer users' questions (<b>inference</b>) care more about being close to cities.",
+      "Inside the hall there's far more fiber than outside. A big cluster can use hundreds of thousands of optical transceivers.",
+    ],
+  },
+  money: {
+    step: 'bill', emoji: '💵', short: 'The bill', title: 'Who pays, and how they get paid back',
+    tagline: 'A 20-year building full of chips that age in five.',
+    body: [
+      "The giants (Amazon, Microsoft, Alphabet, Meta) pay mostly from cash flow, but more and more with debt: bonds, private credit and off-balance-sheet joint ventures. Meta's Hyperion campus in Louisiana was financed through a roughly <b>$27 billion</b> deal with Blue Owl.",
+      "Often a developer builds the <b>powered shell</b> and leases it for 10 to 15 years. The tenant brings the chips.",
+      "<b>Neoclouds</b> like CoreWeave borrow against GPU rental contracts, then rent GPUs by the hour.",
+      "Two guesses decide whether it all pays off: what people will pay for a GPU hour years from now, and how long the chips stay worth renting. Try them below.",
+    ],
+    facts: [
+      "Amazon, Alphabet, Microsoft and Meta guided to about <b>$720 to $745 billion</b> of combined capex for 2026.",
+      "That's up from roughly <b>$410 billion</b> in 2025.",
+    ],
+    src: SRC.capex,
+    widget: 'bill',
+  },
+};
+
+const ORDER = ['site', 'power', 'gas', 'backup', 'build', 'shell', 'racks', 'cooling', 'network', 'money'];
+
+/* Widget constants. Round numbers, picked to match the sources above. */
+const RACK_KW = 120;            // NVL72 peak IT draw
+const GPU_PER_RACK = 72;
+const RACK_COST = 3.5e6;        // rack + share of network gear, rough
+const SHELL_PER_MW = 17.6e6;    // Cushman 2026 all-in, ex chips, per MW of IT
+const HOME_KW = 1.2;            // average US home, ~10,500 kWh a year
+const POWER_PRICE = 0.07;       // $/kWh
+const OTHER_OPEX = 1500;        // $/GPU/yr staff, repairs, network
+const BUILDING_LIFE = 20;
+
+/* ------------------------------------------------------------------ */
+/* Three.js setup                                                      */
+/* ------------------------------------------------------------------ */
+
+let time = 0;
+const BG = new THREE.Color('#f3f1ec');
+const container = document.getElementById('scene');
+let renderer;
+try {
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+} catch (e) {
+  document.getElementById('loading').textContent = 'This needs WebGL, which your browser has turned off.';
+  throw e;
+}
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.15;
+container.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = BG;
+
+let viewH = 28;
+const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 400);
+const HOME_TARGET = new THREE.Vector3(0, 0.5, 0);
+const CAM_OFFSET = new THREE.Vector3(16, 27, 34);
+const HOME_ZOOM = 1.1;
+camera.position.copy(HOME_TARGET).add(CAM_OFFSET);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.copy(HOME_TARGET);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.screenSpacePanning = false;
+controls.mouseButtons = { LEFT: THREE.MOUSE.PAN, MIDDLE: THREE.MOUSE.DOLLY, RIGHT: THREE.MOUSE.ROTATE };
+controls.touches = { ONE: THREE.TOUCH.PAN, TWO: THREE.TOUCH.DOLLY_ROTATE };
+controls.minZoom = 0.7;
+controls.maxZoom = 4;
+controls.minPolarAngle = 0.35;
+controls.maxPolarAngle = 1.2;
+controls.minAzimuthAngle = -0.5;
+controls.maxAzimuthAngle = 1.3;
+// Inside an article, don't steal the page's scroll until the reader clicks the scene
+if (EMBED) controls.enableZoom = false;
+// On a phone inside an article, let swipes scroll the page; taps still open pins
+const TOUCH_EMBED = EMBED && window.matchMedia('(pointer: coarse)').matches;
+if (TOUCH_EMBED) { controls.enabled = false; renderer.domElement.style.touchAction = 'pan-y'; }
+
+scene.add(new THREE.HemisphereLight('#ffffff', '#c9cfc6', 1.5));
+const sunLight = new THREE.DirectionalLight('#fff8ec', 2.4);
+sunLight.position.set(-14, 28, 16);
+sunLight.castShadow = true;
+sunLight.shadow.mapSize.set(2048, 2048);
+Object.assign(sunLight.shadow.camera, { left: -34, right: 34, top: 26, bottom: -26, near: 1, far: 90 });
+sunLight.shadow.bias = -0.0004;
+sunLight.shadow.normalBias = 0.03;
+scene.add(sunLight);
+
+const sideInset = () => (window.innerWidth > 1000 ? 362 : 0);
+function homeTarget() {
+  const t = HOME_TARGET.clone();
+  const inset = sideInset();
+  if (!inset) return t;
+  camera.updateMatrixWorld();
+  const right = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 0);
+  return t.addScaledVector(right, -(inset / 2) * (viewH / HOME_ZOOM / window.innerHeight));
+}
+function resize() {
+  const w = window.innerWidth, h = window.innerHeight, a = w / h;
+  viewH = Math.max(30, (sideInset() ? 60 : 56) / ((w - sideInset()) / h));
+  camera.left = -viewH * a / 2; camera.right = viewH * a / 2;
+  camera.top = viewH / 2; camera.bottom = -viewH / 2;
+  camera.updateProjectionMatrix();
+  renderer.setSize(w, h);
+}
+window.addEventListener('resize', () => {
+  resize();
+  if (!selected && !tween) { controls.target.copy(homeTarget()); camera.position.copy(controls.target).add(CAM_OFFSET); }
+});
+resize();
+camera.zoom = HOME_ZOOM;
+camera.updateProjectionMatrix();
+controls.target.copy(homeTarget());
+camera.position.copy(controls.target).add(CAM_OFFSET);
+
+/* ------------------------------------------------------------------ */
+/* Modelling helpers                                                   */
+/* ------------------------------------------------------------------ */
+
+const mat = (color, extra = {}) => new THREE.MeshStandardMaterial({ color, roughness: 0.78, metalness: 0.04, ...extra });
+function shade(m) { m.castShadow = true; m.receiveShadow = true; return m; }
+function rbox(w, h, d, color, r = 0.08) {
+  const rad = Math.min(r, w / 2 - 0.001, h / 2 - 0.001, d / 2 - 0.001);
+  return shade(new THREE.Mesh(new RoundedBoxGeometry(w, h, d, 2, Math.max(rad, 0.0005)), mat(color)));
+}
+function cyl(rt, rb, h, color, seg = 20) {
+  return shade(new THREE.Mesh(new THREE.CylinderGeometry(rt, rb, h, seg), mat(color)));
+}
+function sphere(r, color, seg = 20) {
+  return shade(new THREE.Mesh(new THREE.SphereGeometry(r, seg, Math.round(seg * 0.7)), mat(color)));
+}
+function at(o, x, y, z) { o.position.set(x, y, z); return o; }
+const UP = new THREE.Vector3(0, 1, 0);
+const V = (x, y, z) => new THREE.Vector3(x, y, z);
+function flat(m) { m.castShadow = false; return m; }
+function beam(a, b, t, color) {
+  const len = a.distanceTo(b);
+  const m = shade(new THREE.Mesh(new THREE.BoxGeometry(t, len, t), mat(color)));
+  m.position.copy(a).add(b).multiplyScalar(0.5);
+  m.quaternion.setFromUnitVectors(UP, b.clone().sub(a).normalize());
+  return m;
+}
+const glow = (m) => { m.userData.glow = true; return m; };
+function makeRoute(points) {
+  const cum = [0];
+  for (let i = 1; i < points.length; i++) cum.push(cum[i - 1] + points[i].distanceTo(points[i - 1]));
+  const len = cum[cum.length - 1];
+  const seg = (d) => { let i = 1; while (i < cum.length - 1 && cum[i] < d) i++; return i; };
+  return {
+    len,
+    at(d, out) { const i = seg(d); const s = cum[i] - cum[i - 1] || 1; return out.copy(points[i - 1]).lerp(points[i], (d - cum[i - 1]) / s); },
+    tangent(d, out) { const i = seg(d); return out.copy(points[i]).sub(points[i - 1]).normalize(); },
+  };
+}
+const wheel = (r, color = '#2f3b4a') => { const w = cyl(r, r, r * 0.7, color, 14); w.rotation.z = Math.PI / 2; return w; };
+
+let seed = 20261117;
+const rand = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
+
+const sections = {};
+function section(id) {
+  const g = new THREE.Group();
+  scene.add(g);
+  sections[id] = { id, group: g };
+  return g;
+}
+
+const workers = [];
+function person(shirt, x, z, face = 0) {
+  const g = new THREE.Group();
+  g.add(at(rbox(0.2, 0.32, 0.12, '#3b4650', 0.04), 0, 0.16, 0));
+  g.add(at(rbox(0.27, 0.34, 0.17, shirt, 0.06), 0, 0.5, 0));
+  g.add(at(sphere(0.11, '#e3b18f', 12), 0, 0.78, 0));
+  g.add(at(cyl(0.12, 0.12, 0.05, '#f2c14e', 12), 0, 0.86, 0));
+  g.position.set(x, 0, z);
+  g.rotation.y = face;
+  workers.push({ g, ph: rand() * 6 });
+  return g;
+}
+function tree(x, z, s = 1) {
+  const g = new THREE.Group();
+  g.add(at(cyl(0.06 * s, 0.08 * s, 0.4 * s, '#8a6a4a', 8), 0, 0.2 * s, 0));
+  g.add(at(sphere(0.32 * s, rand() < 0.5 ? '#9cc47a' : '#86b56a', 12), 0, 0.55 * s, 0));
+  scene.add(at(g, x, 0, z));
+}
+
+/* ------------------------------------------------------------------ */
+/* Ground and roads                                                    */
+/* ------------------------------------------------------------------ */
+
+scene.add(at(rbox(51, 1.4, 27, '#fbfbf9', 0.4), 0, -0.95, 0));
+scene.add(at(flat(rbox(50.4, 0.5, 26.4, '#d9dfb4', 0.15)), 0, -0.25, 0));
+const road = (w, d, x, z) => scene.add(at(flat(rbox(w, 0.06, d, '#d6d6d0', 0.03)), x, 0.03, z));
+road(50, 0.95, 0, 11);
+for (let x = -24; x < 24; x += 1.3) scene.add(at(flat(rbox(0.6, 0.012, 0.06, '#ffffff', 0.004)), x, 0.065, 11));
+road(0.95, 5.4, 3, 7.9);       // drive to the loading dock
+road(0.95, 4, 18, 9);          // drive to the office
+road(0.95, 6.4, 13.2, -4.8);   // construction access
+
+/* ------------------------------------------------------------------ */
+/* 1. The land                                                         */
+/* ------------------------------------------------------------------ */
+
+const site = section('site');
+site.add(at(flat(rbox(7, 0.06, 5.6, '#e6d2a5', 0.05)), -20.5, 0.03, -8.8));
+const stakes = [[-23.8, -11.4], [-17.2, -11.4], [-17.2, -6.2], [-23.8, -6.2]];
+stakes.forEach(([x, z]) => {
+  site.add(at(rbox(0.07, 0.4, 0.07, '#e8733d', 0.01), x, 0.2, z));
+  site.add(at(rbox(0.09, 0.06, 0.09, '#f2c14e', 0.01), x, 0.42, z));
+});
+for (let i = 0; i < 4; i++) {
+  const [x1, z1] = stakes[i], [x2, z2] = stakes[(i + 1) % 4];
+  site.add(beam(V(x1, 0.3, z1), V(x2, 0.3, z2), 0.015, '#e8733d'));
+}
+// survey tripod
+for (const a of [0, 2.1, 4.2]) site.add(beam(V(-21.2, 0.7, -9.2), V(-21.2 + Math.cos(a) * 0.3, 0, -9.2 + Math.sin(a) * 0.3), 0.03, '#f2c14e'));
+site.add(at(rbox(0.16, 0.12, 0.2, '#3b4650', 0.03), -21.2, 0.77, -9.2));
+site.add(person('#e8733d', -21.6, -8.6, 2.2));
+// soil boring rig
+site.add(at(rbox(0.9, 0.35, 0.5, '#f4f2ec', 0.05), -19, 0.2, -10));
+site.add(at(rbox(0.08, 1.3, 0.08, '#3d8bd9', 0.02), -18.6, 1.0, -10));
+// sign
+site.add(at(rbox(0.06, 0.7, 0.06, '#5b6266', 0.01), -18.4, 0.35, -6.6));
+site.add(at(rbox(1.2, 0.5, 0.05, '#23303a', 0.03), -18.4, 0.85, -6.6));
+site.add(glow(at(rbox(0.9, 0.08, 0.06, '#f2c14e', 0.01), -18.4, 0.93, -6.57)));
+site.add(at(rbox(0.6, 0.06, 0.06, '#ffffff', 0.01), -18.4, 0.76, -6.57));
+
+/* ------------------------------------------------------------------ */
+/* 2. Power: transmission line and substation                          */
+/* ------------------------------------------------------------------ */
+
+const pw = section('power');
+function pylon(x, z) {
+  const g = new THREE.Group();
+  for (const sx of [-1, 1]) for (const sz of [-1, 1]) g.add(beam(V(sx * 0.32, 0, sz * 0.32), V(sx * 0.08, 2.7, sz * 0.08), 0.05, '#8e979c'));
+  for (const y of [0.8, 1.6]) {
+    const w = 0.32 - (y / 2.7) * 0.24;
+    g.add(beam(V(-w, y, -w), V(w, y + 0.5, w), 0.025, '#8e979c'));
+    g.add(beam(V(w, y, -w), V(-w, y + 0.5, w), 0.025, '#8e979c'));
+  }
+  g.add(at(rbox(0.08, 0.08, 1.7, '#8e979c', 0.01), 0, 2.45, 0));
+  g.add(at(rbox(0.08, 0.08, 1.1, '#8e979c', 0.01), 0, 2.75, 0));
+  for (const zz of [-0.78, 0, 0.78]) g.add(at(cyl(0.035, 0.035, 0.22, '#c9ced3', 8), 0, zz === 0 ? 2.62 : 2.32, zz));
+  return at(g, x, 0, z);
+}
+pw.add(pylon(-24.3, 0));
+pw.add(pylon(-21.8, 0));
+// three conductors from the edge, over both towers, into the gantry
+for (const [zz, y] of [[-0.78, 2.2], [0, 2.5], [0.78, 2.2]]) {
+  pw.add(beam(V(-25.4, y, zz), V(-24.3, y, zz), 0.02, '#4a5560'));
+  pw.add(beam(V(-24.3, y, zz), V(-21.8, y, zz), 0.02, '#4a5560'));
+  pw.add(beam(V(-21.8, y, zz), V(-19.6, 1.75, zz * 0.7), 0.02, '#4a5560'));
+}
+pw.add(at(flat(rbox(4.6, 0.05, 3.8, '#cfcfc9', 0.03)), -17.6, 0.03, 0));
+// fence
+for (let i = 0; i <= 8; i++) {
+  for (const zz of [-1.85, 1.85]) pw.add(at(rbox(0.04, 0.4, 0.04, '#9aa3a8', 0.01), -19.9 + i * 0.575, 0.2, zz));
+}
+for (const zz of [-1.85, 1.85]) pw.add(at(rbox(4.6, 0.02, 0.02, '#9aa3a8', 0.005), -17.6, 0.36, zz));
+// gantry
+for (const zz of [-1, 1]) pw.add(at(rbox(0.1, 1.8, 0.1, '#8e979c', 0.02), -19.6, 0.9, zz));
+pw.add(at(rbox(0.1, 0.1, 2.1, '#8e979c', 0.02), -19.6, 1.8, 0));
+// breakers
+for (const zz of [-0.55, 0, 0.55]) {
+  pw.add(at(cyl(0.09, 0.09, 0.7, '#c9ced3', 10), -18.9, 0.4, zz));
+  pw.add(at(rbox(0.25, 0.15, 0.25, '#7b8794', 0.03), -18.9, 0.07, zz));
+}
+// two main transformers
+function transformer(x, z, s = 1) {
+  const g = new THREE.Group();
+  g.add(at(rbox(0.8 * s, 0.75 * s, 0.9 * s, '#8a959c', 0.05), 0, 0.38 * s, 0));
+  for (let i = -3; i <= 3; i++) g.add(at(rbox(0.04, 0.6 * s, 0.25 * s, '#7a858c', 0.01), 0.42 * s, 0.38 * s, i * 0.12 * s));
+  for (const zz of [-0.25, 0, 0.25]) g.add(at(cyl(0.04 * s, 0.05 * s, 0.35 * s, '#c96f4a', 8), -0.1, 0.9 * s, zz * s));
+  g.add(at(cyl(0.12 * s, 0.12 * s, 0.6 * s, '#9aa3a8', 12), -0.25 * s, 0.95 * s, 0).rotateX(Math.PI / 2));
+  return at(g, x, 0, z);
+}
+pw.add(transformer(-17.7, -0.85));
+pw.add(transformer(-17.7, 0.85));
+// switchgear house
+pw.add(at(rbox(1.0, 0.7, 1.6, '#efe9df', 0.05), -16.1, 0.35, 0));
+pw.add(at(rbox(0.04, 0.45, 0.35, '#7b8794', 0.01), -15.58, 0.3, 0));
+// cable trench to the hall
+pw.add(at(flat(rbox(9.6, 0.04, 0.35, '#8a7a5a', 0.02)), -10.8, 0.04, 0));
+for (let x = -15; x < -6.4; x += 1.6) pw.add(at(rbox(0.2, 0.08, 0.45, '#5b6266', 0.02), x, 0.07, 0));
+
+/* ------------------------------------------------------------------ */
+/* 3. Bring your own power: gas turbines                               */
+/* ------------------------------------------------------------------ */
+
+const gas = section('gas');
+gas.add(at(flat(rbox(6.4, 0.05, 4.4, '#cfcfc9', 0.03)), -20.6, 0.03, 6.6));
+const stacks = [];
+for (const zz of [5.2, 6.6, 8.0]) {
+  gas.add(at(rbox(3.0, 0.75, 0.8, '#dfe3e6', 0.06), -20.8, 0.38, zz));
+  gas.add(at(rbox(3.02, 0.08, 0.82, '#4f6bed', 0.02), -20.8, 0.55, zz));
+  gas.add(at(rbox(0.7, 0.9, 0.9, '#c9ced3', 0.05), -22.6, 0.45, zz));
+  gas.add(at(cyl(0.2, 0.24, 1.6, '#aeb6bd', 14), -19.0, 0.8, zz));
+  stacks.push(V(-19.0, 1.7, zz));
+}
+// gas pipeline from the edge
+gas.add(at(cyl(0.09, 0.09, 1.6, '#f2c14e', 10).rotateZ(Math.PI / 2), -24.4, 0.15, 9.2));
+gas.add(at(cyl(0.09, 0.09, 4.0, '#f2c14e', 10).rotateX(Math.PI / 2), -23.6, 0.15, 7.2));
+gas.add(at(rbox(0.6, 0.5, 0.5, '#f4f2ec', 0.04), -23.6, 0.25, 9.2));
+gas.add(person('#4f6bed', -21.4, 4.4, 0.4));
+
+/* ------------------------------------------------------------------ */
+/* 4. Backup: generators, fuel and the battery room                    */
+/* ------------------------------------------------------------------ */
+
+const bk = section('backup');
+bk.add(at(flat(rbox(10.4, 0.05, 2.4, '#cfcfc9', 0.03)), -6.6, 0.03, -6.6));
+const genStacks = [];
+for (let i = 0; i < 8; i++) {
+  const x = -11 + i * 1.25;
+  bk.add(at(rbox(1.0, 0.6, 1.1, '#e9e4d8', 0.06), x, 0.3, -6.9));
+  bk.add(at(rbox(0.8, 0.3, 0.04, '#7b8794', 0.02), x, 0.32, -6.33));
+  bk.add(at(cyl(0.06, 0.06, 0.35, '#5b6266', 8), x + 0.3, 0.75, -7.1));
+  genStacks.push(V(x + 0.3, 0.95, -7.1));
+}
+// fuel tanks
+for (const x of [-11.2, -9.6]) bk.add(at(cyl(0.3, 0.3, 1.3, '#c9ced3', 16).rotateZ(Math.PI / 2), x, 0.32, -5.7));
+// UPS / battery building with racks of cells visible through a window strip
+bk.add(at(rbox(2.6, 1.0, 1.4, '#efe9df', 0.06), -1.6, 0.5, -6.9));
+for (let i = 0; i < 6; i++) bk.add(glow(at(rbox(0.25, 0.25, 0.03, '#6fd38a', 0.01), -2.5 + i * 0.36, 0.6, -6.18)));
+bk.add(at(rbox(1.0, 0.08, 0.6, '#3b4650', 0.02), -1.6, 1.04, -6.9));
+
+/* ------------------------------------------------------------------ */
+/* 5. Construction of hall two                                         */
+/* ------------------------------------------------------------------ */
+
+const bd = section('build');
+bd.add(at(flat(rbox(9.6, 0.06, 7, '#e6d2a5', 0.05)), 18.6, 0.03, -7.6));
+bd.add(at(rbox(7.6, 0.12, 5.2, '#d8d6cf', 0.03), 19, 0.08, -7.8));
+// tilt-up panels standing along the back and one side, a couple still lying flat
+for (let i = 0; i < 6; i++) bd.add(at(rbox(1.2, 1.5, 0.14, '#e4ddd0', 0.03), 15.8 + i * 1.27, 0.89, -10.35));
+for (let i = 0; i < 3; i++) bd.add(at(rbox(0.14, 1.5, 1.2, '#e4ddd0', 0.03), 22.75, 0.89, -9.6 + i * 1.27));
+for (let i = 0; i < 2; i++) bd.add(at(rbox(1.2, 0.12, 1.5, '#dcd3c3', 0.03), 17.2 + i * 1.5, 0.2, -6.6));
+// braces holding the panels up
+for (let i = 0; i < 6; i++) bd.add(beam(V(15.8 + i * 1.27, 1.2, -10.3), V(15.8 + i * 1.27, 0.14, -9.3), 0.03, '#e8733d'));
+// steel columns
+for (let i = 0; i < 4; i++) for (let j = 0; j < 2; j++) bd.add(at(rbox(0.08, 1.6, 0.08, '#7b8794', 0.01), 16.4 + i * 1.8, 0.9, -8.6 + j * 1.8));
+// prefab power skid arriving
+bd.add(at(rbox(1.6, 0.6, 0.7, '#4f6bed', 0.05), 21.2, 0.44, -5.8));
+// tower crane
+bd.add(at(rbox(0.7, 0.2, 0.7, '#9aa3a8', 0.03), 14.6, 0.1, -4.8));
+for (const sx of [-1, 1]) for (const sz of [-1, 1]) bd.add(beam(V(14.6 + sx * 0.14, 0.2, -4.8 + sz * 0.14), V(14.6 + sx * 0.14, 4.6, -4.8 + sz * 0.14), 0.04, '#f2c14e'));
+for (let y = 0.6; y < 4.6; y += 0.5) bd.add(at(rbox(0.32, 0.03, 0.32, '#f2c14e', 0.005), 14.6, y, -4.8));
+const jib = new THREE.Group();
+jib.add(at(rbox(6.2, 0.18, 0.18, '#f2c14e', 0.02), 1.6, 0, 0));
+jib.add(at(rbox(0.6, 0.5, 0.5, '#e9e4d8', 0.05), -1.2, 0.05, 0));
+jib.add(at(rbox(0.4, 0.4, 0.4, '#5b6266', 0.04), -1.25, -0.25, 0));
+jib.add(at(rbox(0.3, 0.35, 0.3, '#3d8bd9', 0.04), 0, 0.25, 0));
+const hook = at(rbox(0.02, 1.8, 0.02, '#3b4650', 0.005), 3.6, -0.9, 0);
+const load = at(rbox(1.0, 0.1, 0.24, '#7b8794', 0.02), 3.6, -1.85, 0);
+jib.add(hook, load);
+bd.add(at(jib, 14.6, 4.7, -4.8));
+// concrete mixer
+const mixer = new THREE.Group();
+mixer.add(at(rbox(0.5, 0.5, 0.5, '#e0533d', 0.08), 0, 0.4, 0.75));
+mixer.add(at(rbox(0.4, 0.08, 1.8, '#3b4650', 0.02), 0, 0.18, 0.1));
+const drum = at(cyl(0.3, 0.22, 1.0, '#f4f2ec', 14), 0, 0.6, -0.15);
+drum.rotation.x = Math.PI / 2 - 0.25;
+mixer.add(drum);
+for (let k = 0; k < 4; k++) drum.add(at(rbox(0.05, 1.02, 0.05, '#e0533d', 0.01), Math.cos(k * 1.57) * 0.25, 0, Math.sin(k * 1.57) * 0.25));
+for (const zz of [0.75, -0.3, -0.6]) for (const x of [-0.2, 0.2]) mixer.add(at(wheel(0.11), x, 0.11, zz));
+mixer.rotation.y = Math.PI / 2;
+bd.add(at(mixer, 16.4, 0, -4.6));
+bd.add(person('#e8733d', 18.4, -6.2, 0.4));
+bd.add(person('#4caf6a', 20.2, -8.4, 2.6));
+bd.add(person('#f2c14e', 22.0, -6.4, -1.2));
+bd.add(person('#e8733d', 16.8, -9.0, 1.0));
+
+/* ------------------------------------------------------------------ */
+/* 6. The data hall shell                                              */
+/* ------------------------------------------------------------------ */
+
+const sh = section('shell');
+const HW = 12, HD = 8, WH = 1.6;
+sh.add(at(rbox(HW, 0.12, HD, '#d8d6cf', 0.03), 0, 0.06, 0));
+sh.add(at(rbox(HW, WH, 0.16, '#ece7dd', 0.04), 0, WH / 2, -HD / 2));
+sh.add(at(rbox(0.16, WH, HD, '#ece7dd', 0.04), -HW / 2, WH / 2, 0));
+sh.add(at(rbox(0.16, WH, HD, '#ece7dd', 0.04), HW / 2, WH / 2, 0));
+// front wall is low so you can see in, with a loading dock and lobby
+sh.add(at(rbox(HW, 0.5, 0.16, '#ece7dd', 0.04), 0, 0.25, HD / 2));
+sh.add(at(rbox(2.6, 1.3, 1.1, '#dfe6ea', 0.06), -3.4, 0.65, HD / 2 + 0.6));
+sh.add(at(rbox(2.62, 0.3, 1.12, '#7fa7c4', 0.03), -3.4, 0.85, HD / 2 + 0.6));
+sh.add(at(rbox(1.4, 0.4, 0.8, '#cfcfc9', 0.03), 3, 0.2, HD / 2 + 0.45));
+// roof trusses as a cutaway
+for (let x = -5; x <= 5; x += 2.5) sh.add(at(rbox(0.1, 0.1, HD, '#b8bfc4', 0.02), x, WH + 0.02, 0));
+// security fence
+for (let i = 0; i <= 14; i++) sh.add(at(rbox(0.04, 0.45, 0.04, '#9aa3a8', 0.01), -7 + i, 0.22, -5.2));
+
+/* ------------------------------------------------------------------ */
+/* 7. Racks inside the hall                                            */
+/* ------------------------------------------------------------------ */
+
+const rk = section('racks');
+const rackLights = [];
+const ROW_Z = [-2.9, -1.7, -0.3, 0.9, 2.3];
+ROW_Z.forEach((z, r) => {
+  for (let i = 0; i < 16; i++) {
+    const x = -5.0 + i * 0.66;
+    rk.add(at(rbox(0.56, 0.95, 0.5, '#2b3440', 0.03), x, 0.6, z));
+    const face = r % 2 === 0 ? 0.26 : -0.26;
+    const l = glow(at(rbox(0.36, 0.05, 0.02, '#7cf0a2', 0.005), x, 0.85, z + face));
+    l.material = new THREE.MeshStandardMaterial({ color: '#7cf0a2', emissive: '#55e08a', emissiveIntensity: 1 });
+    rk.add(l);
+    rackLights.push({ m: l, ph: rand() * 10, sp: 1 + rand() * 3 });
+  }
+  // busway overhead
+  rk.add(at(rbox(10.6, 0.07, 0.12, '#f2c14e', 0.02), 0, 1.22, z));
+});
+// CDUs along the east wall and coolant headers
+for (const z of [-2.3, 0.3, 2.9]) rk.add(at(rbox(0.5, 0.9, 0.6, '#d7dee4', 0.04), 5.4, 0.55, z));
+rk.add(at(cyl(0.07, 0.07, 7.2, '#3d8bd9', 10).rotateX(Math.PI / 2), 5.75, 1.15, 0));
+rk.add(at(cyl(0.07, 0.07, 7.2, '#e0533d', 10).rotateX(Math.PI / 2), 5.75, 1.35, 0));
+rk.add(person('#4f6bed', -1.2, -1.0, 0.3));
+
+/* ------------------------------------------------------------------ */
+/* 8. Cooling yard                                                     */
+/* ------------------------------------------------------------------ */
+
+const cl = section('cooling');
+cl.add(at(flat(rbox(5.2, 0.05, 7.6, '#cfcfc9', 0.03)), 9.4, 0.03, -0.2));
+const fans = [];
+for (let i = 0; i < 2; i++) for (let j = 0; j < 4; j++) {
+  const x = 8.3 + i * 1.7, z = -3.2 + j * 1.75;
+  cl.add(at(rbox(1.5, 0.55, 1.5, '#dfe5e8', 0.06), x, 0.3, z));
+  for (const dz of [-0.36, 0.36]) {
+    cl.add(at(cyl(0.32, 0.32, 0.04, '#5b6266', 18), x, 0.6, z + dz));
+    const f = new THREE.Group();
+    for (let k = 0; k < 3; k++) { const b = rbox(0.55, 0.02, 0.1, '#c9ced3', 0.01); b.rotation.y = k * 2.094; f.add(b); }
+    cl.add(at(f, x, 0.64, z + dz));
+    fans.push(f);
+  }
+}
+// cooling tower for the hot days
+cl.add(at(cyl(0.75, 0.95, 1.5, '#cfd8dc', 22), 12.4, 0.75, 2.4));
+cl.add(at(cyl(0.6, 0.6, 0.12, '#5b6266', 22), 12.4, 1.52, 2.4));
+// pipes from the hall to the yard
+for (const [z, c] of [[-0.5, '#3d8bd9'], [0.5, '#e0533d']]) {
+  cl.add(at(cyl(0.08, 0.08, 1.6, c, 10).rotateZ(Math.PI / 2), 6.9, 0.35, z));
+  cl.add(at(cyl(0.06, 0.06, 7.0, c, 10).rotateX(Math.PI / 2), 7.5, 0.35 + (c === '#e0533d' ? 0.15 : 0), -0.3));
+}
+cl.add(at(rbox(0.8, 0.6, 0.9, '#9aa3a8', 0.05), 12.2, 0.3, -2.4));
+
+/* ------------------------------------------------------------------ */
+/* 9. Fiber and the meet-me room                                       */
+/* ------------------------------------------------------------------ */
+
+const nw = section('network');
+nw.add(at(rbox(1.6, 0.8, 1.2, '#e3d6e8', 0.06), -1.5, 0.4, 8.4));
+nw.add(at(rbox(0.3, 0.5, 0.04, '#7b8794', 0.02), -1.5, 0.3, 9.02));
+nw.add(glow(at(rbox(0.5, 0.06, 0.03, '#ff9f43', 0.01), -1.0, 0.68, 9.02)));
+// two diverse routes: along the road from the west, and from the east
+nw.add(at(flat(rbox(23.5, 0.03, 0.12, '#ff9f43', 0.01)), -13.25, 0.07, 12.1));
+nw.add(at(flat(rbox(23.5, 0.03, 0.12, '#ff9f43', 0.01)), 13.25, 0.07, 12.4));
+nw.add(at(flat(rbox(0.12, 0.03, 3.4, '#ff9f43', 0.01)), -1.5, 0.07, 10.5));
+nw.add(at(flat(rbox(0.12, 0.03, 3.6, '#ff9f43', 0.01)), 1.5, 0.07, 10.6));
+nw.add(at(flat(rbox(3.0, 0.03, 0.12, '#ff9f43', 0.01)), 0, 0.07, 8.9));
+for (const [x, z] of [[-8, 12.1], [-16, 12.1], [8, 12.4], [16, 12.4], [-1.5, 12.1]]) nw.add(at(cyl(0.2, 0.2, 0.05, '#5b6266', 14), x, 0.07, z));
+for (const [x, z] of [[-12, 12.1], [12, 12.4]]) {
+  nw.add(at(rbox(0.06, 0.4, 0.06, '#ff9f43', 0.01), x, 0.2, z + 0.25));
+}
+// fiber into the hall
+nw.add(at(flat(rbox(0.12, 0.03, 3.6, '#ff9f43', 0.01)), -1.5, 0.07, 5.6));
+
+/* ------------------------------------------------------------------ */
+/* 10. The money office                                                */
+/* ------------------------------------------------------------------ */
+
+const off = section('money');
+off.add(at(rbox(2.6, 2.6, 2.0, '#dfe6ea', 0.08), 19.5, 1.3, 6.6));
+for (const y of [0.7, 1.4, 2.1]) off.add(at(rbox(2.62, 0.14, 2.02, '#7fa7c4', 0.03), 19.5, y, 6.6));
+for (const x of [18.6, 20.4]) off.add(at(rbox(0.08, 0.8, 0.08, '#5b6266', 0.02), x, 3.0, 6.6));
+off.add(at(rbox(2.2, 1.0, 0.1, '#23303a', 0.04), 19.5, 3.55, 6.6));
+[0.2, 0.3, 0.45, 0.6, 0.8].forEach((h, i) => off.add(at(rbox(0.26, h, 0.04, i === 4 ? '#e0533d' : '#6fd38a', 0.01), 18.7 + i * 0.4, 3.15 + h / 2, 6.67)));
+off.add(person('#23303a', 18.2, 8.2, 0.2));
+
+/* Scenery */
+[
+  [-24, -3.2, 1], [-23, -4.4, 0.8], [-15, -10.6, 1], [-14, -12, 0.8], [-13.5, -3.6, 0.9],
+  [-24.2, 12.3, 0.8], [-20, 12.6, 0.9], [-9, 9.2, 1], [-11, 8, 0.8], [-6.5, 9.4, 0.9],
+  [6, 9.2, 0.9], [8.4, 8.6, 1], [10.6, 9.4, 0.8], [24.3, 3.4, 1], [24, -1.2, 0.8],
+  [23.8, 9.6, 0.9], [24.3, -12, 0.8], [11.5, -11.8, 0.9], [8, -12.2, 1], [5, -11.5, 0.8],
+  [-5, -11.8, 0.9], [-12.6, 2.6, 0.8], [-13.4, 4.6, 1],
+].forEach(([x, z, s]) => tree(x, z, s));
+
+/* ------------------------------------------------------------------ */
+/* Smoke, steam, power and coolant                                     */
+/* ------------------------------------------------------------------ */
+
+const puffGeo = new THREE.SphereGeometry(1, 10, 8);
+const parts = [];
+function puff(pos, { color = '#ffffff', size = 0.2, life = 2.2, rise = 0.6, opacity = 0.7, drift = 0.25 }) {
+  const m = new THREE.Mesh(puffGeo, new THREE.MeshBasicMaterial({ color, transparent: true, opacity, depthWrite: false }));
+  m.position.copy(pos);
+  m.userData = { life: 0, max: life, size, rise, opacity, drift };
+  scene.add(m);
+  parts.push(m);
+}
+let gasOn = true;
+const emitters = [
+  { rate: 4, emit: () => gasOn && puff(stacks[Math.floor(rand() * stacks.length)], { size: 0.16, life: 2, rise: 0.8, color: '#e4e6e8', opacity: 0.55 }) },
+  { rate: 2.5, emit: () => puff(V(12.4 + (rand() - 0.5) * 0.6, 1.6, 2.4 + (rand() - 0.5) * 0.6), { size: 0.3, life: 2.6, rise: 0.7, color: '#ffffff', opacity: 0.75 }) },
+  { rate: 0.6, emit: () => puff(genStacks[Math.floor(rand() * genStacks.length)], { size: 0.08, life: 1.2, rise: 0.5, color: '#b9bec2', opacity: 0.4, drift: 0.1 }) },
+].map((e) => ({ ...e, acc: 0 }));
+function updateParticles(dt) {
+  for (const e of emitters) {
+    e.acc += dt * e.rate;
+    while (e.acc >= 1) { e.acc -= 1; e.emit(); }
+  }
+  for (let i = parts.length - 1; i >= 0; i--) {
+    const p = parts[i], u = p.userData;
+    u.life += dt;
+    const k = u.life / u.max;
+    p.position.y += dt * u.rise;
+    p.position.x += dt * u.drift;
+    p.scale.setScalar(u.size * (1 + k * 1.5));
+    p.material.opacity = u.opacity * (1 - k);
+    if (k >= 1) { scene.remove(p); p.material.dispose(); parts.splice(i, 1); }
+  }
+}
+
+// Dots that ride along a path: power in yellow, coolant in blue and red
+const flows = [];
+function flow(points, color, n, speed, size = 0.09) {
+  const route = makeRoute(points);
+  const dots = [];
+  for (let i = 0; i < n; i++) {
+    const m = new THREE.Mesh(new THREE.SphereGeometry(size, 10, 8), new THREE.MeshBasicMaterial({ color, toneMapped: false }));
+    scene.add(m);
+    dots.push(m);
+  }
+  const f = { route, dots, speed, on: true };
+  flows.push(f);
+  return f;
+}
+const gridFlow = flow([V(-25.4, 2.5, 0), V(-21.8, 2.5, 0), V(-19.6, 1.75, 0), V(-17.7, 1.0, 0), V(-16.1, 0.8, 0), V(-15.5, 0.12, 0), V(-6, 0.12, 0), V(-5.2, 1.22, -0.3), V(5.2, 1.22, -0.3)], '#ffd23f', 14, 2.6);
+const gasFlow = flow([V(-19.0, 0.8, 6.6), V(-17.2, 0.8, 6.6), V(-16.1, 0.8, 0.9), V(-16.1, 0.8, 0)], '#ffd23f', 5, 1.6);
+flow([V(11.2, 0.4, 2.2), V(7.5, 0.35, 2.2), V(7.5, 0.35, -0.5), V(6.0, 0.35, -0.5), V(5.75, 1.15, -0.5), V(5.75, 1.15, -3.2)], '#5aa9ff', 8, 1.3, 0.08);
+flow([V(5.75, 1.35, 3.2), V(5.75, 1.35, 0.5), V(6.0, 0.5, 0.5), V(7.5, 0.5, 0.5), V(7.5, 0.5, -3.4), V(11.2, 0.5, -3.4)], '#ff6b5a', 8, 1.3, 0.08);
+function updateFlows() {
+  for (const f of flows) {
+    f.dots.forEach((d, i) => {
+      d.visible = f.on;
+      const pos = ((time * f.speed) + (i / f.dots.length) * f.route.len) % f.route.len;
+      f.route.at(pos, d.position);
+    });
+  }
+}
+
+/* GPU delivery truck */
+const truck = new THREE.Group();
+truck.add(at(rbox(0.52, 0.52, 0.5, '#23303a', 0.08), 0, 0.42, 0.95));
+truck.add(at(rbox(0.44, 0.18, 0.03, '#a9d6f0', 0.02), 0, 0.55, 1.21));
+truck.add(at(rbox(0.36, 0.08, 2.1, '#3b4650', 0.03), 0, 0.2, 0.1));
+truck.add(at(rbox(0.5, 0.55, 1.4, '#f4f2ec', 0.04), 0, 0.52, -0.2));
+truck.add(at(rbox(0.51, 0.1, 1.2, '#6fd38a', 0.02), 0, 0.5, -0.2));
+for (const z of [0.95, -0.45, -0.75]) for (const x of [-0.23, 0.23]) truck.add(at(wheel(0.11), x, 0.11, z));
+scene.add(truck);
+const TRUCK = makeRoute([V(25, 0, 10.75), V(3.0, 0, 10.75), V(3.0, 0, 5.6)]);
+const mTan = new THREE.Vector3();
+function driveRoute(model, route, speed, pause, offset) {
+  const L = route.len, T = L / speed, cycle = 2 * T + 2 * pause;
+  const p = (time + offset) % cycle;
+  let d, fwd;
+  if (p < T) { d = p * speed; fwd = true; }
+  else if (p < T + pause) { d = L; fwd = true; }
+  else if (p < 2 * T + pause) { d = L - (p - T - pause) * speed; fwd = false; }
+  else { d = 0; fwd = false; }
+  route.at(d, model.position);
+  route.tangent(THREE.MathUtils.clamp(d, 0.01, L - 0.01), mTan);
+  if (!fwd) mTan.negate();
+  model.rotation.y = Math.atan2(mTan.x, mTan.z);
+}
+
+function updateMovers(dt) {
+  driveRoute(truck, TRUCK, 2.2, 3, 0);
+  jib.rotation.y = Math.sin(time * 0.25) * 0.9 - 0.4;
+  load.position.y = -1.85 + Math.sin(time * 0.5) * 0.4;
+  hook.scale.y = 1 - Math.sin(time * 0.5) * 0.22;
+  hook.position.y = -0.9 + Math.sin(time * 0.5) * 0.2;
+  drum.rotation.y += dt * 2;
+  for (const f of fans) f.rotation.y += dt * (6 + coolLoad * 6);
+  for (const l of rackLights) l.m.material.emissiveIntensity = 0.5 + 0.5 * Math.max(0, Math.sin(time * l.sp + l.ph));
+  for (const w of workers) w.g.position.y = Math.max(0, Math.sin(time * 3 + w.ph)) * 0.03;
+}
+let coolLoad = 0.5;
+
+/* ------------------------------------------------------------------ */
+/* Selection, highlight, camera                                        */
+/* ------------------------------------------------------------------ */
+
+const pickables = [];
+for (const s of Object.values(sections)) {
+  s.meshes = [];
+  s.group.traverse((o) => {
+    if (!o.isMesh) return;
+    o.material = o.material.clone();
+    o.userData.base = o.material.color.clone();
+    o.userData.sid = s.id;
+    s.meshes.push(o);
+    pickables.push(o);
+  });
+}
+function measure(s) {
+  s.box = new THREE.Box3().setFromObject(s.group);
+  s.center = s.box.getCenter(new THREE.Vector3());
+  s.size = s.box.getSize(new THREE.Vector3());
+}
+Object.values(sections).forEach(measure);
+
+const anchors = {
+  site: V(-20.5, 1.6, -8.8),
+  power: V(-17.7, 2.6, 0),
+  gas: V(-20.8, 2.2, 6.6),
+  backup: V(-6.5, 1.5, -6.9),
+  build: V(18.5, 5.2, -7.6),
+  shell: V(-3.4, 2.2, 4.6),
+  racks: V(1.0, 2.0, -0.5),
+  cooling: V(9.4, 1.6, -0.2),
+  network: V(-1.5, 1.4, 8.4),
+  money: V(19.5, 4.4, 6.6),
+};
+
+const halo = new THREE.Mesh(new THREE.RingGeometry(0.92, 1, 72), new THREE.MeshBasicMaterial({ color: '#4f6bed', transparent: true, opacity: 0.9, toneMapped: false }));
+halo.rotation.x = -Math.PI / 2;
+halo.position.y = 0.11;
+halo.visible = false;
+scene.add(halo);
+
+let selected = null, hovered = null;
+
+function applyLook() {
+  for (const s of Object.values(sections)) {
+    const dim = selected && selected !== s.id && !(selected === 'racks' && s.id === 'shell') && !(selected === 'shell' && s.id === 'racks');
+    for (const m of s.meshes) {
+      m.material.color.copy(m.userData.base);
+      if (dim) m.material.color.lerp(BG, 0.6);
+      if (m.material.emissive && !m.userData.glow) {
+        if (s.id === selected) { m.material.emissive.set('#ffd9a0'); m.material.emissiveIntensity = 0.2; }
+        else if (s.id === hovered) { m.material.emissive.set('#ffffff'); m.material.emissiveIntensity = 0.16; }
+        else { m.material.emissive.set('#000000'); m.material.emissiveIntensity = 0; }
+      }
+    }
+  }
+  for (const [id, el] of Object.entries(pinEls)) {
+    el.classList.toggle('on', id === selected);
+    el.classList.toggle('dim', !!selected && id !== selected);
+  }
+  const step = selected ? INFO[selected].step : null;
+  document.querySelectorAll('.chip').forEach((c) => c.classList.toggle('on', c.dataset.step === step));
+}
+
+let tween = null;
+const ease = (k) => (k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2);
+function flyTo(target, zoom) {
+  const instant = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  tween = { t: 0, dur: instant ? 0.01 : 0.9, fromT: controls.target.clone(), toT: target, fromZ: camera.zoom, toZ: zoom, off: camera.position.clone().sub(controls.target) };
+}
+controls.addEventListener('start', () => { tween = null; });
+
+const isMobile = () => window.innerWidth <= 720;
+function focusOn(s) {
+  const t = s.center.clone();
+  t.y = Math.min(t.y, 1.5);
+  const maxDim = Math.max(s.size.x, s.size.z, s.size.y * 1.2);
+  const zoom = THREE.MathUtils.clamp(viewH / (maxDim * 1.9), 1.15, 3.4);
+  const wpp = viewH / zoom / window.innerHeight;
+  camera.updateMatrixWorld();
+  const right = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 0);
+  const up = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 1);
+  if (isMobile()) t.addScaledVector(up, -(window.innerHeight * 0.56) / 2 * wpp);
+  else t.addScaledVector(right, (404 / 2) * wpp);
+  flyTo(t, zoom);
+}
+
+function placeHalo(s) {
+  halo.position.set(s.center.x, 0.11, s.center.z);
+  halo.userData.rx = s.size.x / 2 + 0.8;
+  halo.userData.rz = s.size.z / 2 + 0.8;
+}
+function select(id) {
+  selected = id;
+  if (id === 'gas') { gasOn = true; gasFlow.on = true; }
+  const s = sections[id];
+  halo.visible = true;
+  placeHalo(s);
+  focusOn(s);
+  renderPanel(id);
+  document.body.classList.add('focused');
+  applyLook();
+}
+function clearSelection(resetCam = true) {
+  selected = null;
+  halo.visible = false;
+  panel.classList.remove('open');
+  document.body.classList.remove('focused');
+  applyLook();
+  if (resetCam) flyTo(homeTarget(), HOME_ZOOM);
+}
+
+/* ------------------------------------------------------------------ */
+/* UI: flow bar, pins, panel                                           */
+/* ------------------------------------------------------------------ */
+
+const flowEl = document.getElementById('flow');
+STEPS.forEach((st, i) => {
+  if (st.key === 'bill') flowEl.insertAdjacentHTML('beforeend', '<span class="sep"></span>');
+  else if (i > 0) flowEl.insertAdjacentHTML('beforeend', '<span class="arrow">›</span>');
+  const b = document.createElement('button');
+  b.className = 'chip';
+  b.dataset.step = st.key;
+  b.innerHTML = `<span class="n">${st.n}</span><span class="lbl">${st.label}</span>`;
+  b.addEventListener('click', () => select(ORDER.find((id) => INFO[id].step === st.key)));
+  flowEl.appendChild(b);
+});
+
+const pinsEl = document.getElementById('pins');
+const pinEls = {};
+for (const id of ORDER) {
+  const b = document.createElement('button');
+  b.className = 'pin';
+  b.innerHTML = `<span class="e">${INFO[id].emoji}</span><span class="lbl">${INFO[id].short}</span>`;
+  b.setAttribute('aria-label', INFO[id].title);
+  b.addEventListener('click', () => select(id));
+  pinsEl.appendChild(b);
+  pinEls[id] = b;
+}
+const tmpV = new THREE.Vector3();
+function updatePins() {
+  const w = window.innerWidth, h = window.innerHeight;
+  for (const id of ORDER) {
+    tmpV.copy(anchors[id]).project(camera);
+    const x = (tmpV.x + 1) / 2 * w, y = (1 - tmpV.y) / 2 * h;
+    pinEls[id].style.transform = `translate(${x}px, ${y}px) translate(-50%, -100%) translateY(-6px)`;
+  }
+}
+
+const panel = document.getElementById('panel');
+const panelBody = document.getElementById('panel-body');
+const fmt = (n) => Math.round(n).toLocaleString();
+const bil = (n) => (n >= 1e9 ? '$' + (n / 1e9).toFixed(n >= 1e10 ? 0 : 1) + 'B' : '$' + (n / 1e6).toFixed(0) + 'M');
+const k$ = (n) => (Math.abs(n) >= 1000 ? (n < 0 ? '−' : '') + '$' + (Math.abs(n) / 1000).toFixed(1) + 'k' : (n < 0 ? '−' : '') + '$' + Math.abs(Math.round(n)));
+
+const WIDGETS = {
+  size: [sizeHTML, bindSize],
+  pue: [pueHTML, bindPue],
+  schedule: [schedHTML, bindSched],
+  bill: [billHTML, bindBill],
+};
+
+function renderPanel(id) {
+  const info = INFO[id];
+  const st = STEPS.find((s) => s.key === info.step);
+  const idx = ORDER.indexOf(id);
+  const w = WIDGETS[info.widget];
+  panelBody.innerHTML = `
+    <span class="step-tag">${st.key === 'bill' ? '💵 Whole campus' : 'Step ' + st.n} · ${st.label}</span>
+    <h2><span class="e">${info.emoji}</span>${info.title}</h2>
+    <p class="tagline">${info.tagline}</p>
+    <ul class="body-list">${info.body.map((b) => `<li>${b}</li>`).join('')}</ul>
+    ${w ? w[0]() : ''}
+    ${info.facts ? `<div class="facts"><div class="facts-h">📊 From <a class="src" href="${info.src.url}" target="_blank" rel="noopener">${info.src.name}</a></div><ul>${info.facts.map((b) => `<li>${b}</li>`).join('')}</ul></div>` : ''}
+  `;
+  panelBody.scrollTop = 0;
+  document.getElementById('count').textContent = `${idx + 1} / ${ORDER.length}`;
+  document.getElementById('prev-btn').disabled = idx === 0;
+  document.getElementById('prev-btn').style.opacity = idx === 0 ? 0.4 : 1;
+  document.getElementById('next-btn').textContent = idx === ORDER.length - 1 ? 'Done ✓' : 'Next →';
+  panel.classList.add('open');
+  if (w) w[1]();
+}
+
+const segHTML = (name, items, on) => `<div class="seg" data-seg="${name}">${items.map(([k, label]) => `<button data-k="${k}" class="${k === on ? 'on' : ''}">${label}</button>`).join('')}</div>`;
+function bindSeg(root, name, onPick) {
+  const el = root.querySelector(`[data-seg="${name}"]`);
+  el.addEventListener('click', (e) => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    el.querySelectorAll('button').forEach((x) => x.classList.toggle('on', x === b));
+    onPick(b.dataset.k);
+  });
+}
+
+/* Widget: size the campus */
+let campusMW = 1000;
+function sizeHTML() {
+  return `<div class="widget" id="w-size">
+    <h3>Size the campus</h3>
+    <p class="hint">Pick how much power the utility will give you. About 1 in 6 watts goes to cooling and losses (PUE 1.2), the rest to NVL72 racks at ${RACK_KW} kW each. Building, power and cooling at $${(SHELL_PER_MW / 1e6).toFixed(1)}M per MW; chips and network gear about $${(RACK_COST / 1e6).toFixed(1)}M per rack. Rough numbers.</p>
+    <div class="lbl-row"><span>Grid connection</span><span id="sz-v"></span></div>
+    <input type="range" id="sz" min="50" max="2000" step="50" value="${campusMW}" aria-label="Campus size in megawatts">
+    <div class="stat-grid">
+      <div class="stat"><div class="v" id="sz-racks"></div><div class="k">racks</div></div>
+      <div class="stat"><div class="v" id="sz-gpus"></div><div class="k">GPUs</div></div>
+      <div class="stat"><div class="v" id="sz-homes"></div><div class="k">homes' worth of power</div></div>
+    </div>
+    <p class="big" id="sz-out"></p>
+    <div id="sz-rows"></div>
+    <p class="status" id="sz-status"></p>
+  </div>`;
+}
+function campus(mw, pue = 1.2) {
+  const it = mw / pue;
+  const racks = Math.floor((it * 1000) / RACK_KW);
+  return { it, racks, gpus: racks * GPU_PER_RACK, homes: (mw * 1000) / HOME_KW, shell: it * SHELL_PER_MW, chips: racks * RACK_COST };
+}
+function bindSize() {
+  const el = document.getElementById('sz');
+  const update = () => {
+    campusMW = +el.value;
+    const c = campus(campusMW);
+    const total = c.shell + c.chips;
+    document.getElementById('sz-v').textContent = campusMW >= 1000 ? parseFloat((campusMW / 1000).toFixed(2)) + ' GW' : campusMW + ' MW';
+    document.getElementById('sz-racks').textContent = fmt(c.racks);
+    document.getElementById('sz-gpus').textContent = c.gpus >= 1e6 ? (c.gpus / 1e6).toFixed(2) + 'M' : fmt(c.gpus / 1000) + 'k';
+    document.getElementById('sz-homes').textContent = c.homes >= 1e6 ? (c.homes / 1e6).toFixed(1) + 'M' : fmt(c.homes / 1000) + 'k';
+    document.getElementById('sz-out').innerHTML = `${bil(total)} <small>to build and fill</small>`;
+    const max = Math.max(c.shell, c.chips);
+    document.getElementById('sz-rows').innerHTML = [
+      ['Building, power, cooling', 'lasts ~20 years', c.shell, '#8a6fd1'],
+      ['Chips and network', 'useful ~4–6 years', c.chips, '#4f6bed'],
+    ].map(([k, sub, v, col]) => `<div class="cost-row"><span>${k}<small>${sub}</small></span><div class="bar" style="width:${(v / max) * 100}%;background:${col}"></div><span class="g">${bil(v)}</span></div>`).join('');
+    document.getElementById('sz-status').innerHTML = `The chips are <b>${Math.round((c.chips / total) * 100)}%</b> of the bill, and they're the part that wears out first. ${campusMW >= 1000 ? 'At this size you are drawing as much power as a mid-size city.' : 'Slide up to a gigawatt to see a Stargate-scale campus.'}`;
+  };
+  el.addEventListener('input', update);
+  update();
+}
+
+/* Widget: PUE and water */
+const COOLING = {
+  air:  { name: '🌬️ Air + chillers', pue: 1.5, wue: 1.0, note: 'Old-style halls: fans push cold air, chillers make it cold. Lots of power goes to cooling instead of chips.' },
+  evap: { name: '💧 Cooling towers', pue: 1.2, wue: 1.8, note: 'Evaporating water is a cheap way to dump heat, so less power goes to cooling. The cost is water.' },
+  dry:  { name: '🧊 Liquid + dry coolers', pue: 1.15, wue: 0.1, note: 'Coolant runs straight to the chips and big radiators dump the heat. Very little water, but fans work hard on hot days.' },
+};
+let coolKey = 'dry';
+function pueHTML() {
+  return `<div class="widget" id="w-pue">
+    <h3>Where the watts go</h3>
+    <p class="hint">The utility gives you 300 MW, and not one watt more. How you cool decides how much of it reaches the chips. Water use is a rough per-kWh average.</p>
+    ${segHTML('c', Object.entries(COOLING).map(([k, c]) => [k, c.name]), coolKey)}
+    <div class="lbl-row"><span>To chips</span><span id="pu-itv"></span></div>
+    <div class="meter"><div class="fill" id="pu-it" style="background:#4f6bed"></div></div>
+    <div class="lbl-row"><span>To cooling and losses</span><span id="pu-ov"></span></div>
+    <div class="meter"><div class="fill" id="pu-o" style="background:#e8a33d"></div></div>
+    <div class="stat-grid">
+      <div class="stat"><div class="v" id="pu-p"></div><div class="k">PUE</div></div>
+      <div class="stat"><div class="v" id="pu-g"></div><div class="k">GPUs you can run</div></div>
+      <div class="stat"><div class="v" id="pu-w"></div><div class="k">Olympic pools of water a year</div></div>
+    </div>
+    <p class="status" id="pu-status"></p>
+  </div>`;
+}
+function bindPue() {
+  const root = document.getElementById('w-pue');
+  const update = () => {
+    const c = COOLING[coolKey];
+    const it = 300 / c.pue;
+    const gpus = Math.floor((it * 1000) / RACK_KW) * GPU_PER_RACK;
+    const base = Math.floor((300 / COOLING.air.pue * 1000) / RACK_KW) * GPU_PER_RACK;
+    const pools = (it * 1000 * 8760 * c.wue) / 2.5e6;
+    document.getElementById('pu-it').style.width = (it / 300) * 100 + '%';
+    document.getElementById('pu-o').style.width = ((300 - it) / 300) * 100 + '%';
+    document.getElementById('pu-itv').textContent = Math.round(it) + ' MW';
+    document.getElementById('pu-ov').textContent = Math.round(300 - it) + ' MW';
+    document.getElementById('pu-p').textContent = c.pue.toFixed(2);
+    document.getElementById('pu-g').textContent = fmt(gpus / 1000) + 'k';
+    document.getElementById('pu-w').textContent = fmt(pools);
+    document.getElementById('pu-status').innerHTML = `${c.note} ${coolKey === 'air' ? '' : `Same grid connection, <b>${fmt((gpus - base) / 1000)}k more GPUs</b> than air cooling.`}`;
+    coolLoad = c.pue - 1;
+  };
+  bindSeg(root, 'c', (k) => { coolKey = k; update(); });
+  update();
+}
+
+/* Widget: the build schedule */
+const PLANS = {
+  grid: {
+    name: '⏳ Wait for the grid',
+    rows: [['Land, zoning, permits', 0, 9], ['Utility study + grid upgrades', 3, 45, 'p'], ['Big transformers arrive', 8, 30], ['Slab, walls, roof', 9, 12], ['Electrical + cooling', 16, 14], ['Commissioning', 30, 4], ['Chips arrive, burn-in', 34, 3]],
+  },
+  gas: {
+    name: '🔥 Bridge with own gas',
+    rows: [['Land, zoning, permits', 0, 9], ['Utility study + grid upgrades', 3, 45, 'd'], ['On-site gas engines', 6, 22, 'p'], ['Slab, walls, roof', 9, 12], ['Electrical + cooling', 16, 14], ['Commissioning', 30, 4], ['Chips arrive, burn-in', 34, 3]],
+  },
+  powered: {
+    name: '⚡ Powered land + prefab',
+    rows: [['Buy land with power promised', 0, 4], ['Utility finishes substation', 0, 20, 'p'], ['Transformers (pre-ordered)', 0, 16], ['Slab, walls, roof', 4, 8], ['Prefab power + cooling skids', 8, 9], ['Commissioning', 17, 3], ['Chips arrive, burn-in', 20, 3]],
+  },
+};
+let planKey = 'grid';
+const SPAN = 50;
+function schedHTML() {
+  return `<div class="widget" id="w-sched">
+    <h3>How long until the first chip runs?</h3>
+    <p class="hint">Rough timelines for one big hall. The red line is the month the chips can start, which is whichever comes last: power, or a finished building.</p>
+    ${segHTML('p', Object.entries(PLANS).map(([k, p]) => [k, p.name]), planKey)}
+    <div class="gantt" id="sc-rows"></div>
+    <div class="g-axis"><span></span><div><span>0</span><span>12</span><span>24</span><span>36</span><span>48 mo</span></div></div>
+    <p class="big" id="sc-out"></p>
+    <p class="status" id="sc-status"></p>
+  </div>`;
+}
+function bindSched() {
+  const root = document.getElementById('w-sched');
+  const update = () => {
+    const rows = PLANS[planKey].rows;
+    const powerAt = Math.min(...rows.filter((r) => r[3] === 'p').map((r) => r[1] + r[2]));
+    const buildAt = rows[rows.length - 1][1] + rows[rows.length - 1][2];
+    const live = Math.max(powerAt, buildAt);
+    document.getElementById('sc-rows').innerHTML = rows.map(([t, s, d, k]) => {
+      const crit = (k === 'p' && powerAt >= buildAt) || (k !== 'p' && k !== 'd' && buildAt > powerAt && t.startsWith('Chips'));
+      const col = k === 'p' ? '#f2c14e' : crit ? '#4f6bed' : '#9fb0f5';
+      return `<div class="g-row"><span class="t">${t}</span><div class="g-track"><div class="g-bar ${k === 'd' ? 'dash' : ''}" style="left:${(s / SPAN) * 100}%;width:${(Math.min(d, SPAN - s) / SPAN) * 100}%;background:${col}"></div><div class="g-live" style="left:${(live / SPAN) * 100}%"></div></div></div>`;
+    }).join('');
+    document.getElementById('sc-out').innerHTML = `Month ${live} <small>first chips online</small>`;
+    document.getElementById('sc-status').innerHTML = powerAt > buildAt
+      ? `The building is done at month ${buildAt}, then sits dark for <b>${powerAt - buildAt} months</b> waiting on power. That's billions of dollars earning nothing.`
+      : `Now power shows up first (month ${powerAt}) and the <b>building</b> is the long pole. ${planKey === 'gas' ? 'The dashed bar is the grid connection, still coming. The turbines bridge the gap.' : 'This is why developers pay up for powered land and factory-built parts.'}`;
+    gasOn = planKey !== 'grid';
+    gasFlow.on = gasOn;
+  };
+  bindSeg(root, 'p', (k) => { planKey = k; update(); });
+  update();
+}
+
+/* Widget: the bill, per GPU */
+const billState = { price: 2.9, util: 70, life: 5 };
+function billHTML() {
+  return `<div class="widget" id="w-bill">
+    <h3>Does one GPU pay for itself?</h3>
+    <p class="hint">One GPU's share of the campus: about $${fmt(RACK_COST / GPU_PER_RACK / 1000)}k of chip and network gear, plus $${fmt(SHELL_PER_MW / (1000 / RACK_KW * GPU_PER_RACK) / 1000)}k of building spread over ${BUILDING_LIFE} years. Power at ${Math.round(POWER_PRICE * 100)}¢/kWh, plus $${fmt(OTHER_OPEX)} a year for staff and repairs.</p>
+    <div class="lbl-row"><span>Rental price per GPU-hour</span><span id="bl-pv"></span></div>
+    <input type="range" id="bl-p" min="1" max="6" step="0.1" value="${billState.price}" aria-label="Rental price per GPU hour">
+    <div class="lbl-row"><span>Hours actually rented</span><span id="bl-uv"></span></div>
+    <input type="range" id="bl-u" min="30" max="100" step="5" value="${billState.util}" aria-label="Utilization percent">
+    <div class="lbl-row"><span>Years the chip stays worth renting</span><span id="bl-lv"></span></div>
+    <input type="range" id="bl-l" min="2" max="8" step="1" value="${billState.life}" aria-label="Chip useful life in years">
+    <div id="bl-rows" style="margin-top:10px"></div>
+    <p class="status" id="bl-status"></p>
+  </div>`;
+}
+function bindBill() {
+  const pEl = document.getElementById('bl-p'), uEl = document.getElementById('bl-u'), lEl = document.getElementById('bl-l');
+  const chip = RACK_COST / GPU_PER_RACK;
+  const shell = SHELL_PER_MW / ((1000 / RACK_KW) * GPU_PER_RACK);
+  const update = () => {
+    billState.price = +pEl.value; billState.util = +uEl.value; billState.life = +lEl.value;
+    const hours = 8760 * billState.util / 100;
+    const rev = billState.price * hours;
+    const power = (RACK_KW / GPU_PER_RACK) * 1.2 * hours * POWER_PRICE;
+    const depChip = chip / billState.life, depShell = shell / BUILDING_LIFE;
+    const profit = rev - power - OTHER_OPEX - depChip - depShell;
+    const cash = rev - power - OTHER_OPEX;
+    // years of cash, after the building's yearly share, to earn back the chip
+    const payback = cash - depShell > 0 ? chip / (cash - depShell) : Infinity;
+    document.getElementById('bl-pv').textContent = '$' + billState.price.toFixed(2);
+    document.getElementById('bl-uv').textContent = billState.util + '%';
+    document.getElementById('bl-lv').textContent = billState.life + ' years';
+    const row = (k, v, cls = '') => `<div class="pl-row ${cls}"><span>${k}</span><span><b>${k$(v)}</b></span></div>`;
+    document.getElementById('bl-rows').innerHTML =
+      row('Rent collected a year', rev) +
+      row('Power', -power, 'neg') + row('Staff, repairs, network', -OTHER_OPEX, 'neg') +
+      row(`Chip wear (over ${billState.life} yrs)`, -depChip, 'neg') + row('Building wear (over 20 yrs)', -depShell, 'neg') +
+      row('Profit per GPU a year', profit, 'tot' + (profit < 0 ? ' neg' : ''));
+    const campusProfit = profit * campus(1000).gpus;
+    document.getElementById('bl-status').innerHTML =
+      (payback === Infinity
+        ? `At this price the GPU never earns back what it cost.`
+        : `Cash pays back the chip in about <b>${payback.toFixed(1)} years</b>. ` +
+          (payback > billState.life
+            ? `That's longer than the chip stays useful. <b>It wears out before it pays you back.</b>`
+            : `That's inside the chip's life, so this one works, if the price holds.`)) +
+      ` Across a 1 GW campus that's about <b>${campusProfit < 0 ? '−' : ''}${bil(Math.abs(campusProfit))}</b> a year of ${campusProfit < 0 ? 'losses' : 'profit'}. Now drag the chip life from 6 years to 3 and watch the same campus change.`;
+  };
+  [pEl, uEl, lEl].forEach((e) => e.addEventListener('input', update));
+  update();
+}
+
+function step(dir) {
+  const idx = selected ? ORDER.indexOf(selected) : -1;
+  const next = idx + dir;
+  if (next >= ORDER.length) { clearSelection(); return; }
+  if (next >= 0) select(ORDER[next]);
+}
+document.getElementById('next-btn').addEventListener('click', () => step(1));
+document.getElementById('prev-btn').addEventListener('click', () => step(-1));
+document.getElementById('close-btn').addEventListener('click', () => clearSelection());
+document.getElementById('tour-btn').addEventListener('click', () => select(ORDER[0]));
+document.getElementById('reset-btn').addEventListener('click', () => clearSelection());
+
+const MOVE_KEYS = {
+  w: [0, 1], arrowup: [0, 1], s: [0, -1], arrowdown: [0, -1],
+  a: [-1, 0], arrowleft: [-1, 0], d: [1, 0], arrowright: [1, 0],
+};
+const held = new Map();
+const TAP_MS = 160;
+window.addEventListener('keydown', (e) => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (e.key === 'Escape') clearSelection();
+  const k = e.key.toLowerCase();
+  if (MOVE_KEYS[k] && !e.metaKey && !e.ctrlKey && !e.altKey) {
+    if (!held.has(k) || held.get(k).up) held.set(k, { down: performance.now(), up: 0 });
+    tween = null;
+    e.preventDefault();
+  }
+});
+window.addEventListener('keyup', (e) => {
+  const h = held.get(e.key.toLowerCase());
+  if (h) h.up = Math.max(performance.now(), h.down + TAP_MS);
+});
+window.addEventListener('blur', () => { held.clear(); if (EMBED) controls.enableZoom = false; });
+const kFwd = new THREE.Vector3(), kRight = new THREE.Vector3(), kMove = new THREE.Vector3();
+function keyboardMove(dt) {
+  let mx = 0, mz = 0;
+  const now = performance.now();
+  for (const [k, h] of held) {
+    if (h.up && now > h.up) { held.delete(k); continue; }
+    mx += MOVE_KEYS[k][0];
+    mz += MOVE_KEYS[k][1];
+  }
+  if (mx || mz) {
+    camera.getWorldDirection(kFwd);
+    kFwd.y = 0;
+    kFwd.normalize();
+    kRight.crossVectors(kFwd, UP).normalize();
+    kMove.copy(kFwd).multiplyScalar(mz).addScaledVector(kRight, mx).normalize().multiplyScalar((16 * dt) / camera.zoom);
+    controls.target.add(kMove);
+    camera.position.add(kMove);
+  }
+  kMove.set(
+    THREE.MathUtils.clamp(controls.target.x, -24, 24) - controls.target.x,
+    0,
+    THREE.MathUtils.clamp(controls.target.z, -12, 12) - controls.target.z,
+  );
+  if (kMove.x || kMove.z) { controls.target.add(kMove); camera.position.add(kMove); }
+}
+
+/* Picking */
+const raycaster = new THREE.Raycaster();
+const ndc = new THREE.Vector2();
+const tip = document.getElementById('tip');
+function pick(ev) {
+  const r = renderer.domElement.getBoundingClientRect();
+  ndc.set(((ev.clientX - r.left) / r.width) * 2 - 1, -((ev.clientY - r.top) / r.height) * 2 + 1);
+  raycaster.setFromCamera(ndc, camera);
+  const hit = raycaster.intersectObjects(pickables, false)[0];
+  return hit ? hit.object.userData.sid : null;
+}
+let downAt = null;
+renderer.domElement.addEventListener('pointerdown', (e) => { downAt = { x: e.clientX, y: e.clientY }; if (EMBED) controls.enableZoom = true; });
+renderer.domElement.addEventListener('pointerup', (e) => {
+  if (!downAt) return;
+  const moved = Math.hypot(e.clientX - downAt.x, e.clientY - downAt.y);
+  downAt = null;
+  if (moved > 6) return;
+  const id = pick(e);
+  if (id) select(id);
+  else if (selected) clearSelection(false);
+});
+renderer.domElement.addEventListener('pointermove', (e) => {
+  if (e.pointerType !== 'mouse' || e.buttons) return;
+  const id = pick(e);
+  if (id !== hovered) {
+    hovered = id;
+    renderer.domElement.style.cursor = id ? 'pointer' : 'grab';
+    applyLook();
+  }
+  if (id) {
+    tip.textContent = `${INFO[id].emoji} ${INFO[id].title}`;
+    tip.style.left = e.clientX + 14 + 'px';
+    tip.style.top = e.clientY + 14 + 'px';
+    tip.style.opacity = 1;
+  } else tip.style.opacity = 0;
+});
+renderer.domElement.addEventListener('pointerleave', () => { tip.style.opacity = 0; if (EMBED) controls.enableZoom = false; });
+
+/* ------------------------------------------------------------------ */
+/* Loop                                                                */
+/* ------------------------------------------------------------------ */
+
+gasOn = false; gasFlow.on = false;
+const clock = new THREE.Clock();
+function frame() {
+  const dt = Math.min(clock.getDelta(), 0.05);
+  time += dt;
+
+  if (tween) {
+    tween.t += dt;
+    const k = ease(Math.min(1, tween.t / tween.dur));
+    controls.target.lerpVectors(tween.fromT, tween.toT, k);
+    camera.position.copy(controls.target).add(tween.off);
+    camera.zoom = THREE.MathUtils.lerp(tween.fromZ, tween.toZ, k);
+    camera.updateProjectionMatrix();
+    if (k >= 1) tween = null;
+  }
+  keyboardMove(dt);
+  controls.update();
+
+  updateMovers(dt);
+  updateParticles(dt);
+  updateFlows();
+
+  if (halo.visible) {
+    const p = 1 + Math.sin(time * 3) * 0.04;
+    halo.scale.set(halo.userData.rx * p, halo.userData.rz * p, 1);
+    halo.material.opacity = 0.55 + Math.sin(time * 3) * 0.25;
+    for (const m of sections[selected].meshes) {
+      if (m.material.emissive && !m.userData.glow) m.material.emissiveIntensity = 0.16 + Math.sin(time * 3) * 0.08;
+    }
+  }
+
+  updatePins();
+  renderer.render(scene, camera);
+  requestAnimationFrame(frame);
+}
+
+applyLook();
+renderer.domElement.style.cursor = 'grab';
+frame();
+requestAnimationFrame(() => document.getElementById('loading').classList.add('gone'));
+</script>
+</body>
+</html>
