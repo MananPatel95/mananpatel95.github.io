@@ -70,6 +70,30 @@
             font-weight: 500;
             margin: 0 0 6px;
         }
+        .age-edit {
+            font: inherit;
+            color: inherit;
+            background: none;
+            border: 0;
+            border-bottom: 1px dashed #9ca3af;
+            padding: 0;
+            cursor: pointer;
+        }
+        .age-edit:hover { border-bottom-color: #111; }
+        .age-input {
+            font: inherit;
+            width: 3.2em;
+            padding: 0;
+            border: 0;
+            border-bottom: 1px solid #111;
+            border-radius: 0;
+            background: transparent;
+            color: inherit;
+            -moz-appearance: textfield;
+        }
+        .age-input::-webkit-outer-spin-button,
+        .age-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        .age-input:focus { outline: none; }
         .view-switch {
             display: flex;
             justify-content: center;
@@ -230,6 +254,7 @@
             color: #374151;
         }
         .legend span { display: inline-flex; align-items: center; gap: 6px; }
+        .legend span[hidden] { display: none; }
         .swatch {
             width: 10px;
             height: 10px;
@@ -294,12 +319,12 @@
             <span><i class="swatch gone"></i> gone</span>
         </div>
         <div class="legend legend-life">
-            <span><i class="swatch era-0"></i> 0–12</span>
-            <span><i class="swatch era-1"></i> 13–19</span>
-            <span><i class="swatch era-2"></i> 20–29</span>
-            <span><i class="swatch era-3"></i> 30–49</span>
-            <span><i class="swatch era-4"></i> 50–64</span>
-            <span><i class="swatch era-5"></i> 65–80</span>
+            <span data-from="0"><i class="swatch era-0"></i> 0–12</span>
+            <span data-from="13"><i class="swatch era-1"></i> 13–19</span>
+            <span data-from="20"><i class="swatch era-2"></i> 20–29</span>
+            <span data-from="30"><i class="swatch era-3"></i> 30–49</span>
+            <span data-from="50"><i class="swatch era-4"></i> 50–64</span>
+            <span data-from="65"><i class="swatch era-5"></i> 65–<b id="lifeEnd" style="font-weight:inherit">80</b></span>
             <span><i class="swatch today"></i> this week</span>
         </div>
         <p class="note">"There are decades when nothing happens, and there are weeks when decades happen." You often don't notice the day slipping by. Sometimes seeing it visually is the kick in the butt you really need to make stuff happen. It motivates me to not let my resolutions be failures.</p>
@@ -307,7 +332,10 @@
     <script>
         (function () {
             var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-            var LIFE_YEARS = 80;
+            var DEFAULT_LIFE_YEARS = 80;
+            var MIN_LIFE_YEARS = 1;
+            var MAX_LIFE_YEARS = 120;
+            var LIFE_YEARS = DEFAULT_LIFE_YEARS;
             var WEEKS_PER_YEAR = 52;
             var TOTAL_WEEKS = LIFE_YEARS * WEEKS_PER_YEAR;
             var BIRTH_YEAR = 1995;
@@ -377,7 +405,11 @@
                 var birthUTC = Date.UTC(by, 0, 1);
                 var todayUTC = Date.UTC(year, today.getMonth(), today.getDate());
                 var daysAlive = Math.round((todayUTC - birthUTC) / msDay);
-                var weekIndex = Math.floor(daysAlive / 7);
+                // Each row is one calendar year of 52 cells, so place today by calendar
+                // year + week of that year. Counting raw days / 7 drifts ~1.25 days per
+                // year (365.25 vs 364) and runs ahead into the next row.
+                var weekOfYear = Math.min(WEEKS_PER_YEAR - 1, Math.floor((daysPassed - 1) / 7));
+                var weekIndex = (year - by) * WEEKS_PER_YEAR + weekOfYear;
                 var weeksElapsed;
                 var weeksLeft;
                 if (daysAlive < 0) {
@@ -403,10 +435,62 @@
 
             function showLifeReadout() {
                 var c = lifeCounts(birthYear);
-                yearLabel.textContent = birthYear + ' → age ' + LIFE_YEARS;
+                yearLabel.innerHTML = '';
+                yearLabel.appendChild(document.createTextNode(birthYear + ' → age '));
+                var ageBtn = document.createElement('button');
+                ageBtn.type = 'button';
+                ageBtn.className = 'age-edit';
+                ageBtn.textContent = LIFE_YEARS;
+                ageBtn.title = 'Change life expectancy';
+                ageBtn.setAttribute('aria-label', 'Life expectancy ' + LIFE_YEARS + ', click to change');
+                ageBtn.addEventListener('click', editAge);
+                yearLabel.appendChild(ageBtn);
                 paintPct();
                 timerEl.textContent = c.weeksLeft.toLocaleString('en-CA') + ' weeks left : ' + c.weeksElapsed.toLocaleString('en-CA') + ' weeks elapsed';
                 statsEl.innerHTML = c.yearsLeft + ' years left · ' + c.yearsElapsed + ' elapsed';
+            }
+
+            function editAge() {
+                var input = document.createElement('input');
+                input.type = 'number';
+                input.inputMode = 'numeric';
+                input.className = 'age-input';
+                input.min = MIN_LIFE_YEARS;
+                input.max = MAX_LIFE_YEARS;
+                input.value = LIFE_YEARS;
+                input.setAttribute('aria-label', 'Life expectancy in years');
+                var done = false;
+                function finish(commit) {
+                    if (done) return;
+                    done = true;
+                    if (commit) {
+                        var v = parseInt(input.value, 10);
+                        if (!isNaN(v)) setLifeYears(Math.max(MIN_LIFE_YEARS, Math.min(MAX_LIFE_YEARS, v)));
+                    }
+                    showLifeReadout();
+                }
+                input.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter') { e.preventDefault(); finish(true); }
+                    else if (e.key === 'Escape') { e.preventDefault(); finish(false); }
+                });
+                input.addEventListener('blur', function () { finish(true); });
+                var btn = yearLabel.querySelector('.age-edit');
+                yearLabel.replaceChild(input, btn);
+                input.focus();
+                input.select();
+            }
+
+            function setLifeYears(n) {
+                if (n === LIFE_YEARS) return;
+                LIFE_YEARS = n;
+                TOTAL_WEEKS = LIFE_YEARS * WEEKS_PER_YEAR;
+                lifeEl.setAttribute('aria-label', 'Weeks of a life, ' + birthYear + ' to age ' + LIFE_YEARS);
+                document.getElementById('lifeEnd').textContent = LIFE_YEARS;
+                var spans = document.querySelectorAll('.legend-life span[data-from]');
+                for (var i = 0; i < spans.length; i++) {
+                    spans[i].hidden = Number(spans[i].getAttribute('data-from')) >= LIFE_YEARS;
+                }
+                renderLife();
             }
 
             function renderLife() {
