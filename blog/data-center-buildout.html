@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What's actually inside a data center buildout? | Manan Patel</title>
+    <meta name="description" content="Big Tech will spend over $700 billion on capex in 2026, mostly on AI data centers. What does that money buy? Land, power, backup, a big box, chips, cooling and fiber, plus the cycle risk underneath it all. With a clickable miniature and a quiz.">
+    <meta name="keywords" content="Manan Patel, data center, AI infrastructure, gigawatt, GPU, power grid, transformers, liquid cooling, PUE, capex, AI bubble, Howard Marks">
+    <meta name="author" content="Manan Patel">
+    <link rel="canonical" href="https://mananpatel.info/blog/data-center-buildout.html">
+
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://mananpatel.info/blog/data-center-buildout.html">
+    <meta property="og:title" content="What's actually inside a data center buildout? | Manan Patel">
+    <meta property="og:description" content="Land, power, backup, a big box, chips, cooling, fiber, and the cycle risk underneath. With a clickable miniature and a quiz.">
+    <meta property="og:site_name" content="Manan Patel">
+    <meta property="article:published_time" content="2026-11-17">
+    <meta property="article:author" content="https://mananpatel.info/#manan-patel">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:url" content="https://mananpatel.info/blog/data-center-buildout.html">
+    <meta name="twitter:title" content="What's actually inside a data center buildout?">
+    <meta name="twitter:description" content="What $700B+ of AI capex actually buys, explained with a tiny clickable campus.">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "BlogPosting",
+          "headline": "What's actually inside a data center buildout?",
+          "description": "What the AI data center buildout actually buys: land, power, backup, the building, chips, cooling and fiber, and the cycle risk underneath.",
+          "url": "https://mananpatel.info/blog/data-center-buildout.html",
+          "datePublished": "2026-11-17",
+          "dateModified": "2026-11-17",
+          "author": { "@id": "https://mananpatel.info/#manan-patel" },
+          "publisher": { "@id": "https://mananpatel.info/#manan-patel" },
+          "mainEntityOfPage": { "@type": "WebPage", "@id": "https://mananpatel.info/blog/data-center-buildout.html" }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://mananpatel.info/" },
+            { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://mananpatel.info/blog/" },
+            { "@type": "ListItem", "position": 3, "name": "Data center buildout", "item": "https://mananpatel.info/blog/data-center-buildout.html" }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'text-light': '#1f2937',
+                        'text-dark': '#f9fafb',
+                        'secondary-text-light': '#6b7280',
+                        'secondary-text-dark': '#9ca3af',
+                        'border-light': '#e5e7eb',
+                        'border-dark': '#374151',
+                        'bg-light': '#ffffff',
+                        'bg-dark': '#111827'
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        if (localStorage.getItem('darkMode') === 'true') document.documentElement.classList.add('dark');
+    </script>
+    <style>
+        :root {
+            --ink: #1f2937; --muted: #6b7280; --line: #e5e7eb; --card: #f8fafc;
+            --blue: #4f6bed; --blue-soft: #e3e8fd; --gold: #e8a33d; --gold-soft: #fdf1dc;
+            --purple: #8a6fd1; --red: #e0533d; --green: #2f9e62; --green-soft: #def5e7;
+        }
+        .dark {
+            --ink: #f3f4f6; --muted: #9ca3af; --line: #374151; --card: #1a2232;
+            --blue: #8297ff; --blue-soft: #232c52; --gold: #f2b85a; --gold-soft: #3a2e17;
+            --purple: #a58ff0; --red: #ff7a66; --green: #5fd08f; --green-soft: #183a28;
+        }
+        .blog-content { line-height: 1.75; }
+        .blog-content h2 { font-size: 1.5rem; font-weight: bold; margin-top: 2.5rem; margin-bottom: 1rem; }
+        .blog-content h3 { font-size: 1.15rem; font-weight: bold; margin-top: 1.5rem; margin-bottom: .5rem; }
+        .blog-content p { margin-bottom: 1rem; }
+        .blog-content ul { list-style: disc; margin-left: 1.5rem; margin-bottom: 1rem; }
+        .blog-content ol { list-style: decimal; margin-left: 1.5rem; margin-bottom: 1rem; }
+        .blog-content li { margin-bottom: 0.5rem; }
+        .blog-content a { color: #2563eb; text-decoration: underline; }
+        .dark .blog-content a { color: #60a5fa; }
+        .pull { border-left: 4px solid var(--blue); padding: .25rem 0 .25rem 1rem; margin: 1.5rem 0; font-size: 1.15rem; font-weight: 600; }
+        figure { margin: 2rem 0; }
+        figcaption { margin-top: 0.75rem; text-align: center; font-size: 0.95rem; font-style: italic; color: #6b7280; }
+        .dark figcaption { color: #9ca3af; }
+
+        /* Diagrams */
+        .dia { border: 1px solid var(--line); border-radius: 14px; padding: 18px; background: var(--card); color: var(--ink); }
+        .dia-scroll { overflow-x: auto; }
+        .dia svg { display: block; width: 100%; height: auto; min-width: 560px; }
+        .dia svg text { font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; }
+        .dia-title { font-size: .8rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+
+        .chain { display: flex; flex-wrap: wrap; align-items: stretch; gap: 6px; }
+        .chain .node { flex: 1 1 110px; border-radius: 10px; padding: 10px; background: var(--blue-soft); }
+        .chain .node b { display: block; font-size: .95rem; }
+        .chain .node span { display: block; font-size: .8rem; color: var(--muted); line-height: 1.35; }
+        .chain .node .v { color: var(--ink); font-weight: 800; font-size: .85rem; margin-top: 4px; }
+        .chain .arr { align-self: center; color: var(--muted); font-weight: 900; }
+        .chain .node.backup { background: var(--gold-soft); }
+
+        .gantt-row { display: grid; grid-template-columns: 170px 1fr; gap: 10px; align-items: center; margin: 7px 0; font-size: .85rem; }
+        .gantt-track { position: relative; height: 16px; border-radius: 999px; background: color-mix(in srgb, var(--line) 50%, transparent); }
+        .gantt-bar { position: absolute; top: 0; bottom: 0; border-radius: 999px; }
+        .gantt-axis { display: grid; grid-template-columns: 170px 1fr; gap: 10px; font-size: .75rem; color: var(--muted); font-weight: 700; }
+        .gantt-axis div { display: flex; justify-content: space-between; }
+        .gantt-mark { position: absolute; top: -5px; bottom: -5px; width: 2px; background: var(--red); }
+        @media (max-width: 560px) { .gantt-row, .gantt-axis { grid-template-columns: 110px 1fr; font-size: .75rem; } }
+
+        .stack { display: flex; height: 44px; border-radius: 10px; overflow: hidden; font-size: .8rem; font-weight: 800; color: #fff; }
+        .stack div { display: flex; align-items: center; justify-content: center; text-align: center; padding: 0 6px; line-height: 1.1; }
+        .legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 10px; font-size: .85rem; color: var(--muted); }
+        .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: middle; }
+
+        .life-row { display: grid; grid-template-columns: 150px 1fr; gap: 10px; align-items: center; margin: 8px 0; font-size: .85rem; }
+        .life-bar { height: 22px; border-radius: 6px; display: flex; align-items: center; padding-left: 8px; color: #fff; font-weight: 800; font-size: .75rem; white-space: nowrap; }
+        @media (max-width: 560px) { .life-row { grid-template-columns: 100px 1fr; font-size: .75rem; } }
+
+        /* Embedded miniature */
+        .mini { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: #f3f1ec; }
+        .mini iframe { display: block; width: 100%; height: 640px; border: 0; }
+        @media (max-width: 720px) { .mini iframe { height: 560px; } }
+        .mini-bar { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 10px 14px; font-size: .85rem; background: var(--card); color: var(--muted); border-top: 1px solid var(--line); }
+
+        /* Quiz */
+        .q { border: 1px solid var(--line); border-radius: 14px; padding: 18px; margin: 18px 0; background: var(--card); }
+        .q-n { font-size: .75rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+        .q-p { font-weight: 700; font-size: 1.05rem; margin: 6px 0 10px; line-height: 1.5; }
+        .q textarea { width: 100%; min-height: 92px; border-radius: 10px; border: 1px solid var(--line); padding: 10px 12px; font: inherit; font-size: .95rem; background: transparent; color: inherit; resize: vertical; }
+        .q textarea:focus { outline: 2px solid var(--blue); outline-offset: 1px; }
+        .q-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+        .q-btn { padding: 8px 14px; border-radius: 999px; font-weight: 700; font-size: .9rem; background: var(--blue); color: #fff; }
+        .q-btn:disabled { opacity: .45; cursor: not-allowed; }
+        .q-btn.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+        .q-fb { margin-top: 12px; font-size: .95rem; line-height: 1.6; }
+        .q-fb .hit { background: var(--green-soft); border-radius: 10px; padding: 10px 12px; margin-bottom: 8px; }
+        .q-fb .ask { background: var(--blue-soft); border-radius: 10px; padding: 10px 12px; margin-bottom: 8px; }
+        .q-fb .model { border-left: 3px solid var(--gold); padding-left: 12px; margin-top: 8px; color: var(--ink); }
+        .q.done { border-color: var(--green); }
+        .q-progress { height: 8px; border-radius: 999px; background: color-mix(in srgb, var(--line) 60%, transparent); overflow: hidden; }
+        .q-progress div { height: 100%; width: 0; background: var(--green); transition: width .3s ease; }
+    </style>
+</head>
+<body class="bg-bg-light dark:bg-bg-dark text-text-light dark:text-text-dark transition-colors">
+    <div class="min-h-screen">
+        <header class="border-b border-border-light dark:border-border-dark">
+            <div class="max-w-4xl mx-auto px-4 py-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <a href="../" class="text-xl font-bold text-text-light dark:text-text-dark hover:opacity-80 transition-opacity">Manan Patel</a>
+                        <p class="text-xs text-secondary-text-light dark:text-secondary-text-dark mt-0.5">Tinkering and Sharing</p>
+                    </div>
+                    <div class="flex items-center gap-3 flex-wrap">
+                        <a href="../#writing" class="text-sm text-secondary-text-light dark:text-secondary-text-dark hover:text-text-light dark:hover:text-text-dark transition-colors">← Back to Writing</a>
+                        <a href="../" class="text-sm text-secondary-text-light dark:text-secondary-text-dark hover:text-text-light dark:hover:text-text-dark transition-colors">Home</a>
+                        <a class="w-8 h-8 border border-border-light dark:border-border-dark rounded flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" href="https://x.com/mananthekid" target="_blank" rel="noopener" aria-label="X">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+                        </a>
+                        <a class="w-8 h-8 border border-border-light dark:border-border-dark rounded flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" href="https://www.linkedin.com/in/mananpatel123/" target="_blank" rel="noopener" aria-label="LinkedIn">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z"></path></svg>
+                        </a>
+                        <a class="w-8 h-8 border border-border-light dark:border-border-dark rounded flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" href="https://github.com/MananPatel95" target="_blank" rel="noopener" aria-label="GitHub">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path clip-rule="evenodd" fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.285 2.866 7.92 6.737 9.208.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.942.359.308.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z"></path></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <article class="max-w-4xl mx-auto px-4 py-8">
+            <header class="mb-8">
+                <div class="flex items-center gap-2 mb-4 flex-wrap">
+                    <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs font-medium rounded">AI / ML</span>
+                    <span class="text-secondary-text-light dark:text-secondary-text-dark text-sm">Nov 17, 2026</span>
+                    <span class="text-secondary-text-light dark:text-secondary-text-dark text-sm">•</span>
+                    <span class="text-secondary-text-light dark:text-secondary-text-dark text-sm">14 min read</span>
+                </div>
+                <h1 class="text-3xl font-bold text-text-light dark:text-text-dark mb-4">What's actually inside a data center buildout?</h1>
+                <p class="text-lg text-secondary-text-light dark:text-secondary-text-dark">
+                    Amazon, Microsoft, Alphabet and Meta are on track to spend over $700 billion on capex this year, mostly on AI data centers. I kept nodding along to that number without knowing what it buys. So I took one apart: the dirt, the wires, the chips, the pipes and the debt. There's a tiny campus you can click in the middle, and a quiz at the end where you answer in your own words.
+                </p>
+            </header>
+
+            <div class="blog-content">
+
+                <p>Imagine someone hands you $40 billion and says: build me a gigawatt.</p>
+                <p>Where do you even start? You'd probably think about chips first. That's what the headlines are about. Nvidia, GPUs, H100s, Blackwell. But if you start with the chips, you lose a year. Maybe three.</p>
+                <p>The people who actually build these things start somewhere much more boring. They start with a question a farmer could answer: <em>is there a big power line near this field?</em></p>
+                <p>That's the whole article in one sentence. An AI data center is an electricity problem wearing a computer costume. Once that clicked for me, every other weird thing about the buildout started making sense: why they're in West Texas, why they buy gas turbines, why the chip lasts 5 years in a building that lasts 20, and why some very smart investors are nervous.</p>
+
+                <h2>The unit is the megawatt</h2>
+                <p>Data centers used to be priced by the square foot, like an office. Not anymore. Everyone in the industry now talks in megawatts (MW) and gigawatts (GW). Ask how big a campus is and you'll hear "1.2 gigs", not "4 million square feet".</p>
+                <p>Why? Because floor space is cheap and power is scarce. A rack of Nvidia's GB200 NVL72 holds 72 GPUs and draws about <a href="https://www.theregister.com/2025/05/27/oracle_openai_40b/" target="_blank" rel="noopener">120 kW at peak</a>. An old enterprise server rack drew 5 to 10 kW. Same steel cabinet, 15x the power. You run out of electricity long before you run out of room.</p>
+                <p>So here's what one gigawatt actually turns into:</p>
+
+                <figure>
+                    <div class="dia dia-scroll">
+                        <div class="dia-title">One gigawatt, decoded</div>
+                        <svg viewBox="0 0 720 300" role="img" aria-label="1,000 MW from the grid splits into about 833 MW for IT and 167 MW for cooling and losses. The IT power runs about 6,900 racks holding about 500,000 GPUs.">
+                            <defs>
+                                <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" fill="var(--muted)"/></marker>
+                            </defs>
+                            <rect x="10" y="80" width="150" height="140" rx="14" fill="var(--gold-soft)" stroke="var(--gold)" stroke-width="2"/>
+                            <text x="85" y="135" text-anchor="middle" font-size="30" font-weight="800" fill="var(--ink)">1,000</text>
+                            <text x="85" y="160" text-anchor="middle" font-size="15" fill="var(--muted)">MW from the grid</text>
+                            <text x="85" y="190" text-anchor="middle" font-size="13" fill="var(--muted)">≈ 830,000 homes</text>
+                            <path d="M160 120 C 220 120, 220 70, 270 70" fill="none" stroke="var(--blue)" stroke-width="34" opacity=".35"/>
+                            <path d="M160 195 C 220 195, 220 240, 270 240" fill="none" stroke="var(--gold)" stroke-width="10" opacity=".5"/>
+                            <rect x="270" y="30" width="170" height="90" rx="14" fill="var(--blue-soft)" stroke="var(--blue)" stroke-width="2"/>
+                            <text x="355" y="70" text-anchor="middle" font-size="26" font-weight="800" fill="var(--ink)">833 MW</text>
+                            <text x="355" y="95" text-anchor="middle" font-size="14" fill="var(--muted)">reaches the chips</text>
+                            <rect x="270" y="200" width="170" height="80" rx="14" fill="none" stroke="var(--gold)" stroke-width="2" stroke-dasharray="5 4"/>
+                            <text x="355" y="235" text-anchor="middle" font-size="22" font-weight="800" fill="var(--ink)">167 MW</text>
+                            <text x="355" y="258" text-anchor="middle" font-size="13" fill="var(--muted)">cooling + losses (PUE 1.2)</text>
+                            <line x1="440" y1="75" x2="495" y2="75" stroke="var(--muted)" stroke-width="2" marker-end="url(#ah)"/>
+                            <rect x="500" y="30" width="200" height="90" rx="14" fill="var(--card)" stroke="var(--line)" stroke-width="2"/>
+                            <text x="600" y="68" text-anchor="middle" font-size="24" font-weight="800" fill="var(--ink)">~6,900 racks</text>
+                            <text x="600" y="94" text-anchor="middle" font-size="13" fill="var(--muted)">at 120 kW each</text>
+                            <line x1="600" y1="120" x2="600" y2="170" stroke="var(--muted)" stroke-width="2" marker-end="url(#ah)"/>
+                            <rect x="500" y="175" width="200" height="105" rx="14" fill="var(--blue)" />
+                            <text x="600" y="220" text-anchor="middle" font-size="28" font-weight="800" fill="#fff">~500,000</text>
+                            <text x="600" y="246" text-anchor="middle" font-size="14" fill="#fff">GPUs, 72 per rack</text>
+                        </svg>
+                    </div>
+                    <figcaption>Round numbers. A gigawatt is roughly a big nuclear reactor's output, or a mid-size city.</figcaption>
+                </figure>
+
+                <p>Hold onto that picture, because it's the whole business. Power comes in. Some of it gets wasted keeping things cool. The rest becomes math. Everything else in a buildout exists to make that pipeline bigger, faster or more reliable.</p>
+
+                <h2>The recipe, in the order it actually happens</h2>
+                <p>Here's what's inside a buildout, in roughly the order the money gets spent.</p>
+
+                <h3>1. Land (but really, power)</h3>
+                <p>Ten years ago you'd put a data center near fiber and near customers. That's why Northern Virginia is full of them. Today the first filter is: how many megawatts can I get here, and when?</p>
+                <p>The demand for that answer is wild. One Texas utility, Oncor, has received about <a href="https://publications.scottmadden.com/energy-industry-update-v26-i1/large-loads-and-the-speed-to-power-challenge" target="_blank" rel="noopener">103 GW of requests for new load, about 82 GW of it from data centers</a>. Texas's all-time peak demand is in the mid-80s of GW. One utility is being asked to roughly add another Texas.</p>
+                <p>So land that already has a utility promise attached, "powered land", sells for many times what the same dirt is worth as farmland. What you're really paying for is a spot in line.</p>
+
+                <h3>2. Power in</h3>
+                <p>Electricity takes a long trip to reach a GPU, and it changes shape at every step. Here's the chain:</p>
+
+                <figure>
+                    <div class="dia">
+                        <div class="dia-title">How a watt gets from the grid to a GPU</div>
+                        <div class="chain">
+                            <div class="node"><b>Transmission</b><span>Big towers from the grid</span><span class="v">345 kV</span></div>
+                            <div class="arr">→</div>
+                            <div class="node"><b>Substation</b><span>Huge transformers step it down</span><span class="v">34.5 kV</span></div>
+                            <div class="arr">→</div>
+                            <div class="node"><b>Switchgear</b><span>Routes power around campus</span><span class="v">34.5 kV</span></div>
+                            <div class="arr">→</div>
+                            <div class="node"><b>Hall transformer</b><span>Steps down again near the building</span><span class="v">480 V</span></div>
+                            <div class="arr">→</div>
+                            <div class="node backup"><b>UPS</b><span>Batteries that never let it blink</span><span class="v">480 V</span></div>
+                            <div class="arr">→</div>
+                            <div class="node"><b>Busway</b><span>Bars over the racks</span><span class="v">480 V</span></div>
+                            <div class="arr">→</div>
+                            <div class="node"><b>Rack power shelf</b><span>AC turns to DC</span><span class="v">~50 V DC</span></div>
+                            <div class="arr">→</div>
+                            <div class="node"><b>GPU</b><span>Final conversion on the board</span><span class="v">&lt;1 V</span></div>
+                        </div>
+                        <div class="chain" style="margin-top:10px">
+                            <div class="node backup" style="flex-basis:100%"><b>Backup on the side</b><span>Diesel generators start in about 10 to 15 seconds if the grid drops. The UPS batteries carry the load until they do.</span></div>
+                        </div>
+                    </div>
+                    <figcaption>US voltages. Every box in this chain is something you have to buy, wait for, install and test.</figcaption>
+                </figure>
+
+                <p>Look at that chain and ask the obvious question: which box takes the longest to get?</p>
+                <p>It's the transformers. Big power transformers have been taking <a href="https://thenextweb.com/news/us-power-companies-scramble-data-centre-equipment" target="_blank" rel="noopener">well over two years to arrive</a>. They're hand-wound, enormous, and every utility in America wants them at the same time as every data center developer does.</p>
+
+                <h3>3. Backup</h3>
+                <p>A bank's servers can never go down. So traditional data centers buy two of everything ("2N") and rows of diesel generators, each a couple of megawatts. A big campus has dozens or hundreds of them.</p>
+                <p>AI training changes this a little. A training run saves checkpoints, so if power blinks you lose a few minutes, not customer money. Some AI campuses buy less backup on purpose. It's one of the few places in this whole story where someone saves money.</p>
+
+                <h3>4. The building</h3>
+                <p>The building is a big, boring, windowless box. Concrete slab, walls that are often cast flat on the ground and tilted up by crane, a roof, a fence and some very serious door locks. It's the cheapest part of the building, and the part people picture.</p>
+                <p>The expensive part is what goes inside the walls: switchgear, cable, pipes, pumps, cooling gear. Builders call it MEP (mechanical, electrical, plumbing). Cushman &amp; Wakefield puts all-in development at about <a href="https://irei.com/news/cushman-wakefield-releases-2026-data-center-development-cost-guide-citing-21-rise-in-per-mw-construction-costs/" target="_blank" rel="noopener">$17.6 million per MW in 2026, not counting chips, up 21% in a year</a>.</p>
+                <p>The labor is mostly electricians. Crusoe's Stargate campus in Abilene, Texas, 8 buildings and 1.2 GW, had about <a href="https://www.datacenterfrontier.com/hyperscale/article/55276169/crusoe-adds-45-gw-natural-gas-to-fuel-ai-expands-abilene-data-center-to-12-gw" target="_blank" rel="noopener">2,000 workers on site a day, heading toward 5,000</a>. In a town of about 125,000 people.</p>
+
+                <h3>5. The chips</h3>
+                <p>This is where most of the money goes. At roughly $3.5 million per NVL72 rack including its share of networking (a rough number), the chips on a 1 GW campus cost more than everything else combined. More on that below, because it's where the risk lives.</p>
+                <p>Racks also need to talk to each other. A training cluster is only useful if 100,000 GPUs can act like one computer, so the hall is laced with fiber, switches and optical transceivers. There's more fiber inside a big AI hall than in the line coming into it.</p>
+
+                <h3>6. Cooling</h3>
+                <p>We'll get to this one. It deserves its own section.</p>
+
+                <h3>7. Fiber out</h3>
+                <p>The orange line along the road. Two routes from different directions so one backhoe can't take you offline. Training sites care less about it than you'd think. Sites that serve answers to users (inference) care a lot more, which is why they sit closer to cities.</p>
+
+                <h2>Why can't you just plug it in?</h2>
+                <p>This was my first question, and it's the right one. You have the land, you have the money. Why does it take four years?</p>
+                <p>Because the building and the power run on two different clocks, and you only make money when both are done.</p>
+
+                <figure>
+                    <div class="dia">
+                        <div class="dia-title">One big hall, waiting for the grid</div>
+                        <div id="gantt"></div>
+                        <div class="gantt-axis"><span></span><div><span>0</span><span>12</span><span>24</span><span>36</span><span>48 mo</span></div></div>
+                    </div>
+                    <figcaption>Rough timeline. The building is done around month 37. The power shows up around month 48. The red line is when chips can run.</figcaption>
+                </figure>
+
+                <p>That gap is brutal. A finished building, billions of dollars, sitting dark for most of a year because a utility study and a transformer haven't shown up. Every month dark is a month the chips you ordered are getting older without earning anything.</p>
+                <p>So builders got creative. Three moves you'll see everywhere:</p>
+                <ul>
+                    <li><b>Bring your own power.</b> Put gas turbines or big engines on site and run "behind the meter" until the grid catches up. Crusoe did it in Abilene. xAI brought in trailer-mounted turbines in Memphis to get its first cluster running fast.</li>
+                    <li><b>Buy your place in line.</b> Pay up for powered land, where the utility has already said yes.</li>
+                    <li><b>Build in a factory.</b> Whole electrical rooms and cooling skids get built off site and trucked in, so the building clock shrinks too.</li>
+                </ul>
+                <p>And then the second-order problem: turbines are sold out too. GE Vernova's gas turbine backlog hit about <a href="https://www.power-eng.com/gas/turbines/data-centers-drive-record-surge-in-ge-vernova-power-equipment-orders-as-turbine-slots-tighten-through-2030/" target="_blank" rel="noopener">100 GW in early 2026, with new orders quoted around three years out</a>. When everyone takes the shortcut, the shortcut gets a waiting list.</p>
+
+                <h2>Go poke at it</h2>
+                <p>I built a tiny version of a campus so you can see how the pieces sit next to each other. Click anything, or hit "Take the tour". Yellow dots are power flowing in. Blue and red dots are coolant going in cold and coming out hot. There are four calculators inside: size the campus, pick a cooling system, race the build schedule, and see whether one GPU pays for itself.</p>
+
+                <figure>
+                    <div class="mini">
+                        <iframe src="/data-center/?embed=1" title="Tiny Data Center: a clickable miniature of an AI campus" loading="lazy" allow="fullscreen"></iframe>
+                        <div class="mini-bar">
+                            <span>Drag to move, right-drag to turn, click the scene to zoom. On a phone, tap the pins or open it full screen.</span>
+                            <a href="/data-center/" target="_blank" rel="noopener">Open full screen ↗</a>
+                        </div>
+                    </div>
+                    <figcaption>Tiny Data Center. Toy model, not to scale. Try the "Construction" and "The bill" panels first.</figcaption>
+                </figure>
+
+                <h2>Every watt in comes out as heat</h2>
+                <p>Here's a fact that sounds obvious and isn't: a chip doing math is a very expensive space heater. 100 MW of electricity in means 100 MW of heat out, all day, every day. Cooling is just moving that heat outside.</p>
+                <p>You can't blow enough air across a 120 kW rack to cool it. So AI halls run liquid straight to the chips:</p>
+
+                <figure>
+                    <div class="dia dia-scroll">
+                        <div class="dia-title">The cooling loop</div>
+                        <svg viewBox="0 0 720 250" role="img" aria-label="Heat moves from the GPU into a cold plate, into a coolant loop, through a coolant distribution unit into a facility water loop, and out through dry coolers or cooling towers to the air.">
+                            <defs>
+                                <marker id="ah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10z" fill="var(--muted)"/></marker>
+                            </defs>
+                            <rect x="10" y="70" width="120" height="110" rx="14" fill="var(--card)" stroke="var(--line)" stroke-width="2"/>
+                            <rect x="35" y="95" width="70" height="30" rx="6" fill="var(--blue)"/>
+                            <text x="70" y="115" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">cold plate</text>
+                            <rect x="35" y="128" width="70" height="20" rx="4" fill="var(--ink)" opacity=".75"/>
+                            <text x="70" y="143" text-anchor="middle" font-size="12" fill="var(--card)">GPU</text>
+                            <text x="70" y="170" text-anchor="middle" font-size="13" fill="var(--muted)">in the rack</text>
+                            <path d="M130 105 H 220" stroke="var(--red)" stroke-width="5" marker-end="url(#ah2)"/>
+                            <path d="M220 150 H 132" stroke="var(--blue)" stroke-width="5" marker-end="url(#ah2)"/>
+                            <text x="175" y="95" text-anchor="middle" font-size="12" fill="var(--muted)">hot coolant</text>
+                            <text x="175" y="172" text-anchor="middle" font-size="12" fill="var(--muted)">cold coolant</text>
+                            <rect x="222" y="70" width="140" height="110" rx="14" fill="var(--blue-soft)" stroke="var(--blue)" stroke-width="2"/>
+                            <text x="292" y="118" text-anchor="middle" font-size="20" font-weight="800" fill="var(--ink)">CDU</text>
+                            <text x="292" y="142" text-anchor="middle" font-size="12" fill="var(--muted)">swaps heat between</text>
+                            <text x="292" y="158" text-anchor="middle" font-size="12" fill="var(--muted)">two loops</text>
+                            <path d="M362 105 H 450" stroke="var(--red)" stroke-width="5" marker-end="url(#ah2)"/>
+                            <path d="M450 150 H 364" stroke="var(--blue)" stroke-width="5" marker-end="url(#ah2)"/>
+                            <text x="406" y="90" text-anchor="middle" font-size="12" fill="var(--muted)">facility water</text>
+                            <rect x="452" y="40" width="160" height="70" rx="14" fill="var(--card)" stroke="var(--line)" stroke-width="2"/>
+                            <text x="532" y="72" text-anchor="middle" font-size="16" font-weight="800" fill="var(--ink)">Dry coolers</text>
+                            <text x="532" y="94" text-anchor="middle" font-size="12" fill="var(--muted)">big radiators, almost no water</text>
+                            <rect x="452" y="140" width="160" height="70" rx="14" fill="var(--card)" stroke="var(--line)" stroke-width="2"/>
+                            <text x="532" y="172" text-anchor="middle" font-size="16" font-weight="800" fill="var(--ink)">Cooling towers</text>
+                            <text x="532" y="194" text-anchor="middle" font-size="12" fill="var(--muted)">evaporate water, less power</text>
+                            <text x="532" y="128" text-anchor="middle" font-size="13" font-weight="800" fill="var(--muted)">or</text>
+                            <path d="M612 75 C 650 75, 650 40, 690 30" stroke="var(--red)" stroke-width="3" fill="none" stroke-dasharray="4 4" marker-end="url(#ah2)"/>
+                            <path d="M612 175 C 650 175, 650 140, 690 125" stroke="var(--red)" stroke-width="3" fill="none" stroke-dasharray="4 4" marker-end="url(#ah2)"/>
+                            <text x="700" y="80" text-anchor="end" font-size="12" fill="var(--muted)">heat to</text>
+                            <text x="700" y="96" text-anchor="end" font-size="12" fill="var(--muted)">the sky</text>
+                        </svg>
+                    </div>
+                    <figcaption>Two loops, so the coolant touching the chips never mixes with the water outside.</figcaption>
+                </figure>
+
+                <p>The industry keeps score with one number, PUE: total power coming in divided by power that reaches the computers. A perfect site would be 1.0. The industry average has sat <a href="https://intelligence.uptimeinstitute.com/resource/uptime-institute-global-data-center-survey-2025" target="_blank" rel="noopener">above 1.5 for about six years</a>. New AI sites aim for 1.1 to 1.2.</p>
+                <p>PUE sounds like a nerdy efficiency stat. Look at what it does to revenue, though. If the utility gives you 300 MW and not one watt more, PUE decides how many GPUs you get to plug in. Going from 1.5 to 1.15 is roughly 37,000 more GPUs on the same wire. Same land, same substation, about 30% more stuff to rent out.</p>
+                <p>The tradeoff is water. Cooling towers are power-cheap and water-hungry. Dry coolers barely touch water but burn more electricity on hot days. Which one you pick depends on whether your town is short on water or your utility is short on power. Lately, the answer is often both.</p>
+
+                <h2>Where the money goes</h2>
+                <p>Okay. Let's spend that $40 billion.</p>
+
+                <figure>
+                    <div class="dia">
+                        <div class="dia-title">A 1 GW campus, roughly $39 billion</div>
+                        <div class="stack" role="img" aria-label="Chips and network about 62 percent, building, power and cooling about 38 percent">
+                            <div style="width:38%;background:var(--purple)">Building, power, cooling ~$15B</div>
+                            <div style="width:62%;background:var(--blue)">Chips + network ~$24B</div>
+                        </div>
+                        <div class="legend">
+                            <span><i style="background:var(--purple)"></i>$17.6M per MW of IT load (Cushman &amp; Wakefield, ex chips)</span>
+                            <span><i style="background:var(--blue)"></i>~$3.5M per 72-GPU rack, rough</span>
+                        </div>
+                        <div style="margin-top:22px" class="dia-title">How long each piece lasts</div>
+                        <div class="life-row"><span>Building + power gear</span><div><div class="life-bar" style="width:100%;background:var(--purple)">~20 years</div></div></div>
+                        <div class="life-row"><span>Typical lease</span><div><div class="life-bar" style="width:70%;background:#7b8794">10 to 15 years</div></div></div>
+                        <div class="life-row"><span>Chips (accounting)</span><div><div class="life-bar" style="width:28%;background:var(--blue)">5 to 6 yrs</div></div></div>
+                        <div class="life-row"><span>New Nvidia generation</span><div><div class="life-bar" style="width:6%;background:var(--red)"></div></div></div>
+                        <p style="font-size:.85rem;color:var(--muted);margin:6px 0 0">The red sliver is about one year.</p>
+                    </div>
+                    <figcaption>The expensive part is the part that ages fastest.</figcaption>
+                </figure>
+
+                <p>That second chart is the one I keep coming back to. You're putting the most expensive thing (chips) inside the longest-lived thing (the building), paid for with something in between (a 10 to 15 year lease or a bond), while a better chip comes out every year or so.</p>
+                <p>Now think about a single GPU. Its share of the campus is roughly $49k of chips and networking plus $29k of building. If you rent it at $2.90 an hour and it's busy 70% of the time, it brings in about $17,800 a year. Take out power and staff and you have about $15,400 of cash. After the building's share, the chip pays for itself in about three and a half years.</p>
+                <p>Fine, if the chip is still worth renting at a good price in year four. Is it?</p>
+                <p>Nobody knows. Accountants at the big clouds usually spread server costs over 5 to 6 years. If the real useful life of a GPU turns out to be closer to 3, the same campus that looks like a money printer at 6 years loses money every year. You can try this yourself in "The bill" panel of the miniature. Drag the chip life slider from 6 to 3 and watch.</p>
+
+                <p class="pull">The whole buildout is a bet on two numbers nobody can see yet: the price of a GPU-hour in 2029, and how long a chip stays worth renting.</p>
+
+                <h2>The part where I think about cycles</h2>
+                <p>Howard Marks has a habit I love. When everyone agrees on something, he asks a different question: not "is this true?" but "is this already in the price?" He calls it second-level thinking. First-level: AI demand is enormous, so build data centers. Second-level: everyone else knows that too, so what happens when they all build at once?</p>
+                <p>Let's run it.</p>
+                <p><b>Everyone agrees demand is huge.</b> I think it is. The four biggest spenders guided to roughly <a href="https://www.datacentres.com/news/ai-demand-surge-hyperscaler-capex-2026" target="_blank" rel="noopener">$720 to $745 billion of capex for 2026</a>, up from about $410 billion in 2025. Some analysts expect more than $1 trillion in 2027.</p>
+                <p><b>So everyone builds.</b> That's what makes the supply chain jam: transformers, turbines, electricians, powered land. Prices for all of them go up. The cost per MW jumped 21% in a year.</p>
+                <p><b>Then the supply arrives at once.</b> This part already happened once in miniature. H100 rental prices were around $8 an hour at some providers during the 2023 scramble. By December 2025 a market index had them near <a href="https://fourweekmba.com/ai-nvidia-h100-rent-hits-2-88-an-hour-up-44-since-december/" target="_blank" rel="noopener">$2.00. By late October 2026, $2.88</a>, up 44%. Shortage, glut, shortage again, in three years.</p>
+
+                <figure>
+                    <div class="dia dia-scroll">
+                        <div class="dia-title">The pendulum</div>
+                        <svg viewBox="0 0 720 230" role="img" aria-label="A pendulum swinging between shortage, where prices spike and everyone builds, and glut, where prices crash and building stops.">
+                            <path d="M110 190 Q 360 -40 610 190" fill="none" stroke="var(--line)" stroke-width="3" stroke-dasharray="6 6"/>
+                            <line x1="360" y1="20" x2="480" y2="160" stroke="var(--muted)" stroke-width="3"/>
+                            <circle cx="360" cy="20" r="6" fill="var(--muted)"/>
+                            <circle cx="488" cy="168" r="22" fill="var(--blue)"/>
+                            <text x="488" y="174" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">us?</text>
+                            <rect x="10" y="140" width="190" height="80" rx="12" fill="var(--gold-soft)" stroke="var(--gold)" stroke-width="2"/>
+                            <text x="105" y="168" text-anchor="middle" font-size="16" font-weight="800" fill="var(--ink)">Shortage</text>
+                            <text x="105" y="188" text-anchor="middle" font-size="12" fill="var(--muted)">prices spike, everyone builds,</text>
+                            <text x="105" y="204" text-anchor="middle" font-size="12" fill="var(--muted)">lenders say yes to everything</text>
+                            <rect x="520" y="140" width="190" height="80" rx="12" fill="var(--blue-soft)" stroke="var(--blue)" stroke-width="2"/>
+                            <text x="615" y="168" text-anchor="middle" font-size="16" font-weight="800" fill="var(--ink)">Glut</text>
+                            <text x="615" y="188" text-anchor="middle" font-size="12" fill="var(--muted)">prices fall, chips sit idle,</text>
+                            <text x="615" y="204" text-anchor="middle" font-size="12" fill="var(--muted)">debt still has to be paid</text>
+                        </svg>
+                    </div>
+                    <figcaption>The pendulum rarely rests in the middle. Where it is today is the hard part to see from inside.</figcaption>
+                </figure>
+
+                <p>History rhymes here. Railroads in the 1800s and fiber in the late 1990s were both real technologies with real demand. Both got overbuilt. Lots of investors lost money, and the country got cheap rails and cheap bandwidth that the next generation of companies built on. You can be right about the technology and still lose money on the buildout. Those are two different bets.</p>
+                <p>So the questions I'd ask, in Marks mode:</p>
+                <ul>
+                    <li><b>Who's lending, and on what terms?</b> When Big Tech pays from cash flow, a bust hurts their stock. When the money is debt, a bust can break things. More of this buildout is now debt: bonds, private credit, joint ventures that keep borrowing off a company's balance sheet. Meta's Hyperion campus in Louisiana used a roughly $27 billion deal with Blue Owl.</li>
+                    <li><b>What has to be true?</b> GPU-hour prices stay healthy for years, the chips last at least 5 years, and demand grows faster than the supply everyone is building at once.</li>
+                    <li><b>What happens if AI gets way more efficient?</b> In January 2025, DeepSeek showed a cheaper way to train a strong model and Nvidia lost about $590 billion of market value in a day. The bull answer is that cheaper AI means way more AI gets used, so demand goes up. The bear answer is that the same work needs fewer chips. Both can be true at different times.</li>
+                </ul>
+                <p>I don't know where the pendulum is. I'm pretty sure nobody does with any confidence, which is itself useful to know. What I do know now is what the money buys, and what has to go right for it to pay off.</p>
+
+                <h2>What I took away</h2>
+                <ol>
+                    <li><b>It's an electricity business.</b> The unit is the megawatt. The bottleneck is the grid. The chips are the expensive passenger.</li>
+                    <li><b>Time is the hidden cost.</b> A building that waits a year for power is a year of aging chips and interest.</li>
+                    <li><b>Cooling is revenue.</b> Better PUE means more GPUs on the same wire.</li>
+                    <li><b>The mismatch is the risk.</b> 20-year buildings, 15-year leases and 5-year chips, financed with more and more debt.</li>
+                    <li><b>Being right about AI is a different bet from being right about the buildout.</b></li>
+                </ol>
+
+                <h2 id="quiz">Check your thinking</h2>
+                <p>No multiple choice. Type your answer in your own words, like you're texting a friend who asked. You'll get a nudge back: what you nailed, and a question about what you might be missing. Try again as many times as you want, or peek at how I'd answer it. Nothing leaves your browser.</p>
+
+                <div class="q-progress" aria-hidden="true"><div id="q-bar"></div></div>
+                <p id="q-count" style="font-size:.85rem;color:var(--muted);margin-top:6px"></p>
+                <div id="quiz-root"></div>
+
+                <div class="q" id="takeaway">
+                    <div class="q-n">Last one</div>
+                    <p class="q-p">In one or two sentences: what's the most surprising thing you learned about data centers today?</p>
+                    <textarea id="tk-text" placeholder="Type it like you'd text it…" aria-label="Your takeaway"></textarea>
+                    <div class="q-actions">
+                        <button class="q-btn" id="tk-copy" type="button">Copy all my answers</button>
+                        <a class="q-btn ghost" id="tk-share" href="#" target="_blank" rel="noopener">Share on X</a>
+                    </div>
+                    <p class="q-fb" id="tk-fb"></p>
+                </div>
+
+                <p>If you think I got something wrong, especially on the money side, DM me on X. I'd rather learn it now than in the next cycle.</p>
+            </div>
+
+            <footer class="mt-12 pt-8 border-t border-border-light dark:border-border-dark">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div class="flex items-center gap-4 flex-wrap">
+                        <span class="text-sm text-secondary-text-light dark:text-secondary-text-dark">Tags:</span>
+                        <div class="flex gap-2 flex-wrap">
+                            <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs font-medium rounded">AI / ML</span>
+                            <span class="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-xs font-medium rounded">Infrastructure</span>
+                            <span class="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-xs font-medium rounded">Investing</span>
+                        </div>
+                    </div>
+                    <div class="text-sm text-secondary-text-light dark:text-secondary-text-dark">
+                        Published Nov 17, 2026
+                    </div>
+                </div>
+            </footer>
+        </article>
+
+        <footer class="border-t border-border-light dark:border-border-dark mt-12">
+            <div class="max-w-4xl mx-auto px-4 py-8">
+                <div class="text-center text-secondary-text-light dark:text-secondary-text-dark text-sm">
+                    <p>&copy; 2026 Manan Patel. All rights reserved.</p>
+                    <p class="mt-2">
+                        <a href="/" class="hover:text-text-light dark:hover:text-text-dark transition-colors">Home</a>
+                        <span class="mx-2">•</span>
+                        <a href="./" class="hover:text-text-light dark:hover:text-text-dark transition-colors">Blog</a>
+                    </p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+    /* Static Gantt: one hall waiting for the grid */
+    (function () {
+        var SPAN = 50;
+        var rows = [
+            ['Land, zoning, permits', 0, 9, 'var(--purple)'],
+            ['Utility study + grid upgrade', 3, 45, 'var(--gold)'],
+            ['Big transformers arrive', 8, 30, 'var(--gold)'],
+            ['Slab, walls, roof', 9, 12, 'var(--blue)'],
+            ['Electrical + cooling', 16, 14, 'var(--blue)'],
+            ['Commissioning', 30, 4, 'var(--blue)'],
+            ['Chips arrive, burn-in', 34, 3, 'var(--blue)']
+        ];
+        var live = 48;
+        document.getElementById('gantt').innerHTML = rows.map(function (r) {
+            return '<div class="gantt-row"><span>' + r[0] + '</span><div class="gantt-track"><div class="gantt-bar" style="left:' + (r[1] / SPAN * 100) + '%;width:' + (r[2] / SPAN * 100) + '%;background:' + r[3] + '"></div><div class="gantt-mark" style="left:' + (live / SPAN * 100) + '%"></div></div></div>';
+        }).join('');
+    })();
+
+    /* Socratic quiz. Each idea is a set of word patterns. A hit means the answer
+       touches that idea; a miss turns into a follow-up question instead of a grade. */
+    (function () {
+        var QUIZ = [
+            {
+                q: "A developer brags they're building a 500,000 square foot data center. What number would you ask for instead, and why does it matter more?",
+                ideas: [
+                    { name: 'You asked for power (MW or GW)', re: /\b(mw|megawatt|gw|gigawatt|power|electric|watt|grid|utility)/i,
+                      ask: "Imagine the hall doubles in size but the utility still gives it the same electricity. How many more GPUs could you switch on?" },
+                    { name: 'You tied it to what limits the chips', re: /(rack|gpu|chip|densit|\bkw\b|heat|cool|limit|bottleneck|scarce|run out|constrain)/i,
+                      ask: "An AI rack draws about 120 kW, an old one 5 to 10 kW. So in a modern hall, what runs out first: floor space or something else?" }
+                ],
+                model: "Ask for megawatts. Floor space is cheap and power is scarce: an AI rack draws ~120 kW, so you run out of electricity (and the ability to remove its heat) long before you run out of floor. Megawatts tell you how many GPUs the place can actually run."
+            },
+            {
+                q: "The building is finished in month 37, but the chips don't run until month 48. What's going on, and what could a developer do about it?",
+                ideas: [
+                    { name: 'You named the power wait', re: /(grid|utility|interconnect|transformer|substation|power|electric)/i,
+                      ask: "What's the one thing a finished building still needs from outside its fence before a single chip can turn on?" },
+                    { name: 'You had a fix', re: /(gas|turbine|engine|behind the meter|on.?site|own power|powered land|bridge|prefab|pre.?order|order early|battery|solar|nuclear|generator)/i,
+                      ask: "If the grid won't be ready for another year, where else could the electricity come from in the meantime? Or what could you have bought earlier?" }
+                ],
+                model: "The building clock beat the power clock. The utility study, grid upgrades and big transformers (2+ year lead times) take longer than construction. Fixes: bridge with on-site gas turbines or engines, buy powered land that already has a utility promise, pre-order transformers, and prefab to shrink the building clock too."
+            },
+            {
+                q: "Why can a liquid-cooled hall run more GPUs than an air-cooled one on the exact same grid connection?",
+                ideas: [
+                    { name: 'You saw that cooling eats power', re: /(pue|overhead|fan|chiller|cooling (uses|takes|eats|needs|burns)|less (power|energy|electric)|waste|efficien)/i,
+                      ask: "Of the 300 MW coming in, does all of it reach the chips? Where does the rest go?" },
+                    { name: 'You connected it to more power left for chips', re: /(more (power|energy|electric|watts|mw)|left over|leftover|\brest\b|remaining|frees|for (the )?(chips|gpus|compute|servers)|more gpus|more chips|more racks|more servers)/i,
+                      ask: "If cooling needs fewer megawatts, what happens to the megawatts it no longer needs?" }
+                ],
+                model: "The grid connection is fixed, so every watt spent on cooling is a watt not spent on chips. Liquid cooling moves heat far more efficiently than fans and chillers (PUE ~1.15 vs ~1.5), so more of the same 300 MW reaches the GPUs: tens of thousands more of them."
+            },
+            {
+                q: "A GPU's share of the campus costs about $78k. After power, staff and the building's share it makes about $14k of cash a year. Good investment?",
+                ideas: [
+                    { name: 'You asked how long the chip lasts', re: /(life|lifespan|\blasts?\b|how long|long enough|obsolete|depreciat|replace|new generation|newer|older|\bage|wear|outdated)/i,
+                      ask: "The chip earns its cost back in about 3.5 years. What has to be true about the chip in year 4 and 5 for this to be a good deal?" },
+                    { name: 'You questioned the future price or demand', re: /(price|rent|\brate|utiliz|demand|busy|idle|glut|supply|compet|customer)/i,
+                      ask: "That $14k assumes about $2.90 an hour and 70% busy. Should you trust either number for the next five years?" }
+                ],
+                model: "It depends on two things nobody can see yet. If the chip stays rentable for 5+ years at roughly today's price and utilization, yes. If a new generation makes it hard to rent after 3 years, or rental prices fall as everyone's supply arrives, it never pays back. The chip life assumption decides profit or loss."
+            },
+            {
+                q: "Everyone agrees AI demand is enormous. Using second-level thinking, why might that still be a risky moment to build a data center?",
+                ideas: [
+                    { name: 'You noticed everyone is building at once', re: /(everyone|everybody|consensus|crowd|competit|same time|at once|priced in|already known|oversupply|over.?build|too much|supply|others)/i,
+                      ask: "If you know demand is huge, who else knows it? What are they all doing with that information right now?" },
+                    { name: 'You named what goes wrong for the builder', re: /(price|fall|drop|crash|glut|idle|return|debt|loan|leverage|interest|bust|lose|cost.*(up|rise)|cycle|fiber|railroad|bubble)/i,
+                      ask: "Say all that new supply lands in the same year. What happens to the price of a GPU-hour, and who gets hurt if the campus was built with borrowed money?" }
+                ],
+                model: "When everyone agrees, it's priced in, and everyone builds at once. That pushes up costs on the way in (transformers, turbines, labor) and can crash rental prices on the way out when all the supply arrives together. With more debt in the mix, a glut can turn into defaults. You can be right about AI and still lose money on the buildout, like fiber in 2001."
+            },
+            {
+                q: "A new model comes out that's 10x cheaper to run. Does demand for data centers go up or down? Make the case for both sides.",
+                ideas: [
+                    { name: 'You made the case for down', re: /(down|less|fewer|lower|drop|need (fewer|less)|shrink|overbuilt|deepseek)/i,
+                      ask: "If every task now needs a tenth of the chips, what happens to campuses that were sized for the old math?" },
+                    { name: 'You made the case for up', re: /(up|more (use|usage|people|demand|apps|tasks)|cheaper.*(more|use)|jevons|explod|grow|new (uses|apps|products)|elastic|adopt)/i,
+                      ask: "When something gets 10x cheaper, like phone calls or storage did, do people use the same amount, or way more?" }
+                ],
+                model: "Down: the same work needs far fewer chips, so campuses sized for today's efficiency could sit half empty. Up: when something gets much cheaper, people use far more of it (the Jevons paradox), and new uses appear that weren't worth it before. In January 2025 DeepSeek tested both stories in one week. Which wins depends on timing, and the debt doesn't wait."
+            }
+        ];
+
+        var STORE = 'dc-quiz-v1';
+        var saved = {};
+        try { saved = JSON.parse(localStorage.getItem(STORE) || '{}'); } catch (e) { saved = {}; }
+        function save() { try { localStorage.setItem(STORE, JSON.stringify(saved)); } catch (e) {} }
+
+        var root = document.getElementById('quiz-root');
+        var esc = function (s) { return s.replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+
+        QUIZ.forEach(function (item, i) {
+            var st = saved[i] || { text: '', tries: 0, done: false };
+            saved[i] = st;
+            var el = document.createElement('div');
+            el.className = 'q' + (st.done ? ' done' : '');
+            el.innerHTML =
+                '<div class="q-n">Question ' + (i + 1) + ' of ' + QUIZ.length + '</div>' +
+                '<p class="q-p">' + item.q + '</p>' +
+                '<textarea placeholder="Type your answer…" aria-label="Your answer to question ' + (i + 1) + '"></textarea>' +
+                '<div class="q-actions"><button class="q-btn" type="button" data-a="check">Check my thinking</button>' +
+                '<button class="q-btn ghost" type="button" data-a="model">How Manan would answer</button></div>' +
+                '<div class="q-fb" aria-live="polite"></div>';
+            root.appendChild(el);
+            var ta = el.querySelector('textarea'), fb = el.querySelector('.q-fb');
+            ta.value = st.text;
+            ta.addEventListener('input', function () { st.text = ta.value; save(); });
+
+            function check() {
+                var text = ta.value.trim();
+                if (text.split(/\s+/).length < 4) {
+                    fb.innerHTML = '<div class="ask">Give it a full thought, even a rough one. What\'s your first guess, and why?</div>';
+                    return;
+                }
+                st.tries++;
+                var hits = item.ideas.filter(function (d) { return d.re.test(text); });
+                var misses = item.ideas.filter(function (d) { return !d.re.test(text); });
+                var html = '';
+                if (hits.length) html += '<div class="hit">✓ ' + hits.map(function (h) { return esc(h.name); }).join('. ') + '.</div>';
+                if (misses.length) {
+                    html += '<div class="ask"><b>Think about this:</b> ' + esc(misses[0].ask) + '</div>';
+                    if (st.tries >= 2) html += '<p style="font-size:.85rem;color:var(--muted)">Add to your answer and check again, or compare with how I\'d answer it.</p>';
+                } else {
+                    st.done = true;
+                    el.classList.add('done');
+                    html += '<div class="model"><b>Here\'s how I\'d put it:</b> ' + esc(item.model) + '</div>';
+                }
+                fb.innerHTML = html;
+                save();
+                progress();
+            }
+            el.querySelector('[data-a="check"]').addEventListener('click', check);
+            el.querySelector('[data-a="model"]').addEventListener('click', function () {
+                fb.insertAdjacentHTML('beforeend', '<div class="model"><b>Here\'s how I\'d put it:</b> ' + esc(item.model) + '</div>');
+                this.disabled = true;
+            });
+        });
+
+        function progress() {
+            var done = QUIZ.filter(function (_, i) { return saved[i] && saved[i].done; }).length;
+            document.getElementById('q-bar').style.width = (done / QUIZ.length * 100) + '%';
+            document.getElementById('q-count').textContent = done + ' of ' + QUIZ.length + ' worked through';
+        }
+        progress();
+
+        var tk = document.getElementById('tk-text');
+        try { tk.value = localStorage.getItem(STORE + '-takeaway') || ''; } catch (e) {}
+        function shareHref() {
+            var msg = (tk.value.trim() || 'I just learned what is actually inside an AI data center buildout.') ;
+            if (msg.length > 200) msg = msg.slice(0, 197) + '…';
+            return 'https://x.com/intent/tweet?text=' + encodeURIComponent(msg + ' via @mananthekid') + '&url=' + encodeURIComponent('https://mananpatel.info/blog/data-center-buildout.html');
+        }
+        var share = document.getElementById('tk-share');
+        share.href = shareHref();
+        tk.addEventListener('input', function () {
+            try { localStorage.setItem(STORE + '-takeaway', tk.value); } catch (e) {}
+            share.href = shareHref();
+        });
+        document.getElementById('tk-copy').addEventListener('click', function () {
+            var lines = ['What\'s actually inside a data center buildout? My answers', ''];
+            QUIZ.forEach(function (item, i) {
+                lines.push((i + 1) + '. ' + item.q);
+                lines.push('→ ' + ((saved[i] && saved[i].text.trim()) || '(skipped)'));
+                lines.push('');
+            });
+            lines.push('Takeaway: ' + (tk.value.trim() || '(none yet)'));
+            var text = lines.join('\n');
+            var fb = document.getElementById('tk-fb');
+            (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject())
+                .then(function () { fb.textContent = 'Copied. Paste it into your notes, or text it to a friend and see if they agree.'; })
+                .catch(function () { fb.textContent = 'Couldn\'t reach the clipboard. Select your answers above and copy them by hand.'; });
+        });
+    })();
+    </script>
+</body>
+</html>

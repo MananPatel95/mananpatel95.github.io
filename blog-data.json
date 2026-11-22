@@ -1,6 +1,17 @@
 {
   "posts": [
     {
+      "id": "data-center-buildout",
+      "title": "What's actually inside a data center buildout?",
+      "description": "What $700B+ of AI capex actually buys: land, power, backup, a big box, chips, cooling and fiber, plus the cycle risk underneath. With a clickable miniature and a quiz.",
+      "date": "2026-11-17",
+      "category": "AI / ML",
+      "tags": ["AI", "Infrastructure", "Investing"],
+      "readTime": "14 min read",
+      "featured": false,
+      "file": "blog/data-center-buildout.html"
+    },
+    {
       "id": "autonomy-city-how-machines-see",
       "title": "Autonomy City: learning how self-driving cars see",
       "description": "I built a browser city sim to learn what Tesla-, Waymo-, and Waabi-style self-driving stacks see, how they plan, and how the data engine behind them works.",
